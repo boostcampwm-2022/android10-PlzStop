@@ -22,12 +22,26 @@
         tools:layout="@layout/fragment_search" >
         <action
             android:id="@+id/action_search_fragment_to_route_fragment"
-            app:destination="@id/route_fragment" />
+            app:destination="@id/route_fragment">
+            <argument
+                android:name="origin"
+                app:argType="string" />
+            <argument
+                android:name="destination"
+                app:argType="string" />
+        </action>
     </fragment>
 
     <fragment
         android:id="@+id/route_fragment"
         android:name="com.stop.ui.route.RouteFragment"
         android:label="fragment_route"
-        tools:layout="@layout/fragment_route" />
+        tools:layout="@layout/fragment_route" >
+        <argument
+            android:name="origin"
+            app:argType="string" />
+        <argument
+            android:name="destination"
+            app:argType="string" />
+    </fragment>
 </navigation>

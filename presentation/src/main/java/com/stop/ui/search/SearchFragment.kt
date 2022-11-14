@@ -9,7 +9,6 @@ import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.stop.R
 
-
 class SearchFragment : Fragment() {
 
     override fun onCreateView(
@@ -23,7 +22,14 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_move_to_route).setOnClickListener {
-            findNavController().navigate(R.id.action_search_fragment_to_route_fragment)
+            val action = SearchFragmentDirections.actionSearchFragmentToRouteFragment(ORIGIN, DESTINATION)
+
+            findNavController().navigate(action)
         }
+    }
+
+    companion object {
+        private const val ORIGIN = "출발지"
+        private const val DESTINATION = "도착지"
     }
 }
