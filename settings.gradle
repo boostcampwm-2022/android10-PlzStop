@@ -14,3 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Plz Stop"
 include ':presentation'
+include ':data'
+include ':domain'
