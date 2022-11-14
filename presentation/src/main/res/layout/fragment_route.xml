@@ -7,23 +7,13 @@
     tools:context=".ui.route.RouteFragment">
 
     <TextView
-        android:id="@+id/text_view_origin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/text_view_destination"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="출발지" />
-
-    <TextView
-        android:id="@+id/text_view_destination"
+        android:id="@+id/text_view_result"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_origin"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="출발지" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

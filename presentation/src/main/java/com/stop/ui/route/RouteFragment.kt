@@ -23,8 +23,7 @@ class RouteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        view.findViewById<TextView>(R.id.text_view_origin).text = args.origin
-        view.findViewById<TextView>(R.id.text_view_destination).text = args.destination
+        view.findViewById<TextView>(R.id.text_view_result).text = args.routeInfo.toString()
     }
 
 }
