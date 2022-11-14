@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Plz Stop</string>
+    <string name="move_to_search">검색 화면으로 이동하기</string>
+    <string name="move_to_route">경로 검색 화면으로 이동</string>
 </resources>
