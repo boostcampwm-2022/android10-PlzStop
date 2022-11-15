@@ -95,6 +95,17 @@
             app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
             app:layout_constraintTop_toTopOf="@id/text_input_layout_destination" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_route"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_drop_down_menu"
+            tools:listitem="@layout/route_item" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_vertical"
             android:layout_width="wrap_content"
