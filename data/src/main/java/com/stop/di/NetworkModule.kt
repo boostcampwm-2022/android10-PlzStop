@@ -2,7 +2,7 @@ package com.stop.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.stop.data.BuildConfig.TMAP_URL
+import com.stop.data.BuildConfig
 import com.stop.remote.ResponseAdapterFactory
 import com.stop.remote.network.NearPlaceApiService
 import dagger.Module
@@ -46,7 +46,7 @@ object NetworkModule {
         moshi: Moshi
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(TMAP_URL)
+            .baseUrl(BuildConfig.TMAP_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(ResponseAdapterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))

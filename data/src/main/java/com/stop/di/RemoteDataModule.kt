@@ -10,7 +10,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RemoteDataModule {
+internal abstract class RemoteDataModule {
 
     @Binds
     @Singleton
