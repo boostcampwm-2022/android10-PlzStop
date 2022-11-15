@@ -1,6 +1,5 @@
 package com.stop.ui.nearplace
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,6 +19,9 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val _nearPlaceList = MutableLiveData<List<Place>>()
     val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
+
+    private val _errorMessage = MutableStateFlow("")
+    val errorMessage : StateFlow<String> = _errorMessage
 
     fun getNearPlaceList(
         version: Int,
@@ -38,7 +42,7 @@ class PlaceSearchViewModel @Inject constructor(
                     )
                 )
             } catch (e: Exception) {
-                Log.e("ABC", e.message.toString())
+                _errorMessage.value = e.message ?: "something is wrong"
             }
         }
     }
