@@ -1,6 +1,6 @@
 package com.stop.model.route
 
-data class RouteInfo(
+data class RouteRequest(
     val originName: String,
     val originX: String,
     val originY: String,

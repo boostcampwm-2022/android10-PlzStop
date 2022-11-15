@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.navigation.fragment.findNavController
 import com.stop.R
-import com.stop.model.route.RouteInfo
+import com.stop.model.route.RouteRequest
 
 class SearchFragment : Fragment() {
 
@@ -23,7 +23,7 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<Button>(R.id.button_move_to_route).setOnClickListener {
-            val routeInfo = RouteInfo(
+            val routeRequest = RouteRequest(
                 originName = ORIGIN_NAME,
                 originX = ORIGIN_X,
                 originY = ORIGIN_Y,
@@ -31,7 +31,7 @@ class SearchFragment : Fragment() {
                 destinationX = DESTINATION_X,
                 destinationY = DESTINATION_Y,
             )
-            val action = SearchFragmentDirections.actionSearchFragmentToRouteFragment(routeInfo)
+            val action = SearchFragmentDirections.actionSearchFragmentToRouteFragment(routeRequest)
 
             findNavController().navigate(action)
         }
