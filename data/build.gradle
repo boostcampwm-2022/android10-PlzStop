@@ -5,6 +5,9 @@ plugins {
     id 'kotlin-kapt'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.stop.data'
     compileSdk 32
@@ -15,6 +18,8 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
     }
 
     buildTypes {
