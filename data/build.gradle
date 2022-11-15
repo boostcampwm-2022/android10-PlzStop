@@ -20,7 +20,6 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField("String", "TMAP_URL", properties['TMAP_URL'])
-        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
     }
 
     buildTypes {
