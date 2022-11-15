@@ -25,9 +25,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideHttpClient(interceptor: AppInterceptor): OkHttpClient {
+    fun provideHttpClient(tmapInterceptor: TmapInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+            .addInterceptor(tmapInterceptor)
             .build()
     }
 
@@ -37,6 +37,12 @@ object NetworkModule {
         return Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTmapInterceptor(): TmapInterceptor {
+        return TmapInterceptor()
     }
 
     @Provides
@@ -52,7 +58,7 @@ object NetworkModule {
             .build()
     }
 
-    class AppInterceptor : Interceptor {
+    class TmapInterceptor : Interceptor {
         @Throws(IOException::class)
         override fun intercept(chain: Interceptor.Chain): Response {
             return with(chain) {
