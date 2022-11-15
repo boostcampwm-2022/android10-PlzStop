@@ -1,24 +1,18 @@
 package com.stop.data.di
 
-import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.data.remote.source.route.RouteRemoteDataSourceImpl
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object DataSourceModule {
+internal interface DataSourceModule {
 
-    @Provides
-    @Singleton
+    @Binds
     fun provideRouteRemoteDataSource(
-        tmapApiService: TmapApiService
-    ): RouteRemoteDataSource {
-        return RouteRemoteDataSourceImpl(tmapApiService)
-    }
-
+        routeRemoteDataSourceImpl: RouteRemoteDataSourceImpl
+    ): RouteRemoteDataSource
 }
