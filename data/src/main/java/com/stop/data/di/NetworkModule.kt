@@ -1,0 +1,66 @@
+package com.stop.data.di
+
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.stop.data.BuildConfig
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
+import java.io.IOException
+import javax.inject.Singleton
+
+@InstallIn(SingletonComponent::class)
+@Module
+object NetworkModule {
+
+    private const val T_MAP_APP_KEY_NAME = "appKey"
+    private const val T_MAP_APP_KEY_VALUE = BuildConfig.T_MAP_APP_KEY
+    private const val T_MAP_URL = "https://apis.openapi.sk.com/"
+
+    @Provides
+    @Singleton
+    fun provideHttpClient(interceptor: AppInterceptor): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi {
+        return Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(T_MAP_URL)
+            .client(okHttpClient)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    class AppInterceptor : Interceptor {
+        @Throws(IOException::class)
+        override fun intercept(chain: Interceptor.Chain): Response {
+            return with(chain) {
+                val newRequest = request().newBuilder()
+                    .addHeader(T_MAP_APP_KEY_NAME, T_MAP_APP_KEY_VALUE)
+                    .build()
+                proceed(newRequest)
+            }
+        }
+    }
+}
