@@ -5,6 +5,9 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     namespace 'com.stop.data'
     compileSdk 32
@@ -16,7 +19,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String", "TMAP_URL", TMAP_URL)
+        buildConfigField("String", "TMAP_URL", properties['TMAP_URL'])
+        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
     }
 
     buildTypes {
