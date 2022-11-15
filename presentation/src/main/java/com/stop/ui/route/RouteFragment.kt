@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
@@ -20,6 +21,7 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val args: RouteFragmentArgs by navArgs()
+    private val viewModel: RouteViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,8 +46,12 @@ class RouteFragment : Fragment() {
     }
 
     private fun setStartAndDestinationText() {
-        binding.textInputEditTextOrigin.setText(args.routeInfo.originName)
-        binding.textInputEditTextDestination.setText(args.routeInfo.destinationName)
+        binding.textInputEditTextOrigin.setText(args.routeRequest.originName)
+        binding.textInputEditTextDestination.setText(args.routeRequest.destinationName)
+
+        viewModel.setOrigin(args.routeRequest.getOrigin())
+        viewModel.setDestination(args.routeRequest.getDestination())
+        viewModel.getRoute()
     }
 
     override fun onDestroyView() {

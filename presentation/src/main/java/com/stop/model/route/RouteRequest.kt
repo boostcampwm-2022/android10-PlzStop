@@ -7,4 +7,21 @@ data class RouteRequest(
     val destinationName: String,
     val destinationX: String,
     val destinationY: String,
-): java.io.Serializable
+): java.io.Serializable {
+
+    fun getOrigin(): Place {
+        return Place(
+            name = originName,
+            latitude = originX,
+            longitude = originY
+        )
+    }
+
+    fun getDestination(): Place {
+        return Place(
+            name = destinationName,
+            latitude = destinationX,
+            longitude = destinationY
+        )
+    }
+}

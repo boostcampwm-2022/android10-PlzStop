@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.stop.ui.route.RouteViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
