@@ -10,7 +10,9 @@ import androidx.navigation.fragment.navArgs
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.model.route.OrderType
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RouteFragment : Fragment() {
 
     private var _binding: FragmentRouteBinding? = null
