@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/placeSearchFragment"
-        android:name="com.stop.PlaceSearchFragment"
+        android:name="com.stop.ui.nearplace.PlaceSearchFragment"
         android:label="fragment_place_search"
         tools:layout="@layout/fragment_place_search" />
 </navigation>
