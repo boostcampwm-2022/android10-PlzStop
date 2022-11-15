@@ -5,7 +5,7 @@ import com.stop.remote.model.nearplace.NearPlcaeResponse
 import com.stop.remote.network.NearPlaceApiService
 import javax.inject.Inject
 
-class NearPlaceRemoteDataSourceImpl @Inject constructor(
+internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
     private val nearPlaceApiService: NearPlaceApiService
 ) : NearPlaceRemoteDataSource {
 
