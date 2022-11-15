@@ -17,7 +17,7 @@ import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
 @Module
-object NetworkModule {
+internal object NetworkModule {
 
     private const val T_MAP_APP_KEY_NAME = "appKey"
     private const val T_MAP_APP_KEY_VALUE = BuildConfig.T_MAP_APP_KEY

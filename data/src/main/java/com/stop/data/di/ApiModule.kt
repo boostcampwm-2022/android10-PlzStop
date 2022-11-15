@@ -9,7 +9,7 @@ import retrofit2.Retrofit
 
 @InstallIn(SingletonComponent::class)
 @Module
-object ApiModule {
+internal object ApiModule {
 
     @Provides
     fun provideTmapApiService(retrofit: Retrofit): TmapApiService {
