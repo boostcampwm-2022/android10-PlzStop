@@ -9,7 +9,7 @@ interface NearPlaceApiService {
 
     @GET("/tmap/pois")
     suspend fun getNearPlaceList(
-        @Query("version") version: Int = 1,
+        @Query("version") version: Int,
         @Query("searchKeyword") searchKeyword: String,
         @Query("centerLon") centerLon: Float,
         @Query("centerLat") centerLat: Float,
