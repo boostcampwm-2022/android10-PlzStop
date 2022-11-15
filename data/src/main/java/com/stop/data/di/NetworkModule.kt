@@ -24,8 +24,7 @@ object NetworkModule {
     private const val T_MAP_URL = "https://apis.openapi.sk.com/"
 
     @Provides
-    @Singleton
-    fun provideHttpClient(tmapInterceptor: TmapInterceptor): OkHttpClient {
+    fun provideOkHttpClient(tmapInterceptor: TmapInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(tmapInterceptor)
             .build()
