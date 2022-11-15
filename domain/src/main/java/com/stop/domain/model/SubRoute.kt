@@ -1,6 +1,7 @@
 package com.stop.domain.model
 
 interface SubRoute {
+
     val distance: Double // distance
     val estimatedTime: Int // sectionTime
     val moveType: MoveType // 이동 타입
