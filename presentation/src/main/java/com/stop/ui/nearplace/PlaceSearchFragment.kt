@@ -39,18 +39,24 @@ class PlaceSearchFragment : Fragment() {
             viewModel = placeSearchViewModel
         }
 
-        binding.textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus) {
-                hideKeyBoard()
-            }
-        }
+        listenEditTextChange()
+    }
 
-        binding.textInputEditTextPlaceSearch.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                hideKeyBoard()
-                true
-            } else {
-                false
+    private fun listenEditTextChange() {
+        with(binding) {
+            textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
+                if (!hasFocus) {
+                    hideKeyBoard()
+                }
+            }
+
+            textInputEditTextPlaceSearch.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    hideKeyBoard()
+                    true
+                } else {
+                    false
+                }
             }
         }
     }
