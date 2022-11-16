@@ -57,7 +57,11 @@ data class Poi(
             )
         }
 
-        return Place(name, roadAddressList)
+        return Place(
+            name,
+            radius,
+            roadAddressList
+        )
     }
 
 }
