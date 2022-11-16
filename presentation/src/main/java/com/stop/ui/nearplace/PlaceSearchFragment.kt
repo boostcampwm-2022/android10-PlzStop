@@ -1,13 +1,15 @@
 package com.stop.ui.nearplace
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,14 +39,25 @@ class PlaceSearchFragment : Fragment() {
             viewModel = placeSearchViewModel
         }
 
-        placeSearchViewModel.getNearPlaceList(
-            1,
-            "아남타워",
-            126.96965F,
-            37.55383F,
-            BuildConfig.TMAP_APP_KEY
-        )
+        binding.textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                hideKeyBoard()
+            }
+        }
 
+        binding.textInputEditTextPlaceSearch.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                hideKeyBoard()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    private fun hideKeyBoard() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 
     override fun onDestroyView() {

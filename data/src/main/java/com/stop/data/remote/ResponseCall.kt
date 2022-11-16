@@ -18,6 +18,10 @@ class ResponseCall<T> constructor(
 
     override fun enqueue(callback: Callback<NetworkResult<T>>) = callDelegate.enqueue(object : Callback<T> {
         override fun onResponse(call: Call<T>, response: Response<T>) {
+            if(response.code() == 204){
+                callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Error(errorMessage = "No Content Error")))
+            }
+
             response.body()?.let {
                 if (response.isSuccessful) {
                     callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Success(it)))

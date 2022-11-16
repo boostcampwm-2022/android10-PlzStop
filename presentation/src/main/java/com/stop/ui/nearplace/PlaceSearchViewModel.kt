@@ -1,9 +1,7 @@
 package com.stop.ui.nearplace
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,34 +15,50 @@ class PlaceSearchViewModel @Inject constructor(
     private val getNearPlaceListUseCase: GetNearPlaceListUseCase
 ) : ViewModel() {
 
-    private val _nearPlaceList = MutableLiveData<List<Place>>()
-    val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
+    val searchKeyword = MutableLiveData("")
+
+    val nearPlaceList: LiveData<List<Place>> = Transformations.map(searchKeyword) { query ->
+        if (query.isNullOrBlank()) {
+            emptyList()
+        } else {
+            getNearPlaceList(
+                query,
+                126.96965F,
+                37.55383F,
+                BuildConfig.TMAP_APP_KEY
+            )
+        }
+    }
 
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
 
-    fun getNearPlaceList(
-        version: Int,
+    private var result: List<Place>? = null
+    private fun getNearPlaceList(
         searchKeyword: String,
         centerLon: Float,
         centerLat: Float,
         appKey: String
-    ) {
+    ): List<Place> {
         viewModelScope.launch {
             try {
-                _nearPlaceList.postValue(
-                    getNearPlaceListUseCase.getNearPlaceList(
-                        version,
-                        searchKeyword,
-                        centerLon,
-                        centerLat,
-                        appKey
-                    )
+                result = getNearPlaceListUseCase.getNearPlaceList(
+                    TMAP_VERSION,
+                    searchKeyword,
+                    centerLon,
+                    centerLat,
+                    appKey
                 )
             } catch (e: Exception) {
+                result = emptyList()
                 _errorMessage.value = e.message ?: "something is wrong"
             }
         }
+        return result ?: emptyList()
+    }
+
+    companion object {
+        private const val TMAP_VERSION = 1
     }
 
 }
