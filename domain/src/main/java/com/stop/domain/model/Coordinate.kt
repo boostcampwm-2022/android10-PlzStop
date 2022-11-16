@@ -1,4 +1,4 @@
-package com.stop.model.route
+package com.stop.domain.model
 
 data class Coordinate(
     val latitude: String,

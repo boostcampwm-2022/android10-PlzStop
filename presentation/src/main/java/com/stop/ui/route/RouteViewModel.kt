@@ -29,10 +29,10 @@ class RouteViewModel @Inject constructor(
             val destinationValue = _destination.value ?: return@launch
 
             val routeRequest = RouteRequest(
-                startX = originValue.latitude,
-                startY = originValue.longitude,
-                endX = destinationValue.latitude,
-                endY = destinationValue.longitude,
+                startX = originValue.coordinate.latitude,
+                startY = originValue.coordinate.longitude,
+                endX = destinationValue.coordinate.latitude,
+                endY = destinationValue.coordinate.longitude,
             )
 
             val result = getRouteUseCase.getRoute(routeRequest)

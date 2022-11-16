@@ -12,16 +12,20 @@ data class RouteRequest(
     fun getOrigin(): Place {
         return Place(
             name = originName,
-            latitude = originX,
-            longitude = originY
+            coordinate = Coordinate(
+                latitude = originX,
+                longitude = originY,
+            )
         )
     }
 
     fun getDestination(): Place {
         return Place(
             name = destinationName,
-            latitude = destinationX,
-            longitude = destinationY
+            coordinate = Coordinate(
+                latitude = destinationX,
+                longitude = destinationX,
+            )
         )
     }
 }
