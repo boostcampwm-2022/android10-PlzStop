@@ -1,8 +1,10 @@
 package com.stop.data.remote.model.route
 
+import com.squareup.moshi.Json
 import com.stop.domain.model.RouteResponse
 
 data class RouteResponse(
+    @Json(name = "metaData")
     val metaData: MetaData
 ) {
     fun toDomain(): RouteResponse {
