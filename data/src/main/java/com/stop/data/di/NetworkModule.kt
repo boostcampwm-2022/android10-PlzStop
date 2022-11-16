@@ -11,6 +11,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
@@ -25,8 +26,12 @@ internal object NetworkModule {
     private const val T_MAP_URL = "https://apis.openapi.sk.com/"
 
     @Provides
-    fun provideOkHttpClient(tmapInterceptor: TmapInterceptor): OkHttpClient {
+    fun provideOkHttpClient(
+        tmapInterceptor: TmapInterceptor,
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
             .addInterceptor(tmapInterceptor)
             .build()
     }
@@ -43,6 +48,11 @@ internal object NetworkModule {
     @Singleton
     fun provideTmapInterceptor(): TmapInterceptor {
         return TmapInterceptor()
+    }
+
+    @Provides
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
     @Provides
