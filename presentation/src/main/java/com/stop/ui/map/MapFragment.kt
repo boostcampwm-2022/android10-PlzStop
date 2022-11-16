@@ -43,14 +43,15 @@ class MapFragment : Fragment() {
     private fun initBinding() {
         // TODO lifecycleOwner, viewModel 설정
     }
-
+    
     private fun initView() {
         binding.imageViewCurrentLocation.setOnClickListener {
-
+            tMapView.setCenterPoint(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude, true)
+            setTrackingMode(true)
         }
 
         binding.imageViewCompassMode.setOnClickListener {
-
+            tMapView.isCompassMode = tMapView.isCompassMode.not()
         }
     }
 
