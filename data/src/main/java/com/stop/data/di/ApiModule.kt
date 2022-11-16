@@ -1,5 +1,6 @@
 package com.stop.data.di
 
+import com.stop.data.remote.network.FakeTmapApiService
 import com.stop.data.remote.network.TmapApiService
 import dagger.Module
 import dagger.Provides
@@ -14,5 +15,10 @@ internal object ApiModule {
     @Provides
     fun provideTmapApiService(retrofit: Retrofit): TmapApiService {
         return retrofit.create(TmapApiService::class.java)
+    }
+
+    @Provides
+    fun provideFakeTmapApiService(retrofit: Retrofit): FakeTmapApiService {
+        return retrofit.create(FakeTmapApiService::class.java)
     }
 }

@@ -1,15 +1,17 @@
 package com.stop.data.remote.source.route
 
 import com.stop.data.remote.model.route.RouteResponse
+import com.stop.data.remote.network.FakeTmapApiService
 import com.stop.data.remote.network.TmapApiService
 import com.stop.domain.model.RouteRequest
 import javax.inject.Inject
 
 internal class RouteRemoteDataSourceImpl @Inject constructor(
-    private val tmapApiService: TmapApiService,
+//    private val tmapApiService: TmapApiService,
+    private val fakeTmapApiService: FakeTmapApiService,
 ): RouteRemoteDataSource {
     override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
-        val response = tmapApiService.getRoutes(routeRequest.toMap())
+        val response = fakeTmapApiService.getRoutes(routeRequest.toMap())
 
         return when(response.isSuccessful) {
             true -> response.body() ?: throw IllegalArgumentException(BODY_IS_EMPTY)
