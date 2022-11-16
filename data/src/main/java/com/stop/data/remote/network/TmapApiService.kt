@@ -8,7 +8,7 @@ import retrofit2.http.QueryMap
 interface TmapApiService {
 
     @POST(TRANSPORT_URL)
-    fun getRoutes(
+    suspend fun getRoutes(
         @QueryMap routeRequest: Map<String, String>
     ): Response<RouteResponse>
 

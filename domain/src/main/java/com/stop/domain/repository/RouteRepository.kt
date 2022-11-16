@@ -5,5 +5,5 @@ import com.stop.domain.model.RouteResponse
 
 interface RouteRepository {
 
-    fun getRoute(routeRequest: RouteRequest): RouteResponse
+    suspend fun getRoute(routeRequest: RouteRequest): RouteResponse
 }

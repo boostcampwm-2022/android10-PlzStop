@@ -9,7 +9,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ): GetRouteUseCase {
 
-    override fun getRoute(routeRequest: RouteRequest): RouteResponse {
+    override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
         return routeRepository.getRoute(routeRequest)
     }
 }

@@ -10,7 +10,8 @@ internal class RouteRepositoryImpl @Inject constructor(
     private val remoteDataSource: RouteRemoteDataSource
 ): RouteRepository {
 
-    override fun getRoute(routeRequest: RouteRequest): RouteResponse {
-        return remoteDataSource.getRoute(routeRequest).toDomain()
+    override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
+        val response = remoteDataSource.getRoute(routeRequest)
+        return response.toDomain()
     }
 }

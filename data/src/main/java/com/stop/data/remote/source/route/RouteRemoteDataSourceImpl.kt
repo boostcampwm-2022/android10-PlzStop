@@ -8,7 +8,7 @@ import javax.inject.Inject
 internal class RouteRemoteDataSourceImpl @Inject constructor(
     private val tmapApiService: TmapApiService,
 ): RouteRemoteDataSource {
-    override fun getRoute(routeRequest: RouteRequest): RouteResponse {
+    override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
         val response = tmapApiService.getRoutes(routeRequest.toMap())
 
         return when(response.isSuccessful) {

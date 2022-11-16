@@ -5,5 +5,5 @@ import com.stop.domain.model.RouteRequest
 
 interface RouteRemoteDataSource {
 
-    fun getRoute(routeRequest: RouteRequest): RouteResponse
+    suspend fun getRoute(routeRequest: RouteRequest): RouteResponse
 }
