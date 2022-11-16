@@ -15,14 +15,17 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PlaceSearchFragment : Fragment() {
 
-    private lateinit var binding: FragmentPlaceSearchBinding
+    private var _binding: FragmentPlaceSearchBinding? = null
+    private val binding get() = _binding!!
+
     private val placeSearchViewModel: PlaceSearchViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_place_search, container, false)
+    ): View {
+        _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_place_search, container, false)
+
         return binding.root
     }
 
@@ -42,6 +45,12 @@ class PlaceSearchFragment : Fragment() {
             BuildConfig.TMAP_APP_KEY
         )
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 
 }
