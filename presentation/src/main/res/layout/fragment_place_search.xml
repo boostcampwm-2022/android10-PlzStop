@@ -1,96 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.nearplace.PlaceSearchFragment">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_line_start"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="16dp" />
+    <data>
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guide_line_end"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_end="16dp" />
+        <variable
+            name="viewModel"
+            type="com.stop.ui.nearplace.PlaceSearchViewModel" />
+    </data>
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/search_view_place_location"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/background_gray_d9_16"
-        app:iconifiedByDefault="false"
-        app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-        app:layout_constraintStart_toStartOf="@id/guide_line_start"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.nearplace.PlaceSearchFragment">
 
-    <TextView
-        android:id="@+id/text_view_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/background_gray_d9_8"
-        android:drawablePadding="3dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="@string/favorite_text"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:drawableStartCompat="@drawable/ic_baseline_star_outline_16"
-        app:layout_constraintEnd_toStartOf="@id/text_view_current_location"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
-        app:layout_constraintStart_toStartOf="@id/guide_line_start"
-        app:layout_constraintTop_toBottomOf="@id/search_view_place_location" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_line_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
 
-    <TextView
-        android:id="@+id/text_view_current_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_gray_d9_8"
-        android:drawablePadding="3dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="@string/current_location_text"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:drawableStartCompat="@drawable/ic_baseline_location_searching_16"
-        app:layout_constraintBottom_toBottomOf="@id/text_view_favorite"
-        app:layout_constraintEnd_toStartOf="@id/text_view_select_map"
-        app:layout_constraintStart_toEndOf="@id/text_view_favorite"
-        app:layout_constraintTop_toTopOf="@id/text_view_favorite" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide_line_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
-    <TextView
-        android:id="@+id/text_view_select_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/background_gray_d9_8"
-        android:drawablePadding="3dp"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="6dp"
-        android:text="@string/select_map_text"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:drawableStartCompat="@drawable/ic_baseline_map_16"
-        app:layout_constraintBottom_toBottomOf="@id/text_view_current_location"
-        app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-        app:layout_constraintStart_toEndOf="@id/text_view_current_location"
-        app:layout_constraintTop_toTopOf="@id/text_view_current_location" />
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view_place_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_gray_d9_8"
+            app:iconifiedByDefault="false"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_place"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-        app:layout_constraintStart_toStartOf="@id/guide_line_start"
-        app:layout_constraintTop_toBottomOf="@id/text_view_favorite" />
+        <TextView
+            android:id="@+id/text_view_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_gray_d9_8"
+            android:drawablePadding="3dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/favorite_text"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_baseline_star_outline_16"
+            app:layout_constraintEnd_toStartOf="@id/text_view_current_location"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toBottomOf="@id/search_view_place_location" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/text_view_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_gray_d9_8"
+            android:drawablePadding="3dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/current_location_text"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_baseline_location_searching_16"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_favorite"
+            app:layout_constraintEnd_toStartOf="@id/text_view_select_map"
+            app:layout_constraintStart_toEndOf="@id/text_view_favorite"
+            app:layout_constraintTop_toTopOf="@id/text_view_favorite" />
+
+        <TextView
+            android:id="@+id/text_view_select_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_gray_d9_8"
+            android:drawablePadding="3dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="6dp"
+            android:text="@string/select_map_text"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_baseline_map_16"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_current_location"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toEndOf="@id/text_view_current_location"
+            app:layout_constraintTop_toTopOf="@id/text_view_current_location" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_place"
+            places="@{viewModel.nearPlaceList}"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toBottomOf="@id/text_view_favorite" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

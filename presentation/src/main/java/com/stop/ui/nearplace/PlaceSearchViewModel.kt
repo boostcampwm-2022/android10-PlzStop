@@ -21,7 +21,7 @@ class PlaceSearchViewModel @Inject constructor(
     val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
 
     private val _errorMessage = MutableStateFlow("")
-    val errorMessage : StateFlow<String> = _errorMessage
+    val errorMessage: StateFlow<String> = _errorMessage
 
     fun getNearPlaceList(
         version: Int,
