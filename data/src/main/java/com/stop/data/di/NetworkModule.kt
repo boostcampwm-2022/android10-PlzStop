@@ -3,6 +3,7 @@ package com.stop.data.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
+import com.stop.data.remote.adapter.route.ResultCallAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,14 +46,21 @@ internal object NetworkModule {
     }
 
     @Provides
+    fun provideResultCallAdapter(): ResultCallAdapter.Factory {
+        return ResultCallAdapter.Factory()
+    }
+
+    @Provides
     @Singleton
     fun provideRetrofitInstance(
         okHttpClient: OkHttpClient,
         moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(T_MAP_URL)
             .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
