@@ -1,10 +1,15 @@
 package com.stop.ui.map
 
+import android.Manifest.permission
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
+import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapView
 import com.stop.databinding.FragmentMapBinding
 
@@ -54,6 +59,34 @@ class MapFragment : Fragment() {
         }
 
         binding.frameLayoutContainer.addView(tMapView)
+        setTrackingMode(true)
+    }
+
+    private fun setTrackingMode(isTracking: Boolean) {
+        val manager = TMapGpsManager(requireContext())
+
+        if (isTracking) {
+            if (isLocationPermissionsGranted()) {
+
+            }
+        } else {
+            manager.setOnLocationChangeListener(null)
+        }
+    }
+
+    private fun isLocationPermissionsGranted(): Boolean {
+        val permissions = listOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
+        val deniedPermissions = permissions.filter { permission ->
+            checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_DENIED
+        }
+
+        if (deniedPermissions.isNotEmpty()) {
+            ActivityCompat.requestPermissions(requireActivity(), deniedPermissions.toTypedArray(), 100)
+        }
+
+        return permissions.any { permission ->
+            checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     override fun onDestroyView() {
