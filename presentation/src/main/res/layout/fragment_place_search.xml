@@ -45,10 +45,10 @@
                 android:id="@+id/text_input_edit_text_place_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:afterTextChanged="@{viewModel::afterTextChanged}"
                 android:hint="@string/location_address_search_text"
                 android:imeOptions="actionSearch"
-                android:inputType="text"
-                android:text="@={viewModel.searchKeyword}" />
+                android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

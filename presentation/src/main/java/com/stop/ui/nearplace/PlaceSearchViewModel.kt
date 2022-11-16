@@ -1,5 +1,6 @@
 package com.stop.ui.nearplace
 
+import android.text.Editable
 import androidx.lifecycle.*
 import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
@@ -15,46 +16,39 @@ class PlaceSearchViewModel @Inject constructor(
     private val getNearPlaceListUseCase: GetNearPlaceListUseCase
 ) : ViewModel() {
 
-    val searchKeyword = MutableLiveData("")
-
-    val nearPlaceList: LiveData<List<Place>> = Transformations.map(searchKeyword) { query ->
-        if (query.isNullOrBlank()) {
-            emptyList()
-        } else {
-            getNearPlaceList(
-                query,
-                126.96965F,
-                37.55383F,
-                BuildConfig.TMAP_APP_KEY
-            )
-        }
-    }
+    private val _nearPlaceList = MutableLiveData<List<Place>>()
+    val nearPlaceList : LiveData<List<Place>> = _nearPlaceList
 
     private val _errorMessage = MutableStateFlow("")
     val errorMessage: StateFlow<String> = _errorMessage
 
-    private var result: List<Place>? = null
+    fun afterTextChanged(s: Editable?){
+        getNearPlaceList(
+            s.toString(),
+            126.96965F,
+            37.55383F
+        )
+    }
+
     private fun getNearPlaceList(
         searchKeyword: String,
         centerLon: Float,
-        centerLat: Float,
-        appKey: String
-    ): List<Place> {
+        centerLat: Float
+    ) {
         viewModelScope.launch {
             try {
-                result = getNearPlaceListUseCase.getNearPlaceList(
+                _nearPlaceList.postValue(getNearPlaceListUseCase.getNearPlaceList(
                     TMAP_VERSION,
                     searchKeyword,
                     centerLon,
                     centerLat,
-                    appKey
-                )
+                    BuildConfig.TMAP_APP_KEY
+                ))
             } catch (e: Exception) {
-                result = emptyList()
+                _nearPlaceList.postValue(emptyList())
                 _errorMessage.value = e.message ?: "something is wrong"
             }
         }
-        return result ?: emptyList()
     }
 
     companion object {
