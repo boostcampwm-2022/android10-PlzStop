@@ -186,5 +186,4 @@
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintBottom_toTopOf="@id/layout_panel"
         app:srcCompat="@drawable/ic_baseline_bookmarks_32" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
