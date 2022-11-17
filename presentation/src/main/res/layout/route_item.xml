@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:background="@drawable/round_border"
+        android:layout_marginBottom="16dp"
         android:layout_height="wrap_content">
 
         <TextView
@@ -74,6 +75,8 @@
             android:layout_marginTop="16dp"
             android:ellipsize="end"
             android:maxLines="3"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/text_view_arrival_time_text"
