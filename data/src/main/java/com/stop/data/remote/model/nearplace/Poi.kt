@@ -2,7 +2,6 @@ package com.stop.data.remote.model.nearplace
 
 import com.squareup.moshi.JsonClass
 import com.stop.data.model.nearplace.Place
-import com.stop.data.model.nearplace.RoadAddress
 
 @JsonClass(generateAdapter = true)
 data class Poi(
@@ -43,24 +42,13 @@ data class Poi(
 ) {
 
     fun toRepositoryModel(): Place {
-        val roadAddressList = newAddressList.newAddress.map {
-            RoadAddress(
-                it.bldNo1,
-                it.bldNo2,
-                it.centerLat.toFloat(),
-                it.centerLon.toFloat(),
-                it.frontLat.toFloat(),
-                it.frontLon.toFloat(),
-                it.fullAddressRoad,
-                it.roadId,
-                it.roadName
-            )
-        }
-
+        val road = newAddressList.newAddress.firstOrNull()
         return Place(
-            name,
-            radius,
-            roadAddressList
+            name = name,
+            radius = radius,
+            fullAddressRoad = road?.fullAddressRoad ?: "",
+            centerLat = road?.centerLat?.toDouble() ?: 0.0,
+            centerLon = road?.centerLon?.toDouble() ?: 0.0
         )
     }
 

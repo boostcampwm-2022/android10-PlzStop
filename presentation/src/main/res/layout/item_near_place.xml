@@ -39,7 +39,7 @@
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@id/text_view_near_place_name"
             app:layout_constraintTop_toBottomOf="@id/text_view_near_place_name"
-            app:roadName="@{place.roadAddressList}"
+            app:roadName="@{place.fullAddressRoad}"
             tools:text="쑥고개로 2다길 1" />
 
         <TextView
