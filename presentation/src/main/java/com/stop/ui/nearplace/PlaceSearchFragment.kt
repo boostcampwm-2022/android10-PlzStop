@@ -10,9 +10,11 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +26,9 @@ class PlaceSearchFragment : Fragment() {
     private var _binding: FragmentPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val placeSearchViewModel: PlaceSearchViewModel by viewModels()
+    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+
+    private lateinit var nearPlaceAdapter: NearPlaceAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,13 +42,40 @@ class PlaceSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdapter()
+        buttonClick()
+        initBinding()
+        listenEditTextChange()
+        logErrorMessage()
+    }
+
+    private fun initAdapter(){
+        nearPlaceAdapter = NearPlaceAdapter()
+        binding.recyclerViewPlace.adapter = nearPlaceAdapter
+
+        nearPlaceAdapter.onItemClick = {
+            placeSearchViewModel.setClickPlace(it)
+            binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+        }
+    }
+
+    private fun buttonClick(){
+        with(binding){
+            textViewCurrentLocation.setOnClickListener {
+                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+            }
+
+            textViewSelectMap.setOnClickListener {
+                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+            }
+        }
+    }
+
+    private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = placeSearchViewModel
         }
-
-        listenEditTextChange()
-        logErrorMessage()
     }
 
     private fun listenEditTextChange() {

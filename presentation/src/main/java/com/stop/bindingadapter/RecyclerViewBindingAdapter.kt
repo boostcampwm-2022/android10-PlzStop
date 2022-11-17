@@ -7,11 +7,9 @@ import com.stop.ui.nearplace.NearPlaceAdapter
 
 @BindingAdapter("places")
 fun RecyclerView.setPlaces(places: List<Place>?) {
-    if (this.adapter == null) {
-        val adapter = NearPlaceAdapter()
-        this.adapter = adapter
+    this.adapter?.run {
+        if(this is NearPlaceAdapter){
+            this.submitList(places)
+        }
     }
-
-    val nearPlaceAdapter = this.adapter as NearPlaceAdapter
-    nearPlaceAdapter.submitList(places)
 }

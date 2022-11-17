@@ -25,6 +25,9 @@ class PlaceSearchViewModel @Inject constructor(
     private val eventChannel = Channel<String>()
     val errorMessage = eventChannel.receiveAsFlow()
 
+    private val _clickPlace = MutableLiveData<Place>()
+    val clickPlace : LiveData<Place> = _clickPlace
+
     fun afterTextChanged(s: Editable?) {
         if(s.toString().isBlank()){
             _nearPlaceList.postValue(emptyList())
@@ -58,6 +61,10 @@ class PlaceSearchViewModel @Inject constructor(
                 eventChannel.send(e.message ?: "something is wrong")
             }
         }
+    }
+
+    fun setClickPlace(place : Place){
+        _clickPlace.value = place
     }
 
     companion object {

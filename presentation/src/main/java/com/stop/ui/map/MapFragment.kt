@@ -3,6 +3,7 @@ package com.stop.ui.map
 import android.Manifest.permission
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,8 @@ import com.skt.tmap.TMapGpsManager
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.skt.tmap.TMapData
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
@@ -19,6 +22,7 @@ import com.skt.tmap.address.TMapAddressInfo
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
+import com.stop.ui.nearplace.PlaceSearchViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,8 +30,11 @@ import kotlinx.coroutines.withContext
 
 
 class MapFragment : Fragment() {
+
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
+
+    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMapView: TMapView
     private var isTracking = true
@@ -48,10 +55,22 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner){
+            Log.e("ABC",it.toString())
+        }
+
+        buttonClick()
         initView()
         initTMap()
         clickLocation()
         clickMap()
+    }
+
+    private fun buttonClick() {
+        binding.textViewSearch.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
+        }
     }
 
     private fun setMapUIVisibility() {
