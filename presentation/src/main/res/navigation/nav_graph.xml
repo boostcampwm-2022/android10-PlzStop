@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/placeSearchFragment">
+
+    <fragment
+        android:id="@+id/placeSearchFragment"
+        android:name="com.stop.ui.nearplace.PlaceSearchFragment"
+        android:label="fragment_place_search"
+        tools:layout="@layout/fragment_place_search" />
+</navigation>
