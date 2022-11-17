@@ -63,28 +63,26 @@ class MapFragment : Fragment() {
     private fun initTMap() {
         tMapView = TMapView(requireContext())
         tMapView.setSKTMapApiKey(T_MAP_API_KEY)
-
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
+            setTrackingMode()
         }
-
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
         }
 
         binding.frameLayoutContainer.addView(tMapView)
-        setTrackingMode()
     }
 
     private fun setTrackingMode() {
         if (isLocationPermissionsGranted()) {
             val manager = TMapGpsManager(requireContext()).apply {
-                this.minDistance = 2.5F
-                this.provider = TMapGpsManager.PROVIDER_GPS
-                this.openGps()
-                this.provider = TMapGpsManager.PROVIDER_NETWORK
-                this.openGps()
+                minDistance = 2.5F
+                provider = TMapGpsManager.PROVIDER_GPS
+                openGps()
+                provider = TMapGpsManager.PROVIDER_NETWORK
+                openGps()
             }
 
             manager.setOnLocationChangeListener(onLocationChangeListener)
@@ -109,9 +107,9 @@ class MapFragment : Fragment() {
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null) {
             val marker = TMapMarkerItem().apply {
-                this.id = "marker_person_pin"
-                this.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_pin)?.toBitmap()
-                this.setTMapPoint(location.latitude, location.longitude)
+                id = "marker_person_pin"
+                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_pin)?.toBitmap()
+                setTMapPoint(location.latitude, location.longitude)
             }
 
             tMapView.removeTMapMarkerItem("marker_person_pin")
