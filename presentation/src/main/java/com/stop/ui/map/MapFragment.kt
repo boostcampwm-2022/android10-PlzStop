@@ -1,7 +1,6 @@
 package com.stop.ui.map
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,6 @@ import com.skt.tmap.address.TMapAddressInfo
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
-import com.stop.model.Location
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,7 +26,8 @@ class MapFragment : Fragment() {
 
     private lateinit var tMapView: TMapView
     private var pressUpPoint = TMapPoint()
-    private var lastMarker: Location = NONE_LOCATION
+    private var lastMarker = NONE_LOCATION
+    private var mapUIVisibility = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,21 +48,35 @@ class MapFragment : Fragment() {
         clickMap()
     }
 
+    private fun setMapUIVisibility() {
+        with(binding) {
+            if (mapUIVisibility) {
+                textViewSearch.visibility = View.VISIBLE
+                imageViewCompassMode.visibility = View.VISIBLE
+                imageViewCurrentLocation.visibility = View.VISIBLE
+                imageViewBookmark.visibility = View.VISIBLE
+
+            } else {
+                textViewSearch.visibility = View.GONE
+                imageViewCompassMode.visibility = View.GONE
+                imageViewCurrentLocation.visibility = View.GONE
+                imageViewBookmark.visibility = View.GONE
+            }
+        }
+    }
+
     private fun equals(point1: TMapPoint, point2: TMapPoint): Boolean {
         return point1.latitude == point2.latitude && point2.longitude == point2.longitude
     }
 
     private fun clickMap() {
         tMapView.setOnDisableScrollWithZoomLevelListener { _, centerPoint ->
-            if (equals(centerPoint, pressUpPoint)) {
-                binding.layoutPanel.visibility = binding.layoutPanel.visibility.run {
-                    if (this == View.GONE && lastMarker != NONE_LOCATION) {
-                        makeMarker(R.drawable.ic_baseline_location_on_32, lastMarker)
-                        View.VISIBLE
-                    } else {
-                        tMapView.removeTMapMarkerItem(MARKER)
-                        View.GONE
-                    }
+            if (equals(centerPoint, pressUpPoint) || equals(pressUpPoint, NONE_LOCATION)) {
+                if (binding.layoutPanel.visibility == View.VISIBLE) {
+                    binding.layoutPanel.visibility = View.GONE
+                } else {
+                    setMapUIVisibility()
+                    mapUIVisibility = mapUIVisibility.not()
                 }
             }
             pressUpPoint = centerPoint
@@ -72,7 +85,7 @@ class MapFragment : Fragment() {
 
     private fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
-            lastMarker = Location(tMapPoint.latitude, tMapPoint.longitude)
+            lastMarker = TMapPoint(tMapPoint.latitude, tMapPoint.longitude)
             makeMarker(
                 R.drawable.ic_baseline_location_on_32,
                 lastMarker
@@ -88,8 +101,7 @@ class MapFragment : Fragment() {
             lateinit var lotAddressInfo: TMapAddressInfo
             lateinit var roadAddressInfo: TMapAddressInfo
             withContext(Dispatchers.IO) {
-                lotAddressInfo =
-                    TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, LOT_ADDRESS_TYPE)
+                lotAddressInfo = TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, LOT_ADDRESS_TYPE)
                 roadAddressInfo =
                     TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, ROAD_ADDRESS_TYPE)
             }
@@ -107,7 +119,6 @@ class MapFragment : Fragment() {
             textViewTitle.text = roadAddressInfo.strBuildingName
             textViewLotAddress.text = lotAddressInfo.strFullAddress
             textViewRoadAddress.text = roadAddressInfo.strFullAddress.replace(roadAddressInfo.strBuildingName, "")
-
             layoutPanel.visibility = View.VISIBLE
         }
     }
@@ -120,7 +131,7 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun makeMarker(icon: Int, location: Location) {
+    private fun makeMarker(icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem()
         marker.id = MARKER
         marker.icon = ContextCompat.getDrawable(
@@ -167,6 +178,6 @@ class MapFragment : Fragment() {
         private const val MARKER = "marker"
         private const val LOT_ADDRESS_TYPE = "A02"
         private const val ROAD_ADDRESS_TYPE = "A04"
-        private val NONE_LOCATION = Location(0.0, 0.0)
+        private val NONE_LOCATION = TMapPoint(0.0, 0.0)
     }
 }
