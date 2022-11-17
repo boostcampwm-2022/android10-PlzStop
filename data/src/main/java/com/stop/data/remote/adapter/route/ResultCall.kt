@@ -5,20 +5,20 @@ import okio.Timeout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import com.stop.data.remote.model.Result
+import com.stop.data.remote.model.NetworkResult
 import java.io.IOException
 
-class ResultCall<T : Any>(private val call: Call<T>) : Call<Result<T>> {
+class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
 
-    override fun clone(): Call<Result<T>> {
+    override fun clone(): Call<NetworkResult<T>> {
         return ResultCall(call.clone())
     }
 
-    override fun execute(): Response<Result<T>> {
+    override fun execute(): Response<NetworkResult<T>> {
         throw UnsupportedOperationException(EXECUTE_IS_NOT_SUPPORTED)
     }
 
-    override fun enqueue(callback: Callback<Result<T>>) {
+    override fun enqueue(callback: Callback<NetworkResult<T>>) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
                 if (response.isSuccessful) {
@@ -26,19 +26,19 @@ class ResultCall<T : Any>(private val call: Call<T>) : Call<Result<T>> {
                     if (responseBody == null) {
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(Result.Unexpected(Throwable(SUCCESS_BUT_BODY_IS_NULL)))
+                            Response.success(NetworkResult.Unexpected(Throwable(SUCCESS_BUT_BODY_IS_NULL)))
                         )
                         return
                     }
                     callback.onResponse(
                         this@ResultCall,
-                        Response.success(Result.Success(responseBody))
+                        Response.success(NetworkResult.Success(responseBody))
                     )
                 } else {
                     callback.onResponse(
                         this@ResultCall,
                         Response.success(
-                            Result.Failure(
+                            NetworkResult.Failure(
                                 response.code(),
                                 response.errorBody()?.string()
                             )
@@ -49,8 +49,8 @@ class ResultCall<T : Any>(private val call: Call<T>) : Call<Result<T>> {
 
             override fun onFailure(call: Call<T>, t: Throwable) {
                 val networkResponse = when (t) {
-                    is IOException -> Result.NetworkError(t)
-                    else -> Result.Unexpected(t)
+                    is IOException -> NetworkResult.NetworkError(t)
+                    else -> NetworkResult.Unexpected(t)
                 }
                 callback.onResponse(this@ResultCall, Response.success(networkResponse))
             }

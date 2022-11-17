@@ -5,17 +5,17 @@ import retrofit2.CallAdapter
 import retrofit2.Retrofit
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-import com.stop.data.remote.model.Result
+import com.stop.data.remote.model.NetworkResult
 
 class ResultCallAdapter<R : Any>(
     private val responseType: Type
-) : CallAdapter<R, Call<Result<R>>> {
+) : CallAdapter<R, Call<NetworkResult<R>>> {
 
     override fun responseType(): Type {
         return responseType
     }
 
-    override fun adapt(call: Call<R>): Call<Result<R>> {
+    override fun adapt(call: Call<R>): Call<NetworkResult<R>> {
         return ResultCall(call)
     }
 
@@ -35,7 +35,7 @@ class ResultCallAdapter<R : Any>(
 
             val responseType = getParameterUpperBound(0, returnType)
 
-            if (getRawType(responseType) != Result::class.java) {
+            if (getRawType(responseType) != NetworkResult::class.java) {
                 return null
             }
 
