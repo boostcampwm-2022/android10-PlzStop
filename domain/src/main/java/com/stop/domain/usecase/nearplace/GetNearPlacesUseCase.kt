@@ -1,6 +1,7 @@
 package com.stop.domain.usecase.nearplace
 
 import com.stop.domain.model.nearplace.Place
+import kotlinx.coroutines.flow.Flow
 
 interface GetNearPlacesUseCase {
 
@@ -10,6 +11,6 @@ interface GetNearPlacesUseCase {
         centerLon: Float,
         centerLat: Float,
         appKey: String
-    ) : List<Place>
+    ) : Flow<List<Place>>
 
 }

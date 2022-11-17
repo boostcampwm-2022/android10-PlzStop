@@ -10,7 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.stop.R
@@ -24,7 +24,7 @@ class PlaceSearchFragment : Fragment() {
     private var _binding: FragmentPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val placeSearchViewModel: PlaceSearchViewModel by viewModels()
+    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var nearPlaceAdapter: NearPlaceAdapter
 
@@ -51,7 +51,9 @@ class PlaceSearchFragment : Fragment() {
         binding.recyclerViewPlace.adapter = nearPlaceAdapter
 
         nearPlaceAdapter.onItemClick = {
-            //Navigation
+            placeSearchViewModel.setClickPlace(it)
+            Log.e("ABC", it.toString())
+            // TODO Navigation
         }
     }
 
@@ -64,7 +66,7 @@ class PlaceSearchFragment : Fragment() {
 
     private fun listenEditTextChange() {
         with(binding) {
-            textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
+            textInputEditTextPlaceSearch.setOnFocusChangeListener { _, hasFocus ->
                 if (!hasFocus) {
                     hideKeyBoard()
                 }

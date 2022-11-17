@@ -8,8 +8,10 @@ import androidx.lifecycle.viewModelScope
 import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.model.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,16 +27,19 @@ class PlaceSearchViewModel @Inject constructor(
     private val eventChannel = Channel<String>()
     val errorMessage = eventChannel.receiveAsFlow()
 
-    fun afterTextChanged(s: Editable?) {
-        if(s.toString().isBlank()){
-            _nearPlaceList.postValue(emptyList())
-        }
+    private val _clickPlace = MutableLiveData<Event<Place>>()
+    val clickPlace: LiveData<Event<Place>> = _clickPlace
 
+    fun afterTextChanged(s: Editable?) {
         getNearPlaces(
             s.toString(),
             126.96965F,
             37.55383F
         )
+
+        if (s.toString().isBlank()) {
+            _nearPlaceList.postValue(emptyList())
+        }
     }
 
     private fun getNearPlaces(
@@ -44,20 +49,28 @@ class PlaceSearchViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                _nearPlaceList.postValue(
-                    getNearPlacesUseCase.getNearPlaces(
-                        TMAP_VERSION,
-                        searchKeyword,
-                        centerLon,
-                        centerLat,
-                        BuildConfig.TMAP_APP_KEY
-                    )
-                )
+                getNearPlacesUseCase.getNearPlaces(
+                    TMAP_VERSION,
+                    searchKeyword,
+                    centerLon,
+                    centerLat,
+                    BuildConfig.TMAP_APP_KEY
+                ).collectLatest {
+                    _nearPlaceList.postValue(it)
+                }
             } catch (e: Exception) {
-                _nearPlaceList.postValue(emptyList())
+                setNearPlaceListEmpty()
                 eventChannel.send(e.message ?: "something is wrong")
             }
         }
+    }
+
+    fun setNearPlaceListEmpty() {
+        _nearPlaceList.postValue(emptyList())
+    }
+
+    fun setClickPlace(place: Place) {
+        _clickPlace.postValue(Event(place))
     }
 
     companion object {
