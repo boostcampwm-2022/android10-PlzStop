@@ -26,6 +26,8 @@ class PlaceSearchFragment : Fragment() {
 
     private val placeSearchViewModel: PlaceSearchViewModel by viewModels()
 
+    private lateinit var nearPlaceAdapter: NearPlaceAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,13 +40,26 @@ class PlaceSearchFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initAdapter()
+        initBinding()
+        listenEditTextChange()
+        logErrorMessage()
+    }
+
+    private fun initAdapter() {
+        nearPlaceAdapter = NearPlaceAdapter()
+        binding.recyclerViewPlace.adapter = nearPlaceAdapter
+
+        nearPlaceAdapter.onItemClick = {
+            //Navigation
+        }
+    }
+
+    private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = placeSearchViewModel
         }
-
-        listenEditTextChange()
-        logErrorMessage()
     }
 
     private fun listenEditTextChange() {

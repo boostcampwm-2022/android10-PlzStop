@@ -10,6 +10,8 @@ import com.stop.domain.model.nearplace.Place
 
 class NearPlaceAdapter : ListAdapter<Place, NearPlaceAdapter.ViewHolder>(diffUtil) {
 
+    var onItemClick: ((Place) -> Unit)? = null
+
     class ViewHolder(private val binding: ItemNearPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(place: Place) {
             binding.place = place
@@ -22,6 +24,9 @@ class NearPlaceAdapter : ListAdapter<Place, NearPlaceAdapter.ViewHolder>(diffUti
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
+        holder.itemView.setOnClickListener {
+            onItemClick?.invoke(currentList[holder.adapterPosition])
+        }
     }
 
     companion object {
