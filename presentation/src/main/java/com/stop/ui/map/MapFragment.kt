@@ -1,14 +1,12 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
-import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.ActivityCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.skt.tmap.TMapGpsManager
@@ -51,6 +49,7 @@ class MapFragment : Fragment() {
         }
 
         binding.imageViewCurrentLocation.setOnClickListener {
+            requestPermissionsLauncher.launch(PERMISSIONS)
             tMapView.setCenterPoint(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude, true)
             isTracking = true
         }
@@ -66,7 +65,7 @@ class MapFragment : Fragment() {
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
-            setTrackingMode()
+            requestPermissionsLauncher.launch(PERMISSIONS)
         }
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
@@ -76,31 +75,22 @@ class MapFragment : Fragment() {
     }
 
     private fun setTrackingMode() {
-        if (isLocationPermissionsGranted()) {
-            val manager = TMapGpsManager(requireContext()).apply {
-                minDistance = 2.5F
-                provider = TMapGpsManager.PROVIDER_GPS
-                openGps()
-                provider = TMapGpsManager.PROVIDER_NETWORK
-                openGps()
-            }
-
-            manager.setOnLocationChangeListener(onLocationChangeListener)
+        val manager = TMapGpsManager(requireContext()).apply {
+            minDistance = 2.5F
+            provider = TMapGpsManager.PROVIDER_GPS
+            openGps()
+            provider = TMapGpsManager.PROVIDER_NETWORK
+            openGps()
         }
+
+        manager.setOnLocationChangeListener(onLocationChangeListener)
     }
 
-    private fun isLocationPermissionsGranted(): Boolean {
-        val permissions = listOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
-        val deniedPermissions = permissions.filter { permission ->
-            checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_DENIED
-        }
-
-        if (deniedPermissions.isNotEmpty()) {
-            ActivityCompat.requestPermissions(requireActivity(), deniedPermissions.toTypedArray(), 100)
-        }
-
-        return permissions.any { permission ->
-            checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.entries.any { it.value }) {
+            setTrackingMode()
         }
     }
 
@@ -129,5 +119,6 @@ class MapFragment : Fragment() {
 
     companion object {
         const val T_MAP_API_KEY = "l7xxc7cabdc0790f4cbeacd90982df581610"
+        val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
 }
