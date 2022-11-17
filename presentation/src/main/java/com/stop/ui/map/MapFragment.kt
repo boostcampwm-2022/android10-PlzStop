@@ -5,11 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.skt.tmap.TMapData
+import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.R
@@ -52,13 +52,21 @@ class MapFragment : Fragment() {
             )
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude)
 
-            CoroutineScope(Dispatchers.IO).launch {
-                val addressInfo = TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, "A04").strFullAddress
-                launch(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), addressInfo, Toast.LENGTH_SHORT).show()
-                }
-                Log.d("MainActivity","test하는중 $addressInfo")
+            setPanel(tMapPoint)
+        }
+    }
+
+    private fun setPanel(tMapPoint: TMapPoint) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val lotAddressInfo = TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, LOT_ADDRESS_TYPE)
+            val roadAddressInfo = TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, ROAD_ADDRESS_TYPE)
+
+            with(binding) {
+                textViewTitle.text = roadAddressInfo.strBuildingName
+                textViewLotAddress.text = lotAddressInfo.strFullAddress
+                textViewRoadAddress.text = roadAddressInfo.strFullAddress.split(roadAddressInfo.strBuildingName).first()
             }
+
         }
     }
 
@@ -66,7 +74,7 @@ class MapFragment : Fragment() {
         val marker = TMapMarkerItem()
         marker.id = id
         marker.icon = ContextCompat.getDrawable(
-            requireContext(),
+            requireActivity(),
             icon
         )?.toBitmap()
         marker.setTMapPoint(location.latitude, location.longitude)
@@ -105,7 +113,9 @@ class MapFragment : Fragment() {
     }
 
     companion object {
-        const val T_MAP_API_KEY = "l7xxc7cabdc0790f4cbeacd90982df581610"
-        const val MARKER = "marker"
+        private const val T_MAP_API_KEY = "l7xxc7cabdc0790f4cbeacd90982df581610"
+        private const val MARKER = "marker"
+        private const val LOT_ADDRESS_TYPE = "A02"
+        private const val ROAD_ADDRESS_TYPE = "A04"
     }
 }
