@@ -22,6 +22,7 @@ class MapFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var tMapView: TMapView
+    private var isTracking = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,7 +52,7 @@ class MapFragment : Fragment() {
 
         binding.imageViewCurrentLocation.setOnClickListener {
             tMapView.setCenterPoint(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude, true)
-            setTrackingMode(true)
+            isTracking = true
         }
 
         binding.imageViewBookmark.setOnClickListener {
@@ -62,25 +63,31 @@ class MapFragment : Fragment() {
     private fun initTMap() {
         tMapView = TMapView(requireContext())
         tMapView.setSKTMapApiKey(T_MAP_API_KEY)
+
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
         }
 
+        tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
+            isTracking = false
+        }
+
         binding.frameLayoutContainer.addView(tMapView)
-        setTrackingMode(true)
+        setTrackingMode()
     }
 
-    private fun setTrackingMode(isTracking: Boolean) {
-        val manager = TMapGpsManager(requireContext())
-
-        if (isTracking) {
-            if (isLocationPermissionsGranted()) {
-                setManagerDefaultOptions(manager)
-                manager.setOnLocationChangeListener(onLocationChangeListener)
+    private fun setTrackingMode() {
+        if (isLocationPermissionsGranted()) {
+            val manager = TMapGpsManager(requireContext()).apply {
+                this.minDistance = 2.5F
+                this.provider = TMapGpsManager.PROVIDER_GPS
+                this.openGps()
+                this.provider = TMapGpsManager.PROVIDER_NETWORK
+                this.openGps()
             }
-        } else {
-            manager.setOnLocationChangeListener(null)
+
+            manager.setOnLocationChangeListener(onLocationChangeListener)
         }
     }
 
@@ -99,14 +106,6 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun setManagerDefaultOptions(manager: TMapGpsManager) {
-        manager.minDistance = 2.5F
-        manager.provider = TMapGpsManager.PROVIDER_GPS
-        manager.openGps()
-        manager.provider = TMapGpsManager.PROVIDER_NETWORK
-        manager.openGps()
-    }
-
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null) {
             val marker = TMapMarkerItem().apply {
@@ -117,8 +116,11 @@ class MapFragment : Fragment() {
 
             tMapView.removeTMapMarkerItem("marker_person_pin")
             tMapView.addTMapMarkerItem(marker)
-            tMapView.setCenterPoint(location.latitude, location.longitude, true)
             tMapView.setLocationPoint(location.latitude, location.longitude)
+
+            if (isTracking) {
+                tMapView.setCenterPoint(location.latitude, location.longitude, true)
+            }
         }
     }
 
