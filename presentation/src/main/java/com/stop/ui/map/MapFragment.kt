@@ -14,6 +14,7 @@ import com.skt.tmap.address.TMapAddressInfo
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
+import com.stop.model.Location
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,7 +26,6 @@ class MapFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var tMapView: TMapView
-    private var pressUpPoint = TMapPoint()
     private var lastMarker = NONE_LOCATION
     private var mapUIVisibility = false
 
@@ -65,21 +65,23 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun equals(point1: TMapPoint, point2: TMapPoint): Boolean {
-        return point1.latitude == point2.latitude && point2.longitude == point2.longitude
-    }
-
     private fun clickMap() {
-        tMapView.setOnDisableScrollWithZoomLevelListener { _, centerPoint ->
-            if (equals(centerPoint, pressUpPoint) || equals(pressUpPoint, NONE_LOCATION)) {
+        val enablePoint = mutableSetOf<Location>()
+        tMapView.setOnEnableScrollWithZoomLevelListener { _, centerPoint ->
+            enablePoint.add(Location(centerPoint.latitude, centerPoint.longitude))
+        }
+
+        tMapView.setOnDisableScrollWithZoomLevelListener { _, _ ->
+            if (enablePoint.size == SAME_POINT) {
                 if (binding.layoutPanel.visibility == View.VISIBLE) {
                     binding.layoutPanel.visibility = View.GONE
+                    tMapView.removeTMapMarkerItem(MARKER)
                 } else {
                     setMapUIVisibility()
                     mapUIVisibility = mapUIVisibility.not()
                 }
             }
-            pressUpPoint = centerPoint
+            enablePoint.clear()
         }
     }
 
@@ -106,7 +108,6 @@ class MapFragment : Fragment() {
                     TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, ROAD_ADDRESS_TYPE)
             }
             setAddressInfo(lotAddressInfo, roadAddressInfo)
-            pressUpPoint = TMapPoint(tMapPoint.latitude, tMapPoint.longitude)
         }
     }
 
@@ -179,5 +180,6 @@ class MapFragment : Fragment() {
         private const val LOT_ADDRESS_TYPE = "A02"
         private const val ROAD_ADDRESS_TYPE = "A04"
         private val NONE_LOCATION = TMapPoint(0.0, 0.0)
+        private const val SAME_POINT = 1
     }
 }
