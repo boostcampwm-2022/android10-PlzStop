@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Plz Stop</string>
+    <string name="bookmark">즐겨찾기 추가</string>
+    <string name="start_location">출발지</string>
+    <string name="end_location">도착지</string>
 </resources>
