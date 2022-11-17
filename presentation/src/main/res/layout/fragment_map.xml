@@ -69,6 +69,7 @@
         android:background="@drawable/layout_location_panel"
         android:paddingHorizontal="8dp"
         android:paddingVertical="4dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
         app:layout_constraintEnd_toEndOf="@id/guideline_end"
         app:layout_constraintStart_toStartOf="@id/guideline_begin"
