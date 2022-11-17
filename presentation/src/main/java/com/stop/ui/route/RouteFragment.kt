@@ -22,6 +22,7 @@ class RouteFragment : Fragment() {
 
     private val args: RouteFragmentArgs by navArgs()
     private val viewModel: RouteViewModel by viewModels()
+    private val adapter = RouteAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +37,21 @@ class RouteFragment : Fragment() {
 
         setStartAndDestinationText()
         setDropDownMenu()
+        setRecyclerView()
+        setObserve()
+    }
+
+    private fun setRecyclerView() {
+        binding.recyclerviewRoute.adapter = adapter
+    }
+
+    private fun setObserve() {
+        viewModel.routeResponse.observe(viewLifecycleOwner) {
+            if (it == null) {
+                return@observe
+            }
+            adapter.submitList(it.itineraries)
+        }
     }
 
     private fun setDropDownMenu() {

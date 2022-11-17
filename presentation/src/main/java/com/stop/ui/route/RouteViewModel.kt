@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.RouteRequest
+import com.stop.domain.model.RouteResponse
 import com.stop.domain.usecase.GetRouteUseCase
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,10 @@ class RouteViewModel @Inject constructor(
     val destination: LiveData<Place>
         get() = _destination
 
+    private val _routeResponse = MutableLiveData<RouteResponse>()
+    val routeResponse: LiveData<RouteResponse>
+        get() = _routeResponse
+
     fun getRoute() {
         viewModelScope.launch {
             val originValue = _origin.value ?: return@launch
@@ -35,7 +40,7 @@ class RouteViewModel @Inject constructor(
                 endY = destinationValue.coordinate.longitude,
             )
 
-            val result = getRouteUseCase.getRoute(routeRequest)
+            _routeResponse.value = getRouteUseCase.getRoute(routeRequest)
         }
     }
 
