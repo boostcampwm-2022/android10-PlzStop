@@ -4,7 +4,7 @@ import com.stop.data.model.nearplace.Place
 
 interface NearPlaceRemoteDataSource {
 
-    suspend fun getNearPlaceList(
+    suspend fun getNearPlaces(
         version : Int,
         searchKeyword: String,
         centerLon: Float,

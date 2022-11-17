@@ -14,6 +14,8 @@ internal abstract class RemoteDataModule {
 
     @Binds
     @Singleton
-    abstract fun provideNearPlaceRemoteData(nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl): NearPlaceRemoteDataSource
+    abstract fun provideNearPlaceRemoteData(
+        nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl
+    ): NearPlaceRemoteDataSource
 
 }

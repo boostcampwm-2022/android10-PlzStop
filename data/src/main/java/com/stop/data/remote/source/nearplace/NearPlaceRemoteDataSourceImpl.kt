@@ -9,14 +9,14 @@ internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
     private val nearPlaceApiService: NearPlaceApiService
 ) : NearPlaceRemoteDataSource {
 
-    override suspend fun getNearPlaceList(
+    override suspend fun getNearPlaces(
         version: Int,
         searchKeyword: String,
         centerLon: Float,
         centerLat: Float,
         appKey: String
     ): List<Place> {
-        val result = nearPlaceApiService.getNearPlaceList(
+        val result = nearPlaceApiService.getNearPlaces(
             version,
             searchKeyword,
             centerLon,

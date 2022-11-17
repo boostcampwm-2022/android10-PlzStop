@@ -2,21 +2,20 @@ package com.stop.domain.usecase.nearplace
 
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.repository.NearPlaceRepository
-import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
 import javax.inject.Inject
 
-internal class GetNearPlaceListUseCaseImpl @Inject constructor(
+internal class GetNearPlacesUseCaseImpl @Inject constructor(
     private val nearPlaceRepository: NearPlaceRepository
-): GetNearPlaceListUseCase {
+): GetNearPlacesUseCase {
 
-    override suspend fun getNearPlaceList(
+    override suspend fun getNearPlaces(
         version: Int,
         searchKeyword: String,
         centerLon: Float,
         centerLat: Float,
         appKey: String
     ): List<Place> {
-        return nearPlaceRepository.getNearPlaceList(
+        return nearPlaceRepository.getNearPlaces(
             version,
             searchKeyword,
             centerLon,

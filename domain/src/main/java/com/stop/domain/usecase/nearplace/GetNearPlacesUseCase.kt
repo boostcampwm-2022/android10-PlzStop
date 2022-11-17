@@ -2,9 +2,9 @@ package com.stop.domain.usecase.nearplace
 
 import com.stop.domain.model.nearplace.Place
 
-interface GetNearPlaceListUseCase {
+interface GetNearPlacesUseCase {
 
-    suspend fun getNearPlaceList(
+    suspend fun getNearPlaces(
         version: Int,
         searchKeyword: String,
         centerLon: Float,

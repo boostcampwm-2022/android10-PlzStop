@@ -4,7 +4,7 @@ import com.stop.domain.model.nearplace.Place
 
 interface NearPlaceRepository {
 
-    suspend fun getNearPlaceList(
+    suspend fun getNearPlaces(
         version: Int,
         searchKeyword: String,
         centerLon: Float,

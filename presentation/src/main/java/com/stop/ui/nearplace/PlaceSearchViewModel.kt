@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
-import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
+import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaceSearchViewModel @Inject constructor(
-    private val getNearPlaceListUseCase: GetNearPlaceListUseCase
+    private val getNearPlacesUseCase: GetNearPlacesUseCase
 ) : ViewModel() {
 
     private val _nearPlaceList = MutableLiveData<List<Place>>()
@@ -30,14 +30,14 @@ class PlaceSearchViewModel @Inject constructor(
             _nearPlaceList.postValue(emptyList())
         }
 
-        getNearPlaceList(
+        getNearPlaces(
             s.toString(),
             126.96965F,
             37.55383F
         )
     }
 
-    private fun getNearPlaceList(
+    private fun getNearPlaces(
         searchKeyword: String,
         centerLon: Float,
         centerLat: Float
@@ -45,7 +45,7 @@ class PlaceSearchViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _nearPlaceList.postValue(
-                    getNearPlaceListUseCase.getNearPlaceList(
+                    getNearPlacesUseCase.getNearPlaces(
                         TMAP_VERSION,
                         searchKeyword,
                         centerLon,

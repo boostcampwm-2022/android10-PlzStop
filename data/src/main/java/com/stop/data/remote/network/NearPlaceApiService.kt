@@ -8,7 +8,7 @@ import retrofit2.http.Query
 interface NearPlaceApiService {
 
     @GET("/tmap/pois")
-    suspend fun getNearPlaceList(
+    suspend fun getNearPlaces(
         @Query("version") version: Int,
         @Query("searchKeyword") searchKeyword: String,
         @Query("centerLon") centerLon: Float,

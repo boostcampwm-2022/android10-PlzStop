@@ -1,7 +1,7 @@
 package com.stop.domain.di
 
-import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
-import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCaseImpl
+import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ internal abstract class UseCaseModule {
 
     @Binds
     @Singleton
-    abstract fun provideGetNearPlaceUseCase(getNearPlaceListUseCaseImpl: GetNearPlaceListUseCaseImpl): GetNearPlaceListUseCase
+    abstract fun provideGetNearPlaceUseCase(getNearPlacesUseCaseImpl: GetNearPlacesUseCaseImpl): GetNearPlacesUseCase
 
 }
