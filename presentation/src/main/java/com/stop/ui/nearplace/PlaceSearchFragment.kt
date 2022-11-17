@@ -2,6 +2,7 @@ package com.stop.ui.nearplace
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,9 +11,12 @@ import android.view.inputmethod.InputMethodManager
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class PlaceSearchFragment : Fragment() {
@@ -40,6 +44,7 @@ class PlaceSearchFragment : Fragment() {
         }
 
         listenEditTextChange()
+        logErrorMessage()
     }
 
     private fun listenEditTextChange() {
@@ -66,10 +71,28 @@ class PlaceSearchFragment : Fragment() {
         imm.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
     }
 
+    private fun logErrorMessage() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                placeSearchViewModel.errorMessage
+                    .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                    .collect {
+                        if (it.isNotBlank()) {
+                            Log.e(PLACE_SEARCH_FRAGMENT, it)
+                        }
+                    }
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
 
         _binding = null
+    }
+
+    companion object {
+        private const val PLACE_SEARCH_FRAGMENT = "PLACE_SEARCH_FRAGMENT"
     }
 
 }

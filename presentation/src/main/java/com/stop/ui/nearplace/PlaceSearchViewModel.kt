@@ -1,13 +1,16 @@
 package com.stop.ui.nearplace
 
 import android.text.Editable
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.nearplace.GetNearPlaceListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,12 +20,16 @@ class PlaceSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _nearPlaceList = MutableLiveData<List<Place>>()
-    val nearPlaceList : LiveData<List<Place>> = _nearPlaceList
+    val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
 
-    private val _errorMessage = MutableStateFlow("")
-    val errorMessage: StateFlow<String> = _errorMessage
+    private val eventChannel = Channel<String>()
+    val errorMessage = eventChannel.receiveAsFlow()
 
-    fun afterTextChanged(s: Editable?){
+    fun afterTextChanged(s: Editable?) {
+        if(s.toString().isBlank()){
+            _nearPlaceList.postValue(emptyList())
+        }
+
         getNearPlaceList(
             s.toString(),
             126.96965F,
@@ -37,16 +44,18 @@ class PlaceSearchViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                _nearPlaceList.postValue(getNearPlaceListUseCase.getNearPlaceList(
-                    TMAP_VERSION,
-                    searchKeyword,
-                    centerLon,
-                    centerLat,
-                    BuildConfig.TMAP_APP_KEY
-                ))
+                _nearPlaceList.postValue(
+                    getNearPlaceListUseCase.getNearPlaceList(
+                        TMAP_VERSION,
+                        searchKeyword,
+                        centerLon,
+                        centerLat,
+                        BuildConfig.TMAP_APP_KEY
+                    )
+                )
             } catch (e: Exception) {
                 _nearPlaceList.postValue(emptyList())
-                _errorMessage.value = e.message ?: "something is wrong"
+                eventChannel.send(e.message ?: "something is wrong")
             }
         }
     }
