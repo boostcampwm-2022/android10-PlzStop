@@ -58,10 +58,7 @@ class MapFragment : Fragment() {
             if (equals(centerPoint, pressUpPoint)) {
                 binding.layoutPanel.visibility = binding.layoutPanel.visibility.run {
                     if (this == View.GONE && lastMarker != NONE_LOCATION) {
-                        makeMarker(
-                            R.drawable.ic_baseline_location_on_32,
-                            lastMarker
-                        )
+                        makeMarker(R.drawable.ic_baseline_location_on_32, lastMarker)
                         View.VISIBLE
                     } else {
                         tMapView.removeTMapMarkerItem(MARKER)
@@ -96,14 +93,30 @@ class MapFragment : Fragment() {
                 roadAddressInfo =
                     TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, ROAD_ADDRESS_TYPE)
             }
-            with(binding) {
-                textViewTitle.text = roadAddressInfo.strBuildingName
-                textViewLotAddress.text = lotAddressInfo.strFullAddress
-                textViewRoadAddress.text =
-                    roadAddressInfo.strFullAddress.split(roadAddressInfo.strBuildingName).first()
-            }
-            binding.layoutPanel.visibility = View.VISIBLE
+            setAddressInfo(lotAddressInfo, roadAddressInfo)
             pressUpPoint = TMapPoint(tMapPoint.latitude, tMapPoint.longitude)
+        }
+    }
+
+    private fun setAddressInfo(lotAddressInfo: TMapAddressInfo, roadAddressInfo: TMapAddressInfo) {
+        with(binding) {
+            textViewTitle.visibility = setVisibility(roadAddressInfo.strBuildingName)
+            textViewLotAddress.visibility = setVisibility(lotAddressInfo.strFullAddress)
+            textViewRoadAddress.visibility = setVisibility(roadAddressInfo.strFullAddress)
+
+            textViewTitle.text = roadAddressInfo.strBuildingName
+            textViewLotAddress.text = lotAddressInfo.strFullAddress
+            textViewRoadAddress.text = roadAddressInfo.strFullAddress.replace(roadAddressInfo.strBuildingName, "")
+
+            layoutPanel.visibility = View.VISIBLE
+        }
+    }
+
+    private fun setVisibility(address: String): Int {
+        return if (address.isNotEmpty()) {
+            View.VISIBLE
+        } else {
+            View.GONE
         }
     }
 
