@@ -164,30 +164,27 @@
         android:id="@+id/image_view_compass_mode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="450dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintBottom_toTopOf="@id/image_view_current_location"
         app:srcCompat="@drawable/ic_compass" />
 
     <ImageView
         android:id="@+id/image_view_current_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_compass_mode"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintBottom_toTopOf="@id/image_view_bookmark"
         app:srcCompat="@drawable/ic_location" />
 
     <ImageView
         android:id="@+id/image_view_bookmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image_view_current_location"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        app:layout_constraintBottom_toTopOf="@id/layout_panel"
         app:srcCompat="@drawable/ic_baseline_bookmarks_32" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
