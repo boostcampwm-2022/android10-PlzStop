@@ -3,11 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/placeSearchFragment">
+    app:startDestination="@id/mapFragment">
 
     <fragment
         android:id="@+id/placeSearchFragment"
         android:name="com.stop.ui.nearplace.PlaceSearchFragment"
         android:label="fragment_place_search"
-        tools:layout="@layout/fragment_place_search" />
+        tools:layout="@layout/fragment_place_search" >
+        <action
+            android:id="@+id/action_placeSearchFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.stop.ui.map.MapFragment"
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_mapFragment_to_placeSearchFragment"
+            app:destination="@id/placeSearchFragment" />
+        <argument
+            android:name="currentLocation"
+            app:argType="string" />
+    </fragment>
 </navigation>
