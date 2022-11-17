@@ -28,8 +28,8 @@ internal object NetworkModule {
     private const val T_MAP_APP_KEY_VALUE = BuildConfig.T_MAP_APP_KEY
     private const val T_MAP_URL = "https://apis.openapi.sk.com/"
 
-    private const val TRANSPORT_URL = "transit/routes"
-    private const val FAKE_JSON_URL = "response.json"
+    private const val TRANSPORT_URI = "transit/routes"
+    private const val FAKE_JSON_URI = "response.json"
 
     @Provides
     fun provideOkHttpClient(
@@ -101,8 +101,8 @@ internal object NetworkModule {
 
     class FakeTmapInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
-            if (chain.request().url.toUri().toString().contains(TRANSPORT_URL)) {
-                val response = readJson(FAKE_JSON_URL)
+            if (chain.request().url.toUri().toString().contains(TRANSPORT_URI)) {
+                val response = readJson(FAKE_JSON_URI)
                 return chain.proceed(chain.request())
                     .newBuilder()
                     .code(200)
