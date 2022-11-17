@@ -28,6 +28,7 @@ class MapFragment : Fragment() {
 
     private lateinit var tMapView: TMapView
     private var pressUpPoint = TMapPoint()
+    private var lastMarker: Location = NONE_LOCATION
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,9 +57,14 @@ class MapFragment : Fragment() {
         tMapView.setOnDisableScrollWithZoomLevelListener { _, centerPoint ->
             if (equals(centerPoint, pressUpPoint)) {
                 binding.layoutPanel.visibility = binding.layoutPanel.visibility.run {
-                    if (this == View.GONE) {
+                    if (this == View.GONE && lastMarker != NONE_LOCATION) {
+                        makeMarker(
+                            R.drawable.ic_baseline_location_on_32,
+                            lastMarker
+                        )
                         View.VISIBLE
                     } else {
+                        tMapView.removeTMapMarkerItem(MARKER)
                         View.GONE
                     }
                 }
@@ -69,10 +75,10 @@ class MapFragment : Fragment() {
 
     private fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
+            lastMarker = Location(tMapPoint.latitude, tMapPoint.longitude)
             makeMarker(
-                MARKER,
                 R.drawable.ic_baseline_location_on_32,
-                Location(tMapPoint.latitude, tMapPoint.longitude)
+                lastMarker
             )
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
 
@@ -101,15 +107,15 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun makeMarker(id: String, icon: Int, location: Location) {
+    private fun makeMarker(icon: Int, location: Location) {
         val marker = TMapMarkerItem()
-        marker.id = id
+        marker.id = MARKER
         marker.icon = ContextCompat.getDrawable(
             requireActivity(),
             icon
         )?.toBitmap()
         marker.setTMapPoint(location.latitude, location.longitude)
-        tMapView.removeTMapMarkerItem(id)
+        tMapView.removeTMapMarkerItem(MARKER)
         tMapView.addTMapMarkerItem(marker)
     }
 
@@ -148,5 +154,6 @@ class MapFragment : Fragment() {
         private const val MARKER = "marker"
         private const val LOT_ADDRESS_TYPE = "A02"
         private const val ROAD_ADDRESS_TYPE = "A04"
+        private val NONE_LOCATION = Location(0.0, 0.0)
     }
 }
