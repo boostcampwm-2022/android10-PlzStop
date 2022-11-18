@@ -22,22 +22,23 @@ class PlaceSearchViewModel @Inject constructor(
     private val getNearPlacesUseCase: GetNearPlacesUseCase
 ) : ViewModel() {
 
+    var currentLocation = Location(0.0, 0.0)
+
     private val _nearPlaceList = MutableLiveData<List<Place>>()
     val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
-
-    private val eventChannel = Channel<String>()
-    val errorMessage = eventChannel.receiveAsFlow()
 
     private val _clickPlace = MutableLiveData<Event<Place>>()
     val clickPlace: LiveData<Event<Place>> = _clickPlace
 
-    var currentLocation = Location(0.0,0.0)
+    private val eventChannel = Channel<String>()
+    val errorMessage = eventChannel.receiveAsFlow()
+
 
     fun afterTextChanged(s: Editable?) {
         getNearPlaces(
             s.toString(),
-            126.96965F,
-            37.55383F
+            currentLocation.longitude,
+            currentLocation.latitude
         )
 
         if (s.toString().isBlank()) {
@@ -47,8 +48,8 @@ class PlaceSearchViewModel @Inject constructor(
 
     private fun getNearPlaces(
         searchKeyword: String,
-        centerLon: Float,
-        centerLat: Float
+        centerLon: Double,
+        centerLat: Double
     ) {
         viewModelScope.launch {
             try {
@@ -73,7 +74,7 @@ class PlaceSearchViewModel @Inject constructor(
     }
 
     fun setClickPlace(place: Place) {
-        _clickPlace.postValue(Event(place))
+        _clickPlace.value = Event(place)
     }
 
     companion object {

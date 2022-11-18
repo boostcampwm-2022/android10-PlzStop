@@ -8,8 +8,8 @@ interface NearPlaceRepository {
     suspend fun getNearPlaces(
         version: Int,
         searchKeyword: String,
-        centerLon: Float,
-        centerLat: Float,
+        centerLon: Double,
+        centerLat: Double,
         appKey: String
     ): Flow<List<Place>>
 

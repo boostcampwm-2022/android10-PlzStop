@@ -48,18 +48,19 @@ class PlaceSearchFragment : Fragment() {
         logErrorMessage()
     }
 
-    private fun initAdapter(){
+    private fun initAdapter() {
         nearPlaceAdapter = NearPlaceAdapter()
         binding.recyclerViewPlace.adapter = nearPlaceAdapter
 
         nearPlaceAdapter.onItemClick = {
             placeSearchViewModel.setClickPlace(it)
+            placeSearchViewModel.setNearPlaceListEmpty()
             binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
         }
     }
 
-    private fun buttonClick(){
-        with(binding){
+    private fun buttonClick() {
+        with(binding) {
             textViewCurrentLocation.setOnClickListener {
                 root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
