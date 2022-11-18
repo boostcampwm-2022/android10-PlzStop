@@ -68,4 +68,8 @@ dependencies {
 
     // LiveData
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+
+    // TMap SDK
+    implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
+    implementation files('libs/tmap-sdk-1.1.aar')
 }
