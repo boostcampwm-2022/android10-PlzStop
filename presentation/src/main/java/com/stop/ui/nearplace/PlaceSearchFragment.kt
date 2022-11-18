@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,19 +42,31 @@ class PlaceSearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initAdapter()
+        buttonClick()
         initBinding()
         listenEditTextChange()
         logErrorMessage()
     }
 
-    private fun initAdapter() {
+    private fun initAdapter(){
         nearPlaceAdapter = NearPlaceAdapter()
         binding.recyclerViewPlace.adapter = nearPlaceAdapter
 
         nearPlaceAdapter.onItemClick = {
             placeSearchViewModel.setClickPlace(it)
-            Log.e("ABC", it.toString())
-            // TODO Navigation
+            binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+        }
+    }
+
+    private fun buttonClick(){
+        with(binding){
+            textViewCurrentLocation.setOnClickListener {
+                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+            }
+
+            textViewSelectMap.setOnClickListener {
+                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+            }
         }
     }
 
@@ -67,7 +80,8 @@ class PlaceSearchFragment : Fragment() {
     private fun listenEditTextChange() {
         with(binding) {
             textInputEditTextPlaceSearch.setOnFocusChangeListener { _, hasFocus ->
-                if (!hasFocus) {
+
+                if (hasFocus.not()) {
                     hideKeyBoard()
                 }
             }
