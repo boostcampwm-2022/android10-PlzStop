@@ -27,11 +27,14 @@ class PlaceSearchViewModel @Inject constructor(
     private val _nearPlaceList = MutableLiveData<List<Place>>()
     val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
 
+    private val errorMessageChannel = Channel<String>()
+    val errorMessage = errorMessageChannel.receiveAsFlow()
+
     private val _clickPlace = MutableLiveData<Event<Place>>()
     val clickPlace: LiveData<Event<Place>> = _clickPlace
 
-    private val eventChannel = Channel<String>()
-    val errorMessage = eventChannel.receiveAsFlow()
+    private val clickCurrentLocationChannel = Channel<Boolean>()
+    val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
 
     fun afterTextChanged(s: Editable?) {
@@ -64,7 +67,7 @@ class PlaceSearchViewModel @Inject constructor(
                 }
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
-                eventChannel.send(e.message ?: "something is wrong")
+                errorMessageChannel.send(e.message ?: "something is wrong")
             }
         }
     }
@@ -75,6 +78,12 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun setClickPlace(place: Place) {
         _clickPlace.value = Event(place)
+    }
+
+    fun setClickCurrentLocation() {
+        viewModelScope.launch {
+            clickCurrentLocationChannel.send(true)
+        }
     }
 
     companion object {

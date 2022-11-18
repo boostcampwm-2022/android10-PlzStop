@@ -13,6 +13,11 @@
         <action
             android:id="@+id/action_mapFragment_to_placeSearchFragment"
             app:destination="@id/placeSearchFragment" />
+        <argument
+            android:name="currentLocation"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"/>
     </fragment>
     <fragment
         android:id="@+id/placeSearchFragment"
