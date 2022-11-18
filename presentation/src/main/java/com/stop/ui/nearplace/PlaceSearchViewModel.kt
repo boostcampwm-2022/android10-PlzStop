@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.stop.BuildConfig
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -27,6 +28,8 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val _clickPlace = MutableLiveData<Place>()
     val clickPlace : LiveData<Place> = _clickPlace
+
+    var currentLocation = Location(0.0,0.0)
 
     fun afterTextChanged(s: Editable?) {
         if(s.toString().isBlank()){

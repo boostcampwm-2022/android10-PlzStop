@@ -2,7 +2,6 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.skt.tmap.TMapData
+import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.address.TMapAddressInfo
@@ -25,7 +25,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
@@ -51,10 +50,6 @@ class MapFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner){
-            Log.e("ABC",it.toString())
-        }
 
         buttonClick()
         initView()
@@ -231,6 +226,7 @@ class MapFragment : Fragment() {
             tMapView.removeTMapMarkerItem("marker_person_pin")
             tMapView.addTMapMarkerItem(marker)
             tMapView.setLocationPoint(location.latitude, location.longitude)
+            placeSearchViewModel.currentLocation = Location(location.latitude, location.longitude)
 
             if (isTracking) {
                 tMapView.setCenterPoint(location.latitude, location.longitude, true)
