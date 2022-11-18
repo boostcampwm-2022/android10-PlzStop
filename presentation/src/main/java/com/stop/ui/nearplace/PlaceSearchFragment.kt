@@ -81,7 +81,7 @@ class PlaceSearchFragment : Fragment() {
     private fun listenEditTextChange() {
         with(binding) {
             textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
-                if (!hasFocus) {
+                if (hasFocus.not()) {
                     hideKeyBoard()
                 }
             }

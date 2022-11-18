@@ -40,8 +40,8 @@ android {
     }
 
     buildFeatures {
-        dataBinding true
         viewBinding true
+        dataBinding true
     }
 }
 
@@ -55,8 +55,12 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
     // Navigation Component
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
+    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+
+    // TMap SDK
+    implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
+    implementation files('libs/tmap-sdk-1.1.aar')
 
     //Hilt
     implementation 'com.google.dagger:hilt-android:2.44'

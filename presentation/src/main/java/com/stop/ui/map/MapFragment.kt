@@ -28,7 +28,6 @@ import kotlinx.coroutines.withContext
 
 
 class MapFragment : Fragment() {
-
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
@@ -238,7 +237,7 @@ class MapFragment : Fragment() {
             }
         }
     }
-
+    
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
