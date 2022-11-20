@@ -2,7 +2,6 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,7 +56,6 @@ class MapFragment : Fragment() {
         buttonClick()
         initView()
         initTMap()
-        Log.d("MapFrag", "맵 시작합니까?")
     }
 
     private fun buttonClick() {
@@ -204,21 +202,29 @@ class MapFragment : Fragment() {
     private fun initTMap() {
         tMapView = TMapView(requireContext())
         tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
-        Log.d("MapFragment", "이건 되나")
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
             requestPermissionsLauncher.launch(PERMISSIONS)
 
-            Log.d("MapFragment", "왜안됨")
-
             clickLocation()
             clickMap()
+            setBookmarkMarker()
 
             observeClickPlace()
             observeClickCurrentLocation()
         }
         binding.frameLayoutContainer.addView(tMapView)
+    }
+
+    private fun setBookmarkMarker() {
+        placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
+            makeMarker(
+                index.toString(),
+                R.drawable.ic_baseline_stars_32,
+                TMapPoint(location.latitude, location.longitude)
+            )
+        }
     }
 
     private fun setTrackingMode() {
@@ -261,16 +267,16 @@ class MapFragment : Fragment() {
     private fun observeClickPlace() {
         placeSearchViewModel.clickPlace.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { clickPlace ->
-                val clickTmapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
+                val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 
-                tMapView.setCenterPoint(clickTmapPoint.latitude, clickTmapPoint.longitude, true)
+                tMapView.setCenterPoint(clickTMapPoint.latitude, clickTMapPoint.longitude, true)
 
-                setPanel(clickTmapPoint)
+                setPanel(clickTMapPoint)
 
                 makeMarker(
                     MARKER,
                     R.drawable.ic_baseline_location_on_32,
-                    clickTmapPoint
+                    clickTMapPoint
                 )
             }
         }

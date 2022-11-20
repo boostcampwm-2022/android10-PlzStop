@@ -24,6 +24,8 @@ class PlaceSearchViewModel @Inject constructor(
 
     var currentLocation = Location(0.0, 0.0)
 
+    var bookmarks = mutableListOf(EXAMPLE_BOOKMARK_1, EXAMPLE_BOOKMARK_2, EXAMPLE_BOOKMARK_3)
+
     private val _nearPlaceList = MutableLiveData<List<Place>>()
     val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
 
@@ -35,7 +37,6 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
-
 
     fun afterTextChanged(s: Editable?) {
         getNearPlaces(
@@ -88,6 +89,10 @@ class PlaceSearchViewModel @Inject constructor(
 
     companion object {
         private const val TMAP_VERSION = 1
+        private val EXAMPLE_BOOKMARK_1 = Location(37.3931010, 126.9781449)
+        private val EXAMPLE_BOOKMARK_2 = Location(37.55063543842469, 127.07369927986392)
+        private val EXAMPLE_BOOKMARK_3 = Location(37.48450549635376, 126.89324337770405)
     }
+
 
 }
