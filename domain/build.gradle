@@ -14,4 +14,13 @@ dependencies {
     // Hilt
     implementation 'com.google.dagger:hilt-core:2.44'
     kapt 'com.google.dagger:hilt-compiler:2.44'
+
+    // moshi
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+
+    // network
+    implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
 }

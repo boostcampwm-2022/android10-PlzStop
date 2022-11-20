@@ -20,6 +20,8 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
+        buildConfigField "String", "OPEN_API_SEOUL_KEY", properties['open_api_seoul_key']
+        buildConfigField "String", "WS_BUS_KEY", properties['ws_bus_key']
     }
 
     buildTypes {
@@ -50,6 +52,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
 
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.44'
