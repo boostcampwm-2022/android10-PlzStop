@@ -67,19 +67,20 @@ class MapFragment : Fragment() {
     }
 
     private fun setMapUIVisibility() {
-        with(binding) {
-            if (mapUIVisibility) {
-                textViewSearch.visibility = View.VISIBLE
-                imageViewCompassMode.visibility = View.VISIBLE
-                imageViewCurrentLocation.visibility = View.VISIBLE
-                imageViewBookmark.visibility = View.VISIBLE
+        if (mapUIVisibility) {
+            setViewVisibility(View.VISIBLE)
 
-            } else {
-                textViewSearch.visibility = View.GONE
-                imageViewCompassMode.visibility = View.GONE
-                imageViewCurrentLocation.visibility = View.GONE
-                imageViewBookmark.visibility = View.GONE
-            }
+        } else {
+            setViewVisibility(View.GONE)
+        }
+    }
+
+    private fun setViewVisibility(visibility: Int) {
+        with(binding) {
+            textViewSearch.visibility = visibility
+            imageViewCompassMode.visibility = visibility
+            imageViewCurrentLocation.visibility = visibility
+            imageViewBookmark.visibility = visibility
         }
     }
 
@@ -116,7 +117,7 @@ class MapFragment : Fragment() {
     }
 
     private fun setPanel(tMapPoint: TMapPoint) {
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             lateinit var lotAddressInfo: TMapAddressInfo
             lateinit var roadAddressInfo: TMapAddressInfo
             withContext(Dispatchers.IO) {
