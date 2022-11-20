@@ -185,6 +185,14 @@ class MapFragment : Fragment() {
                 placeSearchViewModel.currentLocation.longitude,
                 true
             )
+            makeMarker(
+                PERSON_MARKER,
+                R.drawable.ic_person_pin,
+                TMapPoint(
+                    placeSearchViewModel.currentLocation.latitude,
+                    placeSearchViewModel.currentLocation.longitude
+                )
+            )
             isTracking = true
         }
 
