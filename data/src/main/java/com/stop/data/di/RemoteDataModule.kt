@@ -1,5 +1,7 @@
 package com.stop.data.di
 
+import com.stop.data.remote.source.geoLocation.GeoLocationRemoteDataSource
+import com.stop.data.remote.source.geoLocation.GeoLocationRemoteDataSourceImpl
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSourceImpl
 import dagger.Binds
@@ -17,5 +19,11 @@ internal abstract class RemoteDataModule {
     abstract fun provideNearPlaceRemoteData(
         nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl
     ): NearPlaceRemoteDataSource
+
+    @Binds
+    @Singleton
+    abstract fun provideGeoLocationRemoteDataSource(
+        geoLocationRemoteDataSourceImpl: GeoLocationRemoteDataSourceImpl
+    ): GeoLocationRemoteDataSource
 
 }

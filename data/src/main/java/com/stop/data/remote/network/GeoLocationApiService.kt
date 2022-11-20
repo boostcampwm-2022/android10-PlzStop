@@ -5,7 +5,7 @@ import com.stop.data.remote.model.geoLocation.geoLocation
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface GeoAddressApiService {
+interface GeoLocationApiService {
 
     @GET("/tmap/geo/reversegeocoding")
     suspend fun getLocationInfo(

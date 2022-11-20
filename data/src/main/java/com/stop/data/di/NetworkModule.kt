@@ -5,6 +5,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.remote.ResponseAdapterFactory
 import com.stop.data.remote.network.NearPlaceApiService
 import com.stop.data.BuildConfig
+import com.stop.data.remote.network.GeoLocationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,6 +62,12 @@ internal object NetworkModule {
     @Singleton
     fun providePlaceApiService(retrofit: Retrofit): NearPlaceApiService {
         return retrofit.create(NearPlaceApiService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGeoLocationApiService(retrofit: Retrofit): GeoLocationApiService {
+        return retrofit.create(GeoLocationApiService::class.java)
     }
 
 }
