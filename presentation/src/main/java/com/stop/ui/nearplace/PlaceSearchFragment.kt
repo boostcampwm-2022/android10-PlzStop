@@ -41,7 +41,7 @@ class PlaceSearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.e("ABC", placeSearchViewModel.currentLocation.toString())
         initAdapter()
         buttonClick()
         initBinding()
@@ -80,7 +80,7 @@ class PlaceSearchFragment : Fragment() {
 
     private fun listenEditTextChange() {
         with(binding) {
-            textInputEditTextPlaceSearch.setOnFocusChangeListener { v, hasFocus ->
+            textInputEditTextPlaceSearch.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus.not()) {
                     hideKeyBoard()
                 }
