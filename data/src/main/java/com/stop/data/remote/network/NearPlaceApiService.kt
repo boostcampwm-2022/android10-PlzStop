@@ -15,5 +15,4 @@ interface NearPlaceApiService {
         @Query("centerLat") centerLat: Double,
         @Query("appKey") appKey: String,
     ): NetworkResult<NearPlcaeResponse>
-
 }

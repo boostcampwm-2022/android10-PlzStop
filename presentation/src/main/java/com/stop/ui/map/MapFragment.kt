@@ -45,7 +45,6 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-        initBinding()
 
         return binding.root
     }
@@ -67,7 +66,6 @@ class MapFragment : Fragment() {
     private fun setMapUIVisibility() {
         if (mapUIVisibility) {
             setViewVisibility(View.VISIBLE)
-
         } else {
             setViewVisibility(View.GONE)
         }
@@ -165,10 +163,6 @@ class MapFragment : Fragment() {
 
         tMapView.removeTMapMarkerItem(MARKER)
         tMapView.addTMapMarkerItem(marker)
-    }
-
-    private fun initBinding() {
-        // TODO lifecycleOwner, viewModel 설정
     }
 
     private fun initView() {
@@ -289,16 +283,16 @@ class MapFragment : Fragment() {
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle)
                     .collect {
                         val currentLocation = placeSearchViewModel.currentLocation
-                        val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
+                        val currentTMapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
-                        tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
+                        tMapView.setCenterPoint(currentTMapPoint.latitude, currentTMapPoint.longitude)
 
-                        setPanel(currentTmapPoint)
+                        setPanel(currentTMapPoint)
 
                         makeMarker(
                             MARKER,
                             R.drawable.ic_baseline_location_on_32,
-                            currentTmapPoint
+                            currentTMapPoint
                         )
                     }
             }
