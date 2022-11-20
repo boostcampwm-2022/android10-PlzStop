@@ -2,6 +2,7 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -56,8 +57,7 @@ class MapFragment : Fragment() {
         buttonClick()
         initView()
         initTMap()
-        clickLocation()
-        clickMap()
+        Log.d("MapFrag", "맵 시작합니까?")
     }
 
     private fun buttonClick() {
@@ -180,7 +180,11 @@ class MapFragment : Fragment() {
 
         binding.imageViewCurrentLocation.setOnClickListener {
             requestPermissionsLauncher.launch(PERMISSIONS)
-            tMapView.setCenterPoint(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude, true)
+            tMapView.setCenterPoint(
+                placeSearchViewModel.currentLocation.latitude,
+                placeSearchViewModel.currentLocation.longitude,
+                true
+            )
             isTracking = true
         }
 
@@ -192,15 +196,20 @@ class MapFragment : Fragment() {
     private fun initTMap() {
         tMapView = TMapView(requireContext())
         tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
+        Log.d("MapFragment", "이건 되나")
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
             requestPermissionsLauncher.launch(PERMISSIONS)
 
+            Log.d("MapFragment", "왜안됨")
+
+            clickLocation()
+            clickMap()
+
             observeClickPlace()
             observeClickCurrentLocation()
         }
-
         binding.frameLayoutContainer.addView(tMapView)
     }
 
