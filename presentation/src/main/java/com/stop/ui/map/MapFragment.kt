@@ -22,6 +22,7 @@ import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
+import com.stop.model.AddressType
 import com.stop.model.Location
 import com.stop.ui.nearplace.PlaceSearchViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -120,9 +121,12 @@ class MapFragment : Fragment() {
             lateinit var lotAddressInfo: TMapAddressInfo
             lateinit var roadAddressInfo: TMapAddressInfo
             withContext(Dispatchers.IO) {
-                lotAddressInfo = TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, LOT_ADDRESS_TYPE)
+                lotAddressInfo = TMapData().reverseGeocoding(
+                    tMapPoint.latitude, tMapPoint.longitude,
+                    AddressType.LOT_ADDRESS.type
+                )
                 roadAddressInfo =
-                    TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, ROAD_ADDRESS_TYPE)
+                    TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, AddressType.ROAD_ADDRESS.type)
             }
             setAddressInfo(lotAddressInfo, roadAddressInfo)
         }
@@ -286,8 +290,6 @@ class MapFragment : Fragment() {
 
     companion object {
         private const val MARKER = "marker"
-        private const val LOT_ADDRESS_TYPE = "A02"
-        private const val ROAD_ADDRESS_TYPE = "A04"
         private const val SAME_POINT = 1
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
