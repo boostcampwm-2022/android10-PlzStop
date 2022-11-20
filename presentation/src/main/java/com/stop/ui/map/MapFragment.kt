@@ -2,7 +2,6 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.skt.tmap.TMapData
 import com.skt.tmap.TMapGpsManager
@@ -158,13 +159,8 @@ class MapFragment : Fragment() {
             this.tMapPoint = location
         }
 
-        try {
-            tMapView.removeTMapMarkerItem(MARKER)
-            tMapView.addTMapMarkerItem(marker)
-        }catch (e : Exception){
-            Log.e("ABC", e.printStackTrace().toString())
-        }
-
+        tMapView.removeTMapMarkerItem(MARKER)
+        tMapView.addTMapMarkerItem(marker)
     }
 
     private fun initBinding() {
@@ -196,6 +192,7 @@ class MapFragment : Fragment() {
             requestPermissionsLauncher.launch(PERMISSIONS)
 
             observeClickPlace()
+            observeClickCurrentLocation()
         }
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
@@ -256,6 +253,28 @@ class MapFragment : Fragment() {
                     R.drawable.ic_baseline_location_on_32,
                     clickTmapPoint
                 )
+            }
+        }
+    }
+
+    private fun observeClickCurrentLocation() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            launch {
+                placeSearchViewModel.clickCurrentLocation
+                    .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                    .collect {
+                        val currentLocation = placeSearchViewModel.currentLocation
+                        val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
+
+                        tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
+
+                        setPanel(currentTmapPoint)
+
+                        makeMarker(
+                            R.drawable.ic_baseline_location_on_32,
+                            currentTmapPoint
+                        )
+                    }
             }
         }
     }

@@ -55,6 +55,7 @@ class PlaceSearchFragment : Fragment() {
         nearPlaceAdapter.onItemClick = {
             placeSearchViewModel.setClickPlace(it)
             placeSearchViewModel.setNearPlaceListEmpty()
+
             binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
         }
     }
@@ -62,11 +63,12 @@ class PlaceSearchFragment : Fragment() {
     private fun buttonClick() {
         with(binding) {
             textViewCurrentLocation.setOnClickListener {
-                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                placeSearchViewModel.setClickCurrentLocation()
+                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
 
             textViewSelectMap.setOnClickListener {
-                root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
         }
     }

@@ -1,19 +1,19 @@
 package com.stop.model
 
-open class Event<out T>(private val content : T){
+class Event<out T>(private val content: T) {
 
     var hasBeenHandled = false
         private set
 
-    fun getContentIfNotHandled() : T?{
-        return if (hasBeenHandled){
+    fun getContentIfNotHandled(): T? {
+        return if (hasBeenHandled) {
             null
-        }else {
+        } else {
             hasBeenHandled = true
             content
         }
     }
 
-    fun peekContent() : T = content
+    fun peekContent(): T = content
 
 }
