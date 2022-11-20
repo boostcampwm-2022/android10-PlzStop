@@ -17,7 +17,7 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): Flow<List<Place>> = flow<List<Place>> {
+    ): Flow<List<Place>> = flow {
         emit(
             nearPlaceRemoteDataSource.getNearPlaces(
                 version,
