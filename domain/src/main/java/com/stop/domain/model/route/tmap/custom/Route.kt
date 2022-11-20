@@ -1,4 +1,4 @@
-package com.stop.domain.model
+package com.stop.domain.model.route.tmap.custom
 
 interface Route {
 

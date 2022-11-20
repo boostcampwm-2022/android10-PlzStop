@@ -7,7 +7,7 @@
 
         <variable
             name="itinerary"
-            type="com.stop.domain.model.Itinerary" />
+            type="com.stop.domain.model.route.tmap.custom.Itinerary" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

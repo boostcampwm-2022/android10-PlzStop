@@ -1,6 +1,6 @@
-package com.stop.domain.model
+package com.stop.domain.model.route.tmap.custom
 
-data class PublicTransportRoute(
+data class SubwayRoute(
     override val distance: Double,
     override val end: Place,
     override val mode: MoveType,

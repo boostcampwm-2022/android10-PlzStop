@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.stop.databinding.RouteItemBinding
-import com.stop.domain.model.Itinerary
+import com.stop.domain.model.route.tmap.custom.Itinerary
 
 class RouteAdapter : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
 

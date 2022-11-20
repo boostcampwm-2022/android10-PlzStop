@@ -1,4 +1,4 @@
-package com.stop.domain.model
+package com.stop.domain.model.route.tmap.custom
 
 enum class MoveType {
     WALK, BUS, SUBWAY, EXPRESSBUS, TRAIN, AIRPLANE, FERRY, TRANSFER;

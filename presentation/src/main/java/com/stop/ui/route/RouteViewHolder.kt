@@ -2,9 +2,9 @@ package com.stop.ui.route
 
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.databinding.RouteItemBinding
-import com.stop.domain.model.Itinerary
-import com.stop.domain.model.MoveType
-import com.stop.domain.model.PublicTransportRoute
+import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.model.route.tmap.custom.MoveType
+import com.stop.domain.model.route.tmap.custom.SubwayRoute
 import com.stop.util.TimeCalculator
 
 class RouteViewHolder(
@@ -21,7 +21,7 @@ class RouteViewHolder(
     private fun calculateExpectedRoute(itinerary: Itinerary): String {
         return itinerary.routes.joinToString(" -> ") { route ->
             when (route) {
-                is PublicTransportRoute -> {
+                is SubwayRoute -> {
                     when (route.mode) {
                         MoveType.SUBWAY -> "${route.routeInfo} ${route.start.name}역"
                         MoveType.BUS -> {

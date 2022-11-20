@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stop.domain.model.RouteRequest
-import com.stop.domain.model.RouteResponse
+import com.stop.domain.model.route.tmap.RouteRequest
+import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.usecase.GetRouteUseCase
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,8 +24,8 @@ class RouteViewModel @Inject constructor(
     val destination: LiveData<Place>
         get() = _destination
 
-    private val _routeResponse = MutableLiveData<RouteResponse>()
-    val routeResponse: LiveData<RouteResponse>
+    private val _routeResponse = MutableLiveData<List<Itinerary>>()
+    val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
     fun getRoute() {

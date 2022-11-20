@@ -50,7 +50,7 @@ class RouteFragment : Fragment() {
             if (it == null) {
                 return@observe
             }
-            adapter.submitList(it.itineraries)
+            adapter.submitList(it)
         }
     }
 
