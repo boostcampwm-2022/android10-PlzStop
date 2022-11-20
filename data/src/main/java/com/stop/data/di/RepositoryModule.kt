@@ -1,6 +1,8 @@
 package com.stop.data.di
 
+import com.stop.data.repository.GeoLocationRepositoryImpl
 import com.stop.data.repository.NearPlaceRepositoryImpl
+import com.stop.domain.repository.GeoLocationRepository
 import com.stop.domain.repository.NearPlaceRepository
 import dagger.Binds
 import dagger.Module
@@ -16,4 +18,7 @@ internal abstract class RepositoryModule {
     @Singleton
     abstract fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
 
+    @Binds
+    @Singleton
+    abstract fun provideGeoLocationRepository(geoLocationRepositoryImpl: GeoLocationRepositoryImpl): GeoLocationRepository
 }

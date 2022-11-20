@@ -22,7 +22,7 @@ import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
-import com.stop.model.AddressType
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.model.Location
 import com.stop.ui.nearplace.PlaceSearchViewModel
 import kotlinx.coroutines.Dispatchers

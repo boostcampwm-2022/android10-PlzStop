@@ -1,13 +1,14 @@
-package com.stop.data.remote.source.geoLocation
+package com.stop.domain.repository
 
-import com.stop.data.remote.model.geoLocation.AddressInfo
 import com.stop.domain.model.geoLocation.AddressType
+import com.stop.domain.model.geoLocation.GeoLocationInfo
 
-interface GeoLocationRemoteDataSource {
+interface GeoLocationRepository {
+
     suspend fun getGeoLocationInfo(
         appKey: String,
         addressType: AddressType,
         lat: String,
         lon: String
-    ): AddressInfo
+    ): GeoLocationInfo
 }

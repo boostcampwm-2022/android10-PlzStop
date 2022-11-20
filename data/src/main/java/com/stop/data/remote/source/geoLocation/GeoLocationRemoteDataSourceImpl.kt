@@ -1,23 +1,24 @@
 package com.stop.data.remote.source.geoLocation
 
 import com.stop.data.remote.model.NetworkResult
-import com.stop.data.remote.model.geoLocation.addressInfo
+import com.stop.data.remote.model.geoLocation.AddressInfo
 import com.stop.data.remote.network.GeoLocationApiService
+import com.stop.domain.model.geoLocation.AddressType
 import javax.inject.Inject
 
 class GeoLocationRemoteDataSourceImpl @Inject constructor(
     private val geoLocationApiService: GeoLocationApiService
 ) : GeoLocationRemoteDataSource {
-    
+
     override suspend fun getGeoLocationInfo(
         appKey: String,
-        addressType: String,
+        addressType: AddressType,
         lat: String,
         lon: String
-    ): addressInfo {
+    ): AddressInfo {
         val result = geoLocationApiService.getLocationInfo(
             appKey,
-            addressType,
+            addressType.type,
             lat,
             lon
         )
@@ -27,7 +28,7 @@ class GeoLocationRemoteDataSourceImpl @Inject constructor(
                 throw Exception(result.message)
             }
             is NetworkResult.Success -> {
-                return result.data?.addressInfo ?: addressInfo(
+                return result.data?.addressInfo ?: AddressInfo(
                     "",
                     "",
                     "",
