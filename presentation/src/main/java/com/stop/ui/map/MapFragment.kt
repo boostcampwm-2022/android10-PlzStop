@@ -88,6 +88,7 @@ class MapFragment : Fragment() {
         val enablePoint = mutableSetOf<Location>()
         tMapView.setOnEnableScrollWithZoomLevelListener { _, centerPoint ->
             enablePoint.add(Location(centerPoint.latitude, centerPoint.longitude))
+            isTracking = false
         }
 
         tMapView.setOnDisableScrollWithZoomLevelListener { _, _ ->
@@ -107,6 +108,7 @@ class MapFragment : Fragment() {
     private fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
             makeMarker(
+                MARKER,
                 R.drawable.ic_baseline_location_on_32,
                 tMapPoint
             )
@@ -153,9 +155,9 @@ class MapFragment : Fragment() {
         }
     }
 
-    private fun makeMarker(icon: Int, location: TMapPoint) {
+    private fun makeMarker(id: String, icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem().apply {
-            this.id = MARKER
+            this.id = id
             this.icon = ContextCompat.getDrawable(
                 requireContext(),
                 icon
@@ -198,9 +200,6 @@ class MapFragment : Fragment() {
             observeClickPlace()
             observeClickCurrentLocation()
         }
-        tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
-            isTracking = false
-        }
 
         binding.frameLayoutContainer.addView(tMapView)
     }
@@ -227,14 +226,12 @@ class MapFragment : Fragment() {
 
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null) {
-            val marker = TMapMarkerItem().apply {
-                id = "marker_person_pin"
-                icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_person_pin)?.toBitmap()
-                setTMapPoint(location.latitude, location.longitude)
-            }
+            makeMarker(
+                PERSON_MARKER,
+                R.drawable.ic_person_pin,
+                TMapPoint(location.latitude, location.longitude)
+            )
 
-            tMapView.removeTMapMarkerItem("marker_person_pin")
-            tMapView.addTMapMarkerItem(marker)
             tMapView.setLocationPoint(location.latitude, location.longitude)
             placeSearchViewModel.currentLocation = Location(location.latitude, location.longitude)
 
@@ -254,6 +251,7 @@ class MapFragment : Fragment() {
                 setPanel(clickTmapPoint)
 
                 makeMarker(
+                    MARKER,
                     R.drawable.ic_baseline_location_on_32,
                     clickTmapPoint
                 )
@@ -275,6 +273,7 @@ class MapFragment : Fragment() {
                         setPanel(currentTmapPoint)
 
                         makeMarker(
+                            MARKER,
                             R.drawable.ic_baseline_location_on_32,
                             currentTmapPoint
                         )
@@ -290,6 +289,7 @@ class MapFragment : Fragment() {
 
     companion object {
         private const val MARKER = "marker"
+        private const val PERSON_MARKER = "marker_person_pin"
         private const val SAME_POINT = 1
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
