@@ -2,6 +2,7 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.address.TMapAddressInfo
 import com.skt.tmap.overlay.TMapMarkerItem
+import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
@@ -34,7 +36,6 @@ class MapFragment : Fragment() {
 
     private lateinit var tMapView: TMapView
     private var isTracking = true
-    private var lastMarker = NONE_LOCATION
     private var mapUIVisibility = false
 
     override fun onCreateView(
@@ -103,13 +104,12 @@ class MapFragment : Fragment() {
 
     private fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
-            lastMarker = TMapPoint(tMapPoint.latitude, tMapPoint.longitude)
             makeMarker(
                 R.drawable.ic_baseline_location_on_32,
-                lastMarker
+                tMapPoint
             )
-            tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
 
+            tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
             setPanel(tMapPoint)
         }
     }
@@ -149,15 +149,22 @@ class MapFragment : Fragment() {
     }
 
     private fun makeMarker(icon: Int, location: TMapPoint) {
-        val marker = TMapMarkerItem()
-        marker.id = MARKER
-        marker.icon = ContextCompat.getDrawable(
-            requireActivity(),
-            icon
-        )?.toBitmap()
-        marker.setTMapPoint(location.latitude, location.longitude)
-        tMapView.removeTMapMarkerItem(MARKER)
-        tMapView.addTMapMarkerItem(marker)
+        val marker = TMapMarkerItem().apply {
+            this.id = MARKER
+            this.icon = ContextCompat.getDrawable(
+                requireContext(),
+                icon
+            )?.toBitmap()
+            this.tMapPoint = location
+        }
+
+        try {
+            tMapView.removeTMapMarkerItem(MARKER)
+            tMapView.addTMapMarkerItem(marker)
+        }catch (e : Exception){
+            Log.e("ABC", e.printStackTrace().toString())
+        }
+
     }
 
     private fun initBinding() {
@@ -182,11 +189,13 @@ class MapFragment : Fragment() {
 
     private fun initTMap() {
         tMapView = TMapView(requireContext())
-        tMapView.setSKTMapApiKey(T_MAP_API_KEY)
+        tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
         tMapView.setOnMapReadyListener {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
             requestPermissionsLauncher.launch(PERMISSIONS)
+
+            observeClickPlace()
         }
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
@@ -233,19 +242,34 @@ class MapFragment : Fragment() {
             }
         }
     }
-    
+
+    private fun observeClickPlace() {
+        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { clickPlace ->
+                val clickTmapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
+
+                tMapView.setCenterPoint(clickTmapPoint.latitude, clickTmapPoint.longitude, true)
+
+                setPanel(clickTmapPoint)
+
+                makeMarker(
+                    R.drawable.ic_baseline_location_on_32,
+                    clickTmapPoint
+                )
+            }
+        }
+    }
+
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
     }
 
     companion object {
-        private const val T_MAP_API_KEY = "l7xxc7cabdc0790f4cbeacd90982df581610"
         private const val MARKER = "marker"
         private const val LOT_ADDRESS_TYPE = "A02"
         private const val ROAD_ADDRESS_TYPE = "A04"
         private const val SAME_POINT = 1
-        private val NONE_LOCATION = TMapPoint(0.0, 0.0)
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
 }

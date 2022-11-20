@@ -4,15 +4,17 @@ import com.stop.domain.model.nearplace.Place
 
 data class Place(
     val name: String,
-    val radius : String,
-    val roadAddressList: List<RoadAddress>
+    val radius: String,
+    val fullAddressRoad: String,
+    val centerLat: Double,
+    val centerLon: Double
 ) {
 
     fun toUseCaseModel() = Place(
         name = name,
         radius = radius,
-        roadAddressList = roadAddressList.map {
-           it.toDomainRoadAddress()
-        }
+        fullAddressRoad = fullAddressRoad,
+        centerLat = centerLat,
+        centerLon = centerLon
     )
 }

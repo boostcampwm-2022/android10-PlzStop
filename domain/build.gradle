@@ -10,7 +10,10 @@ java {
 }
 
 dependencies {
-    //Hilt
+    // Hilt
     implementation 'com.google.dagger:hilt-core:2.44'
     kapt 'com.google.dagger:hilt-compiler:2.44'
+
+    // Flow
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 }

@@ -11,8 +11,8 @@ interface NearPlaceApiService {
     suspend fun getNearPlaces(
         @Query("version") version: Int,
         @Query("searchKeyword") searchKeyword: String,
-        @Query("centerLon") centerLon: Float,
-        @Query("centerLat") centerLat: Float,
+        @Query("centerLon") centerLon: Double,
+        @Query("centerLat") centerLat: Double,
         @Query("appKey") appKey: String,
     ): NetworkResult<NearPlcaeResponse>
 
