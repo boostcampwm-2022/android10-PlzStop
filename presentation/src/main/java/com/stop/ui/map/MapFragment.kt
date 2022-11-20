@@ -25,7 +25,6 @@ import com.stop.databinding.FragmentMapBinding
 import com.stop.model.AddressType
 import com.stop.model.Location
 import com.stop.ui.nearplace.PlaceSearchViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,7 +33,7 @@ class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels() //Todo 왜 activityViewModel?
 
     private lateinit var tMapView: TMapView
     private var isTracking = true
@@ -117,7 +116,7 @@ class MapFragment : Fragment() {
     }
 
     private fun setPanel(tMapPoint: TMapPoint) {
-        CoroutineScope(Dispatchers.Main).launch {
+        lifecycleScope.launch{
             lateinit var lotAddressInfo: TMapAddressInfo
             lateinit var roadAddressInfo: TMapAddressInfo
             withContext(Dispatchers.IO) {
