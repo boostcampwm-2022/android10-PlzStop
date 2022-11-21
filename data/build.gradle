@@ -20,8 +20,8 @@ android {
         consumerProguardFiles "consumer-rules.pro"
 
         buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
-        buildConfigField "String", "OPEN_API_SEOUL_KEY", properties['open_api_seoul_key']
-        buildConfigField "String", "WS_BUS_KEY", properties['ws_bus_key']
+        buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
+        buildConfigField "String", "BUS_KEY", properties['bus_key']
     }
 
     buildTypes {
