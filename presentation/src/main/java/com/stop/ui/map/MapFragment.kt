@@ -23,7 +23,7 @@ import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
-import com.stop.ui.nearplace.PlaceSearchViewModel
+import com.stop.ui.placesearch.PlaceSearchViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
