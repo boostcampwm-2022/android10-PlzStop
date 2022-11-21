@@ -7,6 +7,7 @@ import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.model.route.tmap.origin.Leg
 import com.stop.domain.repository.RouteRepository
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -158,6 +159,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private suspend fun getBusIdUsedAtPublicApi(
         station: com.stop.domain.model.route.tmap.origin.Station
     ): String {
+        delay(200) // 초당 처리 횟수를 초과하지 않기 위해 딜레이를 넣음
         val reverseGeocodingResponse =
             routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon))
         val arsId = when (reverseGeocodingResponse.addressInfo.city) {
