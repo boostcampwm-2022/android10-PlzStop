@@ -258,24 +258,22 @@ class MapFragment : Fragment() {
     }
 
     private fun observeClickCurrentLocation() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                placeSearchViewModel.clickCurrentLocation
-                    .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                    .collect {
-                        val currentLocation = placeSearchViewModel.currentLocation
-                        val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
+        lifecycleScope.launch {
+            placeSearchViewModel.clickCurrentLocation
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect {
+                    val currentLocation = placeSearchViewModel.currentLocation
+                    val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
-                        tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
+                    tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
 
-                        setPanel(currentTmapPoint)
+                    setPanel(currentTmapPoint)
 
-                        makeMarker(
-                            R.drawable.ic_baseline_location_on_32,
-                            currentTmapPoint
-                        )
-                    }
-            }
+                    makeMarker(
+                        R.drawable.ic_baseline_location_on_32,
+                        currentTmapPoint
+                    )
+                }
         }
     }
 

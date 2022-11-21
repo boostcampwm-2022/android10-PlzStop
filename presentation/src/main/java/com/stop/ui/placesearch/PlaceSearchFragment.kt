@@ -106,16 +106,15 @@ class PlaceSearchFragment : Fragment() {
     }
 
     private fun logErrorMessage() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                placeSearchViewModel.errorMessage
-                    .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                    .collect {
-                        if (it.isNotBlank()) {
-                            Log.e(PLACE_SEARCH_FRAGMENT, it)
-                        }
+        lifecycleScope.launch {
+
+            placeSearchViewModel.errorMessage
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect {
+                    if (it.isNotBlank()) {
+                        Log.e(PLACE_SEARCH_FRAGMENT, it)
                     }
-            }
+                }
         }
     }
 
