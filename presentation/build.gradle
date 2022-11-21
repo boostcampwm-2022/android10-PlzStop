@@ -23,7 +23,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
+        buildConfigField("String", "TMAP_APP_KEY", properties['t_map_app_key'])
         externalNativeBuild {
             cmake {
                 cppFlags ''
