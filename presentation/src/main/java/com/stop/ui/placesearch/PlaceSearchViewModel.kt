@@ -63,7 +63,7 @@ class PlaceSearchViewModel @Inject constructor(
                     centerLat,
                     BuildConfig.TMAP_APP_KEY
                 ).collectLatest {
-                    _nearPlaceList.postValue(it)
+                    _nearPlaceList.value = it
                 }
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
