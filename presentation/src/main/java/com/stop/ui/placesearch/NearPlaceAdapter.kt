@@ -1,4 +1,4 @@
-package com.stop.ui.nearplace
+package com.stop.ui.placesearch
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
