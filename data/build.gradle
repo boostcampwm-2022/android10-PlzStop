@@ -13,7 +13,6 @@ android {
     namespace 'com.stop.data'
     compileSdk 32
 
-
     defaultConfig {
         minSdk 24
         targetSdk 32
@@ -21,8 +20,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField "String", "TMAP_URL", properties['TMAP_URL']
-        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
+        buildConfigField "String", "TMAP_URL", properties['t_map_url']
+        buildConfigField("String", "TMAP_APP_KEY", properties['t_map_app_key'])
         buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
         buildConfigField "String", "BUS_KEY", properties['bus_key']
     }
