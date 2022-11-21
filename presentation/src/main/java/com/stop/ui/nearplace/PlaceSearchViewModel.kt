@@ -1,12 +1,15 @@
 package com.stop.ui.nearplace
 
 import android.text.Editable
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.BuildConfig
+import com.stop.domain.model.geoLocation.GeoLocationInfo
 import com.stop.domain.model.nearplace.Place
+import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.model.Event
 import com.stop.model.Location
@@ -19,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PlaceSearchViewModel @Inject constructor(
-    private val getNearPlacesUseCase: GetNearPlacesUseCase
+    private val getNearPlacesUseCase: GetNearPlacesUseCase,
+    private val geoLocationUseCase: GeoLocationUseCase
 ) : ViewModel() {
 
     var currentLocation = Location(0.0, 0.0)
@@ -37,6 +41,12 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
+
+    private val _geoLocation = MutableLiveData<GeoLocationInfo>()
+    val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
+
+    private val _panelVisibility = MutableLiveData(View.GONE)
+    val panelVisibility: LiveData<Int> = _panelVisibility
 
     fun afterTextChanged(s: Editable?) {
         getNearPlaces(
@@ -84,6 +94,13 @@ class PlaceSearchViewModel @Inject constructor(
     fun setClickCurrentLocation() {
         viewModelScope.launch {
             clickCurrentLocationChannel.send(true)
+        }
+    }
+
+    fun getGeoLocationInfo(lat: Double, lon: Double) {
+        viewModelScope.launch{
+            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(lat, lon)
+            _panelVisibility.value = View.VISIBLE
         }
     }
 

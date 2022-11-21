@@ -13,27 +13,22 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.skt.tmap.TMapData
 import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
-import com.skt.tmap.address.TMapAddressInfo
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
-import com.stop.domain.model.geoLocation.AddressType
 import com.stop.model.Location
 import com.stop.ui.nearplace.PlaceSearchViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class MapFragment : Fragment() {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels() //Todo 왜 activityViewModel?
+    private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMapView: TMapView
     private var isTracking = true
@@ -52,14 +47,29 @@ class MapFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        buttonClick()
+        initBinding()
+        clickSearchButton()
+        clickEndLocation()
         initView()
         initTMap()
     }
 
-    private fun buttonClick() {
+    private fun initBinding() {
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = placeSearchViewModel
+        }
+    }
+
+    private fun clickEndLocation() {
+        binding.textViewEndLocation.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_map_fragment_to_route_fragment)
+        }
+    }
+
+    private fun clickSearchButton() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
+            binding.root.findNavController().navigate(R.id.action_map_fragment_to_place_search_fragment)
         }
     }
 
@@ -87,6 +97,7 @@ class MapFragment : Fragment() {
             isTracking = false
         }
 
+        tMapView.zoomLevel
         tMapView.setOnDisableScrollWithZoomLevelListener { _, _ ->
             if (enablePoint.size == SAME_POINT) {
                 if (binding.layoutPanel.visibility == View.VISIBLE) {
@@ -115,40 +126,7 @@ class MapFragment : Fragment() {
     }
 
     private fun setPanel(tMapPoint: TMapPoint) {
-        lifecycleScope.launch {
-            lateinit var lotAddressInfo: TMapAddressInfo
-            lateinit var roadAddressInfo: TMapAddressInfo
-            withContext(Dispatchers.IO) {
-                lotAddressInfo = TMapData().reverseGeocoding(
-                    tMapPoint.latitude, tMapPoint.longitude,
-                    AddressType.LOT_ADDRESS.type
-                )
-                roadAddressInfo =
-                    TMapData().reverseGeocoding(tMapPoint.latitude, tMapPoint.longitude, AddressType.ROAD_ADDRESS.type)
-            }
-            setAddressInfo(lotAddressInfo, roadAddressInfo)
-        }
-    }
-
-    private fun setAddressInfo(lotAddressInfo: TMapAddressInfo, roadAddressInfo: TMapAddressInfo) {
-        with(binding) {
-            textViewTitle.visibility = setVisibility(roadAddressInfo.strBuildingName)
-            textViewLotAddress.visibility = setVisibility(lotAddressInfo.strFullAddress)
-            textViewRoadAddress.visibility = setVisibility(roadAddressInfo.strFullAddress)
-
-            textViewTitle.text = roadAddressInfo.strBuildingName
-            textViewLotAddress.text = lotAddressInfo.strFullAddress
-            textViewRoadAddress.text = roadAddressInfo.strFullAddress.replace(roadAddressInfo.strBuildingName, "")
-            layoutPanel.visibility = View.VISIBLE
-        }
-    }
-
-    private fun setVisibility(address: String): Int {
-        return if (address.isNotEmpty()) {
-            View.VISIBLE
-        } else {
-            View.GONE
-        }
+        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
     }
 
     private fun makeMarker(id: String, icon: Int, location: TMapPoint) {

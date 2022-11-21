@@ -19,7 +19,7 @@ class ResponseCall<T> constructor(
     override fun enqueue(callback: Callback<NetworkResult<T>>) = callDelegate.enqueue(object : Callback<T> {
         override fun onResponse(call: Call<T>, response: Response<T>) {
             if(response.code() == 204){
-                callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Error(errorMessage = "No Content Error")))
+                callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Failure(code = response.code(), message = "No Content Error")))
             }
 
             response.body()?.let {
@@ -31,8 +31,9 @@ class ResponseCall<T> constructor(
                     callback.onResponse(
                         this@ResponseCall,
                         Response.success(
-                            NetworkResult.Error(
-                                errorMessage = errorResponse?.error?.message ?: "Something went wrong"
+                            NetworkResult.Failure(
+                                code = response.code(),
+                                message = errorResponse?.error?.message ?: "Something went wrong"
                             )
                         )
                     )
@@ -43,13 +44,13 @@ class ResponseCall<T> constructor(
         override fun onFailure(call: Call<T>, t: Throwable) {
             when (t) {
                 is HttpException -> {
-                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Error(errorMessage = t.message ?: "HttpException Error")))
+                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.NetworkError(t as IOException)))
                 }
                 is IOException -> {
-                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Error(errorMessage = t.message ?: "IOException Error")))
+                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Unexpected(t)))
                 }
                 else -> {
-                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Error(errorMessage = t.message ?: "Something went wrong")))
+                    callback.onResponse(this@ResponseCall, Response.success(NetworkResult.Unexpected(t)))
                 }
             }
         }

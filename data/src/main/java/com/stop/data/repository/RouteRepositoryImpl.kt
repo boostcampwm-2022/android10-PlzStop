@@ -1,6 +1,7 @@
 package com.stop.data.repository
 
 import com.stop.data.remote.source.route.RouteRemoteDataSource
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -18,8 +19,8 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getRoute(routeRequest)
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate): ReverseGeocodingResponse {
-        return remoteDataSource.reverseGeocoding(coordinate)
+    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
+        return remoteDataSource.reverseGeocoding(coordinate, addressType)
     }
 
     override suspend fun getSubwayStationCd(stationId: String, stationName: String): String {

@@ -1,5 +1,6 @@
 package com.stop.domain.repository
 
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -10,7 +11,7 @@ import com.stop.domain.model.route.tmap.origin.RouteResponse
 interface RouteRepository {
 
     suspend fun getRoute(routeRequest: RouteRequest): RouteResponse
-    suspend fun reverseGeocoding(coordinate: Coordinate): ReverseGeocodingResponse
+    suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse
 
     suspend fun getSubwayStationCd(stationId: String, stationName: String): String
     suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse

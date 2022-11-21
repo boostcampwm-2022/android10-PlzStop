@@ -6,6 +6,7 @@ import com.stop.data.remote.network.ApisDataService
 import com.stop.data.remote.network.FakeTmapApiService
 import com.stop.data.remote.network.OpenApiSeoulService
 import com.stop.data.remote.network.WsBusApiService
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.SubwayStationResponse
@@ -44,8 +45,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate): ReverseGeocodingResponse {
-        with(fakeTmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude)) {
+    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
+        with(fakeTmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude, addressType = addressType.type)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
@@ -92,15 +93,15 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun createGyeonggiBusStationIdUrl(stationName: String): String {
-        return "$APIS_DATA_URL$GET_GYEONGGI_BUS_STATION_ID_URL?ServiceKey=${BuildConfig.WS_BUS_KEY}&keyword=$stationName"
+        return "$APIS_DATA_URL$GET_GYEONGGI_BUS_STATION_ID_URL?ServiceKey=${BuildConfig.BUS_KEY}&keyword=$stationName"
     }
 
     private fun createWsBusUrl(apiName: String, stationName: String): String {
-        return "$WS_BUS_URL$apiName?serviceKey=${BuildConfig.WS_BUS_KEY}&stSrch=$stationName&resultType=json"
+        return "$WS_BUS_URL$apiName?serviceKey=${BuildConfig.BUS_KEY}&stSrch=$stationName&resultType=json"
     }
 
     private fun createOpenApiSeoulUrl(stationName: String): String {
-        return "$OPEN_API_SEOUL_URL${BuildConfig.OPEN_API_SEOUL_KEY}/json/SearchInfoBySubwayNameService/1/5/$stationName/"
+        return "$OPEN_API_SEOUL_URL${BuildConfig.SUBWAY_KEY}/json/SearchInfoBySubwayNameService/1/5/$stationName/"
     }
 
     private fun findStationCd(stationId: String, data: SubwayStationResponse): String {

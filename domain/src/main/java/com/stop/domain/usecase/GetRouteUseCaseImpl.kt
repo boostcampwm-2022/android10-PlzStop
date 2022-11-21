@@ -1,6 +1,7 @@
 package com.stop.domain.usecase
 
 import com.squareup.moshi.JsonDataException
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
 import com.stop.domain.model.route.seoul.bus.BusStationInfo
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -154,8 +155,8 @@ internal class GetRouteUseCaseImpl @Inject constructor(
         station: com.stop.domain.model.route.tmap.origin.Station
     ): String {
         val reverseGeocodingResponse =
-            routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon))
-        val arsId = when (reverseGeocodingResponse.addressInfo.city) {
+            routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon), AddressType.LOT_ADDRESS)
+        val arsId = when (reverseGeocodingResponse.addressInfo.cityDo) {
             GYEONGGI_DO -> {
                 val busStations = routeRepository.getGyeonggiBusStationId(station.stationName).busStations
 

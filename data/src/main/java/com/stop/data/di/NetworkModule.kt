@@ -27,11 +27,11 @@ import javax.inject.Singleton
 internal object NetworkModule {
 
     private const val T_MAP_APP_KEY_NAME = "appKey"
-    private const val T_MAP_APP_KEY_VALUE = BuildConfig.T_MAP_APP_KEY
+    private const val T_MAP_APP_KEY_VALUE = BuildConfig.TMAP_APP_KEY
     private const val T_MAP_URL = "https://apis.openapi.sk.com/"
     private const val OPEN_API_SEOUL_URL = "http://openapi.seoul.go.kr:8088/"
     private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
-    private const val OPEN_API_SEOUL_KEY_VALUE = BuildConfig.OPEN_API_SEOUL_KEY
+    private const val OPEN_API_SEOUL_KEY_VALUE = BuildConfig.SUBWAY_KEY
     private const val T_MAP_ROUTE_URL = "transit/routes"
     private const val FAKE_JSON_URI = "response.json"
 

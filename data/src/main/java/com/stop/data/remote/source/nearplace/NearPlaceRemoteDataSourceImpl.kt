@@ -25,13 +25,19 @@ internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
         )
 
         when (result) {
-            is NetworkResult.Error -> {
+            is NetworkResult.Success -> {
+                return result.data.searchPoiInfo.pois.poi.map {
+                    it.toRepositoryModel()
+                }
+            }
+            is NetworkResult.Failure -> {
                 throw Exception(result.message)
             }
-            is NetworkResult.Success -> {
-                return result.data?.searchPoiInfo?.pois?.poi?.map {
-                    it.toRepositoryModel()
-                } ?: emptyList()
+            is NetworkResult.NetworkError -> {
+                throw result.exception
+            }
+            is NetworkResult.Unexpected -> {
+                throw result.exception
             }
         }
     }
