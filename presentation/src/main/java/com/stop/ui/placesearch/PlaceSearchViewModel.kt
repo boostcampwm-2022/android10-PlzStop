@@ -12,7 +12,8 @@ import com.stop.model.Event
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +25,8 @@ class PlaceSearchViewModel @Inject constructor(
 
     var currentLocation = Location(0.0, 0.0)
 
-    private val _nearPlaceList = MutableLiveData<List<Place>>()
-    val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
+    private val _nearPlaceList = MutableStateFlow<List<Place>>(emptyList())
+    val nearPlaceList: StateFlow<List<Place>> = _nearPlaceList
 
     private val errorMessageChannel = Channel<String>()
     val errorMessage = errorMessageChannel.receiveAsFlow()
@@ -36,7 +37,6 @@ class PlaceSearchViewModel @Inject constructor(
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
-
     fun afterTextChanged(s: Editable?) {
         getNearPlaces(
             s.toString(),
@@ -45,7 +45,7 @@ class PlaceSearchViewModel @Inject constructor(
         )
 
         if (s.toString().isBlank()) {
-            _nearPlaceList.postValue(emptyList())
+            setNearPlaceListEmpty()
         }
     }
 
@@ -56,15 +56,15 @@ class PlaceSearchViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                getNearPlacesUseCase.getNearPlaces(
-                    TMAP_VERSION,
-                    searchKeyword,
-                    centerLon,
-                    centerLat,
-                    BuildConfig.TMAP_APP_KEY
-                ).collectLatest {
-                    _nearPlaceList.value = it
-                }
+                _nearPlaceList.emit(
+                    getNearPlacesUseCase.getNearPlaces(
+                        TMAP_VERSION,
+                        searchKeyword,
+                        centerLon,
+                        centerLat,
+                        BuildConfig.TMAP_APP_KEY
+                    )
+                )
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
@@ -73,7 +73,7 @@ class PlaceSearchViewModel @Inject constructor(
     }
 
     fun setNearPlaceListEmpty() {
-        _nearPlaceList.postValue(emptyList())
+        _nearPlaceList.value = emptyList()
     }
 
     fun setClickPlace(place: Place) {
