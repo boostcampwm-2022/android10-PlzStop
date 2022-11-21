@@ -4,6 +4,8 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
 import com.stop.data.remote.adapter.route.ResultCallAdapter
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +18,6 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.jaxb.JaxbConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
 import javax.inject.Singleton
@@ -56,14 +57,8 @@ internal object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideJaxbConverterFactory(): JaxbConverterFactory {
-        return JaxbConverterFactory.create()
-    }
-
-    @Provides
-    @Singleton
-    fun provideTmapInterceptor(): TmapInterceptor {
-        return TmapInterceptor()
+    fun provideTikXmlConverterFactory(): TikXmlConverterFactory {
+        return TikXmlConverterFactory.create(TikXml.Builder().exceptionOnUnreadXml(false).build())
     }
 
     @Provides
@@ -85,7 +80,6 @@ internal object NetworkModule {
     fun provideRetrofitInstance(
         okHttpClient: OkHttpClient,
         moshi: Moshi,
-        jaxbConverterFactory: JaxbConverterFactory,
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
