@@ -1,9 +1,7 @@
 package com.stop.data.di
 
-import com.stop.data.repository.GeoLocationRepositoryImpl
-import com.stop.data.repository.NearPlaceRepositoryImpl
-import com.stop.domain.repository.GeoLocationRepository
-import com.stop.domain.repository.NearPlaceRepository
+import com.stop.data.repository.RouteRepositoryImpl
+import com.stop.domain.repository.RouteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -12,13 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-internal abstract class RepositoryModule {
+internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
-
-    @Binds
-    @Singleton
-    abstract fun provideGeoLocationRepository(geoLocationRepositoryImpl: GeoLocationRepositoryImpl): GeoLocationRepository
+    fun provideRemoteRepository(
+        routeRepositoryImpl: RouteRepositoryImpl
+    ): RouteRepository
 }

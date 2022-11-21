@@ -5,9 +5,6 @@ plugins {
     id 'com.google.dagger.hilt.android'
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 android {
     namespace 'com.stop.data'
     compileSdk 32
@@ -19,7 +16,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String", "TMAP_URL", properties['TMAP_URL'])
+        buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
+        buildConfigField "String", "OPEN_API_SEOUL_KEY", properties['open_api_seoul_key']
+        buildConfigField "String", "WS_BUS_KEY", properties['ws_bus_key']
     }
 
     buildTypes {
@@ -60,4 +59,18 @@ dependencies {
     implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
     implementation 'com.squareup.moshi:moshi:1.13.0'
     kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+
+    // network
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+    implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
+}
+
+kapt {
+    correctErrorTypes true
 }
