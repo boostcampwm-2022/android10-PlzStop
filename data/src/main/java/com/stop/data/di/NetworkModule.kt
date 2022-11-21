@@ -3,7 +3,6 @@ package com.stop.data.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
-import com.stop.data.remote.JsonXmlConverterFactory
 import com.stop.data.remote.adapter.route.ResultCallAdapter
 import dagger.Module
 import dagger.Provides
@@ -40,15 +39,10 @@ internal object NetworkModule {
 //        tmapInterceptor: TmapInterceptor,
         fakeTmapInterceptor: FakeTmapInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
-//        selfSigningHelper: SelfSigningHelper,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(fakeTmapInterceptor)
-//            .sslSocketFactory(
-//                selfSigningHelper.sslContext.socketFactory,
-//                selfSigningHelper.trustManagerFactory.trustManagers[0] as X509TrustManager
-//            )
             .build()
     }
 
