@@ -98,7 +98,12 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                 )
             },
             lines = createCoordinates(leg.passShape?.linestring ?: ""),
-            stations = leg.passStopList?.stationList?.map { station ->
+            stations = leg.passStopList?.stationList?.mapIndexed { mapIndex, station ->
+                val id = if (mapIndex == 0) { // 승차지의 막차 시간만 필요합니다
+                    getIdUsedAtPublicApi(leg.route, station, moveType)
+                } else {
+                    UNKNOWN_ARS_ID
+                }
                 with(station) {
                     Station(
                         orderIndex = index,
@@ -108,7 +113,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         ),
                         stationId = stationID,
                         stationName = stationName,
-                        idUsedAtPublicApi = getIdUsedAtPublicApi(leg.route, station, moveType)
+                        idUsedAtPublicApi = id,
                     )
                 }
             } ?: listOf(),
