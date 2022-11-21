@@ -23,4 +23,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
     implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
+    
+    // coroutine
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
 }
