@@ -1,6 +1,7 @@
 package com.stop.ui.nearplace
 
 import android.text.Editable
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -75,10 +76,12 @@ class PlaceSearchViewModel @Inject constructor(
                     BuildConfig.TMAP_APP_KEY
                 ).collectLatest {
                     _nearPlaceList.postValue(it)
+                    Log.d("PlaceSearchViewModel","getNearPlace $it")
                 }
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
+                Log.d("PlaceSearchViewModel","getNearPlace 실패~ ${e.toString()}")
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.stop.data.remote.network
 
-import com.stop.data.remote.JsonResponse
 import com.stop.data.remote.model.NetworkResult
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
 import com.stop.domain.model.route.tmap.origin.RouteResponse
@@ -12,7 +11,6 @@ import retrofit2.http.Query
 
 interface FakeTmapApiService {
 
-    @JsonResponse
     @FormUrlEncoded
     @POST(TRANSPORT_URL)
     suspend fun getRoutes(
@@ -25,7 +23,6 @@ interface FakeTmapApiService {
         @Field("count") count: Int,
     ): NetworkResult<RouteResponse>
 
-    @JsonResponse
     @GET(REVERSE_GEOCODING_URL)
     suspend fun getReverseGeocoding(
         @Query("lat") latitude: String,

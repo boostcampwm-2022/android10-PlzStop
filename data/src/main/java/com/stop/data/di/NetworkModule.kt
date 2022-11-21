@@ -3,7 +3,6 @@ package com.stop.data.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
-import com.stop.data.remote.JsonXmlConverterFactory
 import com.stop.data.remote.adapter.route.ResultCallAdapter
 import dagger.Module
 import dagger.Provides
@@ -20,6 +19,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.jaxb.JaxbConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.io.IOException
+import javax.inject.Named
 import javax.inject.Singleton
 
 @InstallIn(SingletonComponent::class)
@@ -29,26 +29,28 @@ internal object NetworkModule {
     private const val T_MAP_APP_KEY_NAME = "appKey"
     private const val T_MAP_APP_KEY_VALUE = BuildConfig.TMAP_APP_KEY
     private const val T_MAP_URL = "https://apis.openapi.sk.com/"
+
     private const val OPEN_API_SEOUL_URL = "http://openapi.seoul.go.kr:8088/"
     private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
-    private const val OPEN_API_SEOUL_KEY_VALUE = BuildConfig.SUBWAY_KEY
+    private const val BUS_KEY = BuildConfig.BUS_KEY
+
+    private const val APIS_URL = "http://apis.data.go.kr/6410000/"
+    private const val APIS_KEY_NAME = "ServiceKey"
+
+    private const val WS_BUS_URL = "http://ws.bus.go.kr/api/rest/"
+    private const val WS_KEY_NAME = "ServiceKey"
+
     private const val T_MAP_ROUTE_URL = "transit/routes"
     private const val FAKE_JSON_URI = "response.json"
 
     @Provides
     fun provideOkHttpClient(
-//        tmapInterceptor: TmapInterceptor,
-        fakeTmapInterceptor: FakeTmapInterceptor,
+        customInterceptor: CustomInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
-//        selfSigningHelper: SelfSigningHelper,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor(fakeTmapInterceptor)
-//            .sslSocketFactory(
-//                selfSigningHelper.sslContext.socketFactory,
-//                selfSigningHelper.trustManagerFactory.trustManagers[0] as X509TrustManager
-//            )
+            .addInterceptor(customInterceptor)
             .build()
     }
 
@@ -73,8 +75,8 @@ internal object NetworkModule {
     }
 
     @Provides
-    fun provideFakeTmapInterceptor(): FakeTmapInterceptor {
-        return FakeTmapInterceptor()
+    fun provideCustomInterceptor(): CustomInterceptor {
+        return CustomInterceptor()
     }
 
     @Provides
@@ -87,22 +89,77 @@ internal object NetworkModule {
         return ResultCallAdapter.Factory()
     }
 
+    @Named("place")
     @Provides
     fun provideRetrofitInstance(
         okHttpClient: OkHttpClient,
         moshi: Moshi,
-        jaxbConverterFactory: JaxbConverterFactory,
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(T_MAP_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(resultCallAdapter)
-            .addConverterFactory(JsonXmlConverterFactory.Builder()
-                .setXmlConverterFactory(jaxbConverterFactory)
-                .setJsonConverterFactory(MoshiConverterFactory.create(moshi))
-                .build()
-            )
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Provides
+    @Named("Tmap")
+    fun provideTmapRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(T_MAP_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Provides
+    @Named("OpenApiSeoul")
+    fun provideOpenApiSeoulRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(OPEN_API_SEOUL_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Provides
+    @Named("WsBus")
+    fun provideWsBusRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(WS_BUS_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+
+    @Provides
+    @Named("ApisData")
+    fun provideApisDataRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(APIS_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
             .build()
     }
 
@@ -118,7 +175,7 @@ internal object NetworkModule {
         }
     }
 
-    class FakeTmapInterceptor : Interceptor {
+    class CustomInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val url = chain.request().url.toUri().toString()
 
@@ -134,22 +191,24 @@ internal object NetworkModule {
                             .toResponseBody("application/json".toMediaTypeOrNull())
                     ).addHeader("content-type", "application/json")
                     .build()
-            } else if (url.contains(OPEN_API_SEOUL_URL)) {
-                return with(chain) {
-                    val newRequest = request().newBuilder()
-                        .addHeader(OPEN_API_SEOUL_KEY_NAME, OPEN_API_SEOUL_KEY_VALUE)
-                        .build()
-                    proceed(newRequest)
-                }
-            } else if (url.contains(T_MAP_URL)) {
-                return with(chain) {
-                    val newRequest = request().newBuilder()
-                        .addHeader(T_MAP_APP_KEY_NAME, T_MAP_APP_KEY_VALUE)
-                        .build()
-                    proceed(newRequest)
+            }
+
+            val (name: String, key: String) = when {
+                url.contains(OPEN_API_SEOUL_URL) -> Pair(OPEN_API_SEOUL_KEY_NAME, BUS_KEY)
+                url.contains(T_MAP_URL) -> Pair(T_MAP_APP_KEY_NAME, T_MAP_APP_KEY_VALUE)
+                url.contains(APIS_URL) -> Pair(APIS_KEY_NAME, BUS_KEY)
+                url.contains(WS_BUS_URL) -> Pair(WS_KEY_NAME, BUS_KEY)
+                else -> {
+                    return chain.proceed(chain.request())
                 }
             }
-            return chain.proceed(chain.request())
+
+            return with(chain) {
+                val newRequest = request().newBuilder()
+                    .addHeader(name, key)
+                    .build()
+                proceed(newRequest)
+            }
         }
 
         private fun readJson(fileName: String): String {

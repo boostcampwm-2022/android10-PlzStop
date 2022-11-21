@@ -8,7 +8,6 @@ import retrofit2.http.Url
 
 interface WsBusApiService {
 
-    @JsonResponse
     @GET
     suspend fun getBusArsId(
         @Url url: String,
