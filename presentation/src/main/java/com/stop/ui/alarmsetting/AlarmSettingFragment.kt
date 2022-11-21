@@ -7,12 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
+
     private var _binding: FragmentAlarmSettingBinding? = null
     private val binding get() = _binding!!
+
+    private val alarmSettingViewModel by viewModels<AlarmSettingViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,9 +32,26 @@ class AlarmSettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initBinding()
+        initView()
         buttonClick()
-        binding.numberPickerAlarmTime.minValue = 0
-        binding.numberPickerAlarmTime.maxValue = 60
+    }
+
+    private fun initBinding(){
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = alarmSettingViewModel
+        }
+    }
+
+    private fun initView() {
+        with(binding){
+            textViewLastTime.text = getString(R.string.last_transport_arrival_time, 23, 30)
+            textViewWalk.text = getString(R.string.last_transport_walking_time, 10)
+
+            numberPickerAlarmTime.minValue = 0
+            numberPickerAlarmTime.maxValue = 60
+        }
     }
 
     private fun buttonClick() {
