@@ -42,13 +42,16 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         val originRouteData = routeRepository.getRoute(routeRequest)
 
-        return originRouteData.metaData.plan.itineraries.fold(listOf())  itinerary@{ itineraries, itinerary ->
+        return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
 
                     routes + when (moveType) {
-                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType)
+                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(
+                            leg,
+                            moveType,
+                        )
                         MoveType.WALK -> createWalkRoute(leg, moveType)
                         else -> return@fold routes
                     }
@@ -58,7 +61,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         return@itinerary itineraries
                     }
                     routes
-                } catch (e: JsonDataException) {
+                } catch (e: JsonDataException) { // T MAP에 있는 정류소 이름이 업데이트 되지 않아, 공공 데이터 포털의 결과가 없는 경우 처리
                     println(e)
                     routes
                 }
@@ -75,7 +78,10 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
 
-    private suspend fun createPublicTransportRoute(leg: Leg, moveType: MoveType): SubwayRoute {
+    private suspend fun createPublicTransportRoute(
+        leg: Leg,
+        moveType: MoveType,
+    ): SubwayRoute {
         return SubwayRoute(
             distance = leg.distance,
             end = with(leg.end) {
@@ -164,12 +170,14 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon))
         val arsId = when (reverseGeocodingResponse.addressInfo.city) {
             GYEONGGI_DO -> {
-                val busStations = routeRepository.getGyeonggiBusStationId(station.stationName).busStations
+                val busStations =
+                    routeRepository.getGyeonggiBusStationId(station.stationName).msgBody.busStations
 
                 findClosestGyeonggiBusStation(station, busStations)
             }
             SEOUL -> {
-                val busStations = routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
+                val busStations =
+                    routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
 
                 findClosestSeoulBusStation(station, busStations)
             }
@@ -302,7 +310,6 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     companion object {
         private const val NOT_REGISTERED_STATION = "등록되지 않은 전철역입니다."
         private const val NO_SUPPORTING_TYPE = "지원하지 않는 타입입니다."
-        private const val NO_MATCHING_BUS_STATION = "일치하는 버스 정류장이 없습니다."
         private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
         private const val NO_SUPPORTING_CITY = "지원하지 않는 도시입니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
