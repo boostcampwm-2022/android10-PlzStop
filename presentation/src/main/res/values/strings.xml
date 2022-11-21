@@ -8,4 +8,5 @@
     <string name="select_map_text">지도에서 선택</string>
     <string name="distance_km">%1$skm</string>
     <string name="location_address_search_text">장소, 주소 검색</string>
+    <string name="route_text">경로</string>
 </resources>
