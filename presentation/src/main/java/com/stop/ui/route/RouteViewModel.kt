@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Itinerary
-import com.stop.domain.usecase.GetRouteUseCase
+import com.stop.domain.usecase.route.GetRouteUseCase
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

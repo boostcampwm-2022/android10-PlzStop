@@ -1,4 +1,4 @@
-package com.stop.domain.usecase
+package com.stop.domain.usecase.route
 
 import com.squareup.moshi.JsonDataException
 import com.stop.domain.model.geoLocation.AddressType
