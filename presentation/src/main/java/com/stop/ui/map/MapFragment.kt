@@ -21,6 +21,7 @@ import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,7 @@ class MapFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+    private val alarmViewModel: AlarmViewModel by activityViewModels()
 
     private lateinit var tMapView: TMapView
     private var isTracking = true
@@ -59,6 +61,7 @@ class MapFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = placeSearchViewModel
+            // TODO: alarmViewModel 연결
         }
     }
 
