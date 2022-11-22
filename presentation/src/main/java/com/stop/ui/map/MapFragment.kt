@@ -42,7 +42,6 @@ class MapFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-
         initBinding()
 
         return binding.root
@@ -73,7 +72,8 @@ class MapFragment : Fragment() {
 
     private fun clickSearchButton() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
+            binding.root.findNavController()
+                .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
     }
 
@@ -265,9 +265,13 @@ class MapFragment : Fragment() {
                     .flowWithLifecycle(viewLifecycleOwner.lifecycle)
                     .collect {
                         val currentLocation = placeSearchViewModel.currentLocation
-                        val currentTMapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
+                        val currentTMapPoint =
+                            TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
-                        tMapView.setCenterPoint(currentTMapPoint.latitude, currentTMapPoint.longitude)
+                        tMapView.setCenterPoint(
+                            currentTMapPoint.latitude,
+                            currentTMapPoint.longitude
+                        )
 
                         setPanel(currentTMapPoint)
 
@@ -290,6 +294,7 @@ class MapFragment : Fragment() {
         private const val MARKER = "marker"
         private const val PERSON_MARKER = "marker_person_pin"
         private const val SAME_POINT = 1
-        val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
+        private val PERMISSIONS =
+            arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
 }
