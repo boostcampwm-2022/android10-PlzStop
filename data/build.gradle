@@ -19,6 +19,11 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
+
+        buildConfigField "String", "T_MAP_URL", properties['t_map_url']
+        buildConfigField "String", "WS_BUS_URL", properties['ws_bus_url']
+        buildConfigField "String", "APIS_URL", properties['apis_url']
+        buildConfigField "String", "OPEN_API_SEOUL_URL", properties['open_api_seoul_url']
         buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
         buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
         buildConfigField "String", "BUS_KEY", properties['bus_key']
