@@ -7,7 +7,7 @@ import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
 import com.stop.domain.model.route.tmap.origin.RouteResponse
 
-interface RouteRemoteDataSource {
+internal interface RouteRemoteDataSource {
 
     suspend fun getRoute(routeRequest: RouteRequest): RouteResponse
 

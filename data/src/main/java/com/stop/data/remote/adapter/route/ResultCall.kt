@@ -8,7 +8,7 @@ import retrofit2.Response
 import com.stop.data.remote.model.NetworkResult
 import java.io.IOException
 
-class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
+internal class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
 
     override fun clone(): Call<NetworkResult<T>> {
         return ResultCall(call.clone())

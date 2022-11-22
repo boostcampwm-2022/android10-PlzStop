@@ -5,7 +5,7 @@ import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface WsBusApiService {
+internal interface WsBusApiService {
 
     @GET(GET_BUS_ARS_URL)
     suspend fun getBusArsId(

@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.PropertyElement
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "busStationList")
-data class GyeonggiBusStation(
+internal data class GyeonggiBusStation(
     @PropertyElement(name = "stationId")
     val stationId: Int,
     @PropertyElement(name = "stationName")

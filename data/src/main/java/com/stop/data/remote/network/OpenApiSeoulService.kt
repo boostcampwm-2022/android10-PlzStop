@@ -6,7 +6,7 @@ import com.stop.domain.model.route.seoul.subway.SubwayStationResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface OpenApiSeoulService {
+internal interface OpenApiSeoulService {
 
     @GET("{KEY}/{TYPE}/{SERVICE}/{START_INDEX}/{END_INDEX}/{STATION_NM}/")
     suspend fun getStationInfo(
