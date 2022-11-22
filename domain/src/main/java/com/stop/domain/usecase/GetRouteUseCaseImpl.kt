@@ -56,13 +56,13 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         else -> return@fold routes
                     }
                 } catch (e: IllegalArgumentException) {
-                    println(e)
+                    e.printStackTrace()
                     if (e.message?.contains(GYEONGGI_REGION_BUS_NOT_SUPPORT) == true) {
                         return@itinerary itineraries
                     }
                     routes
                 } catch (e: JsonDataException) { // T MAP에 있는 정류소 이름이 업데이트 되지 않아, 공공 데이터 포털의 결과가 없는 경우 처리
-                    println(e)
+                    e.printStackTrace()
                     routes
                 }
             }
