@@ -9,4 +9,5 @@
     <string name="distance_km">%1$skm</string>
     <string name="location_address_search_text">장소, 주소 검색</string>
     <string name="mission_close_image_view_description">미션 종료 버튼입니다.</string>
+    <string name="minute_and_second">%s:%s</string>
 </resources>

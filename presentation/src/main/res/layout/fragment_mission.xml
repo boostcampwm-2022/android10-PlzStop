@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +22,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:textSize="24sp"
+            android:text="@{viewModel.destination}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1호선 용산역" />
@@ -28,6 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            android:text="@{@string/minute_and_second(viewModel.leftMinute, viewModel.leftSecond)}"
             android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -38,9 +43,9 @@
             android:id="@+id/image_view_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
             android:contentDescription="@string/mission_close_image_view_description"
             app:layout_constraintBottom_toBottomOf="@+id/frame_layout_container"
-            android:layout_marginBottom="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_baseline_cancel_24" />
