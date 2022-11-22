@@ -86,7 +86,8 @@ class MissionFragment : Fragment(), TMapHandler {
     }
 
     private fun readFromAssets(): List<String> {
-        val reader = BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+        val reader =
+            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
         val lines = arrayListOf<String>()
         var line = reader.readLine()
         while (line != null) {
@@ -131,7 +132,7 @@ class MissionFragment : Fragment(), TMapHandler {
                 visibility = View.VISIBLE
                 animate().alpha(1f)
                     .setDuration(shortAnimationDuration.toLong())
-                    .setListener(object: AnimatorListenerAdapter() {
+                    .setListener(object : AnimatorListenerAdapter() {
                         override fun onAnimationEnd(animation: Animator?) {
                             animate().alpha(0f)
                                 .setDuration(shortAnimationDuration.toLong())
