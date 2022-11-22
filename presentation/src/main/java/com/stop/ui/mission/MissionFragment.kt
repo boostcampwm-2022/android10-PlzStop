@@ -1,5 +1,6 @@
 package com.stop.ui.mission
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
@@ -13,9 +14,15 @@ import androidx.fragment.app.viewModels
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 @AndroidEntryPoint
-class MissionFragment : Fragment(), RequestAuthority {
+class MissionFragment : Fragment(), TMapHandler {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -24,6 +31,11 @@ class MissionFragment : Fragment(), RequestAuthority {
     private val viewModel: MissionViewModel by viewModels()
 
     private lateinit var tMap: TMap
+
+    private val permissions = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
 
     private val requestPermissionsLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -56,8 +68,33 @@ class MissionFragment : Fragment(), RequestAuthority {
         super.onDestroyView()
     }
 
-    override fun requestPermissions(permissions: Array<String>) {
+    override fun alertTMapReady() {
         requestPermissionsLauncher.launch(permissions)
+        mimicUserMove()
+    }
+
+    private fun mimicUserMove() {
+        val lines = readFromAssets()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            lines.forEach { line ->
+                val (longitude, latitude) = line.split(",")
+                tMap.moveLocation(longitude, latitude)
+                delay(500)
+            }
+        }
+    }
+
+    private fun readFromAssets(): List<String> {
+        val reader = BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+        val lines = arrayListOf<String>()
+        var line = reader.readLine()
+        while (line != null) {
+            lines.add(line)
+            line = reader.readLine()
+        }
+        reader.close()
+        return lines
     }
 
     private fun setDataBinding() {
@@ -114,5 +151,7 @@ class MissionFragment : Fragment(), RequestAuthority {
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
+
+        private const val FAKE_USER_FILE_PATH = "fake_user_path"
     }
 }
