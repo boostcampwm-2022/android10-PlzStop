@@ -103,10 +103,10 @@ class TMap(
     }
 
     companion object {
-        private const val KOREA_LATITUDE_MIN = 32.856
-        private const val KOREA_LATITUDE_MAX = 38.561
+        private const val KOREA_LATITUDE_MIN = 32.814978
+        private const val KOREA_LATITUDE_MAX = 39.036253
 
-        private const val KOREA_LONGITUDE_MAX = 130.675
-        private const val KOREA_LONGITUDE_MIN = 124.564
+        private const val KOREA_LONGITUDE_MIN = 124.661865
+        private const val KOREA_LONGITUDE_MAX = 132.550049
     }
 }
