@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:textSize="24sp"
             android:text="@{viewModel.destination}"
+            android:textSize="24sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="1호선 용산역" />
@@ -38,6 +38,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_destination"
             tools:text="04:30" />
+
+        <TextView
+            android:id="@+id/text_view_changed_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textSize="32sp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/text_view_time_left"
+            app:layout_constraintTop_toTopOf="@id/text_view_time_left"
+            tools:text="+1" />
 
         <ImageView
             android:id="@+id/image_view_current_location"
