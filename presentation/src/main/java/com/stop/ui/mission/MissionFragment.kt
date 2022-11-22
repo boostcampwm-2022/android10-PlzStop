@@ -69,7 +69,7 @@ class MissionFragment : Fragment(), RequestAuthority {
         tMap = TMap((requireContext() as ContextWrapper).baseContext, this)
         tMap.init()
 
-        binding.frameLayoutContainer.addView(tMap.getTMapView())
+        binding.constraintLayoutContainer.addView(tMap.getTMapView())
     }
 
     private fun initViewModel() {
