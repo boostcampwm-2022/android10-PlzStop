@@ -48,6 +48,9 @@ class MissionViewModel : ViewModel() {
             while (leftTime > TIME_ZERO) {
                 delay(DELAY_TIME)
                 leftTime -= ONE_SECOND
+                if (leftTime <= TIME_ZERO) {
+                    break
+                }
                 _estimatedTimeRemaining.value = leftTime
             }
         }
@@ -62,6 +65,9 @@ class MissionViewModel : ViewModel() {
                     }
                     leftTime += increasedTime
                     _timeIncreased.value = increasedTime
+                }
+                if (leftTime < TIME_ZERO) {
+                    leftTime = 0
                 }
                 _estimatedTimeRemaining.value = leftTime
             }
