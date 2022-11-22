@@ -23,7 +23,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
+        buildConfigField("String", "TMAP_APP_KEY", properties['t_map_app_key'])
         externalNativeBuild {
             cmake {
                 cppFlags ''
@@ -49,6 +49,13 @@ android {
         viewBinding true
         dataBinding true
     }
+
+    packagingOptions {
+        resources.excludes.add("META-INF/NOTICE.md")
+        resources.merges.add("META-INF/LICENSE.md")
+        resources.merges.add("META-INF/AL2.0")
+        resources.merges.add("META-INF/LGPL2.1")
+    }
 }
 
 dependencies {
@@ -60,9 +67,12 @@ dependencies {
     implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    // network
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+
     // Navigation Component
-    implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
-    implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
 
     // TMap SDK
     implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
