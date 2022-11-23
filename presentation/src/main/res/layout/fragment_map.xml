@@ -158,23 +158,38 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/text_view_start_location" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/text_view_search"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="25dp"
-            android:background="#80FF5555"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/layout_text_view_search"
+            android:elevation="15dp"
             android:gravity="center_vertical"
             android:text="@string/search_hint"
+            android:paddingStart="45sp"
+            android:paddingEnd="0sp"
             android:textSize="17sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="#808590"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_begin"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_view_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="15dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintStart_toStartOf="@id/text_view_search"
+            app:layout_constraintTop_toTopOf="@+id/text_view_search"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_search"
+            app:srcCompat="@drawable/ic_search" />
 
         <ImageView
             android:id="@+id/image_view_compass_mode"

@@ -102,7 +102,7 @@ class MapFragment : Fragment() {
         tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
         tMapView.setOnMapReadyListener {
             requestPermissionsLauncher.launch(PERMISSIONS)
-            tMapView.mapType = TMapView.MapType.NIGHT
+            tMapView.mapType = TMapView.MapType.DEFAULT
             tMapView.zoomLevel = TMAP_ZOOM_LEVEL
 
             addBookmarkMarker()
