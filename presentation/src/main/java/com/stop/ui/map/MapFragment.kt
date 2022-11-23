@@ -104,6 +104,7 @@ class MapFragment : Fragment() {
             requestPermissionsLauncher.launch(PERMISSIONS)
             tMapView.mapType = TMapView.MapType.DEFAULT
             tMapView.zoomLevel = TMAP_ZOOM_LEVEL
+            tMapView.setVisibleLogo(false)
 
             addBookmarkMarker()
             initTMapListener()
