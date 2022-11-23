@@ -5,7 +5,7 @@ import com.stop.data.remote.model.nearplace.NearPlaceResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface NearPlaceApiService {
+internal interface NearPlaceApiService {
 
     @GET("/tmap/pois")
     suspend fun getNearPlaces(

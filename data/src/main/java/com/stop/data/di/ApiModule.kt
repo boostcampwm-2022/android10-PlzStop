@@ -45,7 +45,7 @@ internal object ApiModule {
 
     @Provides
     @Singleton
-    fun providePlaceApiService(@Named("place") retrofit: Retrofit): NearPlaceApiService {
+    fun providePlaceApiService(@Named("Tmap") retrofit: Retrofit): NearPlaceApiService {
         return retrofit.create(NearPlaceApiService::class.java)
     }
 }

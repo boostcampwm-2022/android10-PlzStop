@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_close_24"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/guideline_end_vertical"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
             app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -30,7 +30,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/button_swap_origin_with_destination"
+            app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/button_back_to_home">
 
@@ -50,7 +50,7 @@
             android:background="@drawable/ic_baseline_swap_vert_24"
             app:layout_constraintBottom_toBottomOf="@id/text_input_layout_origin"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintTop_toTopOf="@id/text_input_layout_origin" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -58,7 +58,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@+id/button_swap_origin_with_destination"
+            app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_origin">
 
@@ -95,7 +95,7 @@
             android:background="@drawable/ic_baseline_replay_24"
             app:layout_constraintBottom_toBottomOf="@id/text_input_layout_destination"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintTop_toTopOf="@id/text_input_layout_destination" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -105,7 +105,7 @@
             android:layout_marginTop="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/text_input_layout_drop_down_menu"
             tools:listitem="@layout/route_item" />

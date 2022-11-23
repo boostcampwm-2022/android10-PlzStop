@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/alarmStartFragment">
+    app:startDestination="@id/mapFragment">
 
     <fragment
         android:id="@+id/mapFragment"
@@ -65,9 +65,6 @@
         android:id="@+id/routeFragment"
         android:name="com.stop.ui.route.RouteFragment"
         android:label="RouteFragment" >
-        <argument
-            android:name="routeRequest"
-            app:argType="com.stop.model.route.RouteRequest" />
         <action
             android:id="@+id/action_routeFragment_to_routeDetailFragment"
             app:destination="@id/routeDetailFragment" />

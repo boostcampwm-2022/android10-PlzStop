@@ -29,5 +29,4 @@ internal interface RepositoryModule {
     @Binds
     @Singleton
     fun provideAlarmRepository(alarmRepositoryImpl: AlarmRepositoryImpl): AlarmRepository
-
 }
