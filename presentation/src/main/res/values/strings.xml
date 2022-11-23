@@ -15,4 +15,9 @@
     <string name="distance_km">%1$skm</string>
     <string name="location_address_search_text">장소, 주소 검색</string>
     <string name="search_hint">장소, 주소 검색</string>
+    <string name="expected_last_arrival_time">막차 도착 예정 시간</string>
+    <string name="mission_start">미션 시작</string>
+    <string name="quit">종료</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
 </resources>
