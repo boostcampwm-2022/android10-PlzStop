@@ -5,8 +5,12 @@
 
     <data>
         <variable
-            name="viewModel"
+            name="placeSearchViewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
+
+        <variable
+            name="alarmViewModel"
+            type="com.stop.ui.alarmsetting.AlarmViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -57,7 +61,7 @@
             android:background="@drawable/layout_location_panel"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
-            android:visibility="@{viewModel.panelVisibility}"
+            android:visibility="@{placeSearchViewModel.panelVisibility}"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_begin"
@@ -72,7 +76,7 @@
                 android:maxLines="2"
                 android:textColor="@color/white"
                 android:textSize="20sp"
-                android:text="@{viewModel.geoLocation.title}"
+                android:text="@{placeSearchViewModel.geoLocation.title}"
                 app:layout_constraintEnd_toStartOf="@+id/text_view_bookmark"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
@@ -99,7 +103,7 @@
                 android:maxLines="2"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:text="@{viewModel.geoLocation.roadAddress}"
+                android:text="@{placeSearchViewModel.geoLocation.roadAddress}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_view_title"
@@ -113,7 +117,7 @@
                 android:maxLines="2"
                 android:textColor="@color/light_grey"
                 android:textSize="14sp"
-                android:text="@{viewModel.geoLocation.lotAddress}"
+                android:text="@{placeSearchViewModel.geoLocation.lotAddress}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/text_view_road_address"
@@ -126,7 +130,7 @@
                 android:layout_marginEnd="4dp"
                 android:textColor="@color/white"
                 android:textSize="14sp"
-                android:text="@{viewModel.geoLocation.distance}"
+                android:text="@{placeSearchViewModel.geoLocation.distance}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/text_view_start_location"
                 app:layout_constraintStart_toStartOf="parent"

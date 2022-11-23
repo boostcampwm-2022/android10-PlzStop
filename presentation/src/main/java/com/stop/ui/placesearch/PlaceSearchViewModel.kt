@@ -100,9 +100,9 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
-    fun getGeoLocationInfo(lat: Double, lon: Double) {
-        viewModelScope.launch{
-            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(lat, lon)
+    fun getGeoLocationInfo(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
             _panelVisibility.value = View.VISIBLE
         }
     }
