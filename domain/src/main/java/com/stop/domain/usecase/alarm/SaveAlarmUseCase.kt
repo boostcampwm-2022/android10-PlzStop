@@ -2,8 +2,8 @@ package com.stop.domain.usecase.alarm
 
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 
-interface InsertAlarmUseCase {
+interface SaveAlarmUseCase {
 
-    fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem)
+    suspend fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem)
 
 }
