@@ -17,10 +17,12 @@ import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.overlay.TMapMarkerItem
+import com.skt.tmap.overlay.TMapMarkerItem2
 import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.mission.Marker2Example
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -120,6 +122,7 @@ class MapFragment : Fragment() {
                 R.drawable.ic_baseline_location_on_32,
                 tMapPoint
             )
+//            maker2Test(tMapPoint)
 
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
             setPanel(tMapPoint)
@@ -137,12 +140,31 @@ class MapFragment : Fragment() {
                 requireContext(),
                 icon
             )?.toBitmap()
-            this.tMapPoint = location
+            tMapPoint = location
         }
 
         tMapView.removeTMapMarkerItem(MARKER)
         tMapView.addTMapMarkerItem(marker)
     }
+
+
+    fun maker2Test(location: TMapPoint){
+        val view = Marker2Example(context)
+        view.setText("마커2", "입니다")
+
+        val marker = TMapMarkerItem2("marker2").apply {
+            iconView = view
+            tMapPoint = location
+            isAnimation = true
+            animationDuration = 0
+        }
+
+        tMapView.removeTMapMarkerItem2("marker2")
+        tMapView.addTMapMarkerItem2View(marker)
+        tMapView.setCenterPoint(location.latitude, location.longitude)
+    }
+
+
 
     private fun initView() {
         binding.imageViewCompassMode.setOnClickListener {
@@ -179,6 +201,8 @@ class MapFragment : Fragment() {
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
             requestPermissionsLauncher.launch(PERMISSIONS)
+
+            tMapView.setCenterPoint(37.496986,126.887303) //초기위치 센터 바꿈
 
             clickLocation()
             clickMap()

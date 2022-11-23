@@ -22,7 +22,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 @AndroidEntryPoint
-class MissionFragment : Fragment() {
+class MissionFragment : Fragment() , TMapHandler{
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -55,34 +55,34 @@ class MissionFragment : Fragment() {
         super.onDestroyView()
     }
 
-//    override fun alertTMapReady() {
-//        //mimicUserMove()
-//    }
+    override fun alertTMapReady() {
+        mimicUserMove()
+    }
 
-//    private fun mimicUserMove() {
-//        val lines = readFromAssets()
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            lines.forEach { line ->
-//                val (longitude, latitude) = line.split(",")
-//                tMap.moveLocation(longitude, latitude)
-//                delay(500)
-//            }
-//        }
-//    }
+    private fun mimicUserMove() {
+        val lines = readFromAssets()
 
-//    private fun readFromAssets(): List<String> {
-//        val reader =
-//            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
-//        val lines = arrayListOf<String>()
-//        var line = reader.readLine()
-//        while (line != null) {
-//            lines.add(line)
-//            line = reader.readLine()
-//        }
-//        reader.close()
-//        return lines
-//    }
+        CoroutineScope(Dispatchers.IO).launch {
+            lines.forEach { line ->
+                val (longitude, latitude) = line.split(",")
+                tMap.moveLocation(longitude, latitude)
+                delay(500)
+            }
+        }
+    }
+
+    private fun readFromAssets(): List<String> {
+        val reader =
+            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+        val lines = arrayListOf<String>()
+        var line = reader.readLine()
+        while (line != null) {
+            lines.add(line)
+            line = reader.readLine()
+        }
+        reader.close()
+        return lines
+    }
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -90,7 +90,7 @@ class MissionFragment : Fragment() {
     }
 
     private fun initTMap() {
-        tMap = TMap((requireContext() as ContextWrapper).baseContext)
+        tMap = TMap((requireContext() as ContextWrapper).baseContext, this)
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.getTMapView())

@@ -165,7 +165,7 @@
             android:layout_marginTop="25dp"
             android:background="#80FF5555"
             android:gravity="center_vertical"
-            android:text="@string/search_hint"
+            android:text="@string/location_address_search_text"
             android:textSize="17sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"

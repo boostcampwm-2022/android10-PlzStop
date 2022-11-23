@@ -1,19 +1,23 @@
 package com.stop.ui.mission
 
 import android.content.Context
+import android.graphics.Color
 import android.location.Location
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.overlay.TMapMarkerItem
+import com.skt.tmap.overlay.TMapMarkerItem2
 import com.skt.tmap.overlay.TMapPolyLine
 import com.stop.BuildConfig
 import com.stop.R
 
 class TMap(
-    private val context: Context
+    private val context: Context,
+    private val handler: TMapHandler
 ) {
 
     private lateinit var tMapView: TMapView
@@ -23,8 +27,8 @@ class TMap(
 
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null && checkKoreaLocation(location)) {
-            val beforeLocationPoint = tMapView.locationPoint
-            drawMoveLine(location, beforeLocationPoint)
+            //drawMoveLine(TMapPoint(location.latitude, location.longitude))
+            tMapView.setLocationPoint(location.latitude, location.longitude)
             movePin(location)
         }
     }
@@ -39,8 +43,11 @@ class TMap(
         tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
         tMapView.setOnMapReadyListener {
             tMapView.setVisibleLogo(false)
-            tMapView.mapType = TMapView.MapType.NIGHT
+            tMapView.mapType = TMapView.MapType.DEFAULT
             tMapView.zoomLevel = 16
+
+            setTrackingMode()
+            handler.alertTMapReady()
         }
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
@@ -56,19 +63,20 @@ class TMap(
             openGps()
         }
 
-        manager.setOnLocationChangeListener(onLocationChangeListener)
+        //manager.setOnLocationChangeListener(onLocationChangeListener)
     }
 
     fun getTMapView(): TMapView {
         return tMapView
     }
 
-    private fun drawMoveLine(location: Location, beforeLocationPoint: TMapPoint) {
-        val points = arrayListOf(
-            beforeLocationPoint,
-            TMapPoint(location.latitude, location.longitude)
-        )
-        val polyLine = TMapPolyLine("line$lineNum", points)
+    private fun drawMoveLine(location: TMapPoint, beforeLocationPoint: TMapPoint) {
+        val points = arrayListOf(location, beforeLocationPoint)
+        Log.d("TMap","points $points lineNum $lineNum")
+        val polyLine = TMapPolyLine("person_line$lineNum", points).apply {
+            lineColor = Color.MAGENTA
+            outLineColor = Color.MAGENTA
+        }
         lineNum += 1
         tMapView.addTMapPolyLine(polyLine)
     }
@@ -93,10 +101,11 @@ class TMap(
         mockLocation.longitude = longitude.toDouble()
 
         val beforeLocationPoint = tMapView.locationPoint
-        drawMoveLine(mockLocation, beforeLocationPoint)
+        drawMoveLine(TMapPoint(mockLocation.latitude, mockLocation.longitude), beforeLocationPoint)
         movePin(mockLocation)
         tMapView.setLocationPoint(latitude.toDouble(), longitude.toDouble())
     }
+
 
     companion object {
         private const val KOREA_LATITUDE_MIN = 32.814978

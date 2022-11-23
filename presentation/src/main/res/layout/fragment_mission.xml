@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="viewModel"
             type="com.stop.ui.mission.MissionViewModel" />
@@ -14,6 +13,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.mission.MissionFragment">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="16dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout_container"
@@ -60,7 +66,7 @@
             tools:text="+1" />
 
         <ImageView
-            android:id="@+id/image_view_current_location"
+            android:id="@+id/image_view_mission_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="48dp"
@@ -69,6 +75,24 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_baseline_cancel_24" />
+
+        <ImageView
+            android:id="@+id/image_view_compass_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@id/image_view_current_location"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:srcCompat="@drawable/ic_compass" />
+
+        <ImageView
+            android:id="@+id/image_view_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:srcCompat="@drawable/ic_location" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
