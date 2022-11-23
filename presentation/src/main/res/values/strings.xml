@@ -17,4 +17,5 @@
     <string name="expected_arrival_time">예상 도착 시간: </string>
     <string name="expected_required_time">예상 소요 시간</string>
     <string name="not_yet_implemented">미구현</string>
+    <string name="search_hint">장소, 주소 검색</string>
 </resources>

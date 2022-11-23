@@ -21,7 +21,7 @@ import com.stop.BuildConfig
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
-import com.stop.ui.nearplace.PlaceSearchViewModel
+import com.stop.ui.placesearch.PlaceSearchViewModel
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment() {
@@ -64,13 +64,13 @@ class MapFragment : Fragment() {
 
     private fun clickEndLocation() {
         binding.textViewEndLocation.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_map_fragment_to_route_fragment)
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
         }
     }
 
     private fun clickSearchButton() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_map_fragment_to_place_search_fragment)
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
     }
 
