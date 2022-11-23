@@ -3,7 +3,7 @@ package com.stop.data.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
-import com.stop.data.remote.adapter.route.ResultCallAdapter
+import com.stop.data.remote.ResultCallAdapter
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
@@ -35,6 +35,7 @@ internal object NetworkModule {
     private const val FAKE_JSON_URI = "response.json"
 
     @Provides
+    @Singleton
     fun provideOkHttpClient(
         customInterceptor: CustomInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
@@ -45,10 +46,11 @@ internal object NetworkModule {
             .build()
     }
 
+
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return Moshi.Builder()
+       return Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }

@@ -42,4 +42,10 @@ internal object ApiModule {
     fun provideApisDataService(@Named("ApisData") retrofit: Retrofit): ApisDataService {
         return retrofit.create(ApisDataService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun providePlaceApiService(@Named("Tmap") retrofit: Retrofit): NearPlaceApiService {
+        return retrofit.create(NearPlaceApiService::class.java)
+    }
 }

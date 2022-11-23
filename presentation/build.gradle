@@ -2,9 +2,12 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
-    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 
 android {
     namespace 'com.stop'
@@ -18,6 +21,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "TMAP_APP_KEY", properties['t_map_app_key'])
     }
 
     buildTypes {
@@ -35,13 +40,8 @@ android {
     }
 
     buildFeatures {
+        viewBinding true
         dataBinding true
-    }
-    packagingOptions {
-        resources.excludes.add("META-INF/NOTICE.md")
-        resources.merges.add("META-INF/LICENSE.md")
-        resources.merges.add("META-INF/AL2.0")
-        resources.merges.add("META-INF/LGPL2.1")
     }
 }
 
@@ -58,7 +58,14 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.5.3"
     implementation "androidx.navigation:navigation-ui-ktx:2.5.3"
 
-    // Hilt
+    // TMap SDK
+    implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
+    implementation files('libs/tmap-sdk-1.1.aar')
+
+    //Hilt
     implementation 'com.google.dagger:hilt-android:2.44'
     kapt 'com.google.dagger:hilt-compiler:2.44'
+
+    // LiveData
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
 }
