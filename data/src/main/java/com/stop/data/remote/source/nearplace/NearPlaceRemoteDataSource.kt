@@ -10,6 +10,6 @@ interface NearPlaceRemoteDataSource {
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): List<Place>
+    ): Result<List<Place>>
 
 }

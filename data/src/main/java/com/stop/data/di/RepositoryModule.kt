@@ -22,7 +22,8 @@ internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideNearPlaceRepository(
+    fun provideNearPlaceRepository(
         nearPlaceRepositoryImpl: NearPlaceRepositoryImpl
     ): NearPlaceRepository
+
 }

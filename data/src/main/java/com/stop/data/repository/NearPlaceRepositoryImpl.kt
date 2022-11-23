@@ -15,14 +15,20 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): List<Place> = nearPlaceRemoteDataSource.getNearPlaces(
-        version,
-        searchKeyword,
-        centerLon,
-        centerLat,
-        appKey
-    ).map {
-        it.toUseCaseModel()
+    ): List<Place> {
+        nearPlaceRemoteDataSource.getNearPlaces(
+            version,
+            searchKeyword,
+            centerLon,
+            centerLat,
+            appKey
+        ).onSuccess { places ->
+            return places.map {
+                it.toUseCaseModel()
+            }
+        }.onFailure {
+            throw it
+        }
+        return emptyList()
     }
-
 }
