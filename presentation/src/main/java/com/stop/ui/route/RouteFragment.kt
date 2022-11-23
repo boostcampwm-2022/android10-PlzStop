@@ -5,12 +5,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
-import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
-import com.stop.model.route.OrderType
+import com.stop.model.route.Coordinate
+import com.stop.model.route.Place
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,8 +18,6 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    // TODO("args 전달받는거 수정하기 )
-//    private val args: RouteFragmentArgs by navArgs()
     private val viewModel: RouteViewModel by viewModels()
     private val adapter = RouteAdapter()
 
@@ -36,14 +32,16 @@ class RouteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setBinding()
         setStartAndDestinationText()
-        setDropDownMenu()
-        setRecyclerView()
         setObserve()
     }
 
-    private fun setRecyclerView() {
+    private fun setBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
         binding.recyclerviewRoute.adapter = adapter
+        binding.executePendingBindings()
     }
 
     private fun setObserve() {
@@ -55,21 +53,10 @@ class RouteFragment : Fragment() {
         }
     }
 
-    private fun setDropDownMenu() {
-        val options = OrderType.values().map { it.typeName }
-        val adapter = ArrayAdapter(requireContext(), R.layout.order_list_item, options)
-        binding.autoCompleteTextViewOrderType.setText(options.first())
-        binding.autoCompleteTextViewOrderType.setAdapter(adapter)
-    }
-
     private fun setStartAndDestinationText() {
-        TODO("args 전달 받는거 수정하기")
-//        binding.textInputEditTextOrigin.setText(args.routeRequest.originName)
-//        binding.textInputEditTextDestination.setText(args.routeRequest.destinationName)
-//
-//        viewModel.setOrigin(args.routeRequest.getOrigin())
-//        viewModel.setDestination(args.routeRequest.getDestination())
-//        viewModel.getRoute()
+        viewModel.setOrigin(Place(ORIGIN_NAME, Coordinate(ORIGIN_Y, ORIGIN_X)))
+        viewModel.setDestination(Place(DESTINATION_NAME, Coordinate(DESTINATION_X, DESTINATION_Y)))
+        viewModel.getRoute()
     }
 
     override fun onDestroyView() {

@@ -18,7 +18,8 @@ class RouteViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _origin = MutableLiveData<Place>()
-    val origin = MutableLiveData<Place>()
+    val origin: LiveData<Place>
+        get() = _origin
 
     private val _destination = MutableLiveData<Place>()
     val destination: LiveData<Place>

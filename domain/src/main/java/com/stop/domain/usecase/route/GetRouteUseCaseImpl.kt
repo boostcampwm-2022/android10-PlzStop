@@ -75,7 +75,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
 
-    private suspend fun createPublicTransportRoute(leg: Leg, moveType: MoveType): SubwayRoute {
+    private fun createPublicTransportRoute(leg: Leg, moveType: MoveType): SubwayRoute {
         return SubwayRoute(
             distance = leg.distance,
             end = with(leg.end) {
@@ -109,7 +109,6 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         ),
                         stationId = stationID,
                         stationName = stationName,
-                        idUsedAtPublicApi = getIdUsedAtPublicApi(leg.route, station, moveType)
                     )
                 }
             } ?: listOf(),
@@ -296,7 +295,6 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     companion object {
         private const val NOT_REGISTERED_STATION = "등록되지 않은 전철역입니다."
         private const val NO_SUPPORTING_TYPE = "지원하지 않는 타입입니다."
-        private const val NO_MATCHING_BUS_STATION = "일치하는 버스 정류장이 없습니다."
         private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
         private const val NO_SUPPORTING_CITY = "지원하지 않는 도시입니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
