@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stop.databinding.RouteItemBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.model.route.tmap.custom.MoveType
-import com.stop.domain.model.route.tmap.custom.SubwayRoute
+import com.stop.domain.model.route.tmap.custom.TransportRoute
 
 class RouteViewHolder(
     private val binding: RouteItemBinding
@@ -19,7 +19,7 @@ class RouteViewHolder(
     private fun calculateExpectedRoute(itinerary: Itinerary): String {
         return itinerary.routes.joinToString(" -> ") { route ->
             when (route) {
-                is SubwayRoute -> {
+                is TransportRoute -> {
                     when (route.mode) {
                         MoveType.SUBWAY -> "${route.routeInfo} ${route.start.name}역"
                         MoveType.BUS -> {

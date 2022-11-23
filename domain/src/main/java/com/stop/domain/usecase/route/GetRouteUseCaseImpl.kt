@@ -46,8 +46,8 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
 
-    private fun createPublicTransportRoute(leg: Leg, moveType: MoveType): SubwayRoute {
-        return SubwayRoute(
+    private fun createPublicTransportRoute(leg: Leg, moveType: MoveType): TransportRoute {
+        return TransportRoute(
             distance = leg.distance,
             end = with(leg.end) {
                 Place(
