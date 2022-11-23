@@ -1,11 +1,11 @@
 package com.stop.data.remote.network
 
 import com.stop.data.remote.model.NetworkResult
-import com.stop.data.remote.model.nearplace.NearPlcaeResponse
+import com.stop.data.remote.model.nearplace.NearPlaceResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface NearPlaceApiService {
+internal interface NearPlaceApiService {
 
     @GET("/tmap/pois")
     suspend fun getNearPlaces(
@@ -14,6 +14,5 @@ interface NearPlaceApiService {
         @Query("centerLon") centerLon: Double,
         @Query("centerLat") centerLat: Double,
         @Query("appKey") appKey: String,
-    ): NetworkResult<NearPlcaeResponse>
-
+    ): NetworkResult<NearPlaceResponse>
 }

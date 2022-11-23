@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
+    id 'kotlin-kapt'
 }
 
 Properties properties = new Properties()
@@ -19,7 +19,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField("String", "TMAP_URL", properties['TMAP_URL'])
+
+        buildConfigField "String", "T_MAP_URL", properties['t_map_url']
+        buildConfigField "String", "WS_BUS_URL", properties['ws_bus_url']
+        buildConfigField "String", "APIS_URL", properties['apis_url']
+        buildConfigField "String", "OPEN_API_SEOUL_URL", properties['open_api_seoul_url']
+        buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
         buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
         buildConfigField "String", "BUS_KEY", properties['bus_key']
     }
@@ -59,7 +64,23 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
     // Moshi
-    implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
-    implementation 'com.squareup.moshi:moshi:1.13.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
+    implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+
+    // xml parser
+    implementation 'com.tickaroo.tikxml:annotation:0.8.13'
+    implementation 'com.tickaroo.tikxml:core:0.8.13'
+    implementation 'com.tickaroo.tikxml:retrofit-converter:0.8.13'
+    kapt 'com.tickaroo.tikxml:processor:0.8.13'
+
+    // Room
+    implementation "androidx.room:room-runtime:2.4.3"
+    annotationProcessor "androidx.room:room-compiler:2.4.3"
+    kapt "androidx.room:room-compiler:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
+}
+
+kapt {
+    correctErrorTypes true
 }
