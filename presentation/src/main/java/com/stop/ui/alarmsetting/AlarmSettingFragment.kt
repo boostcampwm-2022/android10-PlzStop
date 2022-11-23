@@ -26,15 +26,16 @@ class AlarmSettingFragment : Fragment() {
     ): View? {
         _binding = FragmentAlarmSettingBinding.inflate(inflater, container, false)
 
+        initBinding()
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initBinding()
         initView()
-        buttonClick()
+        setButtonListener()
     }
 
     private fun initBinding(){
@@ -54,7 +55,7 @@ class AlarmSettingFragment : Fragment() {
         }
     }
 
-    private fun buttonClick() {
+    private fun setButtonListener() {
         with(binding) {
             textViewRouteContent.setOnClickListener {
                 if (textViewTransportContent.visibility == View.VISIBLE) {
