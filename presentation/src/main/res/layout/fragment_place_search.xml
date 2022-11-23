@@ -7,13 +7,13 @@
 
         <variable
             name="viewModel"
-            type="com.stop.ui.nearplace.PlaceSearchViewModel" />
+            type="com.stop.ui.placesearch.PlaceSearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.nearplace.PlaceSearchFragment">
+        tools:context=".ui.placesearch.PlaceSearchFragment">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_start"

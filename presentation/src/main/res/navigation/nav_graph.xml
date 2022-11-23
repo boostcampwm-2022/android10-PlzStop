@@ -3,41 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/map_fragment">
+    app:startDestination="@id/mapFragment">
 
     <fragment
-        android:id="@+id/map_fragment"
+        android:id="@+id/mapFragment"
         android:name="com.stop.ui.map.MapFragment"
         android:label="MapFragment"
         tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_placeSearchFragment"
+            app:destination="@id/placeSearchFragment" />
         <argument
             android:name="currentLocation"
             app:argType="string"
             app:nullable="true"
             android:defaultValue="@null"/>
         <action
-            android:id="@+id/action_map_fragment_to_place_search_fragment"
-            app:destination="@id/place_search_fragment" />
+            android:id="@+id/action_mapFragment_to_routeFragment"
+            app:destination="@id/routeFragment" />
         <action
-            android:id="@+id/action_map_fragment_to_route_fragment"
-            app:destination="@id/route_fragment" />
+            android:id="@+id/action_mapFragment_to_missionFragment"
+            app:destination="@id/missionFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/route_fragment"
+        android:id="@+id/placeSearchFragment"
+        android:name="com.stop.ui.placesearch.PlaceSearchFragment"
+        android:label="fragment_place_search"
+        tools:layout="@layout/fragment_place_search">
+        <action
+            android:id="@+id/action_placeSearchFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/routeDetailFragment"
+        android:name="com.stop.ui.routedetail.RouteDetailFragment"
+        android:label="RouteDetailFragment" >
+        <action
+            android:id="@+id/action_routeDetailFragment_to_alarmSetting"
+            app:destination="@id/alarmSetting" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmSetting"
+        android:name="com.stop.ui.alarmsetting.AlarmSettingFragment"
+        android:label="fragment_alarm_setting"
+        tools:layout="@layout/fragment_alarm_setting" />
+    <fragment
+        android:id="@+id/bookMarkFragment"
+        android:name="com.stop.ui.bookmark.BookMarkFragment"
+        android:label="fragment_book_mark"
+        tools:layout="@layout/fragment_book_mark" />
+    <fragment
+        android:id="@+id/alarmStartFragment"
+        android:name="com.stop.ui.alarmstart.AlarmStartFragment"
+        android:label="fragment_alarm_start"
+        tools:layout="@layout/fragment_alarm_start" >
+        <action
+            android:id="@+id/action_alarmStartFragment_to_missionFragment"
+            app:destination="@id/missionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/routeFragment"
         android:name="com.stop.ui.route.RouteFragment"
-        android:label="fragment_route"
-        tools:layout="@layout/fragment_route" >
-        <argument
-            android:name="routeRequest"
-            app:argType="com.stop.model.route.RouteRequest" />
+        android:label="RouteFragment" >
+        <action
+            android:id="@+id/action_routeFragment_to_routeDetailFragment"
+            app:destination="@id/routeDetailFragment" />
     </fragment>
     <fragment
-        android:id="@+id/place_search_fragment"
-        android:name="com.stop.ui.nearplace.PlaceSearchFragment"
-        android:label="PlaceSearchFragment" >
-        <action
-            android:id="@+id/action_place_search_fragment_to_map_fragment"
-            app:destination="@id/map_fragment" />
-    </fragment>
+        android:id="@+id/missionFragment"
+        android:name="com.stop.ui.mission.MissionFragment"
+        android:label="MissionFragment" />
+
 </navigation>

@@ -20,7 +20,8 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    private val args: RouteFragmentArgs by navArgs()
+    // TODO("args 전달받는거 수정하기 )
+//    private val args: RouteFragmentArgs by navArgs()
     private val viewModel: RouteViewModel by viewModels()
     private val adapter = RouteAdapter()
 
@@ -62,17 +63,28 @@ class RouteFragment : Fragment() {
     }
 
     private fun setStartAndDestinationText() {
-        binding.textInputEditTextOrigin.setText(args.routeRequest.originName)
-        binding.textInputEditTextDestination.setText(args.routeRequest.destinationName)
-
-        viewModel.setOrigin(args.routeRequest.getOrigin())
-        viewModel.setDestination(args.routeRequest.getDestination())
-        viewModel.getRoute()
+        TODO("args 전달 받는거 수정하기")
+//        binding.textInputEditTextOrigin.setText(args.routeRequest.originName)
+//        binding.textInputEditTextDestination.setText(args.routeRequest.destinationName)
+//
+//        viewModel.setOrigin(args.routeRequest.getOrigin())
+//        viewModel.setDestination(args.routeRequest.getDestination())
+//        viewModel.getRoute()
     }
 
     override fun onDestroyView() {
         _binding = null
 
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val ORIGIN_NAME = "이앤씨벤쳐드림타워3차"
+        private const val ORIGIN_X = "126.893820"
+        private const val ORIGIN_Y = "37.4865002"
+
+        private const val DESTINATION_NAME = "Naver1784"
+        private const val DESTINATION_X = "127.105037"
+        private const val DESTINATION_Y = "37.3584879"
     }
 }

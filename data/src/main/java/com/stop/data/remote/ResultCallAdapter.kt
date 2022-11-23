@@ -1,4 +1,4 @@
-package com.stop.data.remote.adapter.route
+package com.stop.data.remote
 
 import retrofit2.Call
 import retrofit2.CallAdapter
@@ -7,7 +7,7 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 import com.stop.data.remote.model.NetworkResult
 
-class ResultCallAdapter<R : Any>(
+internal class ResultCallAdapter<R : Any>(
     private val responseType: Type
 ) : CallAdapter<R, Call<NetworkResult<R>>> {
 

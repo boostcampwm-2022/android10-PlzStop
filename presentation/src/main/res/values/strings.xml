@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">Plz Stop</string>
+    <string name="move_to_search">검색 화면으로 이동하기</string>
+    <string name="move_to_route">경로 검색 화면으로 이동</string>
+    <string name="expected_depart_time">예상 출발 시간: </string>
+    <string name="expected_arrival_time">예상 도착 시간: </string>
+    <string name="expected_required_time">예상 소요 시간</string>
+    <string name="not_yet_implemented">미구현</string>
     <string name="bookmark">즐겨찾기 추가</string>
     <string name="start_location">출발지</string>
     <string name="end_location">도착지</string>
@@ -8,10 +14,4 @@
     <string name="select_map_text">지도에서 선택</string>
     <string name="distance_km">%1$skm</string>
     <string name="location_address_search_text">장소, 주소 검색</string>
-    <string name="move_to_search">검색 화면으로 이동하기</string>
-    <string name="move_to_route">경로 검색 화면으로 이동</string>
-    <string name="expected_depart_time">예상 출발 시간: </string>
-    <string name="expected_arrival_time">예상 도착 시간: </string>
-    <string name="expected_required_time">예상 소요 시간</string>
-    <string name="not_yet_implemented">미구현</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.stop.data.remote.adapter.route
+package com.stop.data.remote
 
 import okhttp3.Request
 import okio.Timeout
@@ -8,7 +8,7 @@ import retrofit2.Response
 import com.stop.data.remote.model.NetworkResult
 import java.io.IOException
 
-class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
+internal class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
 
     override fun clone(): Call<NetworkResult<T>> {
         return ResultCall(call.clone())
@@ -21,12 +21,25 @@ class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResult<T>> {
     override fun enqueue(callback: Callback<NetworkResult<T>>) {
         call.enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>, response: Response<T>) {
+                if (response.code() == 204) {
+                    callback.onResponse(
+                        this@ResultCall,
+                        Response.success(NetworkResult.Failure(204, "No Content Error"))
+                    )
+                }
+
                 if (response.isSuccessful) {
                     val responseBody = response.body()
                     if (responseBody == null) {
                         callback.onResponse(
                             this@ResultCall,
-                            Response.success(NetworkResult.Unexpected(Throwable(SUCCESS_BUT_BODY_IS_NULL)))
+                            Response.success(
+                                NetworkResult.Unexpected(
+                                    Throwable(
+                                        SUCCESS_BUT_BODY_IS_NULL
+                                    )
+                                )
+                            )
                         )
                         return
                     }

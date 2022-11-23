@@ -3,7 +3,9 @@ package com.stop.data.di
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
-import com.stop.data.remote.adapter.route.ResultCallAdapter
+import com.stop.data.remote.ResultCallAdapter
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,9 +18,7 @@ import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.jaxb.JaxbConverterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.io.IOException
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -27,23 +27,19 @@ import javax.inject.Singleton
 internal object NetworkModule {
 
     private const val T_MAP_APP_KEY_NAME = "appKey"
-    private const val T_MAP_APP_KEY_VALUE = BuildConfig.TMAP_APP_KEY
-    private const val T_MAP_URL = "https://apis.openapi.sk.com/"
-
-    private const val OPEN_API_SEOUL_URL = "http://openapi.seoul.go.kr:8088/"
     private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
-    private const val BUS_KEY = BuildConfig.BUS_KEY
-
-    private const val APIS_URL = "http://apis.data.go.kr/6410000/"
     private const val APIS_KEY_NAME = "ServiceKey"
-
-    private const val WS_BUS_URL = "http://ws.bus.go.kr/api/rest/"
     private const val WS_KEY_NAME = "ServiceKey"
 
     private const val T_MAP_ROUTE_URL = "transit/routes"
+
+    /**
+     * resources에 fake 데이터가 담긴 파일을 넣어줘야 Fake TMap이 정상적으로 동작합니다.
+     */
     private const val FAKE_JSON_URI = "response.json"
 
     @Provides
+    @Singleton
     fun provideOkHttpClient(
         customInterceptor: CustomInterceptor,
         loggingInterceptor: HttpLoggingInterceptor,
@@ -54,24 +50,19 @@ internal object NetworkModule {
             .build()
     }
 
+
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-        return Moshi.Builder()
+       return Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideJaxbConverterFactory(): JaxbConverterFactory {
-        return JaxbConverterFactory.create()
-    }
-
-    @Provides
-    @Singleton
-    fun provideTmapInterceptor(): TmapInterceptor {
-        return TmapInterceptor()
+    fun provideTikXmlConverterFactory(): TikXmlConverterFactory {
+        return TikXmlConverterFactory.create(TikXml.Builder().exceptionOnUnreadXml(false).build())
     }
 
     @Provides
@@ -89,21 +80,6 @@ internal object NetworkModule {
         return ResultCallAdapter.Factory()
     }
 
-    @Named("place")
-    @Provides
-    fun provideRetrofitInstance(
-        okHttpClient: OkHttpClient,
-        moshi: Moshi,
-        resultCallAdapter: ResultCallAdapter.Factory,
-    ): Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(T_MAP_URL)
-            .client(okHttpClient)
-            .addCallAdapterFactory(resultCallAdapter)
-            .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .build()
-    }
-
     @Provides
     @Named("Tmap")
     fun provideTmapRetrofitInstance(
@@ -112,7 +88,7 @@ internal object NetworkModule {
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(T_MAP_URL)
+            .baseUrl(BuildConfig.T_MAP_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(resultCallAdapter)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -127,7 +103,7 @@ internal object NetworkModule {
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(OPEN_API_SEOUL_URL)
+            .baseUrl(BuildConfig.OPEN_API_SEOUL_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(resultCallAdapter)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
@@ -142,37 +118,26 @@ internal object NetworkModule {
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(WS_BUS_URL)
+            .baseUrl(BuildConfig.WS_BUS_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(resultCallAdapter)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
-
     @Provides
     @Named("ApisData")
     fun provideApisDataRetrofitInstance(
         okHttpClient: OkHttpClient,
+        tikXmlConverterFactory: TikXmlConverterFactory,
         resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(APIS_URL)
+            .baseUrl(BuildConfig.APIS_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(tikXmlConverterFactory)
             .build()
-    }
-
-    class TmapInterceptor : Interceptor {
-        @Throws(IOException::class)
-        override fun intercept(chain: Interceptor.Chain): Response {
-            return with(chain) {
-                val newRequest = request().newBuilder()
-                    .addHeader(T_MAP_APP_KEY_NAME, T_MAP_APP_KEY_VALUE)
-                    .build()
-                proceed(newRequest)
-            }
-        }
     }
 
     class CustomInterceptor : Interceptor {
@@ -194,10 +159,10 @@ internal object NetworkModule {
             }
 
             val (name: String, key: String) = when {
-                url.contains(OPEN_API_SEOUL_URL) -> Pair(OPEN_API_SEOUL_KEY_NAME, BUS_KEY)
-                url.contains(T_MAP_URL) -> Pair(T_MAP_APP_KEY_NAME, T_MAP_APP_KEY_VALUE)
-                url.contains(APIS_URL) -> Pair(APIS_KEY_NAME, BUS_KEY)
-                url.contains(WS_BUS_URL) -> Pair(WS_KEY_NAME, BUS_KEY)
+                url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(OPEN_API_SEOUL_KEY_NAME, BuildConfig.BUS_KEY)
+                url.contains(BuildConfig.T_MAP_URL) -> Pair(T_MAP_APP_KEY_NAME, BuildConfig.T_MAP_APP_KEY)
+                url.contains(BuildConfig.APIS_URL) -> Pair(APIS_KEY_NAME, BuildConfig.BUS_KEY)
+                url.contains(BuildConfig.WS_BUS_URL) -> Pair(WS_KEY_NAME, BuildConfig.BUS_KEY)
                 else -> {
                     return chain.proceed(chain.request())
                 }

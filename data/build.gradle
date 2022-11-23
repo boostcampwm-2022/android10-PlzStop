@@ -1,9 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-    id 'kotlin-android-extensions'
+    id 'kotlin-kapt'
 }
 
 Properties properties = new Properties()
@@ -13,7 +12,6 @@ android {
     namespace 'com.stop.data'
     compileSdk 32
 
-
     defaultConfig {
         minSdk 24
         targetSdk 32
@@ -21,8 +19,12 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField "String", "TMAP_URL", properties['TMAP_URL']
-        buildConfigField("String", "TMAP_APP_KEY", properties['TMAP_APP_KEY'])
+
+        buildConfigField "String", "T_MAP_URL", properties['t_map_url']
+        buildConfigField "String", "WS_BUS_URL", properties['ws_bus_url']
+        buildConfigField "String", "APIS_URL", properties['apis_url']
+        buildConfigField "String", "OPEN_API_SEOUL_URL", properties['open_api_seoul_url']
+        buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
         buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
         buildConfigField "String", "BUS_KEY", properties['bus_key']
     }
@@ -62,19 +64,15 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
 
     // Moshi
-    implementation 'com.squareup.moshi:moshi-kotlin:1.13.0'
-    implementation 'com.squareup.moshi:moshi:1.13.0'
-    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.13.0'
-
-    // network
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.10.0'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
     implementation 'com.squareup.moshi:moshi-kotlin:1.14.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
-    implementation 'com.squareup.retrofit2:converter-jaxb:2.9.0'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
-    implementation 'com.sun.xml.bind:jaxb-impl:4.0.0'
+    implementation 'com.squareup.moshi:moshi:1.14.0'
+    kapt 'com.squareup.moshi:moshi-kotlin-codegen:1.14.0'
+
+    // xml parser
+    implementation 'com.tickaroo.tikxml:annotation:0.8.13'
+    implementation 'com.tickaroo.tikxml:core:0.8.13'
+    implementation 'com.tickaroo.tikxml:retrofit-converter:0.8.13'
+    kapt 'com.tickaroo.tikxml:processor:0.8.13'
 }
 
 kapt {
