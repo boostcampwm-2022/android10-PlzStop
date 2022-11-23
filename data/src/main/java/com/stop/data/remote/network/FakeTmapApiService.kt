@@ -29,7 +29,7 @@ internal interface FakeTmapApiService {
         @Query("lon") longitude: String,
         @Query("version") version: Int = REVERSE_GEOCODING_VERSION,
         @Query("coordType") coordinationType: String = REVERSE_GEOCODING_COORDINATION_TYPE,
-        @Query("addressType") addressType: String = REVERSE_GEOCODING_ADDRESS_TYPE,
+        @Query("addressType") addressType: String,
     ): NetworkResult<ReverseGeocodingResponse>
 
     companion object {
@@ -38,6 +38,5 @@ internal interface FakeTmapApiService {
         private const val REVERSE_GEOCODING_URL = "tmap/geo/reversegeocoding"
         private const val REVERSE_GEOCODING_VERSION = 1
         private const val REVERSE_GEOCODING_COORDINATION_TYPE = "WGS84GEO"
-        private const val REVERSE_GEOCODING_ADDRESS_TYPE = "A02"
     }
 }
