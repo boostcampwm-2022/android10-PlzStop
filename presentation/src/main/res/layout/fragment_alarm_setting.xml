@@ -217,7 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="9dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/text_view_register_alarm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_mission_toggle"
             app:layout_constraintTop_toBottomOf="@id/toggle_group_alarm"
@@ -238,6 +238,22 @@
                 android:text="@string/off_text" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
+
+        <TextView
+            android:id="@+id/text_view_register_alarm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/background_gray_d9_8"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:paddingVertical="8dp"
+            android:text="@string/register_alarm_text"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
