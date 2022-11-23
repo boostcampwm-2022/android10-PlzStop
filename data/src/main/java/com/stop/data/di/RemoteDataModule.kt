@@ -17,5 +17,4 @@ internal abstract class RemoteDataModule {
     abstract fun provideNearPlaceRemoteData(
         nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl
     ): NearPlaceRemoteDataSource
-
 }
