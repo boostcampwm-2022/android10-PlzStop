@@ -37,22 +37,15 @@ class PlaceSearchViewModel @Inject constructor(
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
-    fun afterTextChanged(s: Editable?) {
-        getNearPlaces(
-            s.toString(),
-            currentLocation.longitude,
-            currentLocation.latitude
-        )
+    private val _searchKeyword = MutableStateFlow("")
+    val searchKeyword : StateFlow<String> = _searchKeyword
 
-        if (s.toString().isBlank()) {
-            setNearPlaceListEmpty()
-        }
+    fun afterTextChanged(s: Editable?) {
+        _searchKeyword.value = s.toString()
     }
 
-    private fun getNearPlaces(
+    fun getNearPlaces(
         searchKeyword: String,
-        centerLon: Double,
-        centerLat: Double
     ) {
         viewModelScope.launch {
             try {
@@ -60,8 +53,8 @@ class PlaceSearchViewModel @Inject constructor(
                     getNearPlacesUseCase.getNearPlaces(
                         TMAP_VERSION,
                         searchKeyword,
-                        centerLon,
-                        centerLat,
+                        currentLocation.longitude,
+                        currentLocation.latitude,
                         BuildConfig.TMAP_APP_KEY
                     )
                 )

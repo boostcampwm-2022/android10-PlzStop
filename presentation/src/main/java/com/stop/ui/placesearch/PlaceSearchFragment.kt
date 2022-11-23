@@ -17,6 +17,10 @@ import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -46,6 +50,7 @@ class PlaceSearchFragment : Fragment() {
         initBinding()
         listenEditTextChange()
         logErrorMessage()
+        observeSearchKeyword()
     }
 
     private fun initAdapter() {
@@ -116,6 +121,19 @@ class PlaceSearchFragment : Fragment() {
                     }
                 }
         }
+    }
+
+    @OptIn(FlowPreview::class)
+    private fun observeSearchKeyword(){
+        placeSearchViewModel.searchKeyword.debounce(100)
+            .onEach {
+                if(it.isBlank()){
+                    placeSearchViewModel.setNearPlaceListEmpty()
+                }else{
+                    placeSearchViewModel.getNearPlaces(it)
+                }
+            }
+            .launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {
