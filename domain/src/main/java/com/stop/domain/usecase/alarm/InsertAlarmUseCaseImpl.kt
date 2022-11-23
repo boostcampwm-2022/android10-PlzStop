@@ -8,7 +8,7 @@ class InsertAlarmUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : InsertAlarmUseCase{
 
-    override suspend fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
+    override fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         alarmRepository.insertAlarm(alarmUseCaseItem)
     }
 

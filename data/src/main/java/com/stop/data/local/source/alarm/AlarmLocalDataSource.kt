@@ -5,10 +5,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface AlarmLocalDataSource {
 
-    suspend fun insertAlarm(alarmRepositoryItem: AlarmRepositoryItem)
+    fun insertAlarm(alarmRepositoryItem: AlarmRepositoryItem)
 
-    suspend fun deleteAlarm()
+    fun deleteAlarm()
 
-    suspend fun selectAlarm(): Flow<AlarmRepositoryItem>
+    fun selectAlarm(): Flow<AlarmRepositoryItem>
 
 }

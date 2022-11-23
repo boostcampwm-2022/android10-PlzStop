@@ -4,6 +4,6 @@ import com.stop.domain.model.alarm.AlarmUseCaseItem
 
 interface InsertAlarmUseCase {
 
-    suspend fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem)
+    fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem)
 
 }

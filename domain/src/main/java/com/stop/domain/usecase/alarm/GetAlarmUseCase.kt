@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetAlarmUseCase {
 
-    suspend fun getAlarm() : Flow<AlarmUseCaseItem>
+    fun getAlarm() : Flow<AlarmUseCaseItem>
 
 }

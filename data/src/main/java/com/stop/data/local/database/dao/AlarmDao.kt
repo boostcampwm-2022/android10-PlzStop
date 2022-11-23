@@ -11,12 +11,12 @@ import kotlinx.coroutines.flow.Flow
 interface AlarmDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAlarm(alarmEntity: AlarmEntity)
+    fun insertAlarm(alarmEntity: AlarmEntity)
 
     @Query("DELETE FROM AlarmEntity")
-    suspend fun deleteAlarm()
+    fun deleteAlarm()
 
     @Query("SELECT * FROM AlarmEntity")
-    suspend fun selectAlarm(): Flow<AlarmEntity>
+    fun selectAlarm(): Flow<AlarmEntity>
 
 }

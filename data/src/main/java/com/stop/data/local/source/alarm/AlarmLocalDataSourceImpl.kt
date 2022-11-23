@@ -10,15 +10,15 @@ internal class AlarmLocalDataSourceImpl @Inject constructor(
     private val alarmDao: AlarmDao
 ) : AlarmLocalDataSource {
 
-    override suspend fun insertAlarm(alarmRepositoryItem: AlarmRepositoryItem) {
+    override fun insertAlarm(alarmRepositoryItem: AlarmRepositoryItem) {
         alarmDao.insertAlarm(alarmRepositoryItem.toEntity())
     }
 
-    override suspend fun deleteAlarm() {
+    override fun deleteAlarm() {
         alarmDao.deleteAlarm()
     }
 
-    override suspend fun selectAlarm(): Flow<AlarmRepositoryItem> {
+    override fun selectAlarm(): Flow<AlarmRepositoryItem> {
         return alarmDao.selectAlarm().map { it.toRepositoryModel() }
     }
 
