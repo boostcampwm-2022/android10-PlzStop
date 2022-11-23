@@ -18,16 +18,11 @@ class RouteViewHolder(
 
     private fun calculateExpectedRoute(itinerary: Itinerary): String {
         return itinerary.routes.joinToString(" -> ") { route ->
-            when (route) {
-                is TransportRoute -> {
-                    when (route.mode) {
-                        MoveType.SUBWAY -> "${route.routeInfo} ${route.start.name}역"
-                        MoveType.BUS -> {
-                            val (busType, busNum) = route.routeInfo.split(":")
-                            "${route.start.name} 정거장 $busType $busNum 버스"
-                        }
-                        else -> route.start.name
-                    }
+            when (route.mode) {
+                MoveType.SUBWAY -> "${(route as TransportRoute).routeInfo} ${route.start.name}역"
+                MoveType.BUS -> {
+                    val (busType, busNum) = (route as TransportRoute).routeInfo.split(":")
+                    "${route.start.name} 정거장 $busType $busNum 버스"
                 }
                 else -> route.start.name
             }
