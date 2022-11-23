@@ -14,34 +14,12 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetRouteUseCase {
 
-    /*
-        T MAP에서 제공하는 신분당선의 외부코드(FR_CODE)는 공공데이터 포털에서 사용하는 외부 코드와
-        일치하지 않습니다. 그래서 신분당선의 경우 전철역코드를 하드코딩해서 제공하는 방식으로
-        구현했습니다.
-     */
-    private val shinbundangLineCd = mapOf(
-        "강남" to "4307",
-        "양재" to "4308",
-        "신사" to "4304",
-        "논현" to "4305",
-        "신논현" to "4306",
-        "양재시민의숲" to "4309",
-        "청계산입구" to "4310",
-        "판교" to "4311",
-        "정자" to "4312",
-        "미금" to "4313",
-        "동천" to "4314",
-        "수지구청" to "4315",
-        "성복" to "4316",
-        "상현" to "4317",
-        "광교중앙" to "4318",
-        "광교" to "4319",
-    )
+    private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT).toList()
 
     override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         val originRouteData = routeRepository.getRoute(routeRequest)
 
-        return originRouteData.metaData.plan.itineraries.fold(listOf())  itinerary@{ itineraries, itinerary ->
+        return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
@@ -112,21 +90,19 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
     private suspend fun getIdUsedAtPublicApi(
-        route: String?,
+        routeType: Int,
         station: com.stop.domain.model.route.tmap.origin.Station,
         moveType: MoveType,
     ): String {
         return when (moveType) {
             MoveType.SUBWAY -> {
-                if (route == "신분당선") {
-                    return shinbundangLineCd[station.stationName] ?: throw IllegalArgumentException(
-                        NOT_REGISTERED_STATION
-                    )
+                if (allowedSubwayLineForUse.contains(routeType).not()) {
+                    throw IllegalArgumentException(NOT_REGISTERED_STATION)
                 }
                 routeRepository.getSubwayStationCd(station.stationID, station.stationName)
             }
             MoveType.BUS -> {
-                if (route?.contains("마을") == true) {
+                if (station.stationName.contains("마을")) {
                     throw IllegalArgumentException(GYEONGGI_REGION_BUS_NOT_SUPPORT)
                 }
                 getBusIdUsedAtPublicApi(station)
@@ -147,15 +123,20 @@ internal class GetRouteUseCaseImpl @Inject constructor(
         station: com.stop.domain.model.route.tmap.origin.Station
     ): String {
         val reverseGeocodingResponse =
-            routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon), AddressType.LOT_ADDRESS)
+            routeRepository.reverseGeocoding(
+                Coordinate(station.lat, station.lon),
+                AddressType.LOT_ADDRESS
+            )
         val arsId = when (reverseGeocodingResponse.addressInfo.cityDo) {
             GYEONGGI_DO -> {
-                val busStations = routeRepository.getGyeonggiBusStationId(station.stationName).msgBody.busStations
+                val busStations =
+                    routeRepository.getGyeonggiBusStationId(station.stationName).msgBody.busStations
 
                 findClosestGyeonggiBusStation(station, busStations)
             }
             SEOUL -> {
-                val busStations = routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
+                val busStations =
+                    routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
 
                 findClosestSeoulBusStation(station, busStations)
             }
@@ -298,5 +279,8 @@ internal class GetRouteUseCaseImpl @Inject constructor(
         private const val CORRECTION_VALUE = 10_000
         private const val GYEONGGI_DO = "경기도"
         private const val SEOUL = "서울특별시"
+
+        private const val SUBWAY_LINE_ONE = 1
+        private const val SUBWAY_LINE_EIGHT = 8
     }
 }
