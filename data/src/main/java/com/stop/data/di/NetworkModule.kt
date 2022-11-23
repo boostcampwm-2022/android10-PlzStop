@@ -32,6 +32,10 @@ internal object NetworkModule {
     private const val WS_KEY_NAME = "ServiceKey"
 
     private const val T_MAP_ROUTE_URL = "transit/routes"
+
+    /**
+     * resources에 fake 데이터가 담긴 파일을 넣어줘야 Fake TMap이 정상적으로 동작합니다.
+     */
     private const val FAKE_JSON_URI = "response.json"
 
     @Provides
