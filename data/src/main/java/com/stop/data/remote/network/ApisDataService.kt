@@ -1,14 +1,20 @@
 package com.stop.data.remote.network
 
+import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
+import com.stop.data.remote.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.Query
 
-interface ApisDataService {
+internal interface ApisDataService {
 
-    @GET
+    @GET(GET_GYEONGGI_BUS_STATION_ID_URL)
     suspend fun getBusStationId(
-        @Url url: String,
+        @Query("keyword") stationName: String,
+        @Query("serviceKey") key: String = BuildConfig.BUS_KEY
     ): NetworkResult<GetGyeonggiBusStationIdResponse>
+
+    companion object {
+        private const val GET_GYEONGGI_BUS_STATION_ID_URL = "busstationservice/getBusStationList"
+    }
 }

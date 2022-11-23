@@ -1,7 +1,8 @@
 package com.stop.domain.di
 
-import com.stop.domain.usecase.GetRouteUseCase
-import com.stop.domain.usecase.GetRouteUseCaseImpl
+import com.stop.domain.usecase.alarm.*
+import com.stop.domain.usecase.route.GetRouteUseCase
+import com.stop.domain.usecase.route.GetRouteUseCaseImpl
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
@@ -24,8 +25,20 @@ internal interface UseCaseModule {
     @Singleton
     fun provideGeoLocationUseCase(geoLocationUseCaseImpl: GeoLocationUseCaseImpl): GeoLocationUseCase
 
+    @Binds
+    @Singleton
+    fun provideGetNearPlaceUseCase(getNearPlacesUseCaseImpl: GetNearPlacesUseCaseImpl): GetNearPlacesUseCase
 
     @Binds
     @Singleton
-    abstract fun provideGetNearPlaceUseCase(getNearPlacesUseCaseImpl: GetNearPlacesUseCaseImpl): GetNearPlacesUseCase
+    fun provideGetAlarmUseCase(getAlarmUseCaseImpl: GetAlarmUseCaseImpl): GetAlarmUseCase
+
+    @Binds
+    @Singleton
+    fun provideInsertAlarmUseCase(insertAlarmUseCaseImpl: InsertAlarmUseCaseImpl): InsertAlarmUseCase
+
+    @Binds
+    @Singleton
+    fun provideDeleteAlarmUseCase(deleteAlarmUseCaseImpl: DeleteAlarmUseCaseImpl): DeleteAlarmUseCase
+
 }

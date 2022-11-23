@@ -1,7 +1,9 @@
 package com.stop.data.di
 
+import com.stop.data.repository.AlarmRepositoryImpl
 import com.stop.data.repository.NearPlaceRepositoryImpl
 import com.stop.data.repository.RouteRepositoryImpl
+import com.stop.domain.repository.AlarmRepository
 import com.stop.domain.repository.NearPlaceRepository
 import com.stop.domain.repository.RouteRepository
 import dagger.Binds
@@ -22,5 +24,9 @@ internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
+    fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
+
+    @Binds
+    @Singleton
+    fun provideAlarmRepository(alarmRepositoryImpl: AlarmRepositoryImpl): AlarmRepository
 }

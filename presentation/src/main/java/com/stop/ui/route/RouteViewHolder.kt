@@ -5,7 +5,6 @@ import com.stop.databinding.RouteItemBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.model.route.tmap.custom.MoveType
 import com.stop.domain.model.route.tmap.custom.SubwayRoute
-import com.stop.util.TimeCalculator
 
 class RouteViewHolder(
     private val binding: RouteItemBinding
@@ -14,8 +13,7 @@ class RouteViewHolder(
     fun bind(itinerary: Itinerary) {
         binding.itinerary = itinerary
         binding.textViewExpectedRoute.text = calculateExpectedRoute(itinerary)
-        binding.textViewExpectedRequiredTime.text =
-            TimeCalculator.secondToHourAndMinute(itinerary.totalTime)
+        binding.textViewExpectedRequiredTime.text = secondToHourAndMinute(itinerary.totalTime)
     }
 
     private fun calculateExpectedRoute(itinerary: Itinerary): String {
@@ -34,5 +32,9 @@ class RouteViewHolder(
                 else -> route.start.name
             }
         } + " -> 도착지"
+    }
+
+    private fun secondToHourAndMinute(second: Int): String {
+        return "${second / 60 / 60}시간 ${second / 60 % 60}분"
     }
 }
