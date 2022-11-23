@@ -1,7 +1,9 @@
 package com.stop.domain.di
 
-import com.stop.domain.usecase.GetRouteUseCase
-import com.stop.domain.usecase.GetRouteUseCaseImpl
+import com.stop.domain.usecase.route.GetRouteUseCase
+import com.stop.domain.usecase.route.GetRouteUseCaseImpl
+import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
+import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import dagger.Module
 import dagger.Binds
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
@@ -25,4 +27,7 @@ internal interface UseCaseModule {
         getNearPlacesUseCaseImpl: GetNearPlacesUseCaseImpl
     ): GetNearPlacesUseCase
 
+    @Binds
+    @Singleton
+    fun provideGeoLocationUseCase(geoLocationUseCaseImpl: GeoLocationUseCaseImpl): GeoLocationUseCase
 }
