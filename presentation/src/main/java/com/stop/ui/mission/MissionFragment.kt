@@ -85,6 +85,11 @@ class MissionFragment : Fragment(), TMapHandler {
         }
     }
 
+    /**
+     * 이 함수를 사용하기 위해서 assets 폴더에 좌표가 longitude,latitude로 나열되어 있는 txt 파일이
+     * 필요합니다.
+     * 파일의 이름은 아래 companion object에 있는 FAKE_USER_FILE_PATH 변숫값과 동일하게 해주세요.
+     */
     private fun readFromAssets(): List<String> {
         val reader =
             BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
