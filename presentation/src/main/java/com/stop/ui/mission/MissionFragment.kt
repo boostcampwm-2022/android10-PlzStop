@@ -22,7 +22,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 @AndroidEntryPoint
-class MissionFragment : Fragment(), TMapHandler {
+class MissionFragment : Fragment() {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -31,19 +31,6 @@ class MissionFragment : Fragment(), TMapHandler {
     private val viewModel: MissionViewModel by viewModels()
 
     private lateinit var tMap: TMap
-
-    private val permissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
-
-    private val requestPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.entries.any { it.value }) {
-            tMap.setTrackingMode()
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -68,35 +55,34 @@ class MissionFragment : Fragment(), TMapHandler {
         super.onDestroyView()
     }
 
-    override fun alertTMapReady() {
-        requestPermissionsLauncher.launch(permissions)
-        mimicUserMove()
-    }
+//    override fun alertTMapReady() {
+//        //mimicUserMove()
+//    }
 
-    private fun mimicUserMove() {
-        val lines = readFromAssets()
+//    private fun mimicUserMove() {
+//        val lines = readFromAssets()
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            lines.forEach { line ->
+//                val (longitude, latitude) = line.split(",")
+//                tMap.moveLocation(longitude, latitude)
+//                delay(500)
+//            }
+//        }
+//    }
 
-        CoroutineScope(Dispatchers.IO).launch {
-            lines.forEach { line ->
-                val (longitude, latitude) = line.split(",")
-                tMap.moveLocation(longitude, latitude)
-                delay(500)
-            }
-        }
-    }
-
-    private fun readFromAssets(): List<String> {
-        val reader =
-            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
-        val lines = arrayListOf<String>()
-        var line = reader.readLine()
-        while (line != null) {
-            lines.add(line)
-            line = reader.readLine()
-        }
-        reader.close()
-        return lines
-    }
+//    private fun readFromAssets(): List<String> {
+//        val reader =
+//            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+//        val lines = arrayListOf<String>()
+//        var line = reader.readLine()
+//        while (line != null) {
+//            lines.add(line)
+//            line = reader.readLine()
+//        }
+//        reader.close()
+//        return lines
+//    }
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -104,7 +90,7 @@ class MissionFragment : Fragment(), TMapHandler {
     }
 
     private fun initTMap() {
-        tMap = TMap((requireContext() as ContextWrapper).baseContext, this)
+        tMap = TMap((requireContext() as ContextWrapper).baseContext)
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.getTMapView())

@@ -13,8 +13,7 @@ import com.stop.BuildConfig
 import com.stop.R
 
 class TMap(
-    private val context: Context,
-    private val tMapHandler: TMapHandler,
+    private val context: Context
 ) {
 
     private lateinit var tMapView: TMapView
@@ -42,8 +41,6 @@ class TMap(
             tMapView.setVisibleLogo(false)
             tMapView.mapType = TMapView.MapType.NIGHT
             tMapView.zoomLevel = 16
-
-            tMapHandler.alertTMapReady()
         }
         tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
             isTracking = false
@@ -85,7 +82,6 @@ class TMap(
 
         tMapView.removeTMapMarkerItem("marker_person_pin")
         tMapView.addTMapMarkerItem(marker)
-//        tMapView.setLocationPoint(location.latitude, location.longitude)
 
         if (isTracking) {
             tMapView.setCenterPoint(location.latitude, location.longitude, true)
