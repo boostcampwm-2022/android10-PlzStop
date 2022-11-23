@@ -1,6 +1,5 @@
 package com.stop.domain.usecase.route
 
-import com.squareup.moshi.JsonDataException
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
 import com.stop.domain.model.route.seoul.bus.BusStationInfo
@@ -52,15 +51,9 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         MoveType.WALK -> createWalkRoute(leg, moveType)
                         else -> return@fold routes
                     }
-                } catch (e: IllegalArgumentException) {
-                    println(e)
-                    if (e.message?.contains(GYEONGGI_REGION_BUS_NOT_SUPPORT) == true) {
-                        return@itinerary itineraries
-                    }
-                    routes
-                } catch (e: JsonDataException) {
-                    println(e)
-                    routes
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    return@itinerary itineraries
                 }
             }
             itineraries + Itinerary(
