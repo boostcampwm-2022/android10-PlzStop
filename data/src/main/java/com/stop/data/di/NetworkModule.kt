@@ -2,65 +2,183 @@ package com.stop.data.di
 
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
-import com.stop.data.remote.ResponseAdapterFactory
-import com.stop.data.remote.network.NearPlaceApiService
 import com.stop.data.BuildConfig
+import com.stop.data.remote.ResultCallAdapter
+import com.tickaroo.tikxml.TikXml
+import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
+import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.util.concurrent.TimeUnit
+import javax.inject.Named
 import javax.inject.Singleton
 
-@Module
 @InstallIn(SingletonComponent::class)
+@Module
 internal object NetworkModule {
+
+    private const val T_MAP_APP_KEY_NAME = "appKey"
+    private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
+    private const val APIS_KEY_NAME = "ServiceKey"
+    private const val WS_KEY_NAME = "ServiceKey"
+
+    private const val T_MAP_ROUTE_URL = "transit/routes"
+
+    /**
+     * resources에 fake 데이터가 담긴 파일을 넣어줘야 Fake TMap이 정상적으로 동작합니다.
+     */
+    private const val FAKE_JSON_URI = "response.json"
 
     @Provides
     @Singleton
-    fun provideHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(
+        customInterceptor: CustomInterceptor,
+        loggingInterceptor: HttpLoggingInterceptor,
+    ): OkHttpClient {
         return OkHttpClient.Builder()
-            .readTimeout(10, TimeUnit.SECONDS)
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(15, TimeUnit.SECONDS)
-            .addInterceptor(getLoggingInterceptor())
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(customInterceptor)
             .build()
     }
 
-    private fun getLoggingInterceptor(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
 
     @Provides
     @Singleton
-    fun provideMoshi(): Moshi =
-        Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
+    fun provideMoshi(): Moshi {
+       return Moshi.Builder()
+            .addLast(KotlinJsonAdapterFactory())
             .build()
+    }
 
-    @Singleton
     @Provides
-    fun provideRetrofitInstance(
+    @Singleton
+    fun provideTikXmlConverterFactory(): TikXmlConverterFactory {
+        return TikXmlConverterFactory.create(TikXml.Builder().exceptionOnUnreadXml(false).build())
+    }
+
+    @Provides
+    fun provideCustomInterceptor(): CustomInterceptor {
+        return CustomInterceptor()
+    }
+
+    @Provides
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
+    }
+
+    @Provides
+    fun provideResultCallAdapter(): ResultCallAdapter.Factory {
+        return ResultCallAdapter.Factory()
+    }
+
+    @Provides
+    @Named("Tmap")
+    fun provideTmapRetrofitInstance(
         okHttpClient: OkHttpClient,
-        moshi: Moshi
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BuildConfig.TMAP_URL)
+            .baseUrl(BuildConfig.T_MAP_URL)
             .client(okHttpClient)
-            .addCallAdapterFactory(ResponseAdapterFactory())
+            .addCallAdapterFactory(resultCallAdapter)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
 
     @Provides
-    @Singleton
-    fun providePlaceApiService(retrofit: Retrofit): NearPlaceApiService {
-        return retrofit.create(NearPlaceApiService::class.java)
+    @Named("OpenApiSeoul")
+    fun provideOpenApiSeoulRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.OPEN_API_SEOUL_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
     }
 
+    @Provides
+    @Named("WsBus")
+    fun provideWsBusRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.WS_BUS_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Provides
+    @Named("ApisData")
+    fun provideApisDataRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        tikXmlConverterFactory: TikXmlConverterFactory,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.APIS_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(tikXmlConverterFactory)
+            .build()
+    }
+
+    class CustomInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val url = chain.request().url.toUri().toString()
+
+            if (url.contains(T_MAP_ROUTE_URL)) {
+                val response = readJson(FAKE_JSON_URI)
+                return chain.proceed(chain.request())
+                    .newBuilder()
+                    .code(200)
+                    .protocol(Protocol.HTTP_2)
+                    .message("success")
+                    .body(
+                        response.toByteArray()
+                            .toResponseBody("application/json".toMediaTypeOrNull())
+                    ).addHeader("content-type", "application/json")
+                    .build()
+            }
+
+            val (name: String, key: String) = when {
+                url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(OPEN_API_SEOUL_KEY_NAME, BuildConfig.BUS_KEY)
+                url.contains(BuildConfig.T_MAP_URL) -> Pair(T_MAP_APP_KEY_NAME, BuildConfig.T_MAP_APP_KEY)
+                url.contains(BuildConfig.APIS_URL) -> Pair(APIS_KEY_NAME, BuildConfig.BUS_KEY)
+                url.contains(BuildConfig.WS_BUS_URL) -> Pair(WS_KEY_NAME, BuildConfig.BUS_KEY)
+                else -> {
+                    return chain.proceed(chain.request())
+                }
+            }
+
+            return with(chain) {
+                val newRequest = request().newBuilder()
+                    .addHeader(name, key)
+                    .build()
+                proceed(newRequest)
+            }
+        }
+
+        private fun readJson(fileName: String): String {
+            return Thread.currentThread().contextClassLoader?.getResource(fileName)
+                ?.readText() ?: ""
+        }
+    }
 }
