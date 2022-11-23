@@ -18,7 +18,7 @@ internal class AlarmLocalDataSourceImpl @Inject constructor(
         alarmDao.deleteAlarm()
     }
 
-    override suspend fun selectAlarm(): Flow<AlarmRepositoryItem> {
+    override fun selectAlarm(): Flow<AlarmRepositoryItem> {
         return alarmDao.selectAlarm().map { it.toRepositoryModel() }
     }
 

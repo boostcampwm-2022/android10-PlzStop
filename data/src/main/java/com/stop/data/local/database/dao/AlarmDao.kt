@@ -17,6 +17,6 @@ interface AlarmDao {
     suspend fun deleteAlarm()
 
     @Query("SELECT * FROM AlarmEntity")
-    suspend fun selectAlarm(): Flow<AlarmEntity>
+    fun selectAlarm(): Flow<AlarmEntity>
 
 }

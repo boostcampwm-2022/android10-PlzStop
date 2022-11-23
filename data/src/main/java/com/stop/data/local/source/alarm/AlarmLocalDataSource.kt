@@ -9,6 +9,6 @@ interface AlarmLocalDataSource {
 
     suspend fun deleteAlarm()
 
-    suspend fun selectAlarm(): Flow<AlarmRepositoryItem>
+    fun selectAlarm(): Flow<AlarmRepositoryItem>
 
 }

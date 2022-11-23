@@ -30,7 +30,7 @@ internal class AlarmRepositoryImpl @Inject constructor(
         alarmLocalDataSource.deleteAlarm()
     }
 
-    override suspend fun selectAlarm(): Flow<AlarmUseCaseItem> {
+    override fun selectAlarm(): Flow<AlarmUseCaseItem> {
         return alarmLocalDataSource.selectAlarm().map { it.toUseCaseModel() }
     }
 

@@ -198,15 +198,15 @@
             app:layout_constraintBottom_toTopOf="@id/layout_panel"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:srcCompat="@drawable/ic_baseline_bookmarks_32" />
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/home_bottom_sheet"
+                layout="@layout/home_bottom_sheet" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <include
-            android:id="@+id/home_bottom_sheet"
-            layout="@layout/home_bottom_sheet" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>
 

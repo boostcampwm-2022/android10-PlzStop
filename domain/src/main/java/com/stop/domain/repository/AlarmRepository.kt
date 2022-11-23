@@ -9,6 +9,6 @@ interface AlarmRepository {
 
     suspend fun deleteAlarm()
 
-    suspend fun selectAlarm(): Flow<AlarmUseCaseItem>
+    fun selectAlarm(): Flow<AlarmUseCaseItem>
 
 }
