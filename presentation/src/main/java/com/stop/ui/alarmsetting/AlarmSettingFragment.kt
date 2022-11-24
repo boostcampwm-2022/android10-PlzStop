@@ -93,7 +93,7 @@ class AlarmSettingFragment : Fragment() {
 
     private fun setToggleListener() {
         with(binding) {
-            toggleGroupAlarm.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            toggleGroupAlarm.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (isChecked) {
                     when (checkedId) {
                         R.id.button_sound -> alarmSettingViewModel.alarmMethod = true
@@ -102,7 +102,7 @@ class AlarmSettingFragment : Fragment() {
                 }
             }
 
-            toggleGroupMission.addOnButtonCheckedListener { group, checkedId, isChecked ->
+            toggleGroupMission.addOnButtonCheckedListener { _, checkedId, isChecked ->
                 if (isChecked) {
                     when (checkedId) {
                         R.id.button_mission_on -> alarmSettingViewModel.isMission = true
