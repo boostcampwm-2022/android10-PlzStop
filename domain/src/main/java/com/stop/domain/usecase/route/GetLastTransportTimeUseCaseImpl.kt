@@ -268,7 +268,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val NOT_YET_CALCULATED = 0
         private const val KOREA_LONGITUDE = 127
         private const val KOREA_LATITUDE = 37
-        private const val CORRECTION_VALUE = 10_000
+        private const val CORRECTION_VALUE = 100_000
         private const val GYEONGGI_DO = "경기도"
         private const val SEOUL = "서울특별시"
 
