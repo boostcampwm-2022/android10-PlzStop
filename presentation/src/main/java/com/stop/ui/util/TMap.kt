@@ -29,14 +29,12 @@ open class TMap(
                 tMapView.mapType = TMapView.MapType.DEFAULT
                 tMapView.zoomLevel = 16
 
-                when (this@TMap.handler) {
-                    is MissionHandler -> {
-                        (this@TMap.handler).alertTMapReady()
-                        (this@TMap.handler).setOnEnableScrollWithZoomLevelListener()
-                    }
-                    is MapHandler -> {
-                        (this@TMap.handler).alertTMapReady()
-                    }
+                if (this@TMap.handler is MissionHandler) {
+                    (this@TMap.handler).alertTMapReady()
+                    (this@TMap.handler).setOnEnableScrollWithZoomLevelListener()
+                } else if (this@TMap.handler is MapHandler) {
+                    (this@TMap.handler).alertTMapReady()
+
                 }
                 initLocation = Location(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude)
             }
@@ -59,15 +57,12 @@ open class TMap(
         if (location != null && checkKoreaLocation(location)) {
             val beforeLocation = tMapView.locationPoint
             val nowLocation = TMapPoint(location.latitude, location.longitude)
-            when (handler) {
-                is MissionHandler -> {
-                    if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                        handler.setOnLocationChangeListener(nowLocation, beforeLocation)
-                    }
+            if (handler is MissionHandler) {
+                if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
+                    handler.setOnLocationChangeListener(nowLocation, beforeLocation)
                 }
-                is MapHandler -> {
-                    handler.setOnLocationChangeListener(location)
-                }
+            } else if (handler is MapHandler) {
+                handler.setOnLocationChangeListener(location)
             }
 
             tMapView.setLocationPoint(location.latitude, location.longitude)

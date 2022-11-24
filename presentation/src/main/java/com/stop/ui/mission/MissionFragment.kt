@@ -195,6 +195,7 @@ class MissionFragment : Fragment(), MissionHandler {
         )
         PERSON_LINE_NUM += 1
 
+        Log.d("Mission","now $nowLocation before $beforeLocation")
         viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
     }
 
@@ -202,7 +203,6 @@ class MissionFragment : Fragment(), MissionHandler {
         tMap.apply {
             tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
                 isTracking = false
-                Log.d("Mission","실행되나?")
             }
         }
     }
