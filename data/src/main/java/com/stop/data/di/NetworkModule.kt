@@ -44,7 +44,7 @@ internal object NetworkModule {
     @Provides
     @Singleton
     fun provideMoshi(): Moshi {
-       return Moshi.Builder()
+        return Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
