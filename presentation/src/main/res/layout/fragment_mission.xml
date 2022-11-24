@@ -81,18 +81,27 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@id/image_view_current_location"
+            app:layout_constraintBottom_toTopOf="@id/image_view_person_current_location"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:srcCompat="@drawable/ic_compass" />
 
         <ImageView
-            android:id="@+id/image_view_current_location"
+            android:id="@+id/image_view_person_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:layout_constraintBottom_toTopOf="@id/image_view_bus_current_location"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:srcCompat="@drawable/ic_location" />
+
+        <ImageView
+            android:id="@+id/image_view_bus_current_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:srcCompat="@drawable/ic_location" />
+            app:srcCompat="@drawable/ic_baseline_directions_bus_big" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

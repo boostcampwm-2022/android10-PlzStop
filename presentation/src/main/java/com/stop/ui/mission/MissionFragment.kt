@@ -15,6 +15,7 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
+import com.stop.ui.map.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,6 +46,7 @@ class MissionFragment : Fragment(), MissionHandler {
         setDataBinding()
         initViewModel()
         initTMap()
+        initView()
         setObserve()
     }
 
@@ -96,6 +98,33 @@ class MissionFragment : Fragment(), MissionHandler {
         viewModel.countDownWith(LEFT_TIME)
     }
 
+    private fun initView() {
+        binding.imageViewCompassMode.setOnClickListener {
+            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+        }
+
+        binding.imageViewPersonCurrentLocation.setOnClickListener {
+            tMap.tMapView.setCenterPoint(
+                viewModel.personCurrentLocation.latitude,
+                viewModel.personCurrentLocation.longitude,
+                true
+            )
+
+            tMap.isTracking = true
+        }
+
+        binding.imageViewBusCurrentLocation.setOnClickListener {
+            tMap.tMapView.setCenterPoint(
+                viewModel.busCurrentLocation.latitude,
+                viewModel.busCurrentLocation.longitude,
+                true
+            )
+
+            tMap.isTracking = false
+        }
+
+    }
+
     private fun setObserve() {
         val shortAnimationDuration =
             resources.getInteger(android.R.integer.config_shortAnimTime)
@@ -130,7 +159,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun drawBusLocationLine() {
         viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
-            if (Location(nowLocation.latitude, nowLocation.longitude) != INIT_LOCATION) {
+            if (beforeLocation != INIT_LOCATION) {
                 tMap.drawMoveLine(
                     TMapPoint(nowLocation.latitude, nowLocation.longitude),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
@@ -140,6 +169,8 @@ class MissionFragment : Fragment(), MissionHandler {
                 BUS_LINE_NUM += 1
             }
             beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+
+            viewModel.busCurrentLocation = beforeLocation
 
             tMap.makeMarker(
                 BUS_MARKER,
@@ -163,6 +194,8 @@ class MissionFragment : Fragment(), MissionHandler {
             PERSON_LINE_COLOR
         )
         PERSON_LINE_NUM += 1
+
+        viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -175,6 +208,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     companion object {
+
         private const val DESTINATION = "구로3동현대아파트"
         private const val PLUS = "+"
         private const val MINUS = ""
@@ -194,5 +228,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
         private const val BUS_MARKER = "marker_bus_pin"
         private const val BUS_MARKER_IMG = R.drawable.ic_baseline_directions_bus_32
+
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
+import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -43,6 +44,9 @@ class MissionViewModel @Inject constructor(
 
     private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem>()
     val busNowLocationInfo: LiveData<BusInfoUseCaseItem> = _busNowLocationInfo
+
+    var personCurrentLocation = Location(0.0, 0.0)
+    var busCurrentLocation = Location(0.0, 0.0)
 
     init {
         getBusNowLocation()
@@ -90,7 +94,7 @@ class MissionViewModel @Inject constructor(
             while (TIME_TEST < 60) {
                 _busNowLocationInfo.value = getBusNowLocationUseCase.getBusNowLocation(BUS_540_ID)
                 Log.d("MissionViewModel","busNowLocationInfo ${_busNowLocationInfo.value}")
-                delay(1000)
+                delay(5000)
                 TIME_TEST += 1
             }
 
