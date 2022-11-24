@@ -28,7 +28,7 @@ internal class AlarmLocalDataSourceImpl @Inject constructor(
 
     override suspend fun deleteAlarm() {
         context.datastore.edit { preferences ->
-            preferences[ALARM] = ""
+            preferences.remove(ALARM)
         }
     }
 
