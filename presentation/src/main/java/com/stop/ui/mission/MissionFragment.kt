@@ -2,6 +2,7 @@ package com.stop.ui.mission
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,9 @@ import androidx.fragment.app.viewModels
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MissionFragment : Fragment() , MissionHandler{
 
     private var _binding: FragmentMissionBinding? = null
@@ -77,7 +80,7 @@ class MissionFragment : Fragment() , MissionHandler{
     }
 
     private fun initTMap() {
-        tMap = MissionTMap(requireContext(), this)
+        tMap = MissionTMap((requireContext() as ContextWrapper).baseContext, this)
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.tMapView)

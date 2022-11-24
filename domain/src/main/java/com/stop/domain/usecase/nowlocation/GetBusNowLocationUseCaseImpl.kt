@@ -1,14 +1,15 @@
 package com.stop.domain.usecase.nowlocation
 
+import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.repository.NowLocationRepository
 import javax.inject.Inject
 
 class GetBusNowLocationUseCaseImpl @Inject constructor(
     private val nowLocationRepository: NowLocationRepository
-) : GetBusNowLocationUseCase{
+) : GetBusNowLocationUseCase {
 
-    override suspend fun getBusNowLocation(busRouteId: String) {
-        nowLocationRepository.getBusNowLocation(busRouteId)
+    override suspend fun getBusNowLocation(busRouteId: String): BusInfoUseCaseItem {
+        return nowLocationRepository.getBusNowLocation(busRouteId)
     }
 
 }
