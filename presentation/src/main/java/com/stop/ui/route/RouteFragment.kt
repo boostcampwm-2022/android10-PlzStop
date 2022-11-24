@@ -55,7 +55,7 @@ class RouteFragment : Fragment() {
 
     private fun setStartAndDestinationText() {
         viewModel.setOrigin(Place(ORIGIN_NAME, Coordinate(ORIGIN_Y, ORIGIN_X)))
-        viewModel.setDestination(Place(DESTINATION_NAME, Coordinate(DESTINATION_X, DESTINATION_Y)))
+        viewModel.setDestination(Place(DESTINATION_NAME, Coordinate(DESTINATION_Y, DESTINATION_X)))
         viewModel.getRoute()
     }
 

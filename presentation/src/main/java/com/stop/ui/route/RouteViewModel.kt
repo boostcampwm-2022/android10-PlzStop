@@ -9,6 +9,7 @@ import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.usecase.route.GetRouteUseCase
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,18 +31,18 @@ class RouteViewModel @Inject constructor(
         get() = _routeResponse
 
     fun getRoute() {
-        viewModelScope.launch {
-            val originValue = _origin.value ?: return@launch
-            val destinationValue = _destination.value ?: return@launch
+        val originValue = _origin.value ?: return
+        val destinationValue = _destination.value ?: return
 
-            val routeRequest = RouteRequest(
-                startX = originValue.coordinate.latitude,
-                startY = originValue.coordinate.longitude,
-                endX = destinationValue.coordinate.latitude,
-                endY = destinationValue.coordinate.longitude,
-            )
+        val routeRequest = RouteRequest(
+            startX = originValue.coordinate.longitude,
+            startY = originValue.coordinate.latitude,
+            endX = destinationValue.coordinate.longitude,
+            endY = destinationValue.coordinate.latitude,
+        )
 
-            _routeResponse.value = getRouteUseCase.getRoute(routeRequest)
+        viewModelScope.launch(Dispatchers.IO) {
+            _routeResponse.postValue(getRouteUseCase.getRoute(routeRequest))
         }
     }
 

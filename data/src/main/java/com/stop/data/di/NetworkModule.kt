@@ -11,11 +11,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
-import okhttp3.Protocol
 import okhttp3.Response
-import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -30,13 +27,6 @@ internal object NetworkModule {
     private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
     private const val APIS_KEY_NAME = "ServiceKey"
     private const val WS_KEY_NAME = "ServiceKey"
-
-    private const val T_MAP_ROUTE_URL = "transit/routes"
-
-    /**
-     * resources에 fake 데이터가 담긴 파일을 넣어줘야 Fake TMap이 정상적으로 동작합니다.
-     */
-    private const val FAKE_JSON_URI = "response.json"
 
     @Provides
     @Singleton
@@ -144,23 +134,15 @@ internal object NetworkModule {
         override fun intercept(chain: Interceptor.Chain): Response {
             val url = chain.request().url.toUri().toString()
 
-            if (url.contains(T_MAP_ROUTE_URL)) {
-                val response = readJson(FAKE_JSON_URI)
-                return chain.proceed(chain.request())
-                    .newBuilder()
-                    .code(200)
-                    .protocol(Protocol.HTTP_2)
-                    .message("success")
-                    .body(
-                        response.toByteArray()
-                            .toResponseBody("application/json".toMediaTypeOrNull())
-                    ).addHeader("content-type", "application/json")
-                    .build()
-            }
-
             val (name: String, key: String) = when {
-                url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(OPEN_API_SEOUL_KEY_NAME, BuildConfig.BUS_KEY)
-                url.contains(BuildConfig.T_MAP_URL) -> Pair(T_MAP_APP_KEY_NAME, BuildConfig.T_MAP_APP_KEY)
+                url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(
+                    OPEN_API_SEOUL_KEY_NAME,
+                    BuildConfig.BUS_KEY
+                )
+                url.contains(BuildConfig.T_MAP_URL) -> Pair(
+                    T_MAP_APP_KEY_NAME,
+                    BuildConfig.T_MAP_APP_KEY
+                )
                 url.contains(BuildConfig.APIS_URL) -> Pair(APIS_KEY_NAME, BuildConfig.BUS_KEY)
                 url.contains(BuildConfig.WS_BUS_URL) -> Pair(WS_KEY_NAME, BuildConfig.BUS_KEY)
                 else -> {
@@ -174,11 +156,6 @@ internal object NetworkModule {
                     .build()
                 proceed(newRequest)
             }
-        }
-
-        private fun readJson(fileName: String): String {
-            return Thread.currentThread().contextClassLoader?.getResource(fileName)
-                ?.readText() ?: ""
         }
     }
 }

@@ -2,8 +2,8 @@ package com.stop.data.remote.source.route
 
 import com.stop.data.remote.model.NetworkResult
 import com.stop.data.remote.network.ApisDataService
-import com.stop.data.remote.network.FakeTmapApiService
 import com.stop.data.remote.network.OpenApiSeoulService
+import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
@@ -16,8 +16,8 @@ import com.stop.domain.model.route.tmap.origin.RouteResponse
 import javax.inject.Inject
 
 internal class RouteRemoteDataSourceImpl @Inject constructor(
-//    private val tmapApiService: TmapApiService,
-    private val fakeTmapApiService: FakeTmapApiService,
+    private val tmapApiService: TmapApiService,
+//    private val fakeTmapApiService: FakeTmapApiService,
     private val openApiSeoulService: OpenApiSeoulService,
     private val wsBusApiService: WsBusApiService,
     private val apisDataService: ApisDataService,
@@ -25,15 +25,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
         with(
-            fakeTmapApiService.getRoutes(
-                startX = routeRequest.startX,
-                startY = routeRequest.startY,
-                endX = routeRequest.endX,
-                endY = routeRequest.endY,
-                lang = routeRequest.lang,
-                format = routeRequest.format,
-                count = routeRequest.count,
-            )
+            tmapApiService.getRoutes(routeRequest.toMap())
         ) {
             return when (this) {
                 is NetworkResult.Success -> this.data
@@ -45,7 +37,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     }
 
     override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
-        with(fakeTmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude, addressType = addressType.type)) {
+        with(tmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude, addressType = addressType.type)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
