@@ -18,6 +18,13 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="55dp" />
+
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_begin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -160,63 +167,111 @@
                 app:layout_constraintStart_toEndOf="@id/text_view_start_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/text_view_search"
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_search"
+            android:layout_width="0dp"
             android:layout_height="50dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginEnd="35dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/layout_text_view_search"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:elevation="15dp"
-            android:gravity="center_vertical"
-            android:text="@string/search_hint"
-            android:paddingStart="45sp"
-            android:paddingEnd="0sp"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="#808590"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintStart_toStartOf="@id/guideline_begin"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:background="@drawable/background_search"
+            app:layout_constraintStart_toStartOf="@+id/guideline_begin"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintTop_toTopOf="@id/guideline_top">
 
-        <ImageView
-            android:id="@+id/image_view_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:elevation="15dp"
-            android:layout_marginStart="15dp"
-            app:layout_constraintStart_toStartOf="@id/text_view_search"
-            app:layout_constraintTop_toTopOf="@+id/text_view_search"
-            app:layout_constraintBottom_toBottomOf="@+id/text_view_search"
-            app:srcCompat="@drawable/ic_search" />
+            <TextView
+                android:id="@+id/text_view_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/search_hint"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#808590" />
 
-        <ImageView
-            android:id="@+id/image_view_compass_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@id/image_view_current_location"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:srcCompat="@drawable/ic_compass" />
+            <ImageView
+                android:id="@+id/image_view_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                app:layout_constraintStart_toStartOf="@id/layout_search"
+                app:layout_constraintTop_toTopOf="@id/layout_search"
+                app:layout_constraintBottom_toBottomOf="@id/layout_search"
+                app:srcCompat="@drawable/ic_search" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ImageView
-            android:id="@+id/image_view_current_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@id/image_view_bookmark"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:srcCompat="@drawable/ic_location" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/image_view_bookmark"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:layout_constraintBottom_toTopOf="@id/layout_panel"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:srcCompat="@drawable/ic_baseline_bookmarks_32" />
+            <ImageView
+                android:id="@+id/image_view_compass_background"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="10dp"
+                android:elevation="15dp"
+                android:background="@drawable/background_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/image_view_current_background" />
+
+            <ImageView
+                android:id="@+id/image_view_compass"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:elevation="15dp"
+                app:layout_constraintStart_toStartOf="@id/image_view_compass_background"
+                app:layout_constraintEnd_toEndOf="@id/image_view_compass_background"
+                app:layout_constraintTop_toTopOf="@id/image_view_compass_background"
+                app:layout_constraintBottom_toBottomOf="@id/image_view_compass_background"
+                app:srcCompat="@drawable/ic_compass" />
+
+            <ImageView
+                android:id="@+id/image_view_current_background"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="10dp"
+                android:elevation="15dp"
+                android:background="@drawable/background_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/image_view_bookmark_background" />
+
+            <ImageView
+                android:id="@+id/image_view_current"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:elevation="15dp"
+                app:layout_constraintStart_toStartOf="@id/image_view_current_background"
+                app:layout_constraintEnd_toEndOf="@id/image_view_current_background"
+                app:layout_constraintTop_toTopOf="@id/image_view_current_background"
+                app:layout_constraintBottom_toBottomOf="@id/image_view_current_background"
+                app:srcCompat="@drawable/ic_location" />
+
+            <ImageView
+                android:id="@+id/image_view_bookmark_background"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="160dp"
+                android:elevation="15dp"
+                android:background="@drawable/background_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageView
+                android:id="@+id/image_view_bookmark"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:elevation="15dp"
+                app:layout_constraintStart_toStartOf="@id/image_view_bookmark_background"
+                app:layout_constraintEnd_toEndOf="@id/image_view_bookmark_background"
+                app:layout_constraintTop_toTopOf="@id/image_view_bookmark_background"
+                app:layout_constraintBottom_toBottomOf="@id/image_view_bookmark_background"
+                app:srcCompat="@drawable/ic_bookmark" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
