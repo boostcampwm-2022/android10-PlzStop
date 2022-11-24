@@ -18,6 +18,7 @@ interface RouteRepository {
 
     suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse
     suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse
+    suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String
 
     suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse
 }

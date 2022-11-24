@@ -7,6 +7,7 @@ import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
+import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.SubwayStationResponse
@@ -80,6 +81,17 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
         with(wsBusApiService.getBusLine(stationId)) {
+            return when(this) {
+                is NetworkResult.Success -> this.data
+                is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
+                is NetworkResult.NetworkError -> throw this.exception
+                is NetworkResult.Unexpected -> throw this.exception
+            }
+        }
+    }
+
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): GetBusLastTimeResponse {
+        with(wsBusApiService.getBusLastTime(stationId, lineId)) {
             return when(this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)

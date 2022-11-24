@@ -39,7 +39,8 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                             stationType = route.routeType,
                             area = getArea(startStation.coordinate),
                             lineName = route.routeInfo,
-                            lineId = UNKNOWN_ID
+                            lineId = UNKNOWN_ID,
+                            term = NOT_YET_CALCULATED,
                         )
                     }
                     else -> transportIdRequests
@@ -77,27 +78,66 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
 
         // 고유 번호로 승차지의 막차 시간 모두 알아내기
-//        val dataWithLastTime: List<Unit>
+        val dataWithLastTime: List<String> = transportIdRequests.map { transportIdRequest ->
+            when (transportIdRequest.transportMoveType) {
+                TransportMoveType.BUS -> getBusLastTransportTime(transportIdRequest)
+                TransportMoveType.SUBWAY -> getSubwayLastTransportTime(transportIdRequest)
+            }
+        }
 
         // 막차 시간 중 가장 빠른 시간과 dataWithLastTime을 가지는 데이터 클래스 반환하기
 //        return ReturnData(fastestTime, dataWithLastTime)
         return null
     }
 
-    private suspend fun getId(
-        transportIdRequest: TransportIdRequest,
-    ): String {
+    private fun getSubwayLastTransportTime(transportIdRequest: TransportIdRequest): String {
+        TODO()
+    }
+
+    private suspend fun getBusLastTransportTime(transportIdRequest: TransportIdRequest): String {
+        when (transportIdRequest.area) {
+            Area.GYEONGGI -> {
+                TODO()
+            }
+            Area.SEOUL -> {
+                return routeRepository.getSeoulBusLastTime(
+                    transportIdRequest.stationId,
+                    transportIdRequest.lineId
+                )
+            }
+            Area.UN_SUPPORT_AREA -> {
+                TODO()
+            }
+        }
+    }
+
+
+    private suspend fun getSeoulBusLineId(transportIdRequest: TransportIdRequest): TransportIdRequest {
+        val busName = transportIdRequest.lineName.split(":")[1]
+        val line =
+            routeRepository.getSeoulBusLine(transportIdRequest.stationId).lineIdMsgBody.busLines.firstOrNull {
+                it.busLineName == busName
+            } ?: throw NoAppropriateDataException(NO_BUS_LINE_ID)
+
+        return transportIdRequest.changeLineId(line.lineId, line.term)
+    }
+
+    private suspend fun getStationId(transportIdRequest: TransportIdRequest): String {
         return when (transportIdRequest.transportMoveType) {
             TransportMoveType.SUBWAY -> {
                 if (allowedSubwayLineForUse.contains(transportIdRequest.stationType).not()) {
                     throw NoAppropriateDataException(NOT_REGISTERED_STATION)
                 }
-                routeRepository.getSubwayStationCd(transportIdRequest.id, transportIdRequest.stationName)
+                routeRepository.getSubwayStationCd(
+                    transportIdRequest.stationId,
+                    transportIdRequest.stationName
+                )
             }
             TransportMoveType.BUS -> {
                 getBusIdUsedAtPublicApi(transportIdRequest)
             }
         }
+    }
 
     private suspend fun getArea(coordinate: Coordinate): Area {
         val areaName =
@@ -173,7 +213,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             }
         }
 
-        return closestStation?.arsId ?: UNKNOWN_ARS_ID
+        return closestStation?.arsId ?: UNKNOWN_ID
     }
 
     private fun findClosestGyeonggiBusStation(
@@ -225,6 +265,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
 
         private const val UNKNOWN_ID = "0"
+        private const val NOT_YET_CALCULATED = 0
         private const val KOREA_LONGITUDE = 127
         private const val KOREA_LATITUDE = 37
         private const val CORRECTION_VALUE = 10_000

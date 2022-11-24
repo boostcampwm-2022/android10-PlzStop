@@ -14,13 +14,16 @@ import javax.inject.Inject
 
 internal class RouteRepositoryImpl @Inject constructor(
     private val remoteDataSource: RouteRemoteDataSource
-): RouteRepository {
+) : RouteRepository {
 
     override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
         return remoteDataSource.getRoute(routeRequest)
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
+    override suspend fun reverseGeocoding(
+        coordinate: Coordinate,
+        addressType: AddressType
+    ): ReverseGeocodingResponse {
         return remoteDataSource.reverseGeocoding(coordinate, addressType)
     }
 
@@ -34,6 +37,14 @@ internal class RouteRepositoryImpl @Inject constructor(
 
     override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
         return remoteDataSource.getSeoulBusLine(stationId)
+    }
+
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String {
+        return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
+            .lastTimeMsgBody
+            .lastTimes
+            .first()
+            .lastTime
     }
 
     override suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse {
