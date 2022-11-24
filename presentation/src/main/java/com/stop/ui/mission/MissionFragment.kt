@@ -3,6 +3,7 @@ package com.stop.ui.mission
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,7 +16,7 @@ import com.stop.databinding.FragmentMissionBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MissionFragment : Fragment() , MissionHandler{
+class MissionFragment : Fragment(), MissionHandler {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -129,7 +130,13 @@ class MissionFragment : Fragment() , MissionHandler{
     }
 
     override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
-        tMap.drawMoveLine(nowLocation, beforeLocation)
+        tMap.drawMoveLine(
+            nowLocation,
+            beforeLocation,
+            PERSON_LINE + PERSON_LINE_NUM.toString(),
+            PERSON_LINE_COLOR
+        )
+        PERSON_LINE_NUM += 1
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -143,5 +150,13 @@ class MissionFragment : Fragment() , MissionHandler{
         private const val LEFT_TIME = 60
 
         private const val FAKE_USER_FILE_PATH = "fake_user_path"
+
+        private const val PERSON_LINE = "person_line"
+        private const val PERSON_LINE_COLOR = Color.MAGENTA
+        private var PERSON_LINE_NUM = 0
+
+        private const val BUS_LINE = "bus_line"
+        private const val BUS_LINE_COLOR = Color.BLUE
+        private var BUS_LINE_NUM = 0
     }
 }
