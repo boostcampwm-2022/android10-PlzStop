@@ -1,4 +1,4 @@
-package com.stop.data.remote.model.nowLocation
+package com.stop.data.remote.model.nowlocation
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

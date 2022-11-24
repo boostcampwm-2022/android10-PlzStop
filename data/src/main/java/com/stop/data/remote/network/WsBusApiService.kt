@@ -2,6 +2,7 @@ package com.stop.data.remote.network
 
 import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
+import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -19,7 +20,7 @@ internal interface WsBusApiService {
         @Query("ServiceKey") serviceKey: String = BuildConfig.BUS_KEY,
         @Query("busRouteId") busRouteId: String,
         @Query("resultType") resultType: String = JSON
-    ): NetworkResult<GetBusStationArsIdResponse>
+    ): NetworkResult<GetBusNowLocationResponse>
 
     companion object {
         private const val GET_BUS_ARS_URL = "stationinfo/getStationByName"
