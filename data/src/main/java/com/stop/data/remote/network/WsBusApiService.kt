@@ -1,5 +1,6 @@
 package com.stop.data.remote.network
 
+import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import retrofit2.http.GET
@@ -13,7 +14,16 @@ internal interface WsBusApiService {
         @Query("resultType") resultType: String = "json",
     ): NetworkResult<GetBusStationArsIdResponse>
 
+    @GET(GET_BUS_NOW_LOCATION_URL)
+    suspend fun getBusNowLocation(
+        @Query("ServiceKey") serviceKey: String = BuildConfig.BUS_KEY,
+        @Query("busRouteId") busRouteId: String,
+        @Query("resultType") resultType: String = JSON
+    ): NetworkResult<GetBusStationArsIdResponse>
+
     companion object {
         private const val GET_BUS_ARS_URL = "stationinfo/getStationByName"
+        private const val GET_BUS_NOW_LOCATION_URL = "buspos/getBustPosByRtid"
+        private const val JSON = "json"
     }
 }
