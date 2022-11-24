@@ -6,12 +6,11 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="#FFFFFF"
+        android:background="@drawable/background_bottom_sheet"
         android:elevation="20dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="100dp"
-        app:behavior_hideable="false"
-        style="@style/Widget.Material3.BottomSheet">
+        app:behavior_hideable="false">
 
         <com.google.android.material.bottomsheet.BottomSheetDragHandleView
             android:id="@+id/drag_handle"
