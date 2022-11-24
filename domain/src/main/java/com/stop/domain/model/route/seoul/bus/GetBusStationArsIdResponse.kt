@@ -4,5 +4,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class GetBusStationArsIdResponse(
-    val msgBody: MsgBody,
+    val arsIdMsgBody: ArsIdMsgBody,
 )

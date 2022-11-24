@@ -102,7 +102,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             }
             SEOUL -> {
                 val busStations =
-                    routeRepository.getSeoulBusStationArsId(transportIdRequest.stationName).msgBody.busStations
+                    routeRepository.getSeoulBusStationArsId(transportIdRequest.stationName)
+                        .arsIdMsgBody
+                        .busStations
 
                 findClosestSeoulBusStation(transportIdRequest, busStations)
             }
