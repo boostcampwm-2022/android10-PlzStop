@@ -11,14 +11,8 @@ import androidx.fragment.app.viewModels
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
-class MissionFragment : Fragment() , TMapHandler{
+class MissionFragment : Fragment() , MissionHandler{
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -52,15 +46,6 @@ class MissionFragment : Fragment() , TMapHandler{
         super.onDestroyView()
     }
 
-    override fun alertTMapReady() {
-        //mimicUserMove()
-        tMap.setTrackingMode()
-    }
-
-    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
-        tMap.drawMoveLine(nowLocation, beforeLocation)
-    }
-
 //    private fun mimicUserMove() {
 //        val lines = readFromAssets()
 //
@@ -73,18 +58,18 @@ class MissionFragment : Fragment() , TMapHandler{
 //        }
 //    }
 
-    private fun readFromAssets(): List<String> {
-        val reader =
-            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
-        val lines = arrayListOf<String>()
-        var line = reader.readLine()
-        while (line != null) {
-            lines.add(line)
-            line = reader.readLine()
-        }
-        reader.close()
-        return lines
-    }
+//    private fun readFromAssets(): List<String> {
+//        val reader =
+//            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+//        val lines = arrayListOf<String>()
+//        var line = reader.readLine()
+//        while (line != null) {
+//            lines.add(line)
+//            line = reader.readLine()
+//        }
+//        reader.close()
+//        return lines
+//    }
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -133,6 +118,19 @@ class MissionFragment : Fragment() , TMapHandler{
                     })
             }
         }
+    }
+
+    override fun alertTMapReady() {
+        //mimicUserMove()
+        tMap.setTrackingMode()
+    }
+
+    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
+        tMap.drawMoveLine(nowLocation, beforeLocation)
+    }
+
+    override fun setOnEnableScrollWithZoomLevelListener() {
+        tMap.setEnableScroll()
     }
 
     companion object {

@@ -5,49 +5,14 @@ import android.graphics.Color
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
 import com.stop.R
-import com.stop.ui.util.TMapCoop
+import com.stop.ui.util.TMap
 
 class MissionTMap(
     context: Context,
-    handler: TMapHandler,
-) : TMapCoop(context, handler) {
+    handler: MissionHandler,
+) : TMap(context, handler) {
 
     private var lineNum = 0
-
-//    private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
-//        if (location != null && checkKoreaLocation(location)) {
-//            val beforeLocation = tMapView.locationPoint
-//            drawMoveLine(TMapPoint(location.latitude, location.longitude), beforeLocation)
-//            tMapView.setLocationPoint(location.latitude, location.longitude)
-//
-//            makeMarker(
-//                PERSON_MARKER,
-//                PERSON_MARKER_IMG,
-//                beforeLocation
-//            )
-//
-//            if (isTracking) {
-//                tMapView.setCenterPoint(location.latitude, location.longitude)
-//            }
-//        }
-//    }
-////
-//    fun init() {
-//        tMapView = TMapView(context)
-//        tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
-//        tMapView.setOnMapReadyListener {
-//            tMapView.setVisibleLogo(false)
-//            tMapView.mapType = TMapView.MapType.DEFAULT
-//            tMapView.zoomLevel = 16
-//
-//            setTrackingMode()
-//            handler.alertTMapReady()
-//        }
-//        tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
-//            isTracking = false
-//        }
-//    }
-
 
     fun drawMoveLine(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
         val points = arrayListOf(nowLocation, beforeLocation)
@@ -66,6 +31,13 @@ class MissionTMap(
         makeMarker(PERSON_MARKER, PERSON_MARKER_IMG, mockLocation)
         tMapView.setLocationPoint(mockLocation.latitude, mockLocation.longitude)
     }
+
+    fun setEnableScroll() {
+        tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
+            isTracking = false
+        }
+    }
+
 
     companion object {
         private const val PERSON_MARKER = "marker_person_pin"

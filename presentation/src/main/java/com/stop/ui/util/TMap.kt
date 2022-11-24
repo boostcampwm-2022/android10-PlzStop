@@ -1,7 +1,6 @@
 package com.stop.ui.util
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.skt.tmap.TMapGpsManager
@@ -11,11 +10,12 @@ import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
 import com.stop.R
 import com.stop.model.Location
-import com.stop.ui.mission.TMapHandler
+import com.stop.ui.map.MapHandler
+import com.stop.ui.mission.MissionHandler
 
-open class TMapCoop(
+open class TMap(
     private val context: Context,
-    private val handler: TMapHandler
+    private val handler: Handler
 ) {
     lateinit var tMapView: TMapView
     var isTracking = true
@@ -29,13 +29,18 @@ open class TMapCoop(
                 tMapView.mapType = TMapView.MapType.DEFAULT
                 tMapView.zoomLevel = 16
 
-                this@TMapCoop.handler.alertTMapReady().toString()
-                initLocation = com.stop.model.Location(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude)
-                Log.d("hihihi","init 바뀌나? ${initLocation}")
+                when (this@TMap.handler) {
+                    is MissionHandler -> {
+                        (this@TMap.handler).alertTMapReady()
+                    }
+                    is MapHandler -> {
+                        (this@TMap.handler).alertTMapReady()
+                    }
+                }
+                initLocation = Location(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude)
             }
-
-            setOnEnableScrollWithZoomLevelListener { _, _ ->
-                isTracking = false // Enable 지도에서 사용하고 있음
+            if (handler is MissionHandler) {
+                (handler as MissionHandler).setOnEnableScrollWithZoomLevelListener()
             }
         }
     }
@@ -56,9 +61,17 @@ open class TMapCoop(
         if (location != null && checkKoreaLocation(location)) {
             val beforeLocation = tMapView.locationPoint
             val nowLocation = TMapPoint(location.latitude, location.longitude)
-            if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                handler.setOnLocationChangeListener(nowLocation, beforeLocation)
+            when (handler) {
+                is MissionHandler -> {
+                    if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
+                        handler.setOnLocationChangeListener(nowLocation, beforeLocation)
+                    }
+                }
+                is MapHandler -> {
+                    handler.setOnLocationChangeListener(location)
+                }
             }
+
             tMapView.setLocationPoint(location.latitude, location.longitude)
 
             makeMarker(
@@ -68,7 +81,7 @@ open class TMapCoop(
             )
 
             if (isTracking) {
-                tMapView.setCenterPoint(location.latitude, location.longitude)
+                tMapView.setCenterPoint(location.latitude, location.longitude, true)
             }
         }
     }
