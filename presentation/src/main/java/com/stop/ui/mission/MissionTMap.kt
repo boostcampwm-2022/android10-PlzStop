@@ -36,13 +36,6 @@ class MissionTMap(
         tMapView.setLocationPoint(mockLocation.latitude, mockLocation.longitude)
     }
 
-    fun setEnableScroll() {
-        tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
-            isTracking = false
-        }
-    }
-
-
     companion object {
         private const val PERSON_MARKER = "marker_person_pin"
         private const val PERSON_MARKER_IMG = R.drawable.ic_person_pin

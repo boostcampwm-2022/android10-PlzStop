@@ -166,7 +166,12 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
-        tMap.setEnableScroll()
+        tMap.apply {
+            tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
+                isTracking = false
+                Log.d("Mission","실행되나?")
+            }
+        }
     }
 
     companion object {

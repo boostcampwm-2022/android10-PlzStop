@@ -32,15 +32,13 @@ open class TMap(
                 when (this@TMap.handler) {
                     is MissionHandler -> {
                         (this@TMap.handler).alertTMapReady()
+                        (this@TMap.handler).setOnEnableScrollWithZoomLevelListener()
                     }
                     is MapHandler -> {
                         (this@TMap.handler).alertTMapReady()
                     }
                 }
                 initLocation = Location(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude)
-            }
-            if (handler is MissionHandler) {
-                (handler as MissionHandler).setOnEnableScrollWithZoomLevelListener()
             }
         }
     }
