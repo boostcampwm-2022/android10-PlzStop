@@ -7,6 +7,8 @@ import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
+import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
+import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCaseImpl
 import dagger.Module
 import dagger.Binds
 import dagger.hilt.InstallIn
@@ -40,5 +42,9 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun provideDeleteAlarmUseCase(deleteAlarmUseCaseImpl: DeleteAlarmUseCaseImpl): DeleteAlarmUseCase
+
+    @Binds
+    @Singleton
+    fun provideBusNowLocationUseCase(getBusNowLocationUseCaseImpl: GetBusNowLocationUseCaseImpl): GetBusNowLocationUseCase
 
 }
