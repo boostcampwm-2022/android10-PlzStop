@@ -24,7 +24,7 @@ internal interface WsBusApiService {
 
     companion object {
         private const val GET_BUS_ARS_URL = "stationinfo/getStationByName"
-        private const val GET_BUS_NOW_LOCATION_URL = "buspos/getBustPosByRtid"
+        private const val GET_BUS_NOW_LOCATION_URL = "buspos/getBusPosByRtid"
         private const val JSON = "json"
     }
 }
