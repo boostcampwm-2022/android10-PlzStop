@@ -6,20 +6,30 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:backgroundTint="#858590"
+        android:backgroundTint="#FFFFFF"
+        android:elevation="20dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
         app:behavior_peekHeight="100dp"
-        app:behavior_hideable="true"
+        app:behavior_hideable="false"
         style="@style/Widget.Material3.BottomSheet">
+
+        <com.google.android.material.bottomsheet.BottomSheetDragHandleView
+            android:id="@+id/drag_handle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#404550"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:text="임시 텍스트 임시 텍스트"
-            android:textSize="35sp"
-            android:textColor="@color/white"
+            android:text="현재 등록된 막차 알림이 없습니다."
+            android:textSize="15sp"
+            android:textColor="#808590"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

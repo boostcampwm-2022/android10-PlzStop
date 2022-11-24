@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="791dp" />
+            app:layout_constraintGuide_end="115dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_panel"
@@ -307,6 +307,15 @@
                 app:layout_constraintBottom_toBottomOf="@id/layout_bookmark"
                 app:srcCompat="@drawable/ic_bookmark" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include
+                android:id="@+id/home_bottom_sheet"
+                layout="@layout/home_bottom_sheet" />
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 
