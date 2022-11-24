@@ -280,6 +280,6 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val SUBWAY_LINE_ONE = 1
         private const val SUBWAY_LINE_EIGHT = 8
 
-        private const val MID_NIGHT = 240_000
+        private const val MID_NIGHT = 60_000
     }
 }
