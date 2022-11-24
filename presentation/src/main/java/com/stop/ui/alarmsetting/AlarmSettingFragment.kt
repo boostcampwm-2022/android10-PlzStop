@@ -3,12 +3,12 @@ package com.stop.ui.alarmsetting
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,16 +38,13 @@ class AlarmSettingFragment : Fragment() {
         initView()
         setButtonListener()
         setToggleListener()
-        alarmSettingViewModel.getAlarm()
-        alarmSettingViewModel.alarmUseCaseItem.observe(viewLifecycleOwner) {
-            Log.e("ABC", it.toString())
-        }
     }
 
     private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmSettingViewModel
+            fragment = this@AlarmSettingFragment
         }
     }
 
@@ -114,6 +111,11 @@ class AlarmSettingFragment : Fragment() {
                 }
             }
         }
+    }
+
+    fun setAlarmRegisterListener() {
+        alarmSettingViewModel.saveAlarm()
+        binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
     }
 
     override fun onDestroyView() {

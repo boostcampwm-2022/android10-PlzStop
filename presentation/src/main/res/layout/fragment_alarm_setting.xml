@@ -9,6 +9,10 @@
             name="viewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
+        <variable
+            name="fragment"
+            type="com.stop.ui.alarmsetting.AlarmSettingFragment" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -248,7 +252,7 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/background_gray_d9_8"
             android:gravity="center"
-            android:onClick="@{() -> viewModel.saveAlarm()}"
+            android:onClick="@{() -> fragment.setAlarmRegisterListener()}"
             android:paddingVertical="8dp"
             android:text="@string/register_alarm_text"
             android:textColor="@color/black"
