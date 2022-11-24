@@ -1,10 +1,10 @@
 package com.stop.data.remote.model
 
-sealed class NetworkResult<T>(
-    val data: T? = null,
-    val message: String? = null
-) {
-    class Success<T>(data: T) : NetworkResult<T>(data = data)
+import java.io.IOException
 
-    class Error<T>(errorMessage: String) : NetworkResult<T>(message = errorMessage)
+internal sealed class NetworkResult<out R> {
+    data class Success<out T>(val data: T) : NetworkResult<T>()
+    data class Failure(val code: Int, val message: String?): NetworkResult<Nothing>()
+    data class NetworkError(val exception: IOException): NetworkResult<Nothing>()
+    data class Unexpected(val exception: Throwable): NetworkResult<Nothing>()
 }

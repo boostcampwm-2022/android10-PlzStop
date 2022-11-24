@@ -4,7 +4,6 @@ plugins {
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-    id 'kotlin-parcelize'
 }
 
 Properties properties = new Properties()
@@ -24,11 +23,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField("String", "TMAP_APP_KEY", properties['t_map_app_key'])
-        externalNativeBuild {
-            cmake {
-                cppFlags ''
-            }
-        }
     }
 
     buildTypes {
@@ -74,8 +68,4 @@ dependencies {
 
     // LiveData
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
-
-    // TMap SDK
-    implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
-    implementation files('libs/tmap-sdk-1.1.aar')
 }

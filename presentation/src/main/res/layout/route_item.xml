@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="itinerary"
+            type="com.stop.domain.model.route.tmap.custom.Itinerary" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/round_border"
+        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_view_required_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expected_required_time"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
+            tools:text="예상 소요 시간: " />
+
+        <TextView
+            android:id="@+id/text_view_expected_required_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintStart_toEndOf="@id/text_view_required_time_text"
+            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
+            tools:text="1시간 10분" />
+
+        <TextView
+            android:id="@+id/text_view_depart_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expected_depart_time"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text" />
+
+        <TextView
+            android:id="@+id/text_view_expected_depart_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_yet_implemented"
+            app:layout_constraintStart_toEndOf="@id/text_view_depart_time_text"
+            app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text"
+            tools:text="2022.11.08.화 00:13" />
+
+        <TextView
+            android:id="@+id/text_view_arrival_time_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/expected_arrival_time"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_view_depart_time_text" />
+
+        <TextView
+            android:id="@+id/text_view_expected_arrival_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/not_yet_implemented"
+            app:layout_constraintStart_toEndOf="@id/text_view_arrival_time_text"
+            app:layout_constraintTop_toBottomOf="@id/text_view_expected_depart_time"
+            tools:text="2022.11.08.화 01:23" />
+
+        <TextView
+            android:id="@+id/text_view_expected_route"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_view_arrival_time_text"
+            tools:text="출발지 -> 1호선 Xxx역 -> 5315번 버스 환승 -> 2호선 Xxx역 환승 -> 도착지" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="80dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
