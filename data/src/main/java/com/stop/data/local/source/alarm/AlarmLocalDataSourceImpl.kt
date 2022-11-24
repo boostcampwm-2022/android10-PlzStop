@@ -35,8 +35,11 @@ internal class AlarmLocalDataSourceImpl @Inject constructor(
     override suspend fun getAlarm(): Flow<AlarmRepositoryItem?> {
         return context.datastore.data.map { preferences ->
             val jsonString = preferences[ALARM] ?: ""
-            val elements = adapter.fromJson(jsonString)?.toRepositoryModel()
-            elements
+            if (jsonString.isNotBlank()) {
+                adapter.fromJson(jsonString)?.toRepositoryModel()
+            } else {
+                null
+            }
         }
     }
 

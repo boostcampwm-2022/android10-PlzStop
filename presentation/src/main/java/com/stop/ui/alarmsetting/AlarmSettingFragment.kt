@@ -9,13 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
-import com.stop.domain.model.alarm.AlarmUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
@@ -38,35 +34,17 @@ class AlarmSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val test = AlarmUseCaseItem(
-            "abc",
-            "abc",
-            listOf("ABC"),
-            "abc","abc",true,true
-        )
-
-        lifecycleScope.launch{
-            alarmSettingViewModel.save(test)
-        }
-
-      /*  lifecycleScope.launch{
-            alarmSettingViewModel.get().asLiveData().observe(viewLifecycleOwner){
-                Log.e("ABC", it.toString())
-            }
-        }*/
-
-        lifecycleScope.launch{
-            alarmSettingViewModel.get().collectLatest {
-                Log.e("ABC", it.toString())
-            }
-        }
-
 
         initView()
         setButtonListener()
+        setToggleListener()
+        alarmSettingViewModel.getAlarm()
+        alarmSettingViewModel.alarmUseCaseItem.observe(viewLifecycleOwner) {
+            Log.e("ABC", it.toString())
+        }
     }
 
-    private fun initBinding(){
+    private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmSettingViewModel
@@ -74,12 +52,15 @@ class AlarmSettingFragment : Fragment() {
     }
 
     private fun initView() {
-        with(binding){
+        with(binding) {
             textViewLastTime.text = getString(R.string.last_transport_arrival_time, 23, 30)
             textViewWalk.text = getString(R.string.last_transport_walking_time, 10)
 
             numberPickerAlarmTime.minValue = 0
             numberPickerAlarmTime.maxValue = 60
+
+            buttonSound.isCheckable = true
+            buttonMissionOn.isCheckable = true
         }
     }
 
@@ -110,6 +91,28 @@ class AlarmSettingFragment : Fragment() {
             textViewTransportContent.visibility = View.VISIBLE
             textViewRouteContent.setCompoundDrawables(null, null, null, null)
             textViewRouteContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0)
+        }
+    }
+
+    private fun setToggleListener() {
+        with(binding) {
+            toggleGroupAlarm.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                if (isChecked) {
+                    when (checkedId) {
+                        R.id.button_sound -> alarmSettingViewModel.alarmMethod = true
+                        else -> alarmSettingViewModel.alarmMethod = false
+                    }
+                }
+            }
+
+            toggleGroupMission.addOnButtonCheckedListener { group, checkedId, isChecked ->
+                if (isChecked) {
+                    when (checkedId) {
+                        R.id.button_mission_on -> alarmSettingViewModel.isMission = true
+                        else -> alarmSettingViewModel.isMission = false
+                    }
+                }
+            }
         }
     }
 
