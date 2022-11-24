@@ -18,6 +18,20 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="15dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="15dp" />
+
+        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,32 +39,18 @@
             app:layout_constraintGuide_begin="55dp" />
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_begin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
-
-        <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="16dp" />
+            app:layout_constraintGuide_end="55dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_panel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.8" />
+            app:layout_constraintGuide_percent="0.25" />
 
         <FrameLayout
             android:id="@+id/frame_layout_container"
@@ -63,16 +63,18 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_panel"
-            android:layout_width="0dp"
+            android:layout_width="270dp"
             android:layout_height="0dp"
-            android:background="@drawable/layout_location_panel"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="30dp"
+            android:elevation="15dp"
+            android:background="@drawable/background_panel"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="5dp"
             android:visibility="@{placeSearchViewModel.panelVisibility}"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintStart_toStartOf="@id/guideline_begin"
-            app:layout_constraintTop_toTopOf="@id/guideline_panel">
+            app:layout_constraintEnd_toStartOf="@id/layout_compass"
+            app:layout_constraintTop_toTopOf="@id/layout_compass"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
 
             <TextView
                 android:id="@+id/text_view_title"
@@ -170,12 +172,12 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_search"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="52dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:elevation="15dp"
             android:background="@drawable/background_search"
-            app:layout_constraintStart_toStartOf="@+id/guideline_begin"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start"
             app:layout_constraintEnd_toStartOf="@+id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/guideline_top">
 
@@ -202,85 +204,69 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_button"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/image_view_compass_background"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
-                android:elevation="15dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/image_view_current_background" />
+            android:id="@+id/layout_compass"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="15dp"
+            android:background="@drawable/background_button"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintBottom_toTopOf="@id/layout_current">
 
             <ImageView
                 android:id="@+id/image_view_compass"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/image_view_compass_background"
-                app:layout_constraintEnd_toEndOf="@id/image_view_compass_background"
-                app:layout_constraintTop_toTopOf="@id/image_view_compass_background"
-                app:layout_constraintBottom_toBottomOf="@id/image_view_compass_background"
+                app:layout_constraintStart_toStartOf="@id/layout_compass"
+                app:layout_constraintEnd_toEndOf="@id/layout_compass"
+                app:layout_constraintTop_toTopOf="@id/layout_compass"
+                app:layout_constraintBottom_toBottomOf="@id/layout_compass"
                 app:srcCompat="@drawable/ic_compass" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/image_view_current_background"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="10dp"
-                android:elevation="15dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/image_view_bookmark_background" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_current"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            android:elevation="15dp"
+            android:background="@drawable/background_button"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintBottom_toTopOf="@id/layout_bookmark">
 
             <ImageView
                 android:id="@+id/image_view_current"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/image_view_current_background"
-                app:layout_constraintEnd_toEndOf="@id/image_view_current_background"
-                app:layout_constraintTop_toTopOf="@id/image_view_current_background"
-                app:layout_constraintBottom_toBottomOf="@id/image_view_current_background"
+                app:layout_constraintStart_toStartOf="@id/layout_current"
+                app:layout_constraintEnd_toEndOf="@id/layout_current"
+                app:layout_constraintTop_toTopOf="@id/layout_current"
+                app:layout_constraintBottom_toBottomOf="@id/layout_current"
                 app:srcCompat="@drawable/ic_location" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageView
-                android:id="@+id/image_view_bookmark_background"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="160dp"
-                android:elevation="15dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_bookmark"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:elevation="15dp"
+            android:background="@drawable/background_button"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
 
             <ImageView
                 android:id="@+id/image_view_bookmark"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/image_view_bookmark_background"
-                app:layout_constraintEnd_toEndOf="@id/image_view_bookmark_background"
-                app:layout_constraintTop_toTopOf="@id/image_view_bookmark_background"
-                app:layout_constraintBottom_toBottomOf="@id/image_view_bookmark_background"
+                app:layout_constraintStart_toStartOf="@id/layout_bookmark"
+                app:layout_constraintEnd_toEndOf="@id/layout_bookmark"
+                app:layout_constraintTop_toTopOf="@id/layout_bookmark"
+                app:layout_constraintBottom_toBottomOf="@id/layout_bookmark"
                 app:srcCompat="@drawable/ic_bookmark" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <include
-                android:id="@+id/home_bottom_sheet"
-                layout="@layout/home_bottom_sheet" />
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
 

@@ -63,11 +63,11 @@ class MapFragment : Fragment() {
     }
 
     private fun initView() {
-        binding.imageViewCompassBackground.setOnClickListener {
+        binding.layoutCompass.setOnClickListener {
             tMapView.isCompassMode = tMapView.isCompassMode.not()
         }
 
-        binding.imageViewCurrentBackground.setOnClickListener {
+        binding.layoutCurrent.setOnClickListener {
             requestPermissionsLauncher.launch(PERMISSIONS)
             isTracking = true
             tMapView.setCenterPoint(
@@ -84,7 +84,7 @@ class MapFragment : Fragment() {
                 .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
-        binding.imageViewBookmarkBackground.setOnClickListener {
+        binding.layoutBookmark.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_bookMarkFragment)
         }
 
@@ -199,7 +199,9 @@ class MapFragment : Fragment() {
 
         with (binding) {
             layoutSearch.visibility = viewVisibility
-            layoutButton.visibility = viewVisibility
+            layoutCompass.visibility = viewVisibility
+            layoutCurrent.visibility = viewVisibility
+            layoutBookmark.visibility = viewVisibility
         }
     }
 
