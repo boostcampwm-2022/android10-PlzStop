@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.viewModels
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
+import com.stop.model.Location
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +27,8 @@ class MissionFragment : Fragment(), MissionHandler {
     private val viewModel: MissionViewModel by viewModels()
 
     private lateinit var tMap: MissionTMap
+
+    private var beforeLocation = INIT_LOCATION
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -124,9 +128,31 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
+    private fun drawBusLocationLine() {
+        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
+            if (Location(nowLocation.latitude, nowLocation.longitude) != INIT_LOCATION) {
+                tMap.drawMoveLine(
+                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                    TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+                    BUS_LINE + BUS_LINE_NUM.toString(),
+                    BUS_LINE_COLOR
+                )
+                BUS_LINE_NUM += 1
+            }
+            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+
+            tMap.makeMarker(
+                BUS_MARKER,
+                BUS_MARKER_IMG,
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+            )
+        }
+    }
+
     override fun alertTMapReady() {
         //mimicUserMove()
         tMap.setTrackingMode()
+        drawBusLocationLine()
     }
 
     override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
@@ -158,5 +184,10 @@ class MissionFragment : Fragment(), MissionHandler {
         private const val BUS_LINE = "bus_line"
         private const val BUS_LINE_COLOR = Color.BLUE
         private var BUS_LINE_NUM = 0
+
+        private val INIT_LOCATION = Location(0.0, 0.0)
+
+        private const val BUS_MARKER = "marker_bus_pin"
+        private const val BUS_MARKER_IMG = R.drawable.ic_baseline_directions_bus_32
     }
 }

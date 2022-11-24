@@ -14,8 +14,8 @@ data class BusInfoRepositoryItem(
     fun toUseCaseModel() = BusInfoUseCaseItem(
         isArrivedAtStation,
         sectionId,
-        latitude,
-        longitude,
+        latitude.toDouble(),
+        longitude.toDouble(),
         busId,
         busNumber,
         isRun,

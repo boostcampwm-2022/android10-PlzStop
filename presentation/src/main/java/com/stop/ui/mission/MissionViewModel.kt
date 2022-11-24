@@ -88,7 +88,7 @@ class MissionViewModel @Inject constructor(
     private fun getBusNowLocation() {
         viewModelScope.launch {
             while (TIME_TEST < 60) {
-                _busNowLocationInfo.value = getBusNowLocationUseCase.getBusNowLocation(BUS_441_ID)
+                _busNowLocationInfo.value = getBusNowLocationUseCase.getBusNowLocation(BUS_540_ID)
                 Log.d("MissionViewModel","busNowLocationInfo ${_busNowLocationInfo.value}")
                 delay(1000)
                 TIME_TEST += 1
@@ -106,7 +106,7 @@ class MissionViewModel @Inject constructor(
         private const val RANDOM_LIMIT = 5
         private const val ZERO = 0
 
-        private const val BUS_441_ID = "100100083"
+        private const val BUS_540_ID = "100100083"
         private var TIME_TEST = 0
     }
 }

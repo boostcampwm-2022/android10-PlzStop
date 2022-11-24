@@ -8,9 +8,9 @@ data class BusInfo(
     val isArrivedAtStation: String,
     val sectionId: String,
     @Json(name = "gpsX")
-    val latitude: String,
-    @Json(name = "gpsY")
     val longitude: String,
+    @Json(name = "gpsY")
+    val latitude: String,
     @Json(name = "vehId")
     val busId: String,
     @Json(name = "plainNo")
