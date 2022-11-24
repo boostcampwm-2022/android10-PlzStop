@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.stop.databinding.FragmentRouteBinding
+import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.model.route.Coordinate
 import com.stop.model.route.Place
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,6 +34,7 @@ class RouteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setBinding()
+        setRecyclerView()
         setStartAndDestinationText()
         setObserve()
     }
@@ -40,9 +42,22 @@ class RouteFragment : Fragment() {
     private fun setBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.recyclerviewRoute.adapter = adapter
         binding.executePendingBindings()
     }
+
+    private fun setRecyclerView() {
+        binding.recyclerviewRoute.adapter = adapter
+        adapter.setOnItineraryClickListener(object: RouteAdapter.OnItineraryClickListener {
+            override fun onItineraryClick(itinerary: Itinerary) {
+                /**
+                 * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
+                 * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
+                 */
+                viewModel.calculateLastTransportTime(itinerary)
+            }
+        })
+    }
+
 
     private fun setObserve() {
         viewModel.routeResponse.observe(viewLifecycleOwner) {

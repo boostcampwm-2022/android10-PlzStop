@@ -4,8 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stop.domain.model.route.TransportLastTimeInfo
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
 import com.stop.domain.usecase.route.GetRouteUseCase
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,6 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RouteViewModel @Inject constructor(
     private val getRouteUseCase: GetRouteUseCase,
+    private val getLastTransportTimeUseCase: GetLastTransportTimeUseCase,
 ): ViewModel() {
 
     private val _origin = MutableLiveData<Place>()
@@ -30,6 +33,10 @@ class RouteViewModel @Inject constructor(
     val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
+    private val _lastTimeResponse = MutableLiveData<TransportLastTimeInfo>()
+    val lastTimeResponse: LiveData<TransportLastTimeInfo>
+        get() = _lastTimeResponse
+
     fun getRoute() {
         val originValue = _origin.value ?: return
         val destinationValue = _destination.value ?: return
@@ -43,6 +50,14 @@ class RouteViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             _routeResponse.postValue(getRouteUseCase.getRoute(routeRequest))
+        }
+    }
+
+    fun calculateLastTransportTime(itinerary: Itinerary) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val lastTimeInfo = getLastTransportTimeUseCase.getLastTransportTime(itinerary) ?: return@launch
+
+            _lastTimeResponse.postValue(lastTimeInfo)
         }
     }
 

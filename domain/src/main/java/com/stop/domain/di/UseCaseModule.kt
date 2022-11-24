@@ -7,6 +7,8 @@ import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
+import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
+import com.stop.domain.usecase.route.GetLastTransportTimeUseCaseImpl
 import dagger.Module
 import dagger.Binds
 import dagger.hilt.InstallIn
@@ -20,6 +22,12 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun provideGetRouteUseCase(getRouteUseCaseImpl: GetRouteUseCaseImpl): GetRouteUseCase
+
+    @Binds
+    @Singleton
+    fun provideGetLastTransportTimeUseCase(
+        getLastTransportTimeUseCaseImpl: GetLastTransportTimeUseCaseImpl
+    ): GetLastTransportTimeUseCase
 
     @Binds
     @Singleton
