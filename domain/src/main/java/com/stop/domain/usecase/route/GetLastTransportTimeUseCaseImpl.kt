@@ -148,23 +148,23 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         busStations: List<BusStationInfo>,
     ): String {
         val originLongitude = correctLongitudeValue(transportIdRequest.coordinate.longitude)
-        val originLatitude = correctLatitudeValue(transportIdRequest.coordinate.longitude)
+        val originLatitude = correctLatitudeValue(transportIdRequest.coordinate.latitude)
         var closestStation: BusStationInfo? = null
-        var closestDistance = 0
+        var closestDistance = 0.0
 
         busStations.filter {
             it.stationName == transportIdRequest.stationName
         }.map {
             if (closestStation == null) {
                 closestStation = it
-                val x = abs(originLongitude - correctLongitudeValue(it.longitude))
-                val y = abs(originLatitude - correctLatitudeValue(it.latitude))
+                val x = abs(originLongitude - correctLongitudeValue(it.longitude)).toDouble()
+                val y = abs(originLatitude - correctLatitudeValue(it.latitude)).toDouble()
                 closestDistance = x * x + y * y
                 return@map
             }
 
-            val x = abs(originLongitude - correctLongitudeValue(it.longitude))
-            val y = abs(originLatitude - correctLatitudeValue(it.latitude))
+            val x = abs(originLongitude - correctLongitudeValue(it.longitude)).toDouble()
+            val y = abs(originLatitude - correctLatitudeValue(it.latitude)).toDouble()
             val distance = x * x + y * y
 
             if (distance < closestDistance) {
