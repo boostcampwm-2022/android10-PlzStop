@@ -31,8 +31,8 @@ class TMap(
     }
 
     private fun checkKoreaLocation(location: Location): Boolean {
-        return location.longitude > KOREA_LONGITUDE_MIN && location.longitude < KOREA_LONGITUDE_MAX
-                && location.latitude > KOREA_LATITUDE_MIN && location.latitude < KOREA_LATITUDE_MAX
+        return location.longitude in KOREA_LONGITUDE_MIN..KOREA_LONGITUDE_MAX
+                && location.latitude in KOREA_LATITUDE_MIN..KOREA_LATITUDE_MAX
     }
 
     fun init() {
