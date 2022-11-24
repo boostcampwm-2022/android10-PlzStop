@@ -78,7 +78,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
 
         // 고유 번호로 승차지의 막차 시간 모두 알아내기
-        val dataWithLastTime: List<String> = transportIdRequests.map { transportIdRequest ->
+        val dataWithLastTime: List<Int> = transportIdRequests.map { transportIdRequest ->
             when (transportIdRequest.transportMoveType) {
                 TransportMoveType.BUS -> getBusLastTransportTime(transportIdRequest)
                 TransportMoveType.SUBWAY -> getSubwayLastTransportTime(transportIdRequest)
@@ -90,20 +90,25 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         return null
     }
 
-    private fun getSubwayLastTransportTime(transportIdRequest: TransportIdRequest): String {
+    private fun getSubwayLastTransportTime(transportIdRequest: TransportIdRequest): Int {
         TODO()
     }
 
-    private suspend fun getBusLastTransportTime(transportIdRequest: TransportIdRequest): String {
+    private suspend fun getBusLastTransportTime(transportIdRequest: TransportIdRequest): Int {
         when (transportIdRequest.area) {
             Area.GYEONGGI -> {
                 TODO()
             }
             Area.SEOUL -> {
-                return routeRepository.getSeoulBusLastTime(
+                val lastTime = routeRepository.getSeoulBusLastTime(
                     transportIdRequest.stationId,
                     transportIdRequest.lineId
-                )
+                ).toInt()
+
+                if (lastTime < MID_NIGHT) {
+                    return lastTime + MID_NIGHT
+                }
+                return lastTime
             }
             Area.UN_SUPPORT_AREA -> {
                 TODO()
@@ -274,5 +279,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
         private const val SUBWAY_LINE_ONE = 1
         private const val SUBWAY_LINE_EIGHT = 8
+
+        private const val MID_NIGHT = 240_000
     }
 }
