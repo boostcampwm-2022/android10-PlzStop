@@ -1,6 +1,7 @@
 package com.stop.domain.usecase.route
 
 import com.stop.domain.model.geoLocation.AddressType
+import com.stop.domain.model.route.Area
 import com.stop.domain.model.route.TransportIdRequest
 import com.stop.domain.model.route.TransportLastTimeInfo
 import com.stop.domain.model.route.TransportMoveType
@@ -15,13 +16,13 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetLastTransportTimeUseCase {
 
-    class NoAppropriateDataException(override val message: String): Exception()
+    class NoAppropriateDataException(override val message: String) : Exception()
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT).toList()
 
     override suspend fun getLastTransportTime(itinerary: Itinerary): TransportLastTimeInfo? {
         // 승차지, 도착지, 고유 번호를 알아내는데 필요한 정보로만 구성된 데이터 클래스로 변환하기
-        val transportIdRequests =
+        var transportIdRequests =
             itinerary.routes.fold(listOf<TransportIdRequest>()) { transportIdRequests, route ->
                 when (route) {
                     is WalkRoute -> transportIdRequests
@@ -32,25 +33,48 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
                         transportIdRequests + TransportIdRequest(
                             transportMoveType = transportMoveType,
-                            id = startStation.stationId,
+                            stationId = startStation.stationId,
                             stationName = startStation.stationName,
                             coordinate = startStation.coordinate,
                             stationType = route.routeType,
+                            area = getArea(startStation.coordinate),
+                            lineName = route.routeInfo,
+                            lineId = UNKNOWN_ID
                         )
                     }
                     else -> transportIdRequests
                 }
             }
 
-        // 공공데이터 포털에서 사용하는 버스, 지하철의 고유번호로 변환하는 작업
-        val transportLastTimeRequests = transportIdRequests.map { transportIdRequest ->
+        // 공공데이터 포털에서 사용하는 버스 정류소, 지하철 역의 고유번호로 변환하는 작업
+        transportIdRequests = transportIdRequests.map { transportIdRequest ->
             try {
-                transportIdRequest.changeId(getId(transportIdRequest))
+                transportIdRequest.changeStationId(getStationId(transportIdRequest))
             } catch (exception: NoAppropriateDataException) {
                 exception.printStackTrace()
                 return null
             }
         }
+
+        // 공공데이터 포털에서 사용하는 버스 노선, 지하철 역의 노선번호로 변환하는 작업
+        transportIdRequests = transportIdRequests.map { transportIdRequest ->
+            try {
+                when (transportIdRequest.transportMoveType) {
+                    TransportMoveType.BUS -> {
+                        when (transportIdRequest.area) {
+                            Area.SEOUL -> getSeoulBusLineId(transportIdRequest)
+                            Area.GYEONGGI -> TODO()
+                            Area.UN_SUPPORT_AREA -> throw NoAppropriateDataException(UN_SUPPORT_AREA)
+                        }
+                    }
+                    TransportMoveType.SUBWAY -> TODO()
+                }
+            } catch (exception: NoAppropriateDataException) {
+                exception.printStackTrace()
+                return null
+            }
+        }
+
 
         // 고유 번호로 승차지의 막차 시간 모두 알아내기
 //        val dataWithLastTime: List<Unit>
@@ -75,6 +99,11 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             }
         }
 
+    private suspend fun getArea(coordinate: Coordinate): Area {
+        val areaName =
+            routeRepository.reverseGeocoding(coordinate, AddressType.LOT_ADDRESS).addressInfo.cityDo
+
+        return Area.getAreaByName(areaName)
     }
 
     /**
@@ -87,11 +116,8 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private suspend fun getBusIdUsedAtPublicApi(
         transportIdRequest: TransportIdRequest
     ): String {
-        val reverseGeocodingResponse =
-            routeRepository.reverseGeocoding(transportIdRequest.coordinate, AddressType.LOT_ADDRESS)
-
-        val arsId = when (reverseGeocodingResponse.addressInfo.cityDo) {
-            GYEONGGI_DO -> {
+        val arsId = when (transportIdRequest.area) {
+            Area.GYEONGGI -> {
                 if (transportIdRequest.stationName.contains("마을")) {
                     throw NoAppropriateDataException(GYEONGGI_REGION_BUS_NOT_SUPPORT)
                 }
@@ -100,7 +126,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
                 findClosestGyeonggiBusStation(transportIdRequest, busStations)
             }
-            SEOUL -> {
+            Area.SEOUL -> {
                 val busStations =
                     routeRepository.getSeoulBusStationArsId(transportIdRequest.stationName)
                         .arsIdMsgBody
@@ -108,10 +134,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
                 findClosestSeoulBusStation(transportIdRequest, busStations)
             }
-            else -> throw NoAppropriateDataException(NO_SUPPORTING_CITY)
+            Area.UN_SUPPORT_AREA -> throw NoAppropriateDataException(UN_SUPPORT_AREA)
         }
 
-        if (arsId == UNKNOWN_ARS_ID) {
+        if (arsId == UNKNOWN_ID) {
             throw NoAppropriateDataException(NO_BUS_ARS_ID)
         }
         return arsId
@@ -180,7 +206,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             }
         }
 
-        return closestStation?.stationId?.toString() ?: UNKNOWN_ARS_ID
+        return closestStation?.stationId?.toString() ?: UNKNOWN_ID
     }
 
     private fun correctLongitudeValue(longitude: String): Int {
@@ -194,10 +220,11 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     companion object {
         private const val NOT_REGISTERED_STATION = "API를 지원하지 않는 전철역입니다."
         private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
-        private const val NO_SUPPORTING_CITY = "지원하지 않는 도시입니다."
+        private const val NO_BUS_LINE_ID = "버스 노선 고유 아이디가 없습니다."
+        private const val UN_SUPPORT_AREA = "지원하지 않는 지역입니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
 
-        private const val UNKNOWN_ARS_ID = "0"
+        private const val UNKNOWN_ID = "0"
         private const val KOREA_LONGITUDE = 127
         private const val KOREA_LATITUDE = 37
         private const val CORRECTION_VALUE = 10_000
