@@ -16,7 +16,6 @@
             android:id="@+id/drag_handle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#404550"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
