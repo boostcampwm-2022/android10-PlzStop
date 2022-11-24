@@ -1,19 +1,16 @@
 package com.stop.ui.mission
 
-import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,7 +18,6 @@ import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
 
-@AndroidEntryPoint
 class MissionFragment : Fragment() , TMapHandler{
 
     private var _binding: FragmentMissionBinding? = null
@@ -30,13 +26,14 @@ class MissionFragment : Fragment() , TMapHandler{
 
     private val viewModel: MissionViewModel by viewModels()
 
-    private lateinit var tMap: TMap
+    private lateinit var tMap: MissionTMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMissionBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -56,20 +53,25 @@ class MissionFragment : Fragment() , TMapHandler{
     }
 
     override fun alertTMapReady() {
-        mimicUserMove()
+        //mimicUserMove()
+        tMap.setTrackingMode()
     }
 
-    private fun mimicUserMove() {
-        val lines = readFromAssets()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            lines.forEach { line ->
-                val (longitude, latitude) = line.split(",")
-                tMap.moveLocation(longitude, latitude)
-                delay(500)
-            }
-        }
+    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
+        tMap.drawMoveLine(nowLocation, beforeLocation)
     }
+
+//    private fun mimicUserMove() {
+//        val lines = readFromAssets()
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            lines.forEach { line ->
+//                val (longitude, latitude) = line.split(",")
+//                tMap.moveLocation(longitude, latitude)
+//                delay(500)
+//            }
+//        }
+//    }
 
     private fun readFromAssets(): List<String> {
         val reader =
@@ -90,10 +92,10 @@ class MissionFragment : Fragment() , TMapHandler{
     }
 
     private fun initTMap() {
-        tMap = TMap((requireContext() as ContextWrapper).baseContext, this)
+        tMap = MissionTMap(requireContext(), this)
         tMap.init()
 
-        binding.constraintLayoutContainer.addView(tMap.getTMapView())
+        binding.constraintLayoutContainer.addView(tMap.tMapView)
     }
 
     private fun initViewModel() {
