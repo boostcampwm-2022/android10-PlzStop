@@ -88,6 +88,7 @@ class MapFragment : Fragment() {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_bookMarkFragment)
         }
 
+        /*
         binding.textViewStartLocation.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
         }
@@ -95,6 +96,7 @@ class MapFragment : Fragment() {
         binding.textViewEndLocation.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
         }
+        */
     }
 
     private fun initTMap() {

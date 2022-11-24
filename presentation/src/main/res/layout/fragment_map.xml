@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="55dp" />
+            app:layout_constraintGuide_begin="791dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_panel"
@@ -63,110 +63,150 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_panel"
-            android:layout_width="270dp"
+            android:layout_width="300dp"
             android:layout_height="0dp"
             android:layout_marginEnd="15dp"
             android:layout_marginTop="30dp"
             android:elevation="15dp"
             android:background="@drawable/background_panel"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="5dp"
             android:visibility="@{placeSearchViewModel.panelVisibility}"
             app:layout_constraintEnd_toStartOf="@id/layout_compass"
             app:layout_constraintTop_toTopOf="@id/layout_compass"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
 
-            <TextView
-                android:id="@+id/text_view_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:text="@{placeSearchViewModel.geoLocation.title}"
-                app:layout_constraintEnd_toStartOf="@+id/text_view_bookmark"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
+            <ImageView
+                android:id="@+id/image_view_panel_point"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="20dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="이앤씨벤처드림타워6차" />
+                app:srcCompat="@drawable/ic_point_marker" />
 
             <TextView
-                android:id="@+id/text_view_bookmark"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/bookmark"
+                android:id="@+id/text_view_panel_title"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:text="@{placeSearchViewModel.geoLocation.title}"
+                android:textSize="22sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:gravity="center_vertical"
+                app:layout_constraintStart_toEndOf="@id/image_view_panel_point"
+                app:layout_constraintEnd_toStartOf="@id/view_panel_bookmark"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="성복역" />
+
+            <View
+                android:id="@+id/view_panel_bookmark"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/background_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ImageView
+                android:id="@+id/image_view_panel_bookmark"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                app:layout_constraintStart_toStartOf="@id/view_panel_bookmark"
+                app:layout_constraintEnd_toEndOf="@id/view_panel_bookmark"
+                app:layout_constraintTop_toTopOf="@id/view_panel_bookmark"
+                app:layout_constraintBottom_toBottomOf="@id/view_panel_bookmark"
+                app:srcCompat="@drawable/ic_bookmark" />
+
             <TextView
-                android:id="@+id/text_view_road_address"
+                android:id="@+id/text_view_panel_address"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:maxLines="1"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/white"
-                android:textSize="14sp"
                 android:text="@{placeSearchViewModel.geoLocation.roadAddress}"
+                android:textSize="14sp"
+                android:textColor="#808590"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_title"
+                app:layout_constraintTop_toBottomOf="@id/text_view_panel_title"
+                app:layout_constraintBottom_toTopOf="@id/view_panel_start"
                 tools:text="서울 구로구 디지털로31길 41" />
 
             <TextView
-                android:id="@+id/text_view_lot_address"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:textColor="@color/light_grey"
-                android:textSize="14sp"
-                android:text="@{placeSearchViewModel.geoLocation.lotAddress}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_road_address"
-                tools:text="서울 구로구 구로동 197-28" />
-
-            <TextView
-                android:id="@+id/text_view_distance_from_now"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                android:text="@{placeSearchViewModel.geoLocation.distance}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/text_view_start_location"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="현재 위치에서 거리" />
-
-            <TextView
-                android:id="@+id/text_view_start_location"
+                android:id="@+id/text_view_panel_distance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="15dp"
-                android:text="@string/start_location"
+                android:layout_marginStart="20dp"
+                android:layout_marginBottom="17dp"
+                android:text="@{placeSearchViewModel.distance.toString()}"
+                android:textSize="40sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/text_view_end_location"
-                app:layout_constraintStart_toEndOf="@id/text_view_distance_from_now" />
+                tools:text="1.6" />
 
             <TextView
-                android:id="@+id/text_view_end_location"
+                android:id="@+id/text_view_panel_distance_km"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/end_location"
+                android:layout_marginStart="7dp"
+                android:layout_marginBottom="23dp"
+                android:text="@string/km"
+                android:textSize="20sp"
+                android:textStyle="bold"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@id/text_view_panel_distance"
                 app:layout_constraintBottom_toBottomOf="parent"
+                tools:text="km" />
+
+            <View
+                android:id="@+id/view_panel_start"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/background_button"
+                app:layout_constraintEnd_toStartOf="@id/view_panel_end"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageView
+                android:id="@+id/image_view_panel_start"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintStart_toStartOf="@id/view_panel_start"
+                app:layout_constraintEnd_toEndOf="@id/view_panel_start"
+                app:layout_constraintTop_toTopOf="@id/view_panel_start"
+                app:layout_constraintBottom_toBottomOf="@id/view_panel_start"
+                app:srcCompat="@drawable/ic_start" />
+
+            <View
+                android:id="@+id/view_panel_end"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/background_button"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/text_view_start_location" />
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageView
+                android:id="@+id/image_view_panel_end"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                app:layout_constraintStart_toStartOf="@id/view_panel_end"
+                app:layout_constraintEnd_toEndOf="@id/view_panel_end"
+                app:layout_constraintTop_toTopOf="@id/view_panel_end"
+                app:layout_constraintBottom_toBottomOf="@id/view_panel_end"
+                app:srcCompat="@drawable/ic_end" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

@@ -20,4 +20,5 @@
     <string name="minus">-</string>
     <string name="plus">+</string>
     <string name="search_hint">장소, 주소 검색</string>
+    <string name="km">km</string>
 </resources>
