@@ -41,7 +41,7 @@ class TMap(
         tMapView.setOnMapReadyListener {
             tMapView.setVisibleLogo(false)
             tMapView.mapType = TMapView.MapType.NIGHT
-            tMapView.zoomLevel = 16
+            tMapView.zoomLevel = DEFAULT_ZOOM_LEVEL
 
             tMapHandler.alertTMapReady()
         }
@@ -108,5 +108,7 @@ class TMap(
 
         private const val KOREA_LONGITUDE_MIN = 124.661865
         private const val KOREA_LONGITUDE_MAX = 132.550049
+
+        private const val DEFAULT_ZOOM_LEVEL = 16
     }
 }
