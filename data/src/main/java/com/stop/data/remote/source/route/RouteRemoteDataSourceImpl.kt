@@ -5,6 +5,7 @@ import com.stop.data.remote.network.ApisDataService
 import com.stop.data.remote.network.FakeTmapApiService
 import com.stop.data.remote.network.OpenApiSeoulService
 import com.stop.data.remote.network.WsBusApiService
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.SubwayStationResponse
@@ -43,8 +44,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate): ReverseGeocodingResponse {
-        with(fakeTmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude)) {
+    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
+        with(fakeTmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude, addressType = addressType.type)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
