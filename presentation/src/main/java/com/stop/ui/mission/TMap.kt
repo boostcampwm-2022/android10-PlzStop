@@ -52,7 +52,7 @@ class TMap(
 
     fun setTrackingMode() {
         val manager = TMapGpsManager(context).apply {
-            minDistance = 2.5F
+            minDistance = RECOGNIZABLE_MINIMUM_DISTANCE_CHANGE
             provider = TMapGpsManager.PROVIDER_GPS
             openGps()
             provider = TMapGpsManager.PROVIDER_NETWORK
@@ -110,5 +110,6 @@ class TMap(
         private const val KOREA_LONGITUDE_MAX = 132.550049
 
         private const val DEFAULT_ZOOM_LEVEL = 16
+        private const val RECOGNIZABLE_MINIMUM_DISTANCE_CHANGE = 2.5f
     }
 }
