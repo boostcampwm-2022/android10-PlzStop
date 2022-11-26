@@ -91,12 +91,11 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="19dp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:text="@{placeSearchViewModel.geoLocation.title}"
                 android:textSize="22sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 android:gravity="center_vertical"
                 app:layout_constraintStart_toEndOf="@id/image_view_panel_point"
@@ -146,11 +145,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginBottom="17dp"
+                android:layout_marginBottom="16dp"
                 android:text="@{placeSearchViewModel.distance.toString()}"
                 android:textSize="40sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="1.6" />
@@ -160,10 +159,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
-                android:layout_marginBottom="23dp"
+                android:layout_marginBottom="22dp"
                 android:text="@string/km"
                 android:textSize="20sp"
-                android:textStyle="bold"
                 android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/text_view_panel_distance"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -214,8 +212,6 @@
             android:id="@+id/layout_search"
             android:layout_width="0dp"
             android:layout_height="52dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             android:elevation="15dp"
             android:background="@drawable/background_search"
             app:layout_constraintStart_toStartOf="@+id/guideline_start"
@@ -227,10 +223,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="50dp"
+                android:layout_marginBottom="1dp"
                 android:gravity="center_vertical"
                 android:text="@string/search_hint"
                 android:textSize="17sp"
-                android:textStyle="bold"
                 android:textColor="#808590" />
 
             <ImageView
@@ -311,7 +307,8 @@
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:elevation="20dp" >
 
             <include
                 android:id="@+id/home_bottom_sheet"
