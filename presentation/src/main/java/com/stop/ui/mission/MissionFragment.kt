@@ -158,6 +158,6 @@ class MissionFragment : Fragment(), TMapHandler {
         private const val MINUS = ""
         private const val LEFT_TIME = 60
 
-        private const val FAKE_USER_FILE_PATH = "fake_user_path"
+        private const val FAKE_USER_FILE_PATH = "fake_user_path.txt"
     }
 }
