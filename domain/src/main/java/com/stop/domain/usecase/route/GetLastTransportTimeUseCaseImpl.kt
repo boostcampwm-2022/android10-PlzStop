@@ -121,7 +121,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         val busName = transportIdRequest.lineName.split(":")[1]
         val line =
             routeRepository.getSeoulBusLine(transportIdRequest.stationId).lineIdMsgBody.busLines.firstOrNull {
-                it.busLineName == busName
+                it.busLineName.contains(busName)
             } ?: throw NoAppropriateDataException(NO_BUS_LINE_ID)
 
         return transportIdRequest.changeLineId(line.lineId, line.term)
