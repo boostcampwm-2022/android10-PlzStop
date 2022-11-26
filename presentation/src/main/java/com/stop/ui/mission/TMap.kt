@@ -40,7 +40,7 @@ class TMap(
         tMapView.setSKTMapApiKey(BuildConfig.TMAP_APP_KEY)
         tMapView.setOnMapReadyListener {
             tMapView.setVisibleLogo(false)
-            tMapView.mapType = TMapView.MapType.NIGHT
+            tMapView.mapType = TMapView.MapType.DEFAULT
             tMapView.zoomLevel = DEFAULT_ZOOM_LEVEL
 
             tMapHandler.alertTMapReady()
