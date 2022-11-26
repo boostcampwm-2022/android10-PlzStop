@@ -1,8 +1,6 @@
 package com.stop.ui.mission
 
 import android.Manifest
-import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -122,7 +120,7 @@ class MissionFragment : Fragment(), TMapHandler {
 
     private fun setObserve() {
         val shortAnimationDuration =
-            resources.getInteger(android.R.integer.config_shortAnimTime)
+            resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
 
         viewModel.timeIncreased.observe(viewLifecycleOwner) {
             val sign = if (it > 0) {
@@ -130,24 +128,18 @@ class MissionFragment : Fragment(), TMapHandler {
             } else {
                 MINUS
             }
-            binding.textViewChangedTime.text =
-                resources.getString(R.string.number_format).format(sign, it)
-            binding.textViewChangedTime.apply {
-                alpha = 0f
+            with(binding.textViewChangedTime) {
+                text = resources.getString(R.string.number_format).format(sign, it)
                 visibility = View.VISIBLE
-                animate().alpha(1f)
-                    .setDuration(shortAnimationDuration.toLong())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            animate().alpha(0f)
-                                .setDuration(shortAnimationDuration.toLong())
-                                .setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        binding.textViewChangedTime.visibility = View.GONE
-                                    }
-                                })
-                        }
-                    })
+                this.animate().alpha(ALPHA_VISIBLE)
+                    .setDuration(shortAnimationDuration)
+                    .withEndAction {
+                        animate().alpha(ALPHA_INVISIBLE)
+                            .setDuration(shortAnimationDuration)
+                            .withEndAction {
+                                visibility = View.INVISIBLE
+                            }
+                    }
             }
         }
     }
@@ -159,5 +151,8 @@ class MissionFragment : Fragment(), TMapHandler {
         private const val LEFT_TIME = 60
 
         private const val FAKE_USER_FILE_PATH = "fake_user_path.txt"
+
+        private const val ALPHA_VISIBLE = 1f
+        private const val ALPHA_INVISIBLE = 0f
     }
 }

@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:textSize="32sp"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@id/text_view_time_left"
             app:layout_constraintTop_toTopOf="@id/text_view_time_left"
             tools:text="+1" />
