@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -44,13 +45,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_end="115dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_panel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.25" />
 
         <FrameLayout
             android:id="@+id/frame_layout_container"
@@ -158,11 +152,12 @@
                 android:id="@+id/text_view_panel_distance_km"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="7dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginBottom="22dp"
                 android:text="@string/km"
                 android:textSize="20sp"
                 android:textColor="@color/white"
+                android:textStyle="bold"
                 app:layout_constraintStart_toEndOf="@id/text_view_panel_distance"
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:text="km" />
@@ -308,12 +303,23 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="20dp" >
+            android:elevation="20dp">
 
-            <include
-                android:id="@+id/home_bottom_sheet"
-                layout="@layout/home_bottom_sheet" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_home_bottom_sheet"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:behavior_peekHeight="100dp"
+                app:behavior_hideable="false">
+
+                <include
+                    android:id="@+id/home_bottom_sheet"
+                    layout="@layout/home_bottom_sheet"
+                    bind:alarmViewModel="@{alarmViewModel}"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="16dp" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
-

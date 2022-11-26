@@ -2,6 +2,7 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapGpsManager
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
@@ -54,6 +56,7 @@ class MapFragment : Fragment() {
         initView()
         initNavigateAction()
         initTMap()
+        initBottomSheetBehavior()
     }
 
     private fun initBinding() {
@@ -76,6 +79,12 @@ class MapFragment : Fragment() {
                 true
             )
         }
+
+        binding.layoutBookmark.setOnClickListener {
+            alarmViewModel.bottomSheetVisibility.value?.let {
+                alarmViewModel.setVisibility(it)
+            }
+        }
     }
 
     private fun initNavigateAction() {
@@ -84,9 +93,11 @@ class MapFragment : Fragment() {
                 .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
+        /*
         binding.layoutBookmark.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_bookMarkFragment)
         }
+        */
 
         /*
         binding.textViewStartLocation.setOnClickListener {
@@ -115,6 +126,19 @@ class MapFragment : Fragment() {
         }
 
         binding.frameLayoutContainer.addView(tMapView)
+    }
+
+    private fun initBottomSheetBehavior() {
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
+        alarmViewModel.bottomSheetVisibility.observe(viewLifecycleOwner) {
+            if (it) {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.maxHeight = convertDpToPx(200)
+            } else {
+                behavior.maxHeight = convertDpToPx(100)
+            }
+        }
     }
 
     private fun setTrackingMode() {
@@ -199,12 +223,20 @@ class MapFragment : Fragment() {
             View.GONE
         }
 
-        with (binding) {
+        with(binding) {
             layoutSearch.visibility = viewVisibility
             layoutCompass.visibility = viewVisibility
             layoutCurrent.visibility = viewVisibility
             layoutBookmark.visibility = viewVisibility
         }
+    }
+
+    private fun convertDpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics
+        ).toInt()
     }
 
     private val requestPermissionsLauncher = registerForActivityResult(
