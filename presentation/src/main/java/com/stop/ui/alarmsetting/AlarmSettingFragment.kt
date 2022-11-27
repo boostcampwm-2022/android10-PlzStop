@@ -3,15 +3,20 @@ package com.stop.ui.alarmsetting
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
+import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
@@ -115,7 +120,20 @@ class AlarmSettingFragment : Fragment() {
 
     fun setAlarmRegisterListener() {
         alarmSettingViewModel.saveAlarm()
+        makeAlarmWorker()
         binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
+    }
+
+    private fun makeAlarmWorker() {
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<AlarmWorker>(15, TimeUnit.MINUTES)
+            .build()
+        val workManager = WorkManager.getInstance(requireContext())
+        workManager.enqueue(periodicWorkRequest)
+        workManager.getWorkInfoByIdLiveData(periodicWorkRequest.id)
+            .observe(viewLifecycleOwner) { info ->
+                val outPutData = info.outputData.getString("WORK_RESULT")
+                Log.e("ABC", outPutData.toString())
+            }
     }
 
     override fun onDestroyView() {
