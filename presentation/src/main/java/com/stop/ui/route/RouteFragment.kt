@@ -5,12 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
-import com.stop.model.route.OrderType
+import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.model.ErrorType
+import com.stop.model.route.Coordinate
+import com.stop.model.route.Place
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -20,8 +22,6 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    // TODO("args 전달받는거 수정하기 )
-//    private val args: RouteFragmentArgs by navArgs()
     private val viewModel: RouteViewModel by viewModels()
     private val adapter = RouteAdapter()
 
@@ -36,15 +36,31 @@ class RouteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setStartAndDestinationText()
-        setDropDownMenu()
+        setBinding()
         setRecyclerView()
+        setStartAndDestinationText()
         setObserve()
+    }
+
+    private fun setBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = viewModel
+        binding.executePendingBindings()
     }
 
     private fun setRecyclerView() {
         binding.recyclerviewRoute.adapter = adapter
+        adapter.setOnItineraryClickListener(object: RouteAdapter.OnItineraryClickListener {
+            override fun onItineraryClick(itinerary: Itinerary) {
+                /**
+                 * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
+                 * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
+                 */
+                viewModel.calculateLastTransportTime(itinerary)
+            }
+        })
     }
+
 
     private fun setObserve() {
         viewModel.routeResponse.observe(viewLifecycleOwner) {
@@ -53,23 +69,23 @@ class RouteFragment : Fragment() {
             }
             adapter.submitList(it)
         }
-    }
 
-    private fun setDropDownMenu() {
-        val options = OrderType.values().map { it.typeName }
-        val adapter = ArrayAdapter(requireContext(), R.layout.order_list_item, options)
-        binding.autoCompleteTextViewOrderType.setText(options.first())
-        binding.autoCompleteTextViewOrderType.setAdapter(adapter)
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { errorType ->
+                val message = when(errorType) {
+                    ErrorType.NO_START -> getString(R.string.no_start_input)
+                    ErrorType.NO_END -> getString(R.string.no_end_input)
+                }
+
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     private fun setStartAndDestinationText() {
-        TODO("args 전달 받는거 수정하기")
-//        binding.textInputEditTextOrigin.setText(args.routeRequest.originName)
-//        binding.textInputEditTextDestination.setText(args.routeRequest.destinationName)
-//
-//        viewModel.setOrigin(args.routeRequest.getOrigin())
-//        viewModel.setDestination(args.routeRequest.getDestination())
-//        viewModel.getRoute()
+        viewModel.setOrigin(Place(ORIGIN_NAME, Coordinate(ORIGIN_Y, ORIGIN_X)))
+        viewModel.setDestination(Place(DESTINATION_NAME, Coordinate(DESTINATION_Y, DESTINATION_X)))
+        viewModel.getRoute()
     }
 
     override fun onDestroyView() {

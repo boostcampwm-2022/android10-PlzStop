@@ -26,7 +26,7 @@ class MapFragment : Fragment(), MapHandler {
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMap: MapTMap
-    private var mapUIVisibility = View.GONE // false
+    private var mapUIVisibility = View.GONE
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,6 @@ class MapFragment : Fragment(), MapHandler {
         initView()
         clickSearchButton()
         clickEndLocation()
-
     }
 
     private fun initBinding() {
@@ -151,25 +150,23 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun observeClickCurrentLocation() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            launch {
-                placeSearchViewModel.clickCurrentLocation
-                    .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                    .collect {
-                        val currentLocation = placeSearchViewModel.currentLocation
-                        val currentTMapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
+        lifecycleScope.launch {
+            placeSearchViewModel.clickCurrentLocation
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect {
+                    val currentLocation = placeSearchViewModel.currentLocation
+                    val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
-                        tMap.tMapView.setCenterPoint(currentTMapPoint.latitude, currentTMapPoint.longitude, true)
+                    tMap.tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
 
-                        setPanel(currentTMapPoint)
+                    setPanel(currentTmapPoint)
 
-                        tMap.makeMarker(
-                            PLACE_MARKER,
-                            PLACE_MARKER_IMG,
-                            currentTMapPoint
-                        )
-                    }
-            }
+                    tMap.makeMarker(
+                        PLACE_MARKER,
+                        PLACE_MARKER_IMG,
+                        currentTMapPoint
+                    )
+                }
         }
     }
 
@@ -214,6 +211,7 @@ class MapFragment : Fragment(), MapHandler {
         private const val PERSON_MARKER = "marker_person_pin"
         private const val PERSON_MARKER_IMG = R.drawable.ic_person_pin
 
+        private const val SAME_POINT = 1
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
 
         private const val BOOKMARK_MARKER_IMG = R.drawable.ic_baseline_stars_32

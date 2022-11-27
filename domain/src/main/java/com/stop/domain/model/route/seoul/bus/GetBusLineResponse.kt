@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class MsgBody(
-    @Json(name = "itemList")
-    val busStations: List<BusStationInfo>
+data class GetBusLineResponse(
+    @Json(name = "msgBody")
+    val lineIdMsgBody: LineIdMsgBody,
 )

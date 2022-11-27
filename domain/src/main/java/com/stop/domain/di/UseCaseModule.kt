@@ -1,8 +1,6 @@
 package com.stop.domain.di
 
 import com.stop.domain.usecase.alarm.*
-import com.stop.domain.usecase.route.GetRouteUseCase
-import com.stop.domain.usecase.route.GetRouteUseCaseImpl
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
@@ -10,6 +8,10 @@ import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCaseImpl
 import dagger.Module
+import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
+import com.stop.domain.usecase.route.GetLastTransportTimeUseCaseImpl
+import com.stop.domain.usecase.route.GetRouteUseCase
+import com.stop.domain.usecase.route.GetRouteUseCaseImpl
 import dagger.Binds
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -25,6 +27,12 @@ internal interface UseCaseModule {
 
     @Binds
     @Singleton
+    fun provideGetLastTransportTimeUseCase(
+        getLastTransportTimeUseCaseImpl: GetLastTransportTimeUseCaseImpl
+    ): GetLastTransportTimeUseCase
+
+    @Binds
+    @Singleton
     fun provideGeoLocationUseCase(geoLocationUseCaseImpl: GeoLocationUseCaseImpl): GeoLocationUseCase
 
     @Binds
@@ -37,7 +45,7 @@ internal interface UseCaseModule {
 
     @Binds
     @Singleton
-    fun provideInsertAlarmUseCase(insertAlarmUseCaseImpl: InsertAlarmUseCaseImpl): InsertAlarmUseCase
+    fun provideInsertAlarmUseCase(insertAlarmUseCaseImpl: SaveAlarmUseCaseImpl): SaveAlarmUseCase
 
     @Binds
     @Singleton

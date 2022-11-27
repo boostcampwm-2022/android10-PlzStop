@@ -5,5 +5,4 @@ data class Station(
     val coordinate: Coordinate,
     val stationId: String,
     val stationName: String,
-    val idUsedAtPublicApi: String,
 )

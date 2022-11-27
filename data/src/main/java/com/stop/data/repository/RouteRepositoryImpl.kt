@@ -3,6 +3,7 @@ package com.stop.data.repository
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
+import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
@@ -13,13 +14,16 @@ import javax.inject.Inject
 
 internal class RouteRepositoryImpl @Inject constructor(
     private val remoteDataSource: RouteRemoteDataSource
-): RouteRepository {
+) : RouteRepository {
 
     override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
         return remoteDataSource.getRoute(routeRequest)
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
+    override suspend fun reverseGeocoding(
+        coordinate: Coordinate,
+        addressType: AddressType
+    ): ReverseGeocodingResponse {
         return remoteDataSource.reverseGeocoding(coordinate, addressType)
     }
 
@@ -29,6 +33,18 @@ internal class RouteRepositoryImpl @Inject constructor(
 
     override suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse {
         return remoteDataSource.getSeoulBusStationArsId(stationName)
+    }
+
+    override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
+        return remoteDataSource.getSeoulBusLine(stationId)
+    }
+
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String {
+        return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
+            .lastTimeMsgBody
+            .lastTimes
+            .first()
+            .lastTime
     }
 
     override suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse {

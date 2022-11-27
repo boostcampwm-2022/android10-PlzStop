@@ -26,7 +26,10 @@ internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
+    fun provideNearPlaceRepository(
+        nearPlaceRepositoryImpl: NearPlaceRepositoryImpl
+    ): NearPlaceRepository
+
 
     @Binds
     @Singleton
@@ -35,4 +38,5 @@ internal interface RepositoryModule {
     @Binds
     @Singleton
     fun provideNowLocationRepository(nowLocationRepositoryImpl: NowLocationRepositoryImpl): NowLocationRepository
+
 }

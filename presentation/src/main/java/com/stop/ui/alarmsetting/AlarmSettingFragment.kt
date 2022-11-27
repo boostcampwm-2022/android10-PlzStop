@@ -3,14 +3,19 @@ package com.stop.ui.alarmsetting
 import android.os.Bundle
 import android.transition.AutoTransition
 import android.transition.TransitionManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
+import com.stop.domain.model.alarm.AlarmUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
@@ -33,6 +38,29 @@ class AlarmSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val test = AlarmUseCaseItem(
+            "abc",
+            "abc",
+            listOf("ABC"),
+            "abc","abc",true,true
+        )
+
+        lifecycleScope.launch{
+            alarmSettingViewModel.save(test)
+        }
+
+      /*  lifecycleScope.launch{
+            alarmSettingViewModel.get().asLiveData().observe(viewLifecycleOwner){
+                Log.e("ABC", it.toString())
+            }
+        }*/
+
+        lifecycleScope.launch{
+            alarmSettingViewModel.get().collectLatest {
+                Log.e("ABC", it.toString())
+            }
+        }
+
 
         initView()
         setButtonListener()

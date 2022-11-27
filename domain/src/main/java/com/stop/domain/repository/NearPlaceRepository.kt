@@ -1,7 +1,6 @@
 package com.stop.domain.repository
 
 import com.stop.domain.model.nearplace.Place
-import kotlinx.coroutines.flow.Flow
 
 interface NearPlaceRepository {
 
@@ -11,6 +10,6 @@ interface NearPlaceRepository {
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): Flow<List<Place>>
+    ): List<Place>
 
 }
