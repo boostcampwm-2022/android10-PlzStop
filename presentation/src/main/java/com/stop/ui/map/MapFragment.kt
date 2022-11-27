@@ -164,7 +164,7 @@ class MapFragment : Fragment(), MapHandler {
                     tMap.makeMarker(
                         PLACE_MARKER,
                         PLACE_MARKER_IMG,
-                        currentTMapPoint
+                        currentTmapPoint
                     )
                 }
         }
