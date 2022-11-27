@@ -29,4 +29,6 @@
     <string name="quit">종료</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
+    <string name="no_start_input">출발지가 입력되지 않았습니다.</string>
+    <string name="no_end_input">도착지가 입력되지 않았습니다.</string>
 </resources>

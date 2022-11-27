@@ -9,6 +9,8 @@ import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
 import com.stop.domain.usecase.route.GetRouteUseCase
+import com.stop.model.ErrorType
+import com.stop.model.Event
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -19,7 +21,7 @@ import javax.inject.Inject
 class RouteViewModel @Inject constructor(
     private val getRouteUseCase: GetRouteUseCase,
     private val getLastTransportTimeUseCase: GetLastTransportTimeUseCase,
-): ViewModel() {
+) : ViewModel() {
 
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>
@@ -37,9 +39,20 @@ class RouteViewModel @Inject constructor(
     val lastTimeResponse: LiveData<TransportLastTimeInfo>
         get() = _lastTimeResponse
 
+    private val _errorMessage = MutableLiveData<Event<ErrorType>>()
+    val errorMessage: LiveData<Event<ErrorType>>
+        get() = _errorMessage
+
     fun getRoute() {
-        val originValue = _origin.value ?: return
-        val destinationValue = _destination.value ?: return
+        val originValue = _origin.value ?: let {
+            _errorMessage.value = Event(ErrorType.NO_START)
+            return
+        }
+
+        val destinationValue = _destination.value ?: let {
+            _errorMessage.value = Event(ErrorType.NO_END)
+            return
+        }
 
         val routeRequest = RouteRequest(
             startX = originValue.coordinate.longitude,
@@ -55,7 +68,8 @@ class RouteViewModel @Inject constructor(
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastTimeInfo = getLastTransportTimeUseCase.getLastTransportTime(itinerary) ?: return@launch
+            val lastTimeInfo =
+                getLastTransportTimeUseCase.getLastTransportTime(itinerary) ?: return@launch
 
             _lastTimeResponse.postValue(lastTimeInfo)
         }

@@ -5,9 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
+import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.model.ErrorType
 import com.stop.model.route.Coordinate
 import com.stop.model.route.Place
 import dagger.hilt.android.AndroidEntryPoint
@@ -65,6 +68,17 @@ class RouteFragment : Fragment() {
                 return@observe
             }
             adapter.submitList(it)
+        }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { errorType ->
+                val message = when(errorType) {
+                    ErrorType.NO_START -> getString(R.string.no_start_input)
+                    ErrorType.NO_END -> getString(R.string.no_end_input)
+                }
+
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
