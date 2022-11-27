@@ -1,5 +1,7 @@
 package com.stop.data.di
 
+import com.stop.data.local.source.alarm.AlarmLocalDataSource
+import com.stop.data.local.source.alarm.AlarmLocalDataSourceImpl
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSourceImpl
 import com.stop.data.remote.source.route.RouteRemoteDataSource
@@ -16,14 +18,20 @@ internal interface DataSourceModule {
 
     @Binds
     @Singleton
+    fun provideNearPlaceRemoteDataSource(
+        nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl
+    ): NearPlaceRemoteDataSource
+
+    @Binds
+    @Singleton
     fun provideRouteRemoteDataSource(
         routeRemoteDataSourceImpl: RouteRemoteDataSourceImpl
     ): RouteRemoteDataSource
 
     @Binds
     @Singleton
-    fun provideNearPlaceDataSource(
-        nearPlaceRemoteDataSourceImpl: NearPlaceRemoteDataSourceImpl
-    ) : NearPlaceRemoteDataSource
-
+    fun provideAlarmLocalDataSource(
+        alarmLocalDataSourceImpl: AlarmLocalDataSourceImpl
+    ): AlarmLocalDataSourc
+    
 }

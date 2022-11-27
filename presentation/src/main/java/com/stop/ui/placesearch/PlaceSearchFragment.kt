@@ -39,6 +39,8 @@ class PlaceSearchFragment : Fragment() {
     ): View {
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_place_search, container, false)
 
+        initBinding()
+
         return binding.root
     }
 
@@ -47,7 +49,6 @@ class PlaceSearchFragment : Fragment() {
 
         initAdapter()
         buttonClick()
-        initBinding()
         listenEditTextChange()
         logErrorMessage()
         observeSearchKeyword()

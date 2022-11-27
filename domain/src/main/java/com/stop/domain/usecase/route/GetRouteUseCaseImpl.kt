@@ -1,13 +1,13 @@
-package com.stop.domain.usecase
+package com.stop.domain.usecase.route
 
 import com.squareup.moshi.JsonDataException
+import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
 import com.stop.domain.model.route.seoul.bus.BusStationInfo
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.model.route.tmap.origin.Leg
 import com.stop.domain.repository.RouteRepository
-import kotlinx.coroutines.delay
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -42,27 +42,24 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         val originRouteData = routeRepository.getRoute(routeRequest)
 
-        return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
+        return originRouteData.metaData.plan.itineraries.fold(listOf())  itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
 
                     routes + when (moveType) {
-                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(
-                            leg,
-                            moveType,
-                        )
+                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType)
                         MoveType.WALK -> createWalkRoute(leg, moveType)
                         else -> return@fold routes
                     }
                 } catch (e: IllegalArgumentException) {
-                    e.printStackTrace()
+                    println(e)
                     if (e.message?.contains(GYEONGGI_REGION_BUS_NOT_SUPPORT) == true) {
                         return@itinerary itineraries
                     }
                     routes
-                } catch (e: JsonDataException) { // T MAP에 있는 정류소 이름이 업데이트 되지 않아, 공공 데이터 포털의 결과가 없는 경우 처리
-                    e.printStackTrace()
+                } catch (e: JsonDataException) {
+                    println(e)
                     routes
                 }
             }
@@ -78,10 +75,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
 
-    private suspend fun createPublicTransportRoute(
-        leg: Leg,
-        moveType: MoveType,
-    ): SubwayRoute {
+    private suspend fun createPublicTransportRoute(leg: Leg, moveType: MoveType): SubwayRoute {
         return SubwayRoute(
             distance = leg.distance,
             end = with(leg.end) {
@@ -105,12 +99,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                 )
             },
             lines = createCoordinates(leg.passShape?.linestring ?: ""),
-            stations = leg.passStopList?.stationList?.mapIndexed { mapIndex, station ->
-                val id = if (mapIndex == 0) { // 승차지의 막차 시간만 필요합니다
-                    getIdUsedAtPublicApi(leg.route, station, moveType)
-                } else {
-                    UNKNOWN_ARS_ID
-                }
+            stations = leg.passStopList?.stationList?.map { station ->
                 with(station) {
                     Station(
                         orderIndex = index,
@@ -120,7 +109,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                         ),
                         stationId = stationID,
                         stationName = stationName,
-                        idUsedAtPublicApi = id,
+                        idUsedAtPublicApi = getIdUsedAtPublicApi(leg.route, station, moveType)
                     )
                 }
             } ?: listOf(),
@@ -165,19 +154,16 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private suspend fun getBusIdUsedAtPublicApi(
         station: com.stop.domain.model.route.tmap.origin.Station
     ): String {
-        delay(200) // 초당 처리 횟수를 초과하지 않기 위해 딜레이를 넣음
         val reverseGeocodingResponse =
-            routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon))
-        val arsId = when (reverseGeocodingResponse.addressInfo.city) {
+            routeRepository.reverseGeocoding(Coordinate(station.lat, station.lon), AddressType.LOT_ADDRESS)
+        val arsId = when (reverseGeocodingResponse.addressInfo.cityDo) {
             GYEONGGI_DO -> {
-                val busStations =
-                    routeRepository.getGyeonggiBusStationId(station.stationName).msgBody.busStations
+                val busStations = routeRepository.getGyeonggiBusStationId(station.stationName).msgBody.busStations
 
                 findClosestGyeonggiBusStation(station, busStations)
             }
             SEOUL -> {
-                val busStations =
-                    routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
+                val busStations = routeRepository.getSeoulBusStationArsId(station.stationName).msgBody.busStations
 
                 findClosestSeoulBusStation(station, busStations)
             }
@@ -310,6 +296,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     companion object {
         private const val NOT_REGISTERED_STATION = "등록되지 않은 전철역입니다."
         private const val NO_SUPPORTING_TYPE = "지원하지 않는 타입입니다."
+        private const val NO_MATCHING_BUS_STATION = "일치하는 버스 정류장이 없습니다."
         private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
         private const val NO_SUPPORTING_CITY = "지원하지 않는 도시입니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
