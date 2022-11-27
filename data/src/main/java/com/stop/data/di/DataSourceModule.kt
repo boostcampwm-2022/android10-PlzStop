@@ -26,5 +26,4 @@ internal interface DataSourceModule {
         routeRemoteDataSourceImpl: RouteRemoteDataSourceImpl
     ): RouteRemoteDataSource
 
-
 }

@@ -2,7 +2,6 @@ package com.stop.domain.usecase.nearplace
 
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.repository.NearPlaceRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 internal class GetNearPlacesUseCaseImpl @Inject constructor(
@@ -15,7 +14,7 @@ internal class GetNearPlacesUseCaseImpl @Inject constructor(
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): Flow<List<Place>> =
+    ): List<Place> =
         nearPlaceRepository.getNearPlaces(
             version,
             searchKeyword,
