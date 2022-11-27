@@ -28,8 +28,8 @@ class MapTMap(
     fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
             makeMarker(
-                MARKER,
-                R.drawable.ic_baseline_location_on_32,
+                PLACE_MARKER,
+                PLACE_MARKER_IMG,
                 tMapPoint
             )
 
@@ -39,7 +39,9 @@ class MapTMap(
     }
 
     companion object {
-        private const val MARKER = "marker"
+        private const val PLACE_MARKER = "marker"
+        private const val PLACE_MARKER_IMG = R.drawable.ic_baseline_location_on_32
+
         private const val SAME_POINT = 1
     }
 }

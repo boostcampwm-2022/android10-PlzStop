@@ -117,7 +117,7 @@ class MapFragment : Fragment(), MapHandler {
         placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
             tMap.makeMarker(
                 index.toString(),
-                R.drawable.ic_baseline_stars_32,
+                BOOKMARK_MARKER_IMG,
                 TMapPoint(location.latitude, location.longitude)
             )
         }
@@ -142,8 +142,8 @@ class MapFragment : Fragment(), MapHandler {
                 setPanel(clickTMapPoint)
 
                 tMap.makeMarker(
-                    MARKER,
-                    R.drawable.ic_baseline_location_on_32,
+                    PLACE_MARKER,
+                    PLACE_MARKER_IMG,
                     clickTMapPoint
                 )
             }
@@ -164,8 +164,8 @@ class MapFragment : Fragment(), MapHandler {
                         setPanel(currentTMapPoint)
 
                         tMap.makeMarker(
-                            MARKER,
-                            R.drawable.ic_baseline_location_on_32,
+                            PLACE_MARKER,
+                            PLACE_MARKER_IMG,
                             currentTMapPoint
                         )
                     }
@@ -196,7 +196,7 @@ class MapFragment : Fragment(), MapHandler {
     override fun setOnDisableScrollWIthZoomLevelListener() {
         if (binding.layoutPanel.visibility == View.VISIBLE) {
             binding.layoutPanel.visibility = View.GONE
-            tMap.tMapView.removeTMapMarkerItem(MARKER)
+            tMap.tMapView.removeTMapMarkerItem(PLACE_MARKER)
         } else {
             setViewVisibility()
             mapUIVisibility = mapUIVisibility.xor(View.GONE)
@@ -208,9 +208,14 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     companion object {
-        private const val MARKER = "marker"
+        private const val PLACE_MARKER = "place_marker"
+        private const val PLACE_MARKER_IMG = R.drawable.ic_baseline_location_on_32
+
         private const val PERSON_MARKER = "marker_person_pin"
         private const val PERSON_MARKER_IMG = R.drawable.ic_person_pin
+
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
+
+        private const val BOOKMARK_MARKER_IMG = R.drawable.ic_baseline_stars_32
     }
 }
