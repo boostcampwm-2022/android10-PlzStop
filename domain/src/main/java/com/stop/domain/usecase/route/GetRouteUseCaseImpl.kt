@@ -45,7 +45,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             distance = leg.distance,
             end = with(leg.end) {
                 Place(
-                    name = name,
+                    name = name.replace("(중)", ""),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -56,7 +56,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             sectionTime = leg.sectionTime,
             start = with(leg.start) {
                 Place(
-                    name = name,
+                    name = name.replace("(중)", ""),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -73,7 +73,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                             longitude = lon
                         ),
                         stationId = stationID,
-                        stationName = stationName,
+                        stationName = stationName.replace("(중)", ""),
                     )
                 }
             } ?: listOf(),
