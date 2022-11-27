@@ -5,6 +5,10 @@ import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
+import com.stop.domain.model.route.seoul.subway.Station
+import com.stop.domain.model.route.seoul.subway.StationLastTime
+import com.stop.domain.model.route.seoul.subway.SubwayCircleType
+import com.stop.domain.model.route.seoul.subway.WeekType
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
@@ -29,6 +33,18 @@ internal class RouteRepositoryImpl @Inject constructor(
 
     override suspend fun getSubwayStationCd(stationId: String, stationName: String): String {
         return remoteDataSource.getSubwayStationCd(stationId, stationName)
+    }
+
+    override suspend fun getSubwayStations(lineName: String): List<Station> {
+        return remoteDataSource.getSubwayStations(lineName)
+    }
+
+    override suspend fun getSubwayStationLastTime(
+        stationId: String,
+        subwayCircleType: SubwayCircleType,
+        weekType: WeekType,
+    ): List<StationLastTime> {
+        return remoteDataSource.getSubwayStationLastTime(stationId, subwayCircleType, weekType)
     }
 
     override suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse {

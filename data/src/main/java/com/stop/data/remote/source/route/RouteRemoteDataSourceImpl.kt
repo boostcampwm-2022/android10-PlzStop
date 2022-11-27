@@ -10,7 +10,7 @@ import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
-import com.stop.domain.model.route.seoul.subway.SubwayStationResponse
+import com.stop.domain.model.route.seoul.subway.*
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
@@ -38,8 +38,17 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse {
-        with(tmapApiService.getReverseGeocoding(coordinate.latitude, coordinate.longitude, addressType = addressType.type)) {
+    override suspend fun reverseGeocoding(
+        coordinate: Coordinate,
+        addressType: AddressType
+    ): ReverseGeocodingResponse {
+        with(
+            tmapApiService.getReverseGeocoding(
+                coordinate.latitude,
+                coordinate.longitude,
+                addressType = addressType.type
+            )
+        ) {
             return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
@@ -68,6 +77,44 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
+    override suspend fun getSubwayStations(lineName: String): List<Station> {
+        with(
+            openApiSeoulService.getSubwayStations(
+                serviceName = "SearchSTNBySubwayLineInfo",
+                lineName = lineName,
+            )
+        ) {
+            return when (this) {
+                is NetworkResult.Success -> this.data.searchStationNameBySubwayLineInfo.stations
+                is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
+                is NetworkResult.NetworkError -> throw this.exception
+                is NetworkResult.Unexpected -> throw this.exception
+            }
+        }
+    }
+
+    override suspend fun getSubwayStationLastTime(
+        stationId: String,
+        subwayCircleType: SubwayCircleType,
+        weekType: WeekType,
+    ): List<StationLastTime> {
+        with(
+            openApiSeoulService.getSubwayLastTime(
+                serviceName = "SearchLastTrainTimeByIDService",
+                stationId = stationId,
+                weekTag = weekType.divisionValue,
+                inOutTag = subwayCircleType.divisionValue,
+            )
+        ) {
+            return when (this) {
+                is NetworkResult.Success -> this.data.searchLastTrainTimeByIDService.stationLastTimes
+                is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
+                is NetworkResult.NetworkError -> throw this.exception
+                is NetworkResult.Unexpected -> throw this.exception
+            }
+        }
+    }
+
     override suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse {
         with(wsBusApiService.getBusArsId(stationName)) {
             return when (this) {
@@ -81,7 +128,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
         with(wsBusApiService.getBusLine(stationId)) {
-            return when(this) {
+            return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
@@ -90,9 +137,12 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): GetBusLastTimeResponse {
+    override suspend fun getSeoulBusLastTime(
+        stationId: String,
+        lineId: String
+    ): GetBusLastTimeResponse {
         with(wsBusApiService.getBusLastTime(stationId, lineId)) {
-            return when(this) {
+            return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
