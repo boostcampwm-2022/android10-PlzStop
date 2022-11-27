@@ -9,7 +9,11 @@ class GetBusNowLocationUseCaseImpl @Inject constructor(
 ) : GetBusNowLocationUseCase {
 
     override suspend fun getBusNowLocation(busRouteId: String): BusInfoUseCaseItem {
-        return nowLocationRepository.getBusNowLocation(busRouteId)
+        return nowLocationRepository.getBusNowLocation(busRouteId, TEST_ORDER)
+    }
+
+    companion object {
+        private const val TEST_ORDER = 1
     }
 
 }

@@ -9,8 +9,8 @@ class NowLocationRepositoryImpl @Inject constructor(
     private val nowLocationRemoteDataSource: NowLocationRemoteDataSource
 ) : NowLocationRepository{
 
-    override suspend fun getBusNowLocation(busRouteId: String): BusInfoUseCaseItem {
-        return nowLocationRemoteDataSource.getBusNowLocation(busRouteId).toUseCaseModel()
+    override suspend fun getBusNowLocation(busRouteId: String, order: Int): BusInfoUseCaseItem {
+        return nowLocationRemoteDataSource.getBusNowLocation(busRouteId, order).toUseCaseModel()
     }
 
 }

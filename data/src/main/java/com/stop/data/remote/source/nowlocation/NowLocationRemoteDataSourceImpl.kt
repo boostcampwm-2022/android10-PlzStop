@@ -9,10 +9,10 @@ internal class NowLocationRemoteDataSourceImpl @Inject constructor(
     private val wsBusApiService: WsBusApiService
 ) : NowLocationRemoteDataSource {
 
-    override suspend fun getBusNowLocation(busRouteId: String): BusInfoRepositoryItem {
+    override suspend fun getBusNowLocation(busRouteId: String, order: Int): BusInfoRepositoryItem {
         with(wsBusApiService.getBusNowLocation(busRouteId = busRouteId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.busBody.busInfo.first().toRepositoryModel()
+                is NetworkResult.Success -> this.data.busBody.busInfo[order].toRepositoryModel()
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw  this.exception
