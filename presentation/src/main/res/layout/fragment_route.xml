@@ -38,6 +38,7 @@
                 android:id="@+id/text_input_edit_text_origin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{viewModel.origin.name}"
                 tools:text="이앤씨벤쳐드림타워3차" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -66,24 +67,8 @@
                 android:id="@+id/text_input_edit_text_destination"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@{viewModel.destination.name}"
                 tools:text="Naver1784" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_drop_down_menu"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/auto_complete_text_view_order_type"
-            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_destination">
-
-            <AutoCompleteTextView
-                android:id="@+id/auto_complete_text_view_order_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +92,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_drop_down_menu"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_destination"
             tools:listitem="@layout/route_item" />
 
         <androidx.constraintlayout.widget.Guideline
