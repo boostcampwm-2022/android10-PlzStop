@@ -26,7 +26,7 @@ class MapFragment : Fragment(), MapHandler {
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMap: MapTMap
-    private var mapUIVisibility = false
+    private var mapUIVisibility = View.GONE // false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -104,20 +104,12 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun setMapUIVisibility() {
-        if (mapUIVisibility) {
-            setViewVisibility(View.VISIBLE)
-        } else {
-            setViewVisibility(View.GONE)
-        }
-    }
-
-    private fun setViewVisibility(visibility: Int) {
+    private fun setViewVisibility() {
         with(binding) {
-            textViewSearch.visibility = visibility
-            imageViewCompassMode.visibility = visibility
-            imageViewCurrentLocation.visibility = visibility
-            imageViewBookmark.visibility = visibility
+            textViewSearch.visibility = mapUIVisibility
+            imageViewCompassMode.visibility = mapUIVisibility
+            imageViewCurrentLocation.visibility = mapUIVisibility
+            imageViewBookmark.visibility = mapUIVisibility
         }
     }
 
@@ -206,8 +198,8 @@ class MapFragment : Fragment(), MapHandler {
             binding.layoutPanel.visibility = View.GONE
             tMap.tMapView.removeTMapMarkerItem(MARKER)
         } else {
-            setMapUIVisibility()
-            mapUIVisibility = mapUIVisibility.not()
+            setViewVisibility()
+            mapUIVisibility = mapUIVisibility.xor(View.GONE)
         }
     }
 
