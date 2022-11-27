@@ -32,6 +32,6 @@ internal interface DataSourceModule {
     @Singleton
     fun provideAlarmLocalDataSource(
         alarmLocalDataSourceImpl: AlarmLocalDataSourceImpl
-    ): AlarmLocalDataSource
-
+    ): AlarmLocalDataSourc
+    
 }

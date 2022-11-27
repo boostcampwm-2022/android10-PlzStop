@@ -5,11 +5,11 @@ import com.stop.data.model.nearplace.Place
 interface NearPlaceRemoteDataSource {
 
     suspend fun getNearPlaces(
-        version : Int,
+        version: Int,
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): List<Place>
+    ): Result<List<Place>>
 
 }
