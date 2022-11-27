@@ -19,12 +19,12 @@ data class BusInfo(
     val isRun: String,
 ) {
     fun toRepositoryModel() = BusInfoRepositoryItem(
-        isArrivedAtStation,
-        sectionId,
-        latitude,
-        longitude,
-        busId,
-        busNumber,
-        isRun
+        isArrivedAtStation = isArrivedAtStation,
+        sectionId = sectionId,
+        latitude = latitude,
+        longitude = longitude,
+        busId = busId,
+        busNumber = busNumber,
+        isRun = isRun,
     )
 }
