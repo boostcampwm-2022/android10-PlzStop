@@ -1,6 +1,5 @@
 package com.stop.data.remote.network
 
-import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
 import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
