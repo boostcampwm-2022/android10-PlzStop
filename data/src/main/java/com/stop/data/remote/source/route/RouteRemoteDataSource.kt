@@ -1,6 +1,7 @@
 package com.stop.data.remote.source.route
 
 import com.stop.domain.model.geoLocation.AddressType
+import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
@@ -37,4 +38,6 @@ internal interface RouteRemoteDataSource {
     suspend fun getSeoulBusLastTime(stationId: String, lineId: String): GetBusLastTimeResponse
 
     suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse
+
+    suspend fun getGyeongggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse
 }
