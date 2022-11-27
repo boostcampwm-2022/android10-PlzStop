@@ -2,6 +2,8 @@ package com.stop.data.di
 
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSourceImpl
+import com.stop.data.remote.source.nowlocation.NowLocationRemoteDataSource
+import com.stop.data.remote.source.nowlocation.NowLocationRemoteDataSourceImpl
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.data.remote.source.route.RouteRemoteDataSourceImpl
 import dagger.Binds
@@ -25,5 +27,11 @@ internal interface DataSourceModule {
     fun provideRouteRemoteDataSource(
         routeRemoteDataSourceImpl: RouteRemoteDataSourceImpl
     ): RouteRemoteDataSource
+
+    @Binds
+    @Singleton
+    fun provideNowLocationRemoteDataSource(
+        nowLocationRemoteDataSourceImpl: NowLocationRemoteDataSourceImpl
+    ): NowLocationRemoteDataSource
 
 }

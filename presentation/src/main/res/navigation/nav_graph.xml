@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_routeFragment_to_routeDetailFragment"
             app:destination="@id/routeDetailFragment" />
+        <argument
+            android:name="routeRequest"
+            app:argType="com.stop.model.route.RouteRequest" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"

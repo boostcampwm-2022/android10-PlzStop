@@ -1,15 +1,20 @@
 package com.stop.ui.mission
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.util.Log
+import androidx.lifecycle.*
+import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
+import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
+import com.stop.model.Location
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.random.Random
 
-class MissionViewModel : ViewModel() {
+@HiltViewModel
+class MissionViewModel @Inject constructor(
+    private val getBusNowLocationUseCase: GetBusNowLocationUseCase
+): ViewModel() {
 
     private val random = Random(System.currentTimeMillis())
 
@@ -35,6 +40,16 @@ class MissionViewModel : ViewModel() {
         MutableLiveData<String>().apply {
             value = (it % TIME_UNIT).toString().padStart(TIME_DIGIT, '0')
         }
+    }
+
+    private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem>()
+    val busNowLocationInfo: LiveData<BusInfoUseCaseItem> = _busNowLocationInfo
+
+    var personCurrentLocation = Location(0.0, 0.0)
+    var busCurrentLocation = Location(0.0, 0.0)
+
+    init {
+        getBusNowLocation()
     }
 
     fun setDestination(inputDestination: String) {
@@ -74,6 +89,18 @@ class MissionViewModel : ViewModel() {
         }
     }
 
+    private fun getBusNowLocation() {
+        viewModelScope.launch {
+            while (TIME_TEST < 60) {
+                _busNowLocationInfo.value = getBusNowLocationUseCase.getBusNowLocation(BUS_540_ID)
+                Log.d("MissionViewModel","busNowLocationInfo ${_busNowLocationInfo.value}")
+                delay(5000)
+                TIME_TEST += 1
+            }
+
+        }
+    }
+
     companion object {
         private const val DELAY_TIME = 1000L
         private const val TIME_ZERO = 0
@@ -82,5 +109,8 @@ class MissionViewModel : ViewModel() {
         private const val ONE_SECOND = 1
         private const val RANDOM_LIMIT = 5
         private const val ZERO = 0
+
+        private const val BUS_540_ID = "100100083"
+        private var TIME_TEST = 0
     }
 }

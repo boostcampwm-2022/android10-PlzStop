@@ -1,26 +1,25 @@
 package com.stop.ui.mission
 
-import android.Manifest
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
+import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
+import com.stop.model.Location
+import com.stop.ui.map.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 @AndroidEntryPoint
-class MissionFragment : Fragment(), TMapHandler {
+class MissionFragment : Fragment(), MissionHandler {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
@@ -28,26 +27,16 @@ class MissionFragment : Fragment(), TMapHandler {
 
     private val viewModel: MissionViewModel by viewModels()
 
-    private lateinit var tMap: TMap
+    private lateinit var tMap: MissionTMap
 
-    private val permissions = arrayOf(
-        Manifest.permission.ACCESS_FINE_LOCATION,
-        Manifest.permission.ACCESS_COARSE_LOCATION
-    )
-
-    private val requestPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.entries.any { it.value }) {
-            tMap.setTrackingMode()
-        }
-    }
+    private var beforeLocation = INIT_LOCATION
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMissionBinding.inflate(layoutInflater)
+
         return binding.root
     }
 
@@ -57,6 +46,7 @@ class MissionFragment : Fragment(), TMapHandler {
         setDataBinding()
         initViewModel()
         initTMap()
+        initView()
         setObserve()
     }
 
@@ -66,40 +56,30 @@ class MissionFragment : Fragment(), TMapHandler {
         super.onDestroyView()
     }
 
-    override fun alertTMapReady() {
-        requestPermissionsLauncher.launch(permissions)
-        mimicUserMove()
-    }
+//    private fun mimicUserMove() {
+//        val lines = readFromAssets()
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            lines.forEach { line ->
+//                val (longitude, latitude) = line.split(",")
+//                tMap.moveLocation(longitude, latitude)
+//                delay(500)
+//            }
+//        }
+//    }
 
-    private fun mimicUserMove() {
-        val lines = readFromAssets()
-
-        CoroutineScope(Dispatchers.IO).launch {
-            lines.forEach { line ->
-                val (longitude, latitude) = line.split(",")
-                tMap.moveLocation(longitude, latitude)
-                delay(500)
-            }
-        }
-    }
-
-    /**
-     * 이 함수를 사용하기 위해서 assets 폴더에 좌표가 longitude,latitude로 나열되어 있는 txt 파일이
-     * 필요합니다.
-     * 파일의 이름은 아래 companion object에 있는 FAKE_USER_FILE_PATH 변숫값과 동일하게 해주세요.
-     */
-    private fun readFromAssets(): List<String> {
-        val reader =
-            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
-        val lines = arrayListOf<String>()
-        var line = reader.readLine()
-        while (line != null) {
-            lines.add(line)
-            line = reader.readLine()
-        }
-        reader.close()
-        return lines
-    }
+//    private fun readFromAssets(): List<String> {
+//        val reader =
+//            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
+//        val lines = arrayListOf<String>()
+//        var line = reader.readLine()
+//        while (line != null) {
+//            lines.add(line)
+//            line = reader.readLine()
+//        }
+//        reader.close()
+//        return lines
+//    }
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -107,10 +87,10 @@ class MissionFragment : Fragment(), TMapHandler {
     }
 
     private fun initTMap() {
-        tMap = TMap((requireContext() as ContextWrapper).baseContext, this)
+        tMap = MissionTMap((requireContext() as ContextWrapper).baseContext, this)
         tMap.init()
 
-        binding.constraintLayoutContainer.addView(tMap.getTMapView())
+        binding.constraintLayoutContainer.addView(tMap.tMapView)
     }
 
     private fun initViewModel() {
@@ -118,9 +98,36 @@ class MissionFragment : Fragment(), TMapHandler {
         viewModel.countDownWith(LEFT_TIME)
     }
 
+    private fun initView() {
+        binding.imageViewCompassMode.setOnClickListener {
+            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+        }
+
+        binding.imageViewPersonCurrentLocation.setOnClickListener {
+            tMap.tMapView.setCenterPoint(
+                viewModel.personCurrentLocation.latitude,
+                viewModel.personCurrentLocation.longitude,
+                true
+            )
+
+            tMap.isTracking = true
+        }
+
+        binding.imageViewBusCurrentLocation.setOnClickListener {
+            tMap.tMapView.setCenterPoint(
+                viewModel.busCurrentLocation.latitude,
+                viewModel.busCurrentLocation.longitude,
+                true
+            )
+
+            tMap.isTracking = false
+        }
+
+    }
+
     private fun setObserve() {
         val shortAnimationDuration =
-            resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+            resources.getInteger(android.R.integer.config_shortAnimTime)
 
         viewModel.timeIncreased.observe(viewLifecycleOwner) {
             val sign = if (it > 0) {
@@ -128,31 +135,99 @@ class MissionFragment : Fragment(), TMapHandler {
             } else {
                 MINUS
             }
-            with(binding.textViewChangedTime) {
-                text = resources.getString(R.string.number_format).format(sign, it)
+            binding.textViewChangedTime.text =
+                resources.getString(R.string.number_format).format(sign, it)
+            binding.textViewChangedTime.apply {
+                alpha = 0f
                 visibility = View.VISIBLE
-                this.animate().alpha(ALPHA_VISIBLE)
-                    .setDuration(shortAnimationDuration)
-                    .withEndAction {
-                        animate().alpha(ALPHA_INVISIBLE)
-                            .setDuration(shortAnimationDuration)
-                            .withEndAction {
-                                visibility = View.INVISIBLE
-                            }
-                    }
+                animate().alpha(1f)
+                    .setDuration(shortAnimationDuration.toLong())
+                    .setListener(object : AnimatorListenerAdapter() {
+                        override fun onAnimationEnd(animation: Animator?) {
+                            animate().alpha(0f)
+                                .setDuration(shortAnimationDuration.toLong())
+                                .setListener(object : AnimatorListenerAdapter() {
+                                    override fun onAnimationEnd(animation: Animator?) {
+                                        binding.textViewChangedTime.visibility = View.GONE
+                                    }
+                                })
+                        }
+                    })
+            }
+        }
+    }
+
+    private fun drawBusLocationLine() {
+        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
+            if (beforeLocation != INIT_LOCATION) {
+                tMap.drawMoveLine(
+                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                    TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+                    BUS_LINE + BUS_LINE_NUM.toString(),
+                    BUS_LINE_COLOR
+                )
+                BUS_LINE_NUM += 1
+            }
+            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+
+            viewModel.busCurrentLocation = beforeLocation
+
+            tMap.makeMarker(
+                BUS_MARKER,
+                BUS_MARKER_IMG,
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+            )
+        }
+    }
+
+    override fun alertTMapReady() {
+        //mimicUserMove()
+        tMap.setTrackingMode()
+        drawBusLocationLine()
+    }
+
+    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
+        tMap.drawMoveLine(
+            nowLocation,
+            beforeLocation,
+            PERSON_LINE + PERSON_LINE_NUM.toString(),
+            PERSON_LINE_COLOR
+        )
+        PERSON_LINE_NUM += 1
+
+        Log.d("Mission","now $nowLocation before $beforeLocation")
+        viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+    }
+
+    override fun setOnEnableScrollWithZoomLevelListener() {
+        tMap.apply {
+            tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
+                isTracking = false
             }
         }
     }
 
     companion object {
+
         private const val DESTINATION = "구로3동현대아파트"
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
 
-        private const val FAKE_USER_FILE_PATH = "fake_user_path.txt"
+        private const val FAKE_USER_FILE_PATH = "fake_user_path"
 
-        private const val ALPHA_VISIBLE = 1f
-        private const val ALPHA_INVISIBLE = 0f
+        private const val PERSON_LINE = "person_line"
+        private const val PERSON_LINE_COLOR = Color.MAGENTA
+        private var PERSON_LINE_NUM = 0
+
+        private const val BUS_LINE = "bus_line"
+        private const val BUS_LINE_COLOR = Color.BLUE
+        private var BUS_LINE_NUM = 0
+
+        private val INIT_LOCATION = Location(0.0, 0.0)
+
+        private const val BUS_MARKER = "marker_bus_pin"
+        private const val BUS_MARKER_IMG = R.drawable.ic_baseline_directions_bus_32
+
     }
 }

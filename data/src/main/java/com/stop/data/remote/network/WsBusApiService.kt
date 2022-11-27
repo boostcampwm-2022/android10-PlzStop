@@ -1,6 +1,8 @@
 package com.stop.data.remote.network
 
+import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
+import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
@@ -14,6 +16,12 @@ internal interface WsBusApiService {
         @Query("stSrch") stationName: String,
         @Query("resultType") resultType: String = "json",
     ): NetworkResult<GetBusStationArsIdResponse>
+
+    @GET(GET_BUS_NOW_LOCATION_URL)
+    suspend fun getBusNowLocation(
+        @Query("busRouteId") busRouteId: String,
+        @Query("resultType") resultType: String = JSON
+    ): NetworkResult<GetBusNowLocationResponse>
 
     @GET(GET_BUS_LINE_URL)
     suspend fun getBusLine(
@@ -30,6 +38,8 @@ internal interface WsBusApiService {
 
     companion object {
         private const val GET_BUS_ARS_URL = "stationinfo/getStationByName"
+        private const val GET_BUS_NOW_LOCATION_URL = "buspos/getBusPosByRtid"
+        private const val JSON = "json"
         private const val GET_BUS_LINE_URL = "stationinfo/getRouteByStation"
         private const val GET_BUS_LAST_TIME_URL = "stationinfo/getBustimeByStation"
     }
