@@ -18,8 +18,9 @@ open class TMap(
     private val handler: Handler
 ) {
     lateinit var tMapView: TMapView
-    var isTracking = true
     lateinit var initLocation: Location
+
+    var isTracking = true
 
     fun init() {
         tMapView = TMapView(context).apply {
