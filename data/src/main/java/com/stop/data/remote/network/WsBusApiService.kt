@@ -17,7 +17,6 @@ internal interface WsBusApiService {
 
     @GET(GET_BUS_NOW_LOCATION_URL)
     suspend fun getBusNowLocation(
-        @Query("ServiceKey") serviceKey: String = BuildConfig.BUS_KEY,
         @Query("busRouteId") busRouteId: String,
         @Query("resultType") resultType: String = JSON
     ): NetworkResult<GetBusNowLocationResponse>
