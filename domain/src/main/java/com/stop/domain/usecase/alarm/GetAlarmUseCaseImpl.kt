@@ -9,8 +9,8 @@ class GetAlarmUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : GetAlarmUseCase{
 
-    override fun getAlarm(): Flow<AlarmUseCaseItem> {
-        return alarmRepository.selectAlarm()
+    override suspend fun getAlarm(): Flow<AlarmUseCaseItem?> {
+        return alarmRepository.getAlarm()
     }
 
 }

@@ -15,7 +15,7 @@ internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
         centerLon: Double,
         centerLat: Double,
         appKey: String
-    ): List<Place> {
+    ): Result<List<Place>> {
         val result = nearPlaceApiService.getNearPlaces(
             version,
             searchKeyword,
@@ -23,21 +23,22 @@ internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
             centerLat,
             appKey
         )
-
-        when (result) {
-            is NetworkResult.Failure -> {
-                throw Exception(result.message)
-            }
-            is NetworkResult.Success -> {
-                return result.data.searchPoiInfo.pois.poi.map {
-                    it.toRepositoryModel()
+        return runCatching {
+            when (result) {
+                is NetworkResult.Failure -> {
+                    throw Exception(result.message)
                 }
-            }
-            is NetworkResult.NetworkError -> {
-                throw result.exception
-            }
-            is NetworkResult.Unexpected -> {
-                throw result.exception
+                is NetworkResult.Success -> {
+                    result.data.searchPoiInfo.pois.poi.map {
+                        it.toRepositoryModel()
+                    }
+                }
+                is NetworkResult.NetworkError -> {
+                    throw result.exception
+                }
+                is NetworkResult.Unexpected -> {
+                    throw result.exception
+                }
             }
         }
     }

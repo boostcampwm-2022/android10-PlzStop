@@ -15,6 +15,7 @@ class NearPlaceAdapter : ListAdapter<Place, NearPlaceAdapter.ViewHolder>(diffUti
     class ViewHolder(private val binding: ItemNearPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(place: Place) {
             binding.place = place
+            binding.executePendingBindings()
         }
     }
 
