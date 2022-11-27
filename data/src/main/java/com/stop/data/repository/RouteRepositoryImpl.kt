@@ -39,7 +39,7 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getSeoulBusLine(stationId)
     }
 
-    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String {
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String? {
         return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
             .lastTimeMsgBody
             .lastTimes

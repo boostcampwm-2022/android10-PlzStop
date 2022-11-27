@@ -17,6 +17,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 ) : GetLastTransportTimeUseCase {
 
     class NoAppropriateDataException(override val message: String) : Exception()
+    class ApiServerDataException(override val message: String) : Exception()
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT).toList()
 
@@ -68,7 +69,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                             Area.UN_SUPPORT_AREA -> throw NoAppropriateDataException(UN_SUPPORT_AREA)
                         }
                     }
-                    TransportMoveType.SUBWAY -> TODO()
+                    TransportMoveType.SUBWAY -> transportIdRequest
                 }
             } catch (exception: NoAppropriateDataException) {
                 exception.printStackTrace()
@@ -78,10 +79,15 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
 
         // 고유 번호로 승차지의 막차 시간 모두 알아내기
-        val dataWithLastTime: List<Int> = transportIdRequests.map { transportIdRequest ->
-            when (transportIdRequest.transportMoveType) {
-                TransportMoveType.BUS -> getBusLastTransportTime(transportIdRequest)
-                TransportMoveType.SUBWAY -> getSubwayLastTransportTime(transportIdRequest)
+        val dataWithLastTime: List<String?> = transportIdRequests.map { transportIdRequest ->
+            try {
+                when (transportIdRequest.transportMoveType) {
+                    TransportMoveType.BUS -> getBusLastTransportTime(transportIdRequest)
+                    TransportMoveType.SUBWAY -> getSubwayLastTransportTime(transportIdRequest)
+                }
+            } catch (exception: ApiServerDataException) {
+                exception.printStackTrace()
+                null
             }
         }
 
@@ -103,7 +109,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                 val lastTime = routeRepository.getSeoulBusLastTime(
                     transportIdRequest.stationId,
                     transportIdRequest.lineId
-                ).toInt()
+                )?.toInt() ?: throw ApiServerDataException(API_SERVER_DATA_ERROR)
 
                 if (lastTime < MID_NIGHT) {
                     return lastTime + MID_NIGHT
@@ -268,6 +274,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val NO_BUS_LINE_ID = "버스 노선 고유 아이디가 없습니다."
         private const val UN_SUPPORT_AREA = "지원하지 않는 지역입니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
+        private const val API_SERVER_DATA_ERROR = "로직이 올바르지만 서버에 데이터가 없습니다."
 
         private const val UNKNOWN_ID = "0"
         private const val NOT_YET_CALCULATED = 0
