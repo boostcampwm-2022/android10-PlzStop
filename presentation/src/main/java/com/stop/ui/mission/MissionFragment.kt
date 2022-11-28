@@ -15,7 +15,6 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
-import com.stop.ui.map.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -99,11 +98,11 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun initView() {
-        binding.imageViewCompassMode.setOnClickListener {
+        binding.layoutCompass.setOnClickListener {
             tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
         }
 
-        binding.imageViewPersonCurrentLocation.setOnClickListener {
+        binding.layoutPersonCurrent.setOnClickListener {
             tMap.tMapView.setCenterPoint(
                 viewModel.personCurrentLocation.latitude,
                 viewModel.personCurrentLocation.longitude,
@@ -113,7 +112,7 @@ class MissionFragment : Fragment(), MissionHandler {
             tMap.isTracking = true
         }
 
-        binding.imageViewBusCurrentLocation.setOnClickListener {
+        binding.layoutBusCurrent.setOnClickListener {
             tMap.tMapView.setCenterPoint(
                 viewModel.busCurrentLocation.latitude,
                 viewModel.busCurrentLocation.longitude,
@@ -161,21 +160,21 @@ class MissionFragment : Fragment(), MissionHandler {
         viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
             if (beforeLocation != INIT_LOCATION) {
                 tMap.drawMoveLine(
-                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                    TMapPoint(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
                     BUS_LINE + BUS_LINE_NUM.toString(),
                     BUS_LINE_COLOR
                 )
                 BUS_LINE_NUM += 1
             }
-            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+            beforeLocation = Location(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0)
 
             viewModel.busCurrentLocation = beforeLocation
 
             tMap.makeMarker(
                 BUS_MARKER,
                 BUS_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                TMapPoint(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0)
             )
         }
     }
@@ -227,7 +226,7 @@ class MissionFragment : Fragment(), MissionHandler {
         private val INIT_LOCATION = Location(0.0, 0.0)
 
         private const val BUS_MARKER = "marker_bus_pin"
-        private const val BUS_MARKER_IMG = R.drawable.ic_baseline_directions_bus_32
+        private const val BUS_MARKER_IMG = R.drawable.ic_bus_marker
 
     }
 }

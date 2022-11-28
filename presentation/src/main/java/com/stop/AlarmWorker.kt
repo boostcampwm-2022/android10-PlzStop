@@ -12,7 +12,6 @@ import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.withContext
 
 // 일단은 NearPlaceUseCase 이용하여서 데이터 가져오기 구현
@@ -45,8 +44,8 @@ class AlarmWorker @AssistedInject constructor(
                 126.969652,
                 37.553836,
                 BuildConfig.TMAP_APP_KEY
-            ).collectLatest {
-                resultList = it
+            ).apply {
+                resultList = this
             }
         }
 
