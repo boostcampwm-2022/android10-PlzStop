@@ -3,6 +3,7 @@ package com.stop.ui.map
 import android.Manifest.permission
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import kotlinx.coroutines.launch
 
@@ -23,6 +26,7 @@ class MapFragment : Fragment(), MapHandler {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
+    private val alarmViewModel: AlarmViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMap: MapTMap
@@ -47,13 +51,13 @@ class MapFragment : Fragment(), MapHandler {
         initView()
         clickSearchButton()
         clickEndLocation()
+        initBottomSheetBehavior()
     }
 
     private fun initBinding() {
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = placeSearchViewModel
-        }
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.placeSearchViewModel = placeSearchViewModel
+        binding.alarmViewModel = alarmViewModel
     }
 
     private fun initTMap() {
@@ -64,11 +68,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initView() {
-        binding.imageViewCompassMode.setOnClickListener {
+        binding.layoutCompass.setOnClickListener {
             tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
         }
 
-        binding.imageViewCurrentLocation.setOnClickListener {
+        binding.layoutCurrent.setOnClickListener {
             requestPermissionsLauncher.launch(PERMISSIONS)
             tMap.tMapView.setCenterPoint(
                 placeSearchViewModel.currentLocation.latitude,
@@ -86,8 +90,10 @@ class MapFragment : Fragment(), MapHandler {
             tMap.isTracking = true
         }
 
-        binding.imageViewBookmark.setOnClickListener {
-
+        binding.layoutBookmark.setOnClickListener {
+            alarmViewModel.bottomSheetVisibility.value?.let {
+                alarmViewModel.setVisibility(it)
+            }
         }
     }
 
@@ -98,17 +104,30 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun clickEndLocation() {
-        binding.textViewEndLocation.setOnClickListener {
+        binding.viewPanelEnd.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+        }
+    }
+
+    private fun initBottomSheetBehavior() {
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
+        alarmViewModel.bottomSheetVisibility.observe(viewLifecycleOwner) {
+            if (it) {
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.maxHeight = convertDpToPx(200)
+            } else {
+                behavior.maxHeight = convertDpToPx(100)
+            }
         }
     }
 
     private fun setViewVisibility() {
         with(binding) {
-            textViewSearch.visibility = mapUIVisibility
-            imageViewCompassMode.visibility = mapUIVisibility
-            imageViewCurrentLocation.visibility = mapUIVisibility
-            imageViewBookmark.visibility = mapUIVisibility
+            layoutSearch.visibility = mapUIVisibility
+            layoutCompass.visibility = mapUIVisibility
+            layoutCurrent.visibility = mapUIVisibility
+            layoutBookmark.visibility = mapUIVisibility
         }
     }
 
@@ -170,8 +189,17 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
+    private fun convertDpToPx(dp: Int): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp.toFloat(),
+            resources.displayMetrics
+        ).toInt()
+    }
+
     override fun onDestroyView() {
         _binding = null
+
         super.onDestroyView()
     }
 
@@ -206,14 +234,14 @@ class MapFragment : Fragment(), MapHandler {
 
     companion object {
         private const val PLACE_MARKER = "place_marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_baseline_location_on_32
+        private const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
 
         private const val PERSON_MARKER = "marker_person_pin"
-        private const val PERSON_MARKER_IMG = R.drawable.ic_person_pin
+        private const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
 
         private const val SAME_POINT = 1
         val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
 
-        private const val BOOKMARK_MARKER_IMG = R.drawable.ic_baseline_stars_32
+        private const val BOOKMARK_MARKER_IMG = R.drawable.ic_bookmark_marker
     }
 }

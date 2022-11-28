@@ -40,7 +40,7 @@ class MapTMap(
 
     companion object {
         private const val PLACE_MARKER = "marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_baseline_location_on_32
+        private const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
 
         private const val SAME_POINT = 1
     }

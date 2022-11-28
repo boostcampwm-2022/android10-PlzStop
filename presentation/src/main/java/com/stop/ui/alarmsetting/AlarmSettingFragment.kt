@@ -28,7 +28,7 @@ class AlarmSettingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAlarmSettingBinding.inflate(inflater, container, false)
 
         initBinding()
@@ -38,29 +38,6 @@ class AlarmSettingFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val test = AlarmUseCaseItem(
-            "abc",
-            "abc",
-            listOf("ABC"),
-            "abc","abc",true,true
-        )
-
-        lifecycleScope.launch{
-            alarmSettingViewModel.save(test)
-        }
-
-      /*  lifecycleScope.launch{
-            alarmSettingViewModel.get().asLiveData().observe(viewLifecycleOwner){
-                Log.e("ABC", it.toString())
-            }
-        }*/
-
-        lifecycleScope.launch{
-            alarmSettingViewModel.get().collectLatest {
-                Log.e("ABC", it.toString())
-            }
-        }
-
 
         initView()
         setButtonListener()

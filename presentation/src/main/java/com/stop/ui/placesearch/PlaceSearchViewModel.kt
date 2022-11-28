@@ -1,5 +1,6 @@
 package com.stop.ui.placesearch
 
+import android.location.LocationManager
 import android.text.Editable
 import android.util.Log
 import android.view.View
@@ -21,6 +22,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.pow
+import kotlin.math.round
+import kotlin.math.sqrt
 
 @HiltViewModel
 class PlaceSearchViewModel @Inject constructor(
@@ -46,12 +50,15 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val _searchKeyword = MutableStateFlow("")
     val searchKeyword : StateFlow<String> = _searchKeyword
-    
+
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
     val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
 
     private val _panelVisibility = MutableLiveData(View.GONE)
     val panelVisibility: LiveData<Int> = _panelVisibility
+
+    private val _distance = MutableLiveData<Float>()
+    val distance: LiveData<Float> = _distance
 
     fun afterTextChanged(s: Editable?) {
         _searchKeyword.value = s.toString()
@@ -74,7 +81,7 @@ class PlaceSearchViewModel @Inject constructor(
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
-                Log.d("PlaceSearchViewModel","getNearPlace 실패~ ${e.toString()}")
+                Log.d("PlaceSearchViewModel", "getNearPlace 실패~ ${e.toString()}")
             }
         }
     }
@@ -93,11 +100,23 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
-    fun getGeoLocationInfo(lat: Double, lon: Double) {
-        viewModelScope.launch{
-            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(lat, lon)
+    fun getGeoLocationInfo(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
             _panelVisibility.value = View.VISIBLE
+            getDistance(latitude, longitude)
         }
+    }
+
+    private fun getDistance(latitude: Double, longitude: Double) {
+        val startPoint = android.location.Location("Start")
+        val endPoint = android.location.Location("End")
+
+        startPoint.latitude = latitude
+        startPoint.longitude = longitude
+        endPoint.latitude = currentLocation.latitude
+        endPoint.longitude = currentLocation.longitude
+        _distance.value = round(startPoint.distanceTo(endPoint) / 100) / 10
     }
 
     companion object {

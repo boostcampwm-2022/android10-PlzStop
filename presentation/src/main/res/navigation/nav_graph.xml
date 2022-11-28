@@ -24,6 +24,9 @@
         <action
             android:id="@+id/action_mapFragment_to_missionFragment"
             app:destination="@id/missionFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_bookMarkFragment"
+            app:destination="@id/bookMarkFragment" />
     </fragment>
     <fragment
         android:id="@+id/placeSearchFragment"
