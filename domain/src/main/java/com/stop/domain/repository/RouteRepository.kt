@@ -3,6 +3,7 @@ package com.stop.domain.repository
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLastTimeResponse
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusRouteStationsResponse
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
@@ -35,4 +36,5 @@ interface RouteRepository {
     suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse
     suspend fun getGyeonggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse
     suspend fun getGyeonggiBusLastTime(lineId: String): GetGyeonggiBusLastTimeResponse
+    suspend fun getGyeonggiBusRouteStations(lineId: String): GetGyeonggiBusRouteStationsResponse
 }

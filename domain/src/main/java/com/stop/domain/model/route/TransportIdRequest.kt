@@ -1,6 +1,7 @@
 package com.stop.domain.model.route
 
 import com.stop.domain.model.route.tmap.custom.Coordinate
+import com.stop.domain.model.route.tmap.custom.Place
 
 data class TransportIdRequest(
     val transportMoveType: TransportMoveType,
@@ -12,9 +13,10 @@ data class TransportIdRequest(
     val lineId: String,
     val lineName: String,
     val term: Int, // 배차 간격, 서울 버스는 노선을 구하는 과정에서 얻을 수 있기 때문에 넣음
-    val destinationStationName: String,
+    val destinationStation: Place,
+    val destinationStationId: String,
 ) {
-    fun changeStationId(newStationId: String): TransportIdRequest {
+    fun changeStartStationId(newStationId: String): TransportIdRequest {
         return TransportIdRequest(
             transportMoveType = transportMoveType,
             stationId = newStationId,
@@ -25,7 +27,24 @@ data class TransportIdRequest(
             lineId = lineId,
             lineName = lineName,
             term = term,
-            destinationStationName = destinationStationName,
+            destinationStation = destinationStation,
+            destinationStationId = destinationStationId,
+        )
+    }
+
+    fun changeDestinationStationId(newDestinationStationId: String): TransportIdRequest {
+        return TransportIdRequest(
+            transportMoveType = transportMoveType,
+            stationId = stationId,
+            stationName = stationName,
+            coordinate = coordinate,
+            stationType = stationType,
+            area = area,
+            lineId = lineId,
+            lineName = lineName,
+            term = term,
+            destinationStation = destinationStation,
+            destinationStationId = newDestinationStationId,
         )
     }
 
@@ -40,7 +59,8 @@ data class TransportIdRequest(
             lineId = newLineId,
             lineName = lineName,
             term = newTerm ?: term,
-            destinationStationName = destinationStationName,
+            destinationStation = destinationStation,
+            destinationStationId = destinationStationId,
         )
     }
 }
