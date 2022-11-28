@@ -4,7 +4,7 @@ import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "msgBody")
-data class BusLineIdMsgBody(
+internal data class BusLineIdMsgBody(
     @Element(name = "busRouteList")
     val routeList: List<GyeonggiBusRoute>
 ) {
