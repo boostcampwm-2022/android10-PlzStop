@@ -38,7 +38,7 @@ class MissionTMap(
 
     companion object {
         private const val PERSON_MARKER = "marker_person_pin"
-        private const val PERSON_MARKER_IMG = R.drawable.ic_person_pin
+        private const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
 
         private const val PERSON_LINE = "person_line"
         private const val PERSON_LINE_COLOR = Color.MAGENTA
