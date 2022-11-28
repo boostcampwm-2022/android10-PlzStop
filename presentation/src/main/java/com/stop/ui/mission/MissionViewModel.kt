@@ -42,8 +42,8 @@ class MissionViewModel @Inject constructor(
         }
     }
 
-    private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem>()
-    val busNowLocationInfo: LiveData<BusInfoUseCaseItem> = _busNowLocationInfo
+    private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem?>()
+    val busNowLocationInfo: LiveData<BusInfoUseCaseItem?> = _busNowLocationInfo
 
     var personCurrentLocation = Location(0.0, 0.0)
     var busCurrentLocation = Location(0.0, 0.0)
@@ -92,7 +92,7 @@ class MissionViewModel @Inject constructor(
     private fun getBusNowLocation() {
         viewModelScope.launch {
             while (TIME_TEST < 60) {
-                _busNowLocationInfo.value = getBusNowLocationUseCase.getBusNowLocation(BUS_540_ID)
+                _busNowLocationInfo.value = getBusNowLocationUseCase(BUS_540_ID)
                 Log.d("MissionViewModel","busNowLocationInfo ${_busNowLocationInfo.value}")
                 delay(5000)
                 TIME_TEST += 1
