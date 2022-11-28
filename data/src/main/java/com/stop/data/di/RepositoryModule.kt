@@ -2,9 +2,11 @@ package com.stop.data.di
 
 import com.stop.data.repository.AlarmRepositoryImpl
 import com.stop.data.repository.NearPlaceRepositoryImpl
+import com.stop.data.repository.NowLocationRepositoryImpl
 import com.stop.data.repository.RouteRepositoryImpl
 import com.stop.domain.repository.AlarmRepository
 import com.stop.domain.repository.NearPlaceRepository
+import com.stop.domain.repository.NowLocationRepository
 import com.stop.domain.repository.RouteRepository
 import dagger.Binds
 import dagger.Module
@@ -24,10 +26,17 @@ internal interface RepositoryModule {
 
     @Binds
     @Singleton
-    fun provideNearPlaceRepository(nearPlaceRepositoryImpl: NearPlaceRepositoryImpl): NearPlaceRepository
+    fun provideNearPlaceRepository(
+        nearPlaceRepositoryImpl: NearPlaceRepositoryImpl
+    ): NearPlaceRepository
+
 
     @Binds
     @Singleton
     fun provideAlarmRepository(alarmRepositoryImpl: AlarmRepositoryImpl): AlarmRepository
+
+    @Binds
+    @Singleton
+    fun provideNowLocationRepository(nowLocationRepositoryImpl: NowLocationRepositoryImpl): NowLocationRepository
 
 }

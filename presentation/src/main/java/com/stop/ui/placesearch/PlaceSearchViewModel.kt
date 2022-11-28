@@ -17,7 +17,8 @@ import com.stop.model.Event
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,10 +34,10 @@ class PlaceSearchViewModel @Inject constructor(
 
     var currentLocation = Location(0.0, 0.0)
 
-    var bookmarks = mutableListOf(EXAMPLE_BOOKMARK_1, EXAMPLE_BOOKMARK_2, EXAMPLE_BOOKMARK_3)
+    private val _nearPlaceList = MutableStateFlow<List<Place>>(emptyList())
+    val nearPlaceList: StateFlow<List<Place>> = _nearPlaceList
 
-    private val _nearPlaceList = MutableLiveData<List<Place>>()
-    val nearPlaceList: LiveData<List<Place>> = _nearPlaceList
+    var bookmarks = mutableListOf(EXAMPLE_BOOKMARK_1, EXAMPLE_BOOKMARK_2, EXAMPLE_BOOKMARK_3)
 
     private val errorMessageChannel = Channel<String>()
     val errorMessage = errorMessageChannel.receiveAsFlow()
@@ -46,6 +47,9 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
+
+    private val _searchKeyword = MutableStateFlow("")
+    val searchKeyword : StateFlow<String> = _searchKeyword
 
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
     val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
@@ -57,34 +61,23 @@ class PlaceSearchViewModel @Inject constructor(
     val distance: LiveData<Float> = _distance
 
     fun afterTextChanged(s: Editable?) {
-        getNearPlaces(
-            s.toString(),
-            currentLocation.longitude,
-            currentLocation.latitude
-        )
-
-        if (s.toString().isBlank()) {
-            _nearPlaceList.postValue(emptyList())
-        }
+        _searchKeyword.value = s.toString()
     }
 
-    private fun getNearPlaces(
+    fun getNearPlaces(
         searchKeyword: String,
-        centerLon: Double,
-        centerLat: Double
     ) {
         viewModelScope.launch {
             try {
-                getNearPlacesUseCase.getNearPlaces(
-                    TMAP_VERSION,
-                    searchKeyword,
-                    centerLon,
-                    centerLat,
-                    BuildConfig.TMAP_APP_KEY
-                ).collectLatest {
-                    _nearPlaceList.postValue(it)
-                    Log.d("PlaceSearchViewModel", "getNearPlace $it")
-                }
+                _nearPlaceList.emit(
+                    getNearPlacesUseCase.getNearPlaces(
+                        TMAP_VERSION,
+                        searchKeyword,
+                        currentLocation.longitude,
+                        currentLocation.latitude,
+                        BuildConfig.TMAP_APP_KEY
+                    )
+                )
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
@@ -94,7 +87,7 @@ class PlaceSearchViewModel @Inject constructor(
     }
 
     fun setNearPlaceListEmpty() {
-        _nearPlaceList.postValue(emptyList())
+        _nearPlaceList.value = emptyList()
     }
 
     fun setClickPlace(place: Place) {
@@ -132,4 +125,5 @@ class PlaceSearchViewModel @Inject constructor(
         private val EXAMPLE_BOOKMARK_2 = Location(37.55063543842469, 127.07369927986392)
         private val EXAMPLE_BOOKMARK_3 = Location(37.48450549635376, 126.89324337770405)
     }
+
 }

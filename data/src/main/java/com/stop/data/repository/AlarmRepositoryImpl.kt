@@ -12,14 +12,14 @@ internal class AlarmRepositoryImpl @Inject constructor(
     private val alarmLocalDataSource: AlarmLocalDataSource
 ) : AlarmRepository {
 
-    override suspend fun insertAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
-        alarmLocalDataSource.insertAlarm(
+    override suspend fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
+        alarmLocalDataSource.saveAlarm(
             AlarmRepositoryItem(
-                alarmUseCaseItem.routeInfo,
-                alarmUseCaseItem.transportInfo,
+                alarmUseCaseItem.startPosition,
+                alarmUseCaseItem.endPosition,
+                alarmUseCaseItem.routes,
                 alarmUseCaseItem.lastTime,
                 alarmUseCaseItem.alarmTime,
-                alarmUseCaseItem.walkTime,
                 alarmUseCaseItem.alarmMethod,
                 alarmUseCaseItem.isMission
             )
@@ -30,8 +30,9 @@ internal class AlarmRepositoryImpl @Inject constructor(
         alarmLocalDataSource.deleteAlarm()
     }
 
-    override fun selectAlarm(): Flow<AlarmUseCaseItem> {
-        return alarmLocalDataSource.selectAlarm().map { it.toUseCaseModel() }
+
+    override suspend fun getAlarm(): Flow<AlarmUseCaseItem?> {
+        return alarmLocalDataSource.getAlarm().map { it?.toUseCaseModel() }
     }
 
 }

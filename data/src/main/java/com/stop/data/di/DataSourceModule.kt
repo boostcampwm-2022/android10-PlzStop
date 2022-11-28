@@ -1,9 +1,9 @@
 package com.stop.data.di
 
-import com.stop.data.local.source.alarm.AlarmLocalDataSource
-import com.stop.data.local.source.alarm.AlarmLocalDataSourceImpl
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSourceImpl
+import com.stop.data.remote.source.nowlocation.NowLocationRemoteDataSource
+import com.stop.data.remote.source.nowlocation.NowLocationRemoteDataSourceImpl
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.data.remote.source.route.RouteRemoteDataSourceImpl
 import dagger.Binds
@@ -30,8 +30,8 @@ internal interface DataSourceModule {
 
     @Binds
     @Singleton
-    fun provideAlarmLocalDataSource(
-        alarmLocalDataSourceImpl: AlarmLocalDataSourceImpl
-    ): AlarmLocalDataSource
+    fun provideNowLocationRemoteDataSource(
+        nowLocationRemoteDataSourceImpl: NowLocationRemoteDataSourceImpl
+    ): NowLocationRemoteDataSource
 
 }

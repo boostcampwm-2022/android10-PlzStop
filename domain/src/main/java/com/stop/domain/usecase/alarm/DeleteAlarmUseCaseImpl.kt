@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class DeleteAlarmUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
-) : DeleteAlarmUseCase{
+) : DeleteAlarmUseCase {
 
     override suspend fun deleteAlarm() {
         alarmRepository.deleteAlarm()
