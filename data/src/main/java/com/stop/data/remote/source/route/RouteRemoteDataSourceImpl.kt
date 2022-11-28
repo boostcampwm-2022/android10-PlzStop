@@ -6,6 +6,7 @@ import com.stop.data.remote.network.OpenApiSeoulService
 import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
+import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLastTimeResponse
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
@@ -165,6 +166,17 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getGyeongggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse {
         with(apisDataService.getBusLineId(stationId)) {
+            return when (this) {
+                is NetworkResult.Success -> this.data.toDomain()
+                is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
+                is NetworkResult.NetworkError -> throw this.exception
+                is NetworkResult.Unexpected -> throw this.exception
+            }
+        }
+    }
+
+    override suspend fun getGyeongggiBusLastTime(lineId: String): GetGyeonggiBusLastTimeResponse {
+        with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)

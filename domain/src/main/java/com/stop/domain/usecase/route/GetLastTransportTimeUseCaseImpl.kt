@@ -106,7 +106,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private suspend fun getGyeongggiBusLineId(transportIdRequest: TransportIdRequest): TransportIdRequest {
         val busName = transportIdRequest.lineName.split(":")[1]
         val line =
-            routeRepository.getGyeongggiBusLine(transportIdRequest.stationId).msgBody.routeList.firstOrNull {
+            routeRepository.getGyeonggiBusLine(transportIdRequest.stationId).msgBody.routeList.firstOrNull {
                 it.busName.contains(busName)
             } ?: throw NoAppropriateDataException(NO_BUS_LINE_ID)
 
@@ -247,7 +247,12 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private suspend fun getBusLastTransportTime(transportIdRequest: TransportIdRequest): String {
         when (transportIdRequest.area) {
             Area.GYEONGGI -> {
-                TODO()
+                val lastTime = routeRepository.getGyeonggiBusLastTime(
+                    transportIdRequest.lineId
+                ).msgBody.routeList
+
+                TODO("해당 노선의 정류소 목록을 가져와서 기점, 종점 구분해서 막차 시간 구하기")
+
             }
             Area.SEOUL -> {
                 var lastTime = routeRepository.getSeoulBusLastTime(
