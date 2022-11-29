@@ -6,10 +6,9 @@ import com.stop.data.remote.network.OpenApiSeoulService
 import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteIdResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime
 import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
@@ -154,10 +153,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse {
+    override suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation> {
         with(apisDataService.getBusStationId(stationName)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.toDomain()
+                is NetworkResult.Success -> this.data.busStations.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -165,10 +164,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusRoute(stationId: String): GyeonggiBusRouteIdResponse {
+    override suspend fun getGyeonggiBusRoute(stationId: String): List<GyeonggiBusRoute> {
         with(apisDataService.getBusRouteId(stationId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.toDomain()
+                is NetworkResult.Success -> this.data.routes.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -176,10 +175,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime> {
         with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.toDomain()
+                is NetworkResult.Success -> this.data.lastTimes.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -187,10 +186,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse {
+    override suspend fun getGyeonggiBusRouteStations(lineId: String): List<GyeonggiBusStation> {
         with(apisDataService.getBusRouteStations(lineId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.toDomain()
+                is NetworkResult.Success -> this.data.stations.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
