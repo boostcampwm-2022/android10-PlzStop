@@ -8,13 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.stop.databinding.RouteItemBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
 
-class RouteAdapter : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
-
-    interface OnItineraryClickListener {
-        fun onItineraryClick(itinerary: Itinerary)
-    }
-
-    private var onItineraryClickListener: OnItineraryClickListener? = null
+class RouteAdapter(
+    private val onItineraryClickListener: OnItineraryClickListener
+) : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteViewHolder {
         val binding = RouteItemBinding.inflate(
@@ -28,7 +24,7 @@ class RouteAdapter : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
             if (position == RecyclerView.NO_POSITION) {
                 return@setOnClickListener
             }
-            onItineraryClickListener?.onItineraryClick(getItem(position))
+            onItineraryClickListener.onItineraryClick(getItem(position))
         }
 
         return viewHolder
@@ -36,10 +32,6 @@ class RouteAdapter : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
 
     override fun onBindViewHolder(holder: RouteViewHolder, position: Int) {
         holder.bind(getItem(position))
-    }
-
-    fun setOnItineraryClickListener(listener: OnItineraryClickListener) {
-        onItineraryClickListener = listener
     }
 
     companion object {

@@ -23,7 +23,7 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: RouteViewModel by viewModels()
-    private val adapter = RouteAdapter()
+    private lateinit var adapter: RouteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,8 +49,7 @@ class RouteFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
-        binding.recyclerviewRoute.adapter = adapter
-        adapter.setOnItineraryClickListener(object: RouteAdapter.OnItineraryClickListener {
+        adapter = RouteAdapter(object: OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
                 /**
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
@@ -59,8 +58,8 @@ class RouteFragment : Fragment() {
                 viewModel.calculateLastTransportTime(itinerary)
             }
         })
+        binding.recyclerviewRoute.adapter = adapter
     }
-
 
     private fun setObserve() {
         viewModel.routeResponse.observe(viewLifecycleOwner) {
