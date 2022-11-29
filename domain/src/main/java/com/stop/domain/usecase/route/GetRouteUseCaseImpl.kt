@@ -10,7 +10,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetRouteUseCase {
 
-    override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
+    override suspend fun invoke(routeRequest: RouteRequest): List<Itinerary> {
         val originRouteData = routeRepository.getRoute(routeRequest)
 
         return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->

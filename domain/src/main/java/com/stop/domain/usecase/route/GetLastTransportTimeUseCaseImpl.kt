@@ -24,7 +24,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT).toList()
 
-    override suspend fun getLastTransportTime(itinerary: Itinerary): TransportLastTimeInfo? {
+    override suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo? {
         // 승차지, 도착지, 고유 번호를 알아내는데 필요한 정보로만 구성된 데이터 클래스로 변환하기
         var transportIdRequests =
             itinerary.routes.fold(listOf<TransportIdRequest>()) { transportIdRequests, route ->

@@ -62,14 +62,14 @@ class RouteViewModel @Inject constructor(
         )
 
         viewModelScope.launch(Dispatchers.IO) {
-            _routeResponse.postValue(getRouteUseCase.getRoute(routeRequest))
+            _routeResponse.postValue(getRouteUseCase.invoke(routeRequest))
         }
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         viewModelScope.launch(Dispatchers.IO) {
             val lastTimeInfo =
-                getLastTransportTimeUseCase.getLastTransportTime(itinerary) ?: return@launch
+                getLastTransportTimeUseCase.invoke(itinerary) ?: return@launch
 
             _lastTimeResponse.postValue(lastTimeInfo)
         }

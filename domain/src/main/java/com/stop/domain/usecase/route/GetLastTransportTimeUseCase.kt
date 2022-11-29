@@ -5,5 +5,5 @@ import com.stop.domain.model.route.tmap.custom.Itinerary
 
 interface GetLastTransportTimeUseCase {
 
-    suspend fun getLastTransportTime(itinerary: Itinerary): TransportLastTimeInfo?
+    suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo?
 }
