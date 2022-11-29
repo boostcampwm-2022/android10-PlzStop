@@ -48,7 +48,7 @@ data class TransportIdRequest(
         )
     }
 
-    fun changeLineId(newLineId: String, newTerm: Int?): TransportIdRequest {
+    fun changeRouteId(newLineId: String, newTerm: Int?): TransportIdRequest {
         return TransportIdRequest(
             transportMoveType = transportMoveType,
             stationId = stationId,

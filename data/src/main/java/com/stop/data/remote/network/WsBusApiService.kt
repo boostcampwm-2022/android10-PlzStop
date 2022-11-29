@@ -3,7 +3,7 @@ package com.stop.data.remote.network
 import com.stop.data.remote.model.NetworkResult
 import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
 import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -23,10 +23,10 @@ internal interface WsBusApiService {
     ): NetworkResult<GetBusNowLocationResponse>
 
     @GET(GET_BUS_LINE_URL)
-    suspend fun getBusLine(
+    suspend fun getBusRoute(
         @Query("arsId") stationId: String,
         @Query("resultType") resultType: String = "json",
-    ): NetworkResult<BusLineResponse>
+    ): NetworkResult<BusRouteResponse>
 
     @GET(GET_BUS_LAST_TIME_URL)
     suspend fun getBusLastTime(

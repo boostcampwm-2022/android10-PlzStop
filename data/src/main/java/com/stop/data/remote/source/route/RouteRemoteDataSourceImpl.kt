@@ -7,11 +7,11 @@ import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteIdResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.*
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -129,8 +129,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusLine(stationId: String): BusLineResponse {
-        with(wsBusApiService.getBusLine(stationId)) {
+    override suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse {
+        with(wsBusApiService.getBusRoute(stationId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
@@ -165,8 +165,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeongggiBusLine(stationId: String): GyeonggiBusLineIdResponse {
-        with(apisDataService.getBusLineId(stationId)) {
+    override suspend fun getGyeonggiBusRoute(stationId: String): GyeonggiBusRouteIdResponse {
+        with(apisDataService.getBusRouteId(stationId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
@@ -176,7 +176,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeongggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse {
         with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()

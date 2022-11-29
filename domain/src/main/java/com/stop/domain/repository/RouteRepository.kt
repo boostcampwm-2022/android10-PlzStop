@@ -2,10 +2,10 @@ package com.stop.domain.repository
 
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteIdResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
-import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
@@ -30,11 +30,11 @@ interface RouteRepository {
     ): List<StationLastTime>
 
     suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse
-    suspend fun getSeoulBusLine(stationId: String): BusLineResponse
+    suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse
     suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String?
 
     suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse
-    suspend fun getGyeonggiBusLine(stationId: String): GyeonggiBusLineIdResponse
+    suspend fun getGyeonggiBusRoute(stationId: String): GyeonggiBusRouteIdResponse
     suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse
     suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse
 }

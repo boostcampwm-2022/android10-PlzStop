@@ -1,5 +1,5 @@
 package com.stop.domain.model.route.gyeonggi
 
-data class BusLineIdMsgBody(
+data class BusRouteIdMsgBody(
     val routeList: List<GyeonggiBusRoute>
 )

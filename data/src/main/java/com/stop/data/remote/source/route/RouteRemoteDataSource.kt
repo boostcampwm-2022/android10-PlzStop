@@ -2,11 +2,11 @@ package com.stop.data.remote.source.route
 
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteIdResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
@@ -35,15 +35,15 @@ internal interface RouteRemoteDataSource {
 
     suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse
 
-    suspend fun getSeoulBusLine(stationId: String): BusLineResponse
+    suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse
 
     suspend fun getSeoulBusLastTime(stationId: String, lineId: String): BusLastTimeResponse
 
     suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse
 
-    suspend fun getGyeongggiBusLine(stationId: String): GyeonggiBusLineIdResponse
+    suspend fun getGyeonggiBusRoute(stationId: String): GyeonggiBusRouteIdResponse
 
-    suspend fun getGyeongggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse
+    suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse
 
     suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse
 }
