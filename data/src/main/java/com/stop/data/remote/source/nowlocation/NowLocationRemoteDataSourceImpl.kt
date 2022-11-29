@@ -20,7 +20,7 @@ internal class NowLocationRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSubwayTrainNowLocation() {
+    override suspend fun getSubwayTrainNowLocation(trainNumber: Int): Any {
         TODO("Not yet implemented")
     }
 

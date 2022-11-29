@@ -1,10 +1,10 @@
-package com.stop.data.remote.model.nowlocation
+package com.stop.data.remote.model.nowlocation.bus
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GetBusNowLocationResponse(
+data class BusNowLocationResponse(
     @Json(name = "msgBody")
     val busBody: BusBody,
 )

@@ -6,5 +6,5 @@ interface NowLocationRemoteDataSource {
 
     suspend fun getBusNowLocation(busRouteId: String, order: Int): BusInfoRepositoryItem
 
-    suspend fun getSubwayTrainNowLocation()
+    suspend fun getSubwayTrainNowLocation(trainNumber: Int):
 }
