@@ -104,9 +104,9 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun clickEndLocation() {
-        binding.viewPanelEnd.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
-        }
+        //binding.viewPanelEnd.setOnClickListener {
+        //    binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+        //}
     }
 
     private fun initBottomSheetBehavior() {
