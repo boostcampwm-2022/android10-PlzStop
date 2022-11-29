@@ -51,27 +51,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_search"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:elevation="15dp"
-            android:background="@drawable/background_search"
-            app:layout_constraintStart_toStartOf="@+id/guideline_start"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
-            app:layout_constraintTop_toTopOf="@id/guideline_top">
-
             <TextView
                 android:id="@+id/text_view_destination"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
                 android:layout_marginHorizontal="10dp"
                 android:gravity="center_vertical"
                 android:textSize="17sp"
                 android:text="@{viewModel.destination}"
                 android:textColor="@color/main_dark_grey"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintEnd_toEndOf="@id/guideline_end"
+                app:layout_constraintTop_toBottomOf="@id/guideline_top"
                 tools:text="1호선 용산역"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/text_view_time_left"
@@ -88,7 +80,7 @@
             android:shadowColor="@color/main_light_grey"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/layout_search"
+            app:layout_constraintTop_toBottomOf="@id/text_view_destination"
             tools:text="04:30" />
 
         <TextView
