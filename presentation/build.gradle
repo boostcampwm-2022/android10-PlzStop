@@ -74,4 +74,7 @@ dependencies {
 
     // LiveData
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+
+    // Lottie
+    implementation 'com.airbnb.android:lottie:3.6.1'
 }
