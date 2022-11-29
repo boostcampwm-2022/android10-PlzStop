@@ -32,7 +32,7 @@ class MissionTMap(
         )
         PERSON_LINE_NUM += 1
 
-        makeMarker(PERSON_MARKER, PERSON_MARKER_IMG, mockLocation)
+        addMarker(PERSON_MARKER, PERSON_MARKER_IMG, mockLocation)
         tMapView.setLocationPoint(mockLocation.latitude, mockLocation.longitude)
     }
 

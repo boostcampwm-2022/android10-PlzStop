@@ -29,7 +29,7 @@
             android:id="@+id/home_bottom_sheet_no_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{alarmViewModel.bottomSheetVisibility ? View.GONE : View.VISIBLE}"
+            android:visibility="@{alarmViewModel.isBottomSheetVisible ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/home_bottom_sheet_drag_handle">
 
             <TextView

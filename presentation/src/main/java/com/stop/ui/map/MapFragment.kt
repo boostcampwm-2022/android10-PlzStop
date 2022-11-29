@@ -2,7 +2,6 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -38,7 +37,6 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-
         initBinding()
 
         return binding.root
@@ -49,15 +47,23 @@ class MapFragment : Fragment(), MapHandler {
 
         initTMap()
         initView()
-        clickSearchButton()
-        clickEndLocation()
+        initNavigateAction()
         initBottomSheetBehavior()
+    }
+
+    override fun alertTMapReady() {
+        requestPermissionsLauncher.launch(PERMISSIONS)
+        tMap.initListener()
+
+        addBookmarkMarker()
+        observeClickPlace()
+        observeClickCurrentLocation()
     }
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.placeSearchViewModel = placeSearchViewModel
         binding.alarmViewModel = alarmViewModel
+        binding.placeSearchViewModel = placeSearchViewModel
     }
 
     private fun initTMap() {
@@ -79,7 +85,7 @@ class MapFragment : Fragment(), MapHandler {
                 placeSearchViewModel.currentLocation.longitude,
                 true
             )
-            tMap.makeMarker(
+            tMap.addMarker(
                 PERSON_MARKER,
                 PERSON_MARKER_IMG,
                 TMapPoint(
@@ -91,35 +97,88 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.layoutBookmark.setOnClickListener {
-            alarmViewModel.bottomSheetVisibility.value?.let {
+            alarmViewModel.isBottomSheetVisible.value?.let {
                 alarmViewModel.setVisibility(it)
             }
         }
     }
 
-    private fun clickSearchButton() {
+    private fun initNavigateAction() {
         binding.textViewSearch.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
-    }
 
-    private fun clickEndLocation() {
-        //binding.viewPanelEnd.setOnClickListener {
-        //    binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
-        //}
+        /*
+        binding.layoutBookmark.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_bookMarkFragment)
+        }
+        */
+
+        binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+        }
+
+        binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+        }
     }
 
     private fun initBottomSheetBehavior() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.bottomSheetVisibility.observe(viewLifecycleOwner) {
-            if (it) {
+        alarmViewModel.isBottomSheetVisible.observe(viewLifecycleOwner) { isBottomSheetVisible ->
+            if (isBottomSheetVisible) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.maxHeight = convertDpToPx(200)
             } else {
                 behavior.maxHeight = convertDpToPx(100)
             }
         }
+    }
+
+    private fun addBookmarkMarker() {
+        placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
+            tMap.addMarker(
+                index.toString(),
+                BOOKMARK_MARKER_IMG,
+                TMapPoint(location.latitude, location.longitude)
+            )
+        }
+    }
+
+    private fun observeClickPlace() {
+        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { clickPlace ->
+                val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
+
+                tMap.tMapView.setCenterPoint(clickTMapPoint.latitude, clickTMapPoint.longitude, true)
+                tMap.addMarker(PLACE_MARKER, PLACE_MARKER_IMG, clickTMapPoint)
+                setPanel(clickTMapPoint)
+            }
+        }
+    }
+
+    private fun observeClickCurrentLocation() {
+        lifecycleScope.launch {
+            placeSearchViewModel.clickCurrentLocation
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect {
+                    val currentLocation = placeSearchViewModel.currentLocation
+                    val currentTMapPoint =
+                        TMapPoint(currentLocation.latitude, currentLocation.longitude)
+
+                    tMap.tMapView.setCenterPoint(
+                        currentTMapPoint.latitude,
+                        currentTMapPoint.longitude
+                    )
+                    tMap.addMarker(PLACE_MARKER, PLACE_MARKER_IMG, currentTMapPoint)
+                    setPanel(currentTMapPoint)
+                }
+        }
+    }
+
+    override fun setPanel(tMapPoint: TMapPoint) {
+        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
     }
 
     private fun setViewVisibility() {
@@ -131,87 +190,12 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun setBookmarkMarker() {
-        placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
-            tMap.makeMarker(
-                index.toString(),
-                BOOKMARK_MARKER_IMG,
-                TMapPoint(location.latitude, location.longitude)
-            )
-        }
-    }
-
-    private val requestPermissionsLauncher = registerForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        if (permissions.entries.any { it.value }) {
-            tMap.setTrackingMode()
-            Log.d("MapFragment","setTrackingMode")
-        }
-    }
-
-    private fun observeClickPlace() {
-        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { clickPlace ->
-                val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
-
-                tMap.tMapView.setCenterPoint(clickTMapPoint.latitude, clickTMapPoint.longitude, true)
-
-                setPanel(clickTMapPoint)
-
-                tMap.makeMarker(
-                    PLACE_MARKER,
-                    PLACE_MARKER_IMG,
-                    clickTMapPoint
-                )
-            }
-        }
-    }
-
-    private fun observeClickCurrentLocation() {
-        lifecycleScope.launch {
-            placeSearchViewModel.clickCurrentLocation
-                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
-                .collect {
-                    val currentLocation = placeSearchViewModel.currentLocation
-                    val currentTmapPoint = TMapPoint(currentLocation.latitude, currentLocation.longitude)
-
-                    tMap.tMapView.setCenterPoint(currentTmapPoint.latitude, currentTmapPoint.longitude)
-
-                    setPanel(currentTmapPoint)
-
-                    tMap.makeMarker(
-                        PLACE_MARKER,
-                        PLACE_MARKER_IMG,
-                        currentTmapPoint
-                    )
-                }
-        }
-    }
-
     private fun convertDpToPx(dp: Int): Int {
         return TypedValue.applyDimension(
             TypedValue.COMPLEX_UNIT_DIP,
             dp.toFloat(),
             resources.displayMetrics
         ).toInt()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
-    }
-
-    override fun alertTMapReady() {
-        requestPermissionsLauncher.launch(PERMISSIONS)
-
-        tMap.clickLocation()
-        tMap.clickMap()
-        setBookmarkMarker()
-
-        observeClickPlace()
-        observeClickCurrentLocation()
     }
 
     override fun setOnLocationChangeListener(location: android.location.Location) {
@@ -228,20 +212,30 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    override fun setPanel(tMapPoint: TMapPoint) {
-        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
+    }
+
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.entries.any { it.value }) {
+            tMap.setTrackingMode()
+        }
     }
 
     companion object {
         private const val PLACE_MARKER = "place_marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
+        private const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
 
-        private const val PERSON_MARKER = "marker_person_pin"
+        private const val PERSON_MARKER = "person_marker"
         private const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
 
-        private const val SAME_POINT = 1
-        val PERMISSIONS = arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
-
         private const val BOOKMARK_MARKER_IMG = R.drawable.ic_bookmark_marker
+
+        private val PERMISSIONS =
+            arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
 }

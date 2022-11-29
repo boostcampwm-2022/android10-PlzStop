@@ -15,14 +15,14 @@
         android:background="@drawable/background_panel">
 
         <ImageView
-            android:id="@+id/image_view_panel_point"
+            android:id="@+id/image_view_panel_place"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginStart="17dp"
             android:layout_marginTop="20dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_point_marker" />
+            app:srcCompat="@drawable/ic_place_marker" />
 
         <TextView
             android:id="@+id/text_view_panel_title"
@@ -37,7 +37,7 @@
             android:textSize="22sp"
             android:textColor="@color/white"
             android:gravity="center_vertical"
-            app:layout_constraintStart_toEndOf="@id/image_view_panel_point"
+            app:layout_constraintStart_toEndOf="@id/image_view_panel_place"
             app:layout_constraintEnd_toStartOf="@id/view_panel_bookmark"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="성복역" />

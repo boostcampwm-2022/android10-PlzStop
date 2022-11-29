@@ -10,7 +10,7 @@ class MapTMap(
     private val handler: MapHandler,
 ) : TMap(context, handler) {
 
-    fun clickMap() {
+    fun initListener() {
         val enablePoint = mutableSetOf<Location>()
         tMapView.setOnEnableScrollWithZoomLevelListener { _, centerPoint ->
             enablePoint.add(Location(centerPoint.latitude, centerPoint.longitude))
@@ -23,11 +23,9 @@ class MapTMap(
             }
             enablePoint.clear()
         }
-    }
 
-    fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
-            makeMarker(
+            addMarker(
                 PLACE_MARKER,
                 PLACE_MARKER_IMG,
                 tMapPoint
@@ -39,8 +37,8 @@ class MapTMap(
     }
 
     companion object {
-        private const val PLACE_MARKER = "marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
+        private const val PLACE_MARKER = "place_marker"
+        private const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
 
         private const val SAME_POINT = 1
     }
