@@ -7,6 +7,6 @@ interface NowLocationRepository {
 
     suspend fun getBusNowLocation(busRouteId: String, order: Int): BusInfoUseCaseItem
 
-    suspend fun getSubwayTrainNowLocation(trainNumber: Int): SubwayTrainRealTimePositionUseCaseItem
+    suspend fun getSubwayTrainNowLocation(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem
 
 }

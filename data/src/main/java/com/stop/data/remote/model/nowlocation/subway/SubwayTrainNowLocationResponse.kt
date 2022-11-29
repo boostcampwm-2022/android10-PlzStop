@@ -7,8 +7,8 @@ import com.stop.data.model.nowlocation.SubwayTrainRealTimePositionRepositoryItem
 data class SubwayTrainNowLocationResponse(
     val realtimePositionList: List<TrainLocationInfo>
 ) {
-    fun toRepositoryModel(trainNumber: Int): SubwayTrainRealTimePositionRepositoryItem {
-        return realtimePositionList.first { it.trainNumber == trainNumber.toString() }.run {
+    fun toRepositoryModel(trainNumber: String): SubwayTrainRealTimePositionRepositoryItem {
+        return realtimePositionList.first { it.trainNumber == trainNumber }.run {
              SubwayTrainRealTimePositionRepositoryItem(
                 subwayId = subwayId,
                 subwayName = stationName,

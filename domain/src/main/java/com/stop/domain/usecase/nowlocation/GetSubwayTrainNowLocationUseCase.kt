@@ -4,6 +4,6 @@ import com.stop.domain.model.nowlocation.SubwayTrainRealTimePositionUseCaseItem
 
 interface GetSubwayTrainNowLocationUseCase {
 
-    suspend operator fun invoke(trainNumber: Int): SubwayTrainRealTimePositionUseCaseItem
+    suspend operator fun invoke(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem
 
 }

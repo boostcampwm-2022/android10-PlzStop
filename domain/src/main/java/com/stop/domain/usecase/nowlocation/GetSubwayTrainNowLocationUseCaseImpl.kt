@@ -8,8 +8,8 @@ class GetSubwayTrainNowLocationUseCaseImpl @Inject constructor(
     private val nowLocationRepository: NowLocationRepository
 ) : GetSubwayTrainNowLocationUseCase {
 
-    override suspend fun invoke(trainNumber: Int): SubwayTrainRealTimePositionUseCaseItem {
-        return nowLocationRepository.getSubwayTrainNowLocation(trainNumber)
+    override suspend operator fun invoke(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem {
+        return nowLocationRepository.getSubwayTrainNowLocation(trainNumber, subwayNumber)
     }
 
 }

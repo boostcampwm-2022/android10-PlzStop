@@ -159,21 +159,21 @@ class MissionFragment : Fragment(), MissionHandler {
         viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
             if (beforeLocation != INIT_LOCATION) {
                 tMap.drawMoveLine(
-                    TMapPoint(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0),
+                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
                     BUS_LINE + BUS_LINE_NUM.toString(),
                     BUS_LINE_COLOR
                 )
                 BUS_LINE_NUM += 1
             }
-            beforeLocation = Location(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0)
+            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
 
             viewModel.busCurrentLocation = beforeLocation
 
             tMap.makeMarker(
                 BUS_MARKER,
                 BUS_MARKER_IMG,
-                TMapPoint(nowLocation?.latitude ?: 0.0, nowLocation?.longitude ?: 0.0)
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
             )
         }
     }
@@ -212,8 +212,6 @@ class MissionFragment : Fragment(), MissionHandler {
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
-
-        private const val FAKE_USER_FILE_PATH = "fake_user_path"
 
         private const val PERSON_LINE = "person_line"
         private const val PERSON_LINE_COLOR = Color.MAGENTA

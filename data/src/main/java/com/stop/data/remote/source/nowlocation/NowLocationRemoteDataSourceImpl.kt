@@ -23,8 +23,8 @@ internal class NowLocationRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSubwayTrainNowLocation(trainNumber: Int): SubwayTrainRealTimePositionRepositoryItem {
-        with(swOpenApiSeoulService.getSubwayTrainNowLocationInfo(stationName = trainNumber.toString() + LINE)) {
+    override suspend fun getSubwayTrainNowLocation(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionRepositoryItem {
+        with(swOpenApiSeoulService.getSubwayTrainNowLocationInfo(stationName = subwayNumber.toString() + LINE)) {
             return when (this) {
                 is NetworkResult.Success -> data.toRepositoryModel(trainNumber)
                 is NetworkResult.Failure -> throw IllegalArgumentException(message)
