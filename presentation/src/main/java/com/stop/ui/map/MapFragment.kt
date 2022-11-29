@@ -53,8 +53,8 @@ class MapFragment : Fragment(), MapHandler {
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
-        tMap.initListener()
 
+        tMap.initListener()
         addBookmarkMarker()
         observeClickPlace()
         observeClickCurrentLocation()
@@ -80,6 +80,8 @@ class MapFragment : Fragment(), MapHandler {
 
         binding.layoutCurrent.setOnClickListener {
             requestPermissionsLauncher.launch(PERMISSIONS)
+
+            tMap.isTracking = true
             tMap.tMapView.setCenterPoint(
                 placeSearchViewModel.currentLocation.latitude,
                 placeSearchViewModel.currentLocation.longitude,
@@ -93,7 +95,6 @@ class MapFragment : Fragment(), MapHandler {
                     placeSearchViewModel.currentLocation.longitude
                 )
             )
-            tMap.isTracking = true
         }
 
         binding.layoutBookmark.setOnClickListener {
@@ -181,6 +182,20 @@ class MapFragment : Fragment(), MapHandler {
         placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
     }
 
+    override fun setOnLocationChangeListener(location: android.location.Location) {
+        placeSearchViewModel.currentLocation = Location(location.latitude, location.longitude)
+    }
+
+    override fun setOnDisableScrollWIthZoomLevelListener() {
+        if (binding.layoutPanel.visibility == View.VISIBLE) {
+            binding.layoutPanel.visibility = View.GONE
+            tMap.tMapView.removeTMapMarkerItem(PLACE_MARKER)
+        } else {
+            setViewVisibility()
+            mapUIVisibility = mapUIVisibility.xor(View.GONE)
+        }
+    }
+
     private fun setViewVisibility() {
         with(binding) {
             layoutSearch.visibility = mapUIVisibility
@@ -196,20 +211,6 @@ class MapFragment : Fragment(), MapHandler {
             dp.toFloat(),
             resources.displayMetrics
         ).toInt()
-    }
-
-    override fun setOnLocationChangeListener(location: android.location.Location) {
-        placeSearchViewModel.currentLocation = Location(location.latitude, location.longitude)
-    }
-
-    override fun setOnDisableScrollWIthZoomLevelListener() {
-        if (binding.layoutPanel.visibility == View.VISIBLE) {
-            binding.layoutPanel.visibility = View.GONE
-            tMap.tMapView.removeTMapMarkerItem(PLACE_MARKER)
-        } else {
-            setViewVisibility()
-            mapUIVisibility = mapUIVisibility.xor(View.GONE)
-        }
     }
 
     override fun onDestroyView() {
