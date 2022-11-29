@@ -45,7 +45,6 @@ class RouteFragment : Fragment() {
     private fun setBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.executePendingBindings()
     }
 
     private fun setRecyclerView() {

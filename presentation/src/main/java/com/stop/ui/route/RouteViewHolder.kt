@@ -14,6 +14,7 @@ class RouteViewHolder(
         binding.itinerary = itinerary
         binding.textViewExpectedRoute.text = calculateExpectedRoute(itinerary)
         binding.textViewExpectedRequiredTime.text = secondToHourAndMinute(itinerary.totalTime)
+        binding.executePendingBindings()
     }
 
     private fun calculateExpectedRoute(itinerary: Itinerary): String {
