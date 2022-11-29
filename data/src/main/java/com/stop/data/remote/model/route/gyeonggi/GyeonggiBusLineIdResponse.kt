@@ -1,15 +1,16 @@
 package com.stop.data.remote.model.route.gyeonggi
 
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
 import com.tickaroo.tikxml.annotation.Element
 import com.tickaroo.tikxml.annotation.Xml
 
 @Xml(name = "response")
-internal data class GetGyeonggiBusStationIdResponse(
+internal data class GyeonggiBusLineIdResponse(
     @Element(name = "msgBody")
-    val msgBody: MsgBody
+    val msgBody: BusLineIdMsgBody,
 ) {
-    fun toDomain(): com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse {
-        return com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse(
+    fun toDomain(): GyeonggiBusLineIdResponse {
+        return GyeonggiBusLineIdResponse(
             msgBody = msgBody.toDomain()
         )
     }

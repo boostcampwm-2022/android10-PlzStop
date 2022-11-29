@@ -112,8 +112,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     }
 
     private suspend fun getSubwayLastTransportTime(transportIdRequest: TransportIdRequest): String {
+        // "호선"을 붙이는 것을 Domain이 해야할까?
         val requestLine = transportIdRequest.stationType
             .toString().padStart(2, '0') + "호선"
+
         val stationsOfLine =
             routeRepository.getSubwayStations(requestLine).sortedWith(compareBy { it.frCode })
 
@@ -471,6 +473,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     }
 
     companion object {
+        // UI에 노출되지 않고, 개발자를 위한 디버깅 목적의 스트링
         private const val NOT_REGISTERED_STATION = "API를 지원하지 않는 전철역입니다."
         private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
         private const val NO_BUS_LINE_ID = "버스 노선 고유 아이디가 없습니다."

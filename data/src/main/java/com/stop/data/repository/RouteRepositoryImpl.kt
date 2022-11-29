@@ -2,12 +2,12 @@ package com.stop.data.repository
 
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.domain.model.geoLocation.AddressType
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusRouteStationsResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
-import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
+import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.seoul.subway.SubwayCircleType
@@ -50,11 +50,11 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getSubwayStationLastTime(stationId, subwayCircleType, weekType)
     }
 
-    override suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse {
+    override suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse {
         return remoteDataSource.getSeoulBusStationArsId(stationName)
     }
 
-    override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
+    override suspend fun getSeoulBusLine(stationId: String): BusLineResponse {
         return remoteDataSource.getSeoulBusLine(stationId)
     }
 
@@ -66,19 +66,19 @@ internal class RouteRepositoryImpl @Inject constructor(
             .lastTime
     }
 
-    override suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse {
+    override suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse {
         return remoteDataSource.getGyeonggiBusStationId(stationName)
     }
 
-    override suspend fun getGyeonggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse {
+    override suspend fun getGyeonggiBusLine(stationId: String): GyeonggiBusLineIdResponse {
         return remoteDataSource.getGyeongggiBusLine(stationId)
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): GetGyeonggiBusLastTimeResponse {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse {
         return remoteDataSource.getGyeongggiBusLastTime(lineId)
     }
 
-    override suspend fun getGyeonggiBusRouteStations(lineId: String): GetGyeonggiBusRouteStationsResponse {
+    override suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse {
         return remoteDataSource.getGyeonggiBusRouteStations(lineId)
     }
 }

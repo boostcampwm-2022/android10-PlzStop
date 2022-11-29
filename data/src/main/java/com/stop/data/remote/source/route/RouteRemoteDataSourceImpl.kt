@@ -6,13 +6,13 @@ import com.stop.data.remote.network.OpenApiSeoulService
 import com.stop.data.remote.network.TmapApiService
 import com.stop.data.remote.network.WsBusApiService
 import com.stop.domain.model.geoLocation.AddressType
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusRouteStationsResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
-import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
+import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
+import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.*
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
@@ -118,7 +118,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse {
+    override suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse {
         with(wsBusApiService.getBusArsId(stationName)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
@@ -129,7 +129,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse {
+    override suspend fun getSeoulBusLine(stationId: String): BusLineResponse {
         with(wsBusApiService.getBusLine(stationId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
@@ -143,7 +143,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     override suspend fun getSeoulBusLastTime(
         stationId: String,
         lineId: String
-    ): GetBusLastTimeResponse {
+    ): BusLastTimeResponse {
         with(wsBusApiService.getBusLastTime(stationId, lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data
@@ -154,7 +154,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse {
+    override suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse {
         with(apisDataService.getBusStationId(stationName)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()
@@ -165,7 +165,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeongggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse {
+    override suspend fun getGyeongggiBusLine(stationId: String): GyeonggiBusLineIdResponse {
         with(apisDataService.getBusLineId(stationId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()
@@ -176,7 +176,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeongggiBusLastTime(lineId: String): GetGyeonggiBusLastTimeResponse {
+    override suspend fun getGyeongggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse {
         with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()
@@ -187,7 +187,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusRouteStations(lineId: String): GetGyeonggiBusRouteStationsResponse {
+    override suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse {
         with(apisDataService.getBusRouteStations(lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.toDomain()

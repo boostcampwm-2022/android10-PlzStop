@@ -1,12 +1,12 @@
 package com.stop.domain.repository
 
 import com.stop.domain.model.geoLocation.AddressType
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLastTimeResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusLineIdResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusRouteStationsResponse
-import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
-import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTimeResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusLineIdResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusRouteStationsResponse
+import com.stop.domain.model.route.gyeonggi.GyeonggiBusStationIdResponse
+import com.stop.domain.model.route.seoul.bus.BusLineResponse
+import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.seoul.subway.SubwayCircleType
@@ -29,12 +29,12 @@ interface RouteRepository {
         weekType: WeekType,
     ): List<StationLastTime>
 
-    suspend fun getSeoulBusStationArsId(stationName: String): GetBusStationArsIdResponse
-    suspend fun getSeoulBusLine(stationId: String): GetBusLineResponse
+    suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse
+    suspend fun getSeoulBusLine(stationId: String): BusLineResponse
     suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String?
 
-    suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse
-    suspend fun getGyeonggiBusLine(stationId: String): GetGyeonggiBusLineIdResponse
-    suspend fun getGyeonggiBusLastTime(lineId: String): GetGyeonggiBusLastTimeResponse
-    suspend fun getGyeonggiBusRouteStations(lineId: String): GetGyeonggiBusRouteStationsResponse
+    suspend fun getGyeonggiBusStationId(stationName: String): GyeonggiBusStationIdResponse
+    suspend fun getGyeonggiBusLine(stationId: String): GyeonggiBusLineIdResponse
+    suspend fun getGyeonggiBusLastTime(lineId: String): GyeonggiBusLastTimeResponse
+    suspend fun getGyeonggiBusRouteStations(lineId: String): GyeonggiBusRouteStationsResponse
 }
