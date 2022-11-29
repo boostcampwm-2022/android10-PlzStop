@@ -24,9 +24,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT).toList()
 
-    override suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo? {
+    override suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo {
         // 승차지, 도착지, 고유 번호를 알아내는데 필요한 정보로만 구성된 데이터 클래스로 변환하기
-        var transportIdRequests =
+        var transportIdRequests: List<TransportIdRequest?> =
             itinerary.routes.fold(listOf<TransportIdRequest>()) { transportIdRequests, route ->
                 when (route) {
                     is WalkRoute -> transportIdRequests
@@ -56,16 +56,24 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         // 공공데이터 포털에서 사용하는 버스 정류소, 지하철 역의 고유번호로 변환하는 작업
         transportIdRequests = transportIdRequests.map { transportIdRequest ->
             try {
+                if (transportIdRequest == null) {
+                    return@map null
+                }
+
                 getStationId(transportIdRequest)
             } catch (exception: NoAppropriateDataException) {
                 exception.printStackTrace()
-                return null
+                null
             }
         }
 
         // 공공데이터 포털에서 사용하는 버스 노선, 지하철 역의 노선번호로 변환하는 작업
         transportIdRequests = transportIdRequests.map { transportIdRequest ->
             try {
+                if (transportIdRequest == null) {
+                    return@map null
+                }
+
                 when (transportIdRequest.transportMoveType) {
                     TransportMoveType.BUS -> {
                         when (transportIdRequest.area) {
@@ -78,7 +86,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                 }
             } catch (exception: NoAppropriateDataException) {
                 exception.printStackTrace()
-                return null
+                null
             }
         }
 
@@ -86,6 +94,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         // 고유 번호로 승차지의 막차 시간 모두 알아내기
         val dataWithLastTime: List<String?> = transportIdRequests.map { transportIdRequest ->
             try {
+                if (transportIdRequest == null) {
+                    return@map null
+                }
+
                 when (transportIdRequest.transportMoveType) {
                     TransportMoveType.BUS -> getBusLastTransportTime(transportIdRequest)
                     TransportMoveType.SUBWAY -> getSubwayLastTransportTime(transportIdRequest)
@@ -98,7 +110,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
         // 막차 시간 중 가장 빠른 시간과 dataWithLastTime을 가지는 데이터 클래스 반환하기
 //        return ReturnData(fastestTime, dataWithLastTime)
-        return null
+        return TransportLastTimeInfo(dataWithLastTime.sortedBy { it }.first() ?: "")
     }
 
     private suspend fun getGyeongggiBusLineId(transportIdRequest: TransportIdRequest): TransportIdRequest {
