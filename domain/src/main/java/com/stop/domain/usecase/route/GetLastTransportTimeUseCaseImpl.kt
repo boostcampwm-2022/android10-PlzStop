@@ -154,7 +154,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     ): TransportIdRequest {
         val busName = transportIdRequest.routeName.split(":")[1]
         val route = routeRepository.getGyeonggiBusRoute(transportIdRequest.stationId)
-            .msgBody.routeList.firstOrNull {
+            .routeList.firstOrNull {
                 it.busName.contains(busName)
             } ?: throw NoAppropriateDataException("버스 노선 고유 아이디가 없습니다.")
 
@@ -319,7 +319,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     ): String {
         val lastTime = routeRepository.getGyeonggiBusLastTime(
             transportIdRequest.routeId
-        ).msgBody.routeList.first()
+        ).routeList.first()
 
         val destinationIsLastStation = checkGyeonggiBusDestinationIsLastStation(transportIdRequest)
 
@@ -339,8 +339,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         transportIdRequest: TransportIdRequest
     ): Boolean {
         val stations =
-            routeRepository.getGyeonggiBusRouteStations(transportIdRequest.routeId)
-                .msgBody.stations
+            routeRepository.getGyeonggiBusRouteStations(transportIdRequest.routeId).stations
 
         var startIndex: Int = -1
         var endIndex: Int = -1
@@ -452,7 +451,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     }
 
     private suspend fun getGyeonggiBusStationId(place: Place): String {
-        val busStations = routeRepository.getGyeonggiBusStationId(place.name).msgBody.busStations
+        val busStations = routeRepository.getGyeonggiBusStationId(place.name).busStations
 
         return findClosestGyeonggiBusStation(place, busStations)
     }
