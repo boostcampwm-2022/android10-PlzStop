@@ -19,10 +19,6 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetLastTransportTimeUseCase {
 
-    class NoAppropriateDataException(override val message: String) : Exception()
-    class NoServiceAreaException : Exception("지원하지 않는 지역입니다.")
-    class ApiServerDataException : Exception("로직이 올바르지만 서버에 데이터가 없습니다.")
-
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT)
 
     override suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo {
@@ -51,6 +47,8 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             } catch (exception: NoAppropriateDataException) {
                 null
             } catch (exception: NoServiceAreaException) {
+                null
+            } catch (exception: IllegalArgumentException) {
                 null
             }
         }
@@ -112,7 +110,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     ): TransportIdRequest {
         // 22년 11월 기준, 공공데이터 포털에서 1 ~ 8호선에 속한 지하철 역의 막차 시간만 제공합니다.
         if (allowedSubwayLineForUse.contains(transportIdRequest.stationType).not()) {
-            throw NoAppropriateDataException(NOT_REGISTERED_STATION)
+            throw NoAppropriateDataException("API를 지원하지 않는 전철역입니다.")
         }
         return transportIdRequest.changeStartStationId(
             routeRepository.getSubwayStationCd(
@@ -158,7 +156,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         val route = routeRepository.getGyeonggiBusRoute(transportIdRequest.stationId)
             .msgBody.routeList.firstOrNull {
                 it.busName.contains(busName)
-            } ?: throw NoAppropriateDataException(NO_BUS_ROUTE_ID)
+            } ?: throw NoAppropriateDataException("버스 노선 고유 아이디가 없습니다.")
 
         return transportIdRequest.changeRouteId(route.routeId, null)
     }
@@ -173,14 +171,14 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             it.stationName == transportIdRequest.stationName
         }
         if (startStationIndex == -1) {
-            throw NoAppropriateDataException(NO_SUBWAY_STATION)
+            throw NoAppropriateDataException("노선에 해당하는 지하철이 없습니다.")
         }
 
         val endStationIndex = stationsOfLine.indexOfFirst {
             it.stationName == transportIdRequest.destinationStation.name
         }
         if (endStationIndex == -1) {
-            throw NoAppropriateDataException(NO_SUBWAY_STATION)
+            throw NoAppropriateDataException("노선에 해당하는 지하철이 없습니다.")
         }
 
         // 내선, 외선 여부 확인
@@ -226,7 +224,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         val result = lastTrainTime.firstOrNull {
             enableDestinationStation.contains(it.destinationStationName).xor(suffix).not()
                     || transportIdRequest.destinationStation.name == it.destinationStationName
-        }?.leftTime ?: throw IllegalArgumentException(LAST_TIME_LOGIC_ERROR)
+        }?.leftTime ?: throw IllegalArgumentException("막차 시간 로직이 잘못되었습니다.")
 
         return result
     }
@@ -362,7 +360,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         }
 
         if (startIndex == -1 || endIndex == -1) {
-            throw NoAppropriateDataException(NO_BUS_ARS_ID)
+            throw NoAppropriateDataException("버스 정류소 고유 아이디가 없습니다.")
         }
 
         return startIndex < endIndex
@@ -375,7 +373,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         val route = routeRepository.getSeoulBusRoute(transportIdRequest.stationId)
             .routeIdMsgBody.busRoutes.firstOrNull {
                 it.busRouteName.contains(busName)
-            } ?: throw NoAppropriateDataException(NO_BUS_ROUTE_ID)
+            } ?: throw NoAppropriateDataException("버스 노선 고유 아이디가 없습니다.")
 
         return transportIdRequest.changeRouteId(route.routeId, route.term)
     }
@@ -425,7 +423,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         transportIdRequest: TransportIdRequest
     ): TransportIdRequest {
         if (transportIdRequest.routeName.contains(LOCAL_BUS_NAME)) {
-            throw NoAppropriateDataException(GYEONGGI_REGION_BUS_NOT_SUPPORT)
+            throw NoAppropriateDataException("경기도 마을 버스 정보는 API에서 제공하지 않습니다.")
         }
 
         val startStationId = getGyeonggiBusStationId(
@@ -446,7 +444,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
         // API 서버 데이터의 문제로 버스 정류소 고유 아이디가 없는 경우가 있습니다.
         if (endStationId == UNKNOWN_ID) {
-            throw NoAppropriateDataException(NO_BUS_ARS_ID)
+            throw NoAppropriateDataException("버스 정류소 고유 아이디가 없습니다.")
         }
 
         return transportIdRequest.changeStartStationId(startStationId)
@@ -534,14 +532,6 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     }
 
     companion object {
-        // UI에 노출되지 않고, 개발자를 위한 디버깅 목적의 스트링
-        private const val NOT_REGISTERED_STATION = "API를 지원하지 않는 전철역입니다."
-        private const val NO_BUS_ARS_ID = "버스 정류소 고유 아이디가 없습니다."
-        private const val NO_BUS_ROUTE_ID = "버스 노선 고유 아이디가 없습니다."
-        private const val NO_SUBWAY_STATION = "노선에 해당하는 지하철이 없습니다."
-        private const val LAST_TIME_LOGIC_ERROR = "막차 시간 로직이 잘못되었습니다."
-        private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
-
         private const val LOCAL_BUS_NAME = "마을"
         private const val UNKNOWN_ID = "0"
         private const val NOT_YET_CALCULATED = 0
@@ -558,3 +548,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val TIME_CORRECTION_VALUE = 240_000
     }
 }
+
+class NoAppropriateDataException(override val message: String) : Exception()
+class NoServiceAreaException : Exception("지원하지 않는 지역입니다.")
+class ApiServerDataException : Exception("로직이 올바르지만 서버에 데이터가 없습니다.")
