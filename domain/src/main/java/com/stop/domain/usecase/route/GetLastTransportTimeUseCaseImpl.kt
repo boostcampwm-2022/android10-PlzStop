@@ -306,7 +306,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         var lastTime = routeRepository.getSeoulBusLastTime(
             transportIdRequest.stationId,
             transportIdRequest.routeId
-        )?.toInt() ?: throw ApiServerDataException()
+        ).first().lastTime?.toInt() ?: throw ApiServerDataException()
 
         if (lastTime < MID_NIGHT) {
             lastTime += TIME_CORRECTION_VALUE
@@ -369,7 +369,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     ): TransportIdRequest {
         val busName = transportIdRequest.routeName.split(":")[1]
         val route = routeRepository.getSeoulBusRoute(transportIdRequest.stationId)
-            .routeIdMsgBody.busRoutes.firstOrNull {
+            .firstOrNull {
                 it.busRouteName.contains(busName)
             } ?: throw NoAppropriateDataException("버스 노선 고유 아이디가 없습니다.")
 
@@ -405,8 +405,6 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     ): TransportIdRequest {
         val busStations =
             routeRepository.getSeoulBusStationArsId(transportIdRequest.stationName)
-                .arsIdMsgBody
-                .busStations
 
         val arsId = findClosestSeoulBusStation(transportIdRequest, busStations)
 

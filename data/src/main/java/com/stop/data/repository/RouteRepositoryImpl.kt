@@ -3,8 +3,7 @@ package com.stop.data.repository
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.*
-import com.stop.domain.model.route.seoul.bus.BusRouteResponse
-import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
+import com.stop.domain.model.route.seoul.bus.*
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.seoul.subway.SubwayCircleType
@@ -47,20 +46,16 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getSubwayStationLastTime(stationId, subwayCircleType, weekType)
     }
 
-    override suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse {
+    override suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo> {
         return remoteDataSource.getSeoulBusStationArsId(stationName)
     }
 
-    override suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse {
+    override suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo> {
         return remoteDataSource.getSeoulBusRoute(stationId)
     }
 
-    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String? {
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo> {
         return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
-            .lastTimeMsgBody
-            .lastTimes
-            .first()
-            .lastTime
     }
 
     override suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation> {

@@ -4,8 +4,7 @@ import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
-import com.stop.domain.model.route.seoul.bus.BusRouteResponse
-import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
+import com.stop.domain.model.route.seoul.bus.*
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.seoul.subway.SubwayCircleType
@@ -28,9 +27,9 @@ interface RouteRepository {
         weekType: WeekType,
     ): List<StationLastTime>
 
-    suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse
-    suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse
-    suspend fun getSeoulBusLastTime(stationId: String, lineId: String): String?
+    suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo>
+    suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo>
+    suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>
 
     suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation>
     suspend fun getGyeonggiBusRoute(stationId: String): List<GyeonggiBusRoute>

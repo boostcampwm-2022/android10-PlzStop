@@ -9,9 +9,7 @@ import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime
-import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.BusRouteResponse
-import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
+import com.stop.domain.model.route.seoul.bus.*
 import com.stop.domain.model.route.seoul.subway.*
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
@@ -117,10 +115,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusStationArsId(stationName: String): BusStationArsIdResponse {
+    override suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo> {
         with(wsBusApiService.getBusArsId(stationName)) {
             return when (this) {
-                is NetworkResult.Success -> this.data
+                is NetworkResult.Success -> this.data.arsIdMsgBody.busStations
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -128,10 +126,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSeoulBusRoute(stationId: String): BusRouteResponse {
+    override suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo> {
         with(wsBusApiService.getBusRoute(stationId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data
+                is NetworkResult.Success -> this.data.routeIdMsgBody.busRoutes
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -142,10 +140,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     override suspend fun getSeoulBusLastTime(
         stationId: String,
         lineId: String
-    ): BusLastTimeResponse {
+    ): List<LastTimeInfo> {
         with(wsBusApiService.getBusLastTime(stationId, lineId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data
+                is NetworkResult.Success -> this.data.lastTimeMsgBody.lastTimes
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
