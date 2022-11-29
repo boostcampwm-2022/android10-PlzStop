@@ -9,5 +9,7 @@
         <item name="colorOnSecondary">@color/black</item>
 
         <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowBackground">@color/main_dark_grey</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_place_marker</item>
     </style>
 </resources>

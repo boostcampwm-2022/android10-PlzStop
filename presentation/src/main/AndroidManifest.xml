@@ -27,8 +27,7 @@
             tools:node="remove" />
 
         <activity
-            android:name=".SplashActivity"
-            android:theme="@style/Theme.Splash"
+            android:name=".MainActivity"
             android:exported="true">
 
             <intent-filter>
@@ -36,11 +35,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
 
-        <activity
-            android:name=".MainActivity"
-            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
         </activity>
     </application>
 </manifest>
