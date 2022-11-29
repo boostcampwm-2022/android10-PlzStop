@@ -130,6 +130,21 @@ internal object NetworkModule {
             .build()
     }
 
+    @Provides
+    @Named("SwOpenApiSeoul")
+    fun provideSwOpenApiSeoulRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.SW_OPEN_API_SEOUL_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
     class CustomInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val url = chain.request().url.toUri().toString()

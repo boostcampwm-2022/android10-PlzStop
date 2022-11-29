@@ -5,4 +5,6 @@ import com.stop.data.model.nowlocation.BusInfoRepositoryItem
 interface NowLocationRemoteDataSource {
 
     suspend fun getBusNowLocation(busRouteId: String, order: Int): BusInfoRepositoryItem
+
+    suspend fun getSubwayTrainNowLocation()
 }
