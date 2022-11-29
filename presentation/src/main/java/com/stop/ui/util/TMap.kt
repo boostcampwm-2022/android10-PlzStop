@@ -60,7 +60,9 @@ open class TMap(
             val nowLocation = TMapPoint(location.latitude, location.longitude)
             if (handler is MissionHandler) {
                 if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation)
+                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, true)
+                } else {
+                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, false)
                 }
             } else if (handler is MapHandler) {
                 handler.setOnLocationChangeListener(location)

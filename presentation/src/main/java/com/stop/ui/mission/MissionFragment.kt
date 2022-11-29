@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -185,17 +184,18 @@ class MissionFragment : Fragment(), MissionHandler {
         drawBusLocationLine()
     }
 
-    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
-        tMap.drawMoveLine(
-            nowLocation,
-            beforeLocation,
-            PERSON_LINE + PERSON_LINE_NUM.toString(),
-            PERSON_LINE_COLOR
-        )
-        PERSON_LINE_NUM += 1
-
-        Log.d("Mission","now $nowLocation before $beforeLocation")
+    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint, canMakeLine: Boolean) {
+        if (canMakeLine) {
+            tMap.drawMoveLine(
+                nowLocation,
+                beforeLocation,
+                PERSON_LINE + PERSON_LINE_NUM.toString(),
+                PERSON_LINE_COLOR
+            )
+            PERSON_LINE_NUM += 1
+        }
         viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
