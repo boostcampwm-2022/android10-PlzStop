@@ -84,7 +84,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         with(
             openApiSeoulService.getSubwayStations(
                 serviceName = "SearchSTNBySubwayLineInfo",
-                lineName = lineName,
+                lineName = lineName.padStart(2, '0') + "호선",
             )
         ) {
             return when (this) {

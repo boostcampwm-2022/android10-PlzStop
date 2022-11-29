@@ -33,7 +33,6 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         val dataWithLastTime: List<String?> = getLastTransportTime(transportIdRequests)
 
         // 막차 시간 중 가장 빠른 시간과 dataWithLastTime을 가지는 데이터 클래스 반환하기
-//        return ReturnData(fastestTime, dataWithLastTime)
         return TransportLastTimeInfo(dataWithLastTime.sortedBy { it }.first() ?: "")
     }
 
@@ -166,12 +165,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     // TODO: 외선, 내선 로직 정리하면서 함수 분리하기
     private suspend fun getSubwayLastTransportTime(transportIdRequest: TransportIdRequest): String {
-        // "호선"을 붙이는 것을 Domain이 해야할까?
-        val requestLine = transportIdRequest.stationType
-            .toString().padStart(2, '0') + "호선"
-
         val stationsOfLine =
-            routeRepository.getSubwayStations(requestLine).sortedWith(compareBy { it.frCode })
+            routeRepository.getSubwayStations(transportIdRequest.stationType.toString())
+                .sortedWith(compareBy { it.frCode })
 
         val startStationIndex = stationsOfLine.indexOfFirst {
             it.stationName == transportIdRequest.stationName
