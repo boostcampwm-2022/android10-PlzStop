@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayTrainRealTimePositionUseCaseItem
+import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
+import com.stop.domain.usecase.nowlocation.GetSubwayRouteUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowLocationUseCase
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +18,8 @@ import kotlin.random.Random
 @HiltViewModel
 class MissionViewModel @Inject constructor(
     private val getBusNowLocationUseCase: GetBusNowLocationUseCase,
-    private val getSubwayTrainNowLocationUseCase: GetSubwayTrainNowLocationUseCase
+    private val getSubwayTrainNowLocationUseCase: GetSubwayTrainNowLocationUseCase,
+    private val getSubwayRouteUseCase: GetSubwayRouteUseCase
 ): ViewModel() {
 
     private val random = Random(System.currentTimeMillis())
@@ -117,6 +120,12 @@ class MissionViewModel @Inject constructor(
         }
     }
 
+    private fun getSubwayRoute() {
+        viewModelScope.launch {
+            getSubwayRouteUseCase(RouteRequest())
+        }
+    }
+
     companion object {
         private const val DELAY_TIME = 1000L
         private const val TIME_ZERO = 0
@@ -129,7 +138,7 @@ class MissionViewModel @Inject constructor(
         private const val TEST_BUS_540_ID = "100100083"
         private var TIME_TEST = 0
 
-        private const val TEST_SUBWAY_NUMER = 1
-        private const val TEST_TRAIN_NUMBER = "0071"
+        private const val TEST_SUBWAY_NUMER = 4
+        private const val TEST_TRAIN_NUMBER = "4327"
     }
 }

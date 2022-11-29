@@ -2,6 +2,7 @@ package com.stop.data.repository
 
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.domain.model.nearplace.Place
+import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
 import com.stop.domain.repository.NearPlaceRepository
 import javax.inject.Inject
 
@@ -16,19 +17,39 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
         centerLat: Double,
         appKey: String
     ): List<Place> {
-        nearPlaceRemoteDataSource.getNearPlaces(
+        return nearPlaceRemoteDataSource.getNearPlaces(
             version,
             searchKeyword,
             centerLon,
             centerLat,
             appKey
         ).onSuccess { places ->
-            return places.map {
+            places.map {
                 it.toUseCaseModel()
             }
         }.onFailure {
             throw it
-        }
-        return emptyList()
+        }.getOrDefault(emptyList()) as List<Place>
     }
+
+    override suspend fun getNowStationLocationInfo(
+        version: Int,
+        searchKeyword: String,
+        centerLon: Double,
+        centerLat: Double,
+        appKey: String
+    ): NowStationLocationUseCaseItem {
+        return nearPlaceRemoteDataSource.getNearPlaces(
+            version,
+            searchKeyword,
+            centerLon,
+            centerLat,
+            appKey
+        ).onSuccess { places ->
+            places.first().toNowStationLocationUseCaseModel()
+        }.onFailure {
+            throw it
+        }.getOrDefault(NowStationLocationUseCaseItem("", 0.0, 0.0)) as NowStationLocationUseCaseItem
+    }
+
 }

@@ -2,7 +2,7 @@ package com.stop.domain.model.route.tmap.origin
 
 import com.squareup.moshi.JsonClass
 import com.stop.domain.model.nowlocation.Location
-import com.stop.domain.model.nowlocation.SubwayRoadLocationUseCaseItem
+import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 
 @JsonClass(generateAdapter = true)
 data class Leg(
@@ -18,12 +18,12 @@ data class Leg(
     val steps: List<Step>?,
     val type: Int?
 ) {
-    fun toUseCaseModel(): SubwayRoadLocationUseCaseItem {
+    fun toUseCaseModel(): SubwayRouteLocationUseCaseItem {
         val line = passShape?.linestring?.split(" ")?.map {
             val (lat, long) = it.split(",")
             Location(lat.toDouble(), long.toDouble())
         } ?: emptyList()
-        return SubwayRoadLocationUseCaseItem(
+        return SubwayRouteLocationUseCaseItem(
             line = line,
             sectionTime = sectionTime
         )

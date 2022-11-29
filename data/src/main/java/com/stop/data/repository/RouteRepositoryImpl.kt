@@ -2,7 +2,7 @@ package com.stop.data.repository
 
 import com.stop.data.remote.source.route.RouteRemoteDataSource
 import com.stop.domain.model.geoLocation.AddressType
-import com.stop.domain.model.nowlocation.SubwayRoadLocationUseCaseItem
+import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.route.gyeonggi.GetGyeonggiBusStationIdResponse
 import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
 import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
@@ -52,7 +52,7 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getGyeonggiBusStationId(stationName)
     }
 
-    override suspend fun getSubwayRoute(routeRequest: RouteRequest): SubwayRoadLocationUseCaseItem {
+    override suspend fun getSubwayRoute(routeRequest: RouteRequest): SubwayRouteLocationUseCaseItem {
         return remoteDataSource.getRoute(routeRequest).metaData.plan.itineraries.first().legs.first { it.mode != "WALK" }
             .toUseCaseModel()
     }
