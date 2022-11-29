@@ -428,7 +428,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private suspend fun convertGyeonggiBusStationId(
         transportIdRequest: TransportIdRequest
     ): TransportIdRequest {
-        if (transportIdRequest.routeName.contains("마을")) {
+        if (transportIdRequest.routeName.contains(LOCAL_BUS_NAME)) {
             throw NoAppropriateDataException(GYEONGGI_REGION_BUS_NOT_SUPPORT)
         }
 
@@ -546,6 +546,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val LAST_TIME_LOGIC_ERROR = "막차 시간 로직이 잘못되었습니다."
         private const val GYEONGGI_REGION_BUS_NOT_SUPPORT = "경기도 마을 버스 정보는 API에서 제공하지 않습니다."
 
+        private const val LOCAL_BUS_NAME = "마을"
         private const val UNKNOWN_ID = "0"
         private const val NOT_YET_CALCULATED = 0
         private const val KOREA_LONGITUDE = 127
