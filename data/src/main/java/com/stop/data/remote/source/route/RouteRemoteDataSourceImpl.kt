@@ -11,10 +11,10 @@ import com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime
 import com.stop.domain.model.route.seoul.bus.*
 import com.stop.domain.model.route.seoul.subway.*
+import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
-import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
-import com.stop.domain.model.route.tmap.origin.RouteResponse
+import com.stop.domain.model.route.tmap.origin.*
 import javax.inject.Inject
 
 internal class RouteRemoteDataSourceImpl @Inject constructor(
@@ -191,6 +191,45 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
+            }
+        }
+    }
+
+    private fun eraseDuplicateLeg(itineraries: List<Itinerary>): List<Itinerary> {
+        return itineraries.map { itinerary ->
+            var beforeInfo: Pair<String, Coordinate>? = null
+            var subtractTime = 0.0
+            var subtractDistance = 0.0
+
+            val newLegs = itinerary.legs.fold(listOf<Leg>()) { legs, leg ->
+                val current =
+                    Pair(leg.mode, Coordinate(leg.start.lat.toString(), leg.start.lon.toString()))
+
+                if (legs.isEmpty()) {
+                    beforeInfo = current
+                    return@fold legs + leg
+                }
+
+                if (beforeInfo == current) {
+                    subtractDistance += leg.distance
+                    subtractTime += leg.sectionTime
+                    return@fold legs
+                }
+                beforeInfo = current
+                legs + leg
+            }
+
+            with(itinerary) {
+                Itinerary(
+                    fare = fare,
+                    legs = newLegs,
+                    pathType = pathType,
+                    totalDistance = totalDistance - subtractDistance,
+                    totalTime = totalTime - subtractTime.toInt(),
+                    transferCount = transferCount,
+                    walkDistance = walkDistance,
+                    walkTime = walkTime,
+                )
             }
         }
     }
