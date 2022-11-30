@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_bus_round"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PlzStop"
+        android:theme="@style/Theme.Splash"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 

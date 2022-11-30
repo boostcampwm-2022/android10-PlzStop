@@ -9,7 +9,13 @@
         <item name="colorOnSecondary">@color/black</item>
 
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:windowBackground">@color/main_dark_grey</item>
-        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_place_marker</item>
+    </style>
+
+    <style name="Theme.Splash" parent="Theme.SplashScreen">
+        <item name="postSplashScreenTheme">@style/Theme.PlzStop</item>
+        <item name="android:windowSplashScreenAnimationDuration">500</item>
+        <item name="android:windowSplashScreenBackground">@color/white</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/avd_splash</item>
+        <item name="android:windowSplashScreenBrandingImage">@drawable/ic_place_marker</item>
     </style>
 </resources>
