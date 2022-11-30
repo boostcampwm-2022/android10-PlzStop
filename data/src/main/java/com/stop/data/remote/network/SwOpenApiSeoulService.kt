@@ -9,7 +9,7 @@ import retrofit2.http.Path
 internal interface SwOpenApiSeoulService {
 
     @GET("{KEY}/{TYPE}/{SERVICE}/{START_INDEX}/{END_INDEX}/{STATION_NM}/")
-    suspend fun getSubwayTrainNowLocationInfo(
+    suspend fun getSubwayTrainNowStationInfo(
         @Path("KEY") key: String = BuildConfig.SUBWAY_KEY,
         @Path("SERVICE") serviceName: String = REAL_TIME_POSITION,
         @Path("TYPE") type: String = JSON,

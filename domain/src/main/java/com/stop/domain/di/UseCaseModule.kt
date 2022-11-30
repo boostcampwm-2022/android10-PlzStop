@@ -56,7 +56,7 @@ internal interface UseCaseModule {
 
     @Binds
     @Singleton
-    fun provideSubwayTrainNowLocationUseCase(getSubwayTrainNowLocationUseCaseImpl: GetSubwayTrainNowLocationUseCaseImpl): GetSubwayTrainNowLocationUseCase
+    fun provideSubwayTrainNowLocationUseCase(getSubwayTrainNowLocationUseCaseImpl: GetSubwayTrainNowStationUseCaseImpl): GetSubwayTrainNowStationUseCase
 
     @Binds
     @Singleton

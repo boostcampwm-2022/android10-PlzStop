@@ -14,8 +14,8 @@ class NowLocationRepositoryImpl @Inject constructor(
         return nowLocationRemoteDataSource.getBusNowLocation(busRouteId, order).toUseCaseModel()
     }
 
-    override suspend fun getSubwayTrainNowLocation(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem {
-        return nowLocationRemoteDataSource.getSubwayTrainNowLocation(trainNumber, subwayNumber).toUseCaseModel()
+    override suspend fun getSubwayTrainNowStation(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem {
+        return nowLocationRemoteDataSource.getSubwayTrainNowStation(trainNumber, subwayNumber).toUseCaseModel()
     }
 
 }

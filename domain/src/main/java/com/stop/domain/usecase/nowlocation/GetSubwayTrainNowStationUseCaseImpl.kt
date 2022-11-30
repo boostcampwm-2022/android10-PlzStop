@@ -4,12 +4,12 @@ import com.stop.domain.model.nowlocation.SubwayTrainRealTimePositionUseCaseItem
 import com.stop.domain.repository.NowLocationRepository
 import javax.inject.Inject
 
-class GetSubwayTrainNowLocationUseCaseImpl @Inject constructor(
+class GetSubwayTrainNowStationUseCaseImpl @Inject constructor(
     private val nowLocationRepository: NowLocationRepository
-) : GetSubwayTrainNowLocationUseCase {
+) : GetSubwayTrainNowStationUseCase {
 
     override suspend operator fun invoke(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionUseCaseItem {
-        return nowLocationRepository.getSubwayTrainNowLocation(trainNumber, subwayNumber)
+        return nowLocationRepository.getSubwayTrainNowStation(trainNumber, subwayNumber)
     }
 
 }

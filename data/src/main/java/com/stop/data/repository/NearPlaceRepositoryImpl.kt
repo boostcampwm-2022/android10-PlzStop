@@ -24,7 +24,7 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
             centerLat,
             appKey
         ).onSuccess { places ->
-            places.map {
+            return places.map {
                 it.toUseCaseModel()
             }
         }.onFailure {
@@ -46,7 +46,7 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
             centerLat,
             appKey
         ).onSuccess { places ->
-            places.first().toNowStationLocationUseCaseModel()
+            return places.first().toNowStationLocationUseCaseModel()
         }.onFailure {
             throw it
         }.getOrDefault(NowStationLocationUseCaseItem("", 0.0, 0.0)) as NowStationLocationUseCaseItem

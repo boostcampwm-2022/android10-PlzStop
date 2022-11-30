@@ -2,25 +2,26 @@ package com.stop.ui.mission
 
 import android.util.Log
 import androidx.lifecycle.*
+import com.stop.data.BuildConfig
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
-import com.stop.domain.model.nowlocation.SubwayTrainRealTimePositionUseCaseItem
-import com.stop.domain.model.route.tmap.RouteRequest
+import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
+import com.stop.domain.usecase.nowlocation.GetNowStationLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayRouteUseCase
-import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowLocationUseCase
+import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowStationUseCase
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
 class MissionViewModel @Inject constructor(
     private val getBusNowLocationUseCase: GetBusNowLocationUseCase,
-    private val getSubwayTrainNowLocationUseCase: GetSubwayTrainNowLocationUseCase,
+    private val getSubwayTrainNowStationUseCase: GetSubwayTrainNowStationUseCase,
+    private val getNowStationLocationUseCase: GetNowStationLocationUseCase,
     private val getSubwayRouteUseCase: GetSubwayRouteUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val random = Random(System.currentTimeMillis())
 
@@ -51,14 +52,15 @@ class MissionViewModel @Inject constructor(
     private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem>()
     val busNowLocationInfo: LiveData<BusInfoUseCaseItem> = _busNowLocationInfo
 
-    private val _subwayTrainNowLocationInfo = MutableLiveData<SubwayTrainRealTimePositionUseCaseItem>()
-    val subwayTrainNowLocationInfo: LiveData<SubwayTrainRealTimePositionUseCaseItem> = _subwayTrainNowLocationInfo
+    private val _nowStationLocationInfo = MutableLiveData<NowStationLocationUseCaseItem>()
+    val nowStationLocationInfo: LiveData<NowStationLocationUseCaseItem> = _nowStationLocationInfo
 
-    var personCurrentLocation = Location(0.0, 0.0)
-    var busCurrentLocation = Location(0.0, 0.0)
+    var personCurrentLocation = Location(37.553836, 126.969652)
+    var busCurrentLocation = Location(37.553836, 126.969652)
 
     init {
         getBusNowLocation()
+        getNowStationLocation()
     }
 
     fun setDestination(inputDestination: String) {
@@ -104,7 +106,7 @@ class MissionViewModel @Inject constructor(
                 getBusNowLocationUseCase(TEST_BUS_540_ID).apply {
                     _busNowLocationInfo.value = this
                 }
-                Log.d("MissionViewModel","busNowLocationInfo ${_busNowLocationInfo.value}")
+                Log.d("MissionViewModel", "busNowLocationInfo ${_busNowLocationInfo.value}")
                 delay(5000)
                 TIME_TEST += 1
             }
@@ -112,19 +114,27 @@ class MissionViewModel @Inject constructor(
         }
     }
 
-    private fun getSubwayTrainNowLocation() {
-        viewModelScope.launch {
-            getSubwayTrainNowLocationUseCase(TEST_TRAIN_NUMBER, TEST_SUBWAY_NUMER).apply {
-                _subwayTrainNowLocationInfo.value = this
-            }
-        }
+    private suspend fun getSubwayTrainNowLocation() = withContext(Dispatchers.Main) {
+        getSubwayTrainNowStationUseCase(TEST_TRAIN_NUMBER, TEST_SUBWAY_NUMER)
     }
 
-    private fun getSubwayRoute() {
-        viewModelScope.launch {
-            getSubwayRouteUseCase(RouteRequest())
-        }
+
+    suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
+        val searchKeyword = getSubwayTrainNowLocation().stationName
+        getNowStationLocationUseCase(
+            TMAP_VERSION,
+            searchKeyword,
+            personCurrentLocation.longitude,
+            personCurrentLocation.latitude,
+            BuildConfig.T_MAP_APP_KEY
+        )
     }
+
+//    private fun getSubwayRoute() {
+//        viewModelScope.launch {
+//            getSubwayRouteUseCase(RouteRequest())
+//        }
+//    }
 
     companion object {
         private const val DELAY_TIME = 1000L
@@ -139,6 +149,9 @@ class MissionViewModel @Inject constructor(
         private var TIME_TEST = 0
 
         private const val TEST_SUBWAY_NUMER = 4
-        private const val TEST_TRAIN_NUMBER = "4327"
+        private const val TEST_TRAIN_NUMBER = "4615"
+
+        private const val TMAP_VERSION = 1
     }
+
 }
