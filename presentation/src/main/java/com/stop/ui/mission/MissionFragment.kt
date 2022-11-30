@@ -10,11 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MissionFragment : Fragment(), MissionHandler {
@@ -178,10 +181,41 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
+    private fun drawSubwayLocationLine() {
+        viewModel.subwayRoute.observe(viewLifecycleOwner) { subwayRoute ->
+            viewLifecycleOwner.lifecycleScope.launch {
+                val timeUnit = (subwayRoute.sectionTime * SECOND_UNIT / subwayRoute.line.size).toLong()
+                subwayRoute.line.forEachIndexed { index, nowLocation ->
+                    if (index == 0) return@forEachIndexed
+                    else {
+                        val beforeLocation = subwayRoute.line[index - 1]
+                        tMap.drawMoveLine(
+                            TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                            TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+                            SUBWAY_LINE + (index - 1).toString(),
+                            SUBWAY_LINE_COLOR
+                        )
+                    }
+                    viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+
+                    tMap.makeMarker(
+                        SUBWAY_MARKER,
+                        SUBWAY_MARKER_IMG,
+                        TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                    )
+
+                    delay(timeUnit)
+                }
+            }
+
+        }
+    }
+
     override fun alertTMapReady() {
         //mimicUserMove()
         tMap.setTrackingMode()
         drawBusLocationLine()
+        drawSubwayLocationLine()
     }
 
     override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint, canMakeLine: Boolean) {
@@ -221,10 +255,18 @@ class MissionFragment : Fragment(), MissionHandler {
         private const val BUS_LINE_COLOR = Color.BLUE
         private var BUS_LINE_NUM = 0
 
+        private const val SUBWAY_LINE = "bus_line"
+        private const val SUBWAY_LINE_COLOR = Color.BLUE
+
         private val INIT_LOCATION = Location(0.0, 0.0)
 
         private const val BUS_MARKER = "marker_bus_pin"
         private const val BUS_MARKER_IMG = R.drawable.ic_bus_marker
+
+        private const val SUBWAY_MARKER = "marker_subway_pin"
+        private const val SUBWAY_MARKER_IMG = R.drawable.ic_subway_marker
+
+        private const val SECOND_UNIT = 1000
 
     }
 }
