@@ -3,7 +3,6 @@ package com.stop.domain.usecase.route
 import com.stop.domain.model.geoLocation.AddressType
 import com.stop.domain.model.route.Area
 import com.stop.domain.model.route.TransportIdRequest
-import com.stop.domain.model.route.TransportLastTimeInfo
 import com.stop.domain.model.route.TransportMoveType
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
 import com.stop.domain.model.route.seoul.bus.BusStationInfo
@@ -21,15 +20,12 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT)
 
-    override suspend fun invoke(itinerary: Itinerary): TransportLastTimeInfo {
+    override suspend fun invoke(itinerary: Itinerary): List<String?> {
         var transportIdRequests: List<TransportIdRequest?> = createTransportIdRequests(itinerary)
         transportIdRequests = convertStationId(transportIdRequests)
         transportIdRequests = convertRouteId(transportIdRequests)
 
-        val dataWithLastTime: List<String?> = getLastTransportTime(transportIdRequests)
-
-        // 막차 시간 중 가장 빠른 시간과 dataWithLastTime을 가지는 데이터 클래스 반환하기
-        return TransportLastTimeInfo(dataWithLastTime.sortedBy { it }.first() ?: "")
+        return getLastTransportTime(transportIdRequests)
     }
 
     private suspend fun getLastTransportTime(transportIdRequests: List<TransportIdRequest?>): List<String?> {
@@ -121,10 +117,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     }
 
     // 승차지, 도착지, 고유 번호를 알아내는데 필요한 정보로만 구성된 데이터 클래스로 변환하기
-    private suspend fun createTransportIdRequests(itinerary: Itinerary): List<TransportIdRequest> {
-        return itinerary.routes.fold(listOf<TransportIdRequest>()) { transportIdRequests, route ->
+    private suspend fun createTransportIdRequests(itinerary: Itinerary): List<TransportIdRequest?> {
+        return itinerary.routes.fold(listOf()) { transportIdRequests, route ->
             when (route) {
-                is WalkRoute -> transportIdRequests
+                is WalkRoute -> transportIdRequests + null
                 is TransportRoute -> {
                     val startStation = route.stations.first()
                     val transportMoveType = TransportMoveType.getMoveTypeByName(route.mode.name)
@@ -144,7 +140,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                         destinationStationId = UNKNOWN_ID,
                     )
                 }
-                else -> transportIdRequests
+                else -> transportIdRequests + null
             }
         }
     }

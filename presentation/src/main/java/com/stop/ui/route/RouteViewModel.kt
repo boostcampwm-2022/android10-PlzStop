@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stop.domain.model.route.TransportLastTimeInfo
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
@@ -35,8 +34,8 @@ class RouteViewModel @Inject constructor(
     val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
-    private val _lastTimeResponse = MutableLiveData<TransportLastTimeInfo>()
-    val lastTimeResponse: LiveData<TransportLastTimeInfo>
+    private val _lastTimeResponse = MutableLiveData<List<String?>>()
+    val lastTimeResponse: LiveData<List<String?>>
         get() = _lastTimeResponse
 
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
@@ -68,8 +67,7 @@ class RouteViewModel @Inject constructor(
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         viewModelScope.launch(Dispatchers.IO) {
-            val lastTimeInfo =
-                getLastTransportTimeUseCase.invoke(itinerary) ?: return@launch
+            val lastTimeInfo = getLastTransportTimeUseCase(itinerary)
 
             _lastTimeResponse.postValue(lastTimeInfo)
         }
