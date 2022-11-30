@@ -6,7 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -22,7 +23,8 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    private val viewModel: RouteViewModel by viewModels()
+    private val viewModel: RouteViewModel by activityViewModels()
+
     private lateinit var adapter: RouteAdapter
 
     override fun onCreateView(
@@ -77,6 +79,10 @@ class RouteFragment : Fragment() {
 
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
+        }
+
+        viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
+            binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
         }
     }
 
