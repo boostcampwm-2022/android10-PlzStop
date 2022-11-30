@@ -3,7 +3,6 @@ package com.stop.ui.mission
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +14,7 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
+import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -56,31 +56,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
         super.onDestroyView()
     }
-
-//    private fun mimicUserMove() {
-//        val lines = readFromAssets()
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            lines.forEach { line ->
-//                val (longitude, latitude) = line.split(",")
-//                tMap.moveLocation(longitude, latitude)
-//                delay(500)
-//            }
-//        }
-//    }
-
-//    private fun readFromAssets(): List<String> {
-//        val reader =
-//            BufferedReader(InputStreamReader(requireContext().assets.open(FAKE_USER_FILE_PATH)))
-//        val lines = arrayListOf<String>()
-//        var line = reader.readLine()
-//        while (line != null) {
-//            lines.add(line)
-//            line = reader.readLine()
-//        }
-//        reader.close()
-//        return lines
-//    }
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
@@ -164,8 +139,8 @@ class MissionFragment : Fragment(), MissionHandler {
                 tMap.drawMoveLine(
                     TMapPoint(nowLocation.latitude, nowLocation.longitude),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                    BUS_LINE + BUS_LINE_NUM.toString(),
-                    BUS_LINE_COLOR
+                    Marker.BUS_LINE + BUS_LINE_NUM.toString(),
+                    Marker.BUS_LINE_COLOR
                 )
                 BUS_LINE_NUM += 1
             }
@@ -174,8 +149,8 @@ class MissionFragment : Fragment(), MissionHandler {
             viewModel.busCurrentLocation = beforeLocation
 
             tMap.makeMarker(
-                BUS_MARKER,
-                BUS_MARKER_IMG,
+                Marker.BUS_MARKER,
+                Marker.BUS_MARKER_IMG,
                 TMapPoint(nowLocation.latitude, nowLocation.longitude)
             )
         }
@@ -192,15 +167,15 @@ class MissionFragment : Fragment(), MissionHandler {
                         tMap.drawMoveLine(
                             TMapPoint(nowLocation.latitude, nowLocation.longitude),
                             TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                            SUBWAY_LINE + (index - 1).toString(),
-                            SUBWAY_LINE_COLOR
+                            Marker.SUBWAY_LINE + (index - 1).toString(),
+                            Marker.SUBWAY_LINE_COLOR
                         )
                     }
                     viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
 
                     tMap.makeMarker(
-                        SUBWAY_MARKER,
-                        SUBWAY_MARKER_IMG,
+                        Marker.SUBWAY_MARKER,
+                        Marker.SUBWAY_MARKER_IMG,
                         TMapPoint(nowLocation.latitude, nowLocation.longitude)
                     )
 
@@ -223,8 +198,8 @@ class MissionFragment : Fragment(), MissionHandler {
             tMap.drawMoveLine(
                 nowLocation,
                 beforeLocation,
-                PERSON_LINE + PERSON_LINE_NUM.toString(),
-                PERSON_LINE_COLOR
+                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+                Marker.PERSON_LINE_COLOR
             )
             PERSON_LINE_NUM += 1
         }
@@ -247,24 +222,11 @@ class MissionFragment : Fragment(), MissionHandler {
         private const val MINUS = ""
         private const val LEFT_TIME = 60
 
-        private const val PERSON_LINE = "person_line"
-        private const val PERSON_LINE_COLOR = Color.MAGENTA
         private var PERSON_LINE_NUM = 0
 
-        private const val BUS_LINE = "bus_line"
-        private const val BUS_LINE_COLOR = Color.BLUE
         private var BUS_LINE_NUM = 0
 
-        private const val SUBWAY_LINE = "bus_line"
-        private const val SUBWAY_LINE_COLOR = Color.BLUE
-
         private val INIT_LOCATION = Location(0.0, 0.0)
-
-        private const val BUS_MARKER = "marker_bus_pin"
-        private const val BUS_MARKER_IMG = R.drawable.ic_bus_marker
-
-        private const val SUBWAY_MARKER = "marker_subway_pin"
-        private const val SUBWAY_MARKER_IMG = R.drawable.ic_subway_marker
 
         private const val SECOND_UNIT = 1000
 

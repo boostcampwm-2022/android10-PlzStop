@@ -1,8 +1,8 @@
 package com.stop.ui.map
 
 import android.content.Context
-import com.stop.R
 import com.stop.model.Location
+import com.stop.ui.util.Marker
 import com.stop.ui.util.TMap
 
 class MapTMap(
@@ -28,8 +28,8 @@ class MapTMap(
     fun clickLocation() {
         tMapView.setOnLongClickListenerCallback { _, _, tMapPoint ->
             makeMarker(
-                PLACE_MARKER,
-                PLACE_MARKER_IMG,
+                Marker.PLACE_MARKER,
+                Marker.PLACE_MARKER_IMG,
                 tMapPoint
             )
 
@@ -39,9 +39,8 @@ class MapTMap(
     }
 
     companion object {
-        private const val PLACE_MARKER = "marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
 
         private const val SAME_POINT = 1
+
     }
 }
