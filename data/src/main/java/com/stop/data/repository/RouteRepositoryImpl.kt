@@ -10,8 +10,8 @@ import com.stop.domain.model.route.seoul.subway.SubwayCircleType
 import com.stop.domain.model.route.seoul.subway.WeekType
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
+import com.stop.domain.model.route.tmap.origin.Itinerary
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
-import com.stop.domain.model.route.tmap.origin.RouteResponse
 import com.stop.domain.repository.RouteRepository
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ internal class RouteRepositoryImpl @Inject constructor(
     private val remoteDataSource: RouteRemoteDataSource
 ) : RouteRepository {
 
-    override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
+    override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         return remoteDataSource.getRoute(routeRequest)
     }
 

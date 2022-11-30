@@ -25,12 +25,12 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     private val apisDataService: ApisDataService,
 ) : RouteRemoteDataSource {
 
-    override suspend fun getRoute(routeRequest: RouteRequest): RouteResponse {
+    override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         with(
             tmapApiService.getRoutes(routeRequest.toMap())
         ) {
             return when (this) {
-                is NetworkResult.Success -> this.data
+                is NetworkResult.Success -> eraseDuplicateLeg(this.data.metaData.plan.itineraries)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception

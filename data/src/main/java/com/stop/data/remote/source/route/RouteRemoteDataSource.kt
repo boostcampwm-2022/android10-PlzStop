@@ -11,12 +11,12 @@ import com.stop.domain.model.route.seoul.subway.SubwayCircleType
 import com.stop.domain.model.route.seoul.subway.WeekType
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
+import com.stop.domain.model.route.tmap.origin.Itinerary
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
-import com.stop.domain.model.route.tmap.origin.RouteResponse
 
 internal interface RouteRemoteDataSource {
 
-    suspend fun getRoute(routeRequest: RouteRequest): RouteResponse
+    suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary>
     suspend fun reverseGeocoding(coordinate: Coordinate, addressType: AddressType): ReverseGeocodingResponse
 
     suspend fun getSubwayStationCd(stationId: String, stationName: String): String

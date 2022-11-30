@@ -11,9 +11,9 @@ internal class GetRouteUseCaseImpl @Inject constructor(
 ) : GetRouteUseCase {
 
     override suspend fun invoke(routeRequest: RouteRequest): List<Itinerary> {
-        val originRouteData = routeRepository.getRoute(routeRequest)
+        val originItineraries = routeRepository.getRoute(routeRequest)
 
-        return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
+        return originItineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
