@@ -20,7 +20,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     private val allowedSubwayLineForUse = (SUBWAY_LINE_ONE..SUBWAY_LINE_EIGHT)
 
-    override suspend fun invoke(itinerary: Itinerary): List<String?> {
+    override suspend operator fun invoke(itinerary: Itinerary): List<String?> {
         var transportIdRequests: List<TransportIdRequest?> = createTransportIdRequests(itinerary)
         transportIdRequests = convertStationId(transportIdRequests)
         transportIdRequests = convertRouteId(transportIdRequests)
