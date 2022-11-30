@@ -1,8 +1,6 @@
 package com.stop.ui.mission
 
-import android.util.Log
 import androidx.lifecycle.*
-import com.stop.data.BuildConfig
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -112,7 +110,6 @@ class MissionViewModel @Inject constructor(
                 getBusNowLocationUseCase(TEST_BUS_540_ID).apply {
                     _busNowLocationInfo.value = this
                 }
-                Log.d("MissionViewModel", "busNowLocationInfo ${_busNowLocationInfo.value}")
                 delay(5000)
                 TIME_TEST += 1
             }
@@ -128,11 +125,9 @@ class MissionViewModel @Inject constructor(
     private suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
         startSubwayStation = getSubwayTrainNowLocation().stationName
         getNowStationLocationUseCase(
-            TMAP_VERSION,
             startSubwayStation,
             personCurrentLocation.longitude,
-            personCurrentLocation.latitude,
-            BuildConfig.T_MAP_APP_KEY
+            personCurrentLocation.latitude
         )
     }
 
@@ -152,7 +147,6 @@ class MissionViewModel @Inject constructor(
             ).apply {
                 _subwayRoute.value = this
             }
-            Log.d("MissionFragment", "subwayRoute ${_subwayRoute.value}")
         }
     }
 
@@ -170,9 +164,7 @@ class MissionViewModel @Inject constructor(
 
         private const val TEST_SUBWAY_NUMER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
-        private const val TEST_TRAIN_NUMBER = "4680"
-
-        private const val TMAP_VERSION = 1
+        private const val TEST_TRAIN_NUMBER = "4713"
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
         private const val TEST_SUBWAY_LONG = "126.85359515"

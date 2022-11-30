@@ -1,6 +1,7 @@
 package com.stop.data.remote.network
 
 import com.stop.data.remote.model.NetworkResult
+import com.stop.data.remote.model.nearplace.NearPlaceResponse
 import com.stop.domain.model.route.tmap.origin.ReverseGeocodingResponse
 import com.stop.domain.model.route.tmap.origin.RouteResponse
 import retrofit2.http.Body
@@ -24,6 +25,14 @@ internal interface TmapApiService {
         @Query("addressType") addressType: String = REVERSE_GEOCODING_ADDRESS_TYPE,
     ) : NetworkResult<ReverseGeocodingResponse>
 
+    @GET(PLACE_SEARCH_URL)
+    suspend fun getNearPlaces(
+        @Query("version") version: Int = VERSION,
+        @Query("searchKeyword") searchKeyword: String,
+        @Query("centerLon") centerLon: Double,
+        @Query("centerLat") centerLat: Double,
+    ): NetworkResult<NearPlaceResponse>
+
     companion object {
         private const val TRANSPORT_URL = "transit/routes"
 
@@ -31,5 +40,8 @@ internal interface TmapApiService {
         private const val REVERSE_GEOCODING_VERSION = 1
         private const val REVERSE_GEOCODING_COORDINATION_TYPE = "WGS84GEO"
         private const val REVERSE_GEOCODING_ADDRESS_TYPE = "A02"
+
+        private const val PLACE_SEARCH_URL = "/tmap/pois"
+        private const val VERSION = 1
     }
 }

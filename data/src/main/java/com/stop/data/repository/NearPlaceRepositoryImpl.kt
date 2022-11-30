@@ -11,18 +11,14 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
 ) : NearPlaceRepository {
 
     override suspend fun getNearPlaces(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): List<Place> {
         return nearPlaceRemoteDataSource.getNearPlaces(
-            version,
-            searchKeyword,
-            centerLon,
-            centerLat,
-            appKey
+            searchKeyword = searchKeyword,
+            centerLon = centerLon,
+            centerLat = centerLat
         ).onSuccess { places ->
             return places.map {
                 it.toUseCaseModel()
@@ -33,18 +29,14 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getNowStationLocationInfo(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): NowStationLocationUseCaseItem {
         return nearPlaceRemoteDataSource.getNearPlaces(
-            version,
-            searchKeyword,
-            centerLon,
-            centerLat,
-            appKey
+            searchKeyword = searchKeyword,
+            centerLon = centerLon,
+            centerLat = centerLat
         ).onSuccess { places ->
             return places.first().toNowStationLocationUseCaseModel()
         }.onFailure {

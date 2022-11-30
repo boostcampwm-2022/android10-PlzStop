@@ -9,18 +9,14 @@ class GetNowStationLocationUseCaseImpl @Inject constructor(
 ) : GetNowStationLocationUseCase {
 
     override suspend fun invoke(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): NowStationLocationUseCaseItem {
         return nearPlaceRepository.getNowStationLocationInfo(
-            version = version,
             searchKeyword = searchKeyword,
             centerLon = centerLon,
-            centerLat = centerLat,
-            appKey = appKey
+            centerLat = centerLat
         )
     }
 

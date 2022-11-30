@@ -6,19 +6,15 @@ import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
 interface NearPlaceRepository {
 
     suspend fun getNearPlaces(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): List<Place>
 
     suspend fun getNowStationLocationInfo(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): NowStationLocationUseCaseItem
 
 }
