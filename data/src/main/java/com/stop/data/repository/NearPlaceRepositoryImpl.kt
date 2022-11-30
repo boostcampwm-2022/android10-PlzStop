@@ -49,7 +49,7 @@ internal class NearPlaceRepositoryImpl @Inject constructor(
             return places.first().toNowStationLocationUseCaseModel()
         }.onFailure {
             throw it
-        }.getOrDefault(NowStationLocationUseCaseItem("", 0.0, 0.0)) as NowStationLocationUseCaseItem
+        }.getOrDefault(NowStationLocationUseCaseItem("", "0", "0")) as NowStationLocationUseCaseItem
     }
 
 }

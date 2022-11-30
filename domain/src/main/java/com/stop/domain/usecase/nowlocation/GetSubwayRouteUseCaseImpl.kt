@@ -9,8 +9,17 @@ class GetSubwayRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetSubwayRouteUseCase {
 
-    override suspend fun invoke(routeRequest: RouteRequest): SubwayRouteLocationUseCaseItem {
-        return routeRepository.getSubwayRoute(routeRequest)
+    override suspend fun invoke(
+        routeRequest: RouteRequest,
+        subwayLine: String,
+        startSubwayStation: String,
+        endSubwayStation: String
+    ): SubwayRouteLocationUseCaseItem {
+        return routeRepository.getSubwayRoute(
+            routeRequest,
+            subwayLine,
+            startSubwayStation,
+            endSubwayStation)
     }
 
 }

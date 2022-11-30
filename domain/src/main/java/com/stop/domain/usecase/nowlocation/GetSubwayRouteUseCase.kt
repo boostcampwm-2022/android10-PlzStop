@@ -5,6 +5,11 @@ import com.stop.domain.model.route.tmap.RouteRequest
 
 interface GetSubwayRouteUseCase {
 
-    suspend operator fun invoke(routeRequest: RouteRequest): SubwayRouteLocationUseCaseItem
+    suspend operator fun invoke(
+        routeRequest: RouteRequest,
+        subwayLine: String,
+        startSubwayStation: String,
+        endSubwayStation: String
+    ): SubwayRouteLocationUseCaseItem
 
 }

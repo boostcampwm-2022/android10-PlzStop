@@ -21,7 +21,7 @@ data class Place(
 
     fun toNowStationLocationUseCaseModel() = NowStationLocationUseCaseItem(
         name = name,
-        latitude = centerLat,
-        longitude = centerLon
+        latitude = centerLat.toString(),
+        longitude = centerLon.toString()
     )
 }

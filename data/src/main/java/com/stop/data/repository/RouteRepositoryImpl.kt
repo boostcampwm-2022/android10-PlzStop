@@ -52,8 +52,25 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getGyeonggiBusStationId(stationName)
     }
 
-    override suspend fun getSubwayRoute(routeRequest: RouteRequest): SubwayRouteLocationUseCaseItem {
-        return remoteDataSource.getRoute(routeRequest).metaData.plan.itineraries.first().legs.first { it.mode != "WALK" }
-            .toUseCaseModel()
+    override suspend fun getSubwayRoute(
+        routeRequest: RouteRequest,
+        subwayLine: String,
+        startSubwayStation: String,
+        endSubwayStation: String
+    ): SubwayRouteLocationUseCaseItem {
+        return remoteDataSource.getRoute(routeRequest).metaData.plan.itineraries.first {
+            it.legs.any { leg ->
+                leg.mode == "SUBWAY"
+                && leg.route?.contains(subwayLine) ?: false
+                        && leg.start.name.contains(startSubwayStation)
+                        && leg.end.name.contains(endSubwayStation)
+            }
+        }.legs.first { leg ->
+            leg.mode == "SUBWAY"
+                    && leg.route?.contains(subwayLine) ?: false
+                    && leg.start.name.contains(startSubwayStation)
+                    && leg.end.name.contains(endSubwayStation)
+        }.toUseCaseModel()
     }
+
 }

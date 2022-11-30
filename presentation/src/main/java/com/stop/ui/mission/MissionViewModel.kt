@@ -4,14 +4,18 @@ import android.util.Log
 import androidx.lifecycle.*
 import com.stop.data.BuildConfig
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
-import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
+import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
+import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetNowStationLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayRouteUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowStationUseCase
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -52,15 +56,17 @@ class MissionViewModel @Inject constructor(
     private val _busNowLocationInfo = MutableLiveData<BusInfoUseCaseItem>()
     val busNowLocationInfo: LiveData<BusInfoUseCaseItem> = _busNowLocationInfo
 
-    private val _nowStationLocationInfo = MutableLiveData<NowStationLocationUseCaseItem>()
-    val nowStationLocationInfo: LiveData<NowStationLocationUseCaseItem> = _nowStationLocationInfo
+    private val _subwayRoute = MutableLiveData<SubwayRouteLocationUseCaseItem>()
+    val subwayRoute: LiveData<SubwayRouteLocationUseCaseItem> = _subwayRoute
 
     var personCurrentLocation = Location(37.553836, 126.969652)
     var busCurrentLocation = Location(37.553836, 126.969652)
 
+    lateinit var startSubwayStation: String
+
     init {
         getBusNowLocation()
-        getNowStationLocation()
+        getSubwayRoute()
     }
 
     fun setDestination(inputDestination: String) {
@@ -119,22 +125,36 @@ class MissionViewModel @Inject constructor(
     }
 
 
-    suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
-        val searchKeyword = getSubwayTrainNowLocation().stationName
+    private suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
+        startSubwayStation = getSubwayTrainNowLocation().stationName
         getNowStationLocationUseCase(
             TMAP_VERSION,
-            searchKeyword,
+            startSubwayStation,
             personCurrentLocation.longitude,
             personCurrentLocation.latitude,
             BuildConfig.T_MAP_APP_KEY
         )
     }
 
-//    private fun getSubwayRoute() {
-//        viewModelScope.launch {
-//            getSubwayRouteUseCase(RouteRequest())
-//        }
-//    }
+    private fun getSubwayRoute() {
+        viewModelScope.launch {
+            val startLocation = getNowStationLocation()
+            getSubwayRouteUseCase(
+                RouteRequest(
+                    startLocation.longitude,
+                    startLocation.latitude,
+                    TEST_SUBWAY_LONG,
+                    TEST_SUBWAY_LAT
+                ),
+                TEST_SUBWAY_NUMER.toString() + LINE,
+                startSubwayStation.dropLast(1), //"역" 버리기
+                TEST_END_SUBWAY_STATION
+            ).apply {
+                _subwayRoute.value = this
+            }
+            Log.d("MissionFragment", "subwayRoute ${_subwayRoute.value}")
+        }
+    }
 
     companion object {
         private const val DELAY_TIME = 1000L
@@ -149,9 +169,15 @@ class MissionViewModel @Inject constructor(
         private var TIME_TEST = 0
 
         private const val TEST_SUBWAY_NUMER = 4
-        private const val TEST_TRAIN_NUMBER = "4615"
+        private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
+        private const val TEST_TRAIN_NUMBER = "4645"
 
         private const val TMAP_VERSION = 1
+
+        private const val TEST_SUBWAY_LAT = "37.30973177"
+        private const val TEST_SUBWAY_LONG = "126.85359515"
+        private const val TEST_END_SUBWAY_STATION = "한대앞"
+
     }
 
 }

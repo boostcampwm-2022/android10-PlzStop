@@ -20,7 +20,7 @@ data class Leg(
 ) {
     fun toUseCaseModel(): SubwayRouteLocationUseCaseItem {
         val line = passShape?.linestring?.split(" ")?.map {
-            val (lat, long) = it.split(",")
+            val (long, lat) = it.split(",")
             Location(lat.toDouble(), long.toDouble())
         } ?: emptyList()
         return SubwayRouteLocationUseCaseItem(

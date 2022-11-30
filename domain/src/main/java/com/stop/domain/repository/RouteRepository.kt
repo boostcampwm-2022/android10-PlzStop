@@ -23,5 +23,10 @@ interface RouteRepository {
 
     suspend fun getGyeonggiBusStationId(stationName: String): GetGyeonggiBusStationIdResponse
 
-    suspend fun getSubwayRoute(routeRequest: RouteRequest): SubwayRouteLocationUseCaseItem
+    suspend fun getSubwayRoute(
+        routeRequest: RouteRequest,
+        subwayLine: String,
+        startSubwayStation: String,
+        endSubwayStation: String
+    ): SubwayRouteLocationUseCaseItem
 }
