@@ -12,7 +12,6 @@ import com.stop.model.ErrorType
 import com.stop.model.Event
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -62,15 +61,15 @@ class RouteViewModel @Inject constructor(
             endY = destinationValue.coordinate.latitude,
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
-            this@RouteViewModel._routeResponse.postValue(getRouteUseCase(routeRequest))
+        viewModelScope.launch {
+            this@RouteViewModel._routeResponse.value = getRouteUseCase(routeRequest)
         }
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
-        viewModelScope.launch(Dispatchers.IO) {
-            this@RouteViewModel._lastTimeResponse.postValue(getLastTransportTimeUseCase(itinerary))
+        viewModelScope.launch {
+            this@RouteViewModel._lastTimeResponse.value = getLastTransportTimeUseCase(itinerary)
         }
     }
 
