@@ -164,7 +164,7 @@ class MissionViewModel @Inject constructor(
 
         private const val TEST_SUBWAY_NUMER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
-        private const val TEST_TRAIN_NUMBER = "4713"
+        private const val TEST_TRAIN_NUMBER = "4591"
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
         private const val TEST_SUBWAY_LONG = "126.85359515"
