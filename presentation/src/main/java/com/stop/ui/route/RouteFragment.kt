@@ -8,12 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.navArgs
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.model.ErrorType
-import com.stop.model.route.Coordinate
-import com.stop.model.route.Place
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,6 +23,8 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val viewModel: RouteViewModel by activityViewModels()
+
+    private val args: RouteFragmentArgs by navArgs()
 
     private lateinit var adapter: RouteAdapter
 
@@ -39,6 +40,7 @@ class RouteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setBinding()
+        setListener()
         setRecyclerView()
         setStartAndDestinationText()
         setObserve()
@@ -49,8 +51,19 @@ class RouteFragment : Fragment() {
         binding.viewModel = viewModel
     }
 
+    private fun setListener() {
+        binding.textViewOrigin.setOnClickListener {
+            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
+            binding.root.findNavController().navigate(action)
+        }
+        binding.textViewDestination.setOnClickListener {
+            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
+            binding.root.findNavController().navigate(action)
+        }
+    }
+
     private fun setRecyclerView() {
-        adapter = RouteAdapter(object: OnItineraryClickListener {
+        adapter = RouteAdapter(object : OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
                 /**
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
@@ -72,7 +85,7 @@ class RouteFragment : Fragment() {
 
         viewModel.errorMessage.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { errorType ->
-                val message = when(errorType) {
+                val message = when (errorType) {
                     ErrorType.NO_START -> getString(R.string.no_start_input)
                     ErrorType.NO_END -> getString(R.string.no_end_input)
                 }
@@ -82,13 +95,19 @@ class RouteFragment : Fragment() {
         }
 
         viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
-            binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
+            it.getContentIfNotHandled()?.let {
+                binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
+            }
         }
     }
 
     private fun setStartAndDestinationText() {
-        viewModel.setOrigin(Place(ORIGIN_NAME, Coordinate(ORIGIN_Y, ORIGIN_X)))
-        viewModel.setDestination(Place(DESTINATION_NAME, Coordinate(DESTINATION_Y, DESTINATION_X)))
+        args.start?.let {
+            viewModel.setOrigin(it)
+        }
+        args.end?.let {
+            viewModel.setDestination(it)
+        }
         viewModel.getRoute()
     }
 
@@ -96,15 +115,5 @@ class RouteFragment : Fragment() {
         _binding = null
 
         super.onDestroyView()
-    }
-
-    companion object {
-        private const val ORIGIN_NAME = "이앤씨벤쳐드림타워3차"
-        private const val ORIGIN_X = "126.893820"
-        private const val ORIGIN_Y = "37.4865002"
-
-        private const val DESTINATION_NAME = "Naver1784"
-        private const val DESTINATION_X = "127.105037"
-        private const val DESTINATION_Y = "37.3584879"
     }
 }

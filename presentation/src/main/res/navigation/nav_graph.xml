@@ -75,6 +75,19 @@
         <action
             android:id="@+id/action_routeFragment_to_routeDetailFragment"
             app:destination="@id/routeDetailFragment" />
+        <argument
+            android:name="start"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <argument
+            android:name="end"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true"
+            android:defaultValue="@null" />
+        <action
+            android:id="@+id/action_routeFragment_to_placeSearchFragment"
+            app:destination="@id/placeSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/missionFragment"
