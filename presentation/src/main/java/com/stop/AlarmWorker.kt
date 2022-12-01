@@ -24,12 +24,10 @@ class AlarmWorker @AssistedInject constructor(
     private val getNearPlacesUseCase: GetNearPlacesUseCase
 ) : CoroutineWorker(context, workerParameters) {
 
-    lateinit var resultList: List<Place>
-
     override suspend fun doWork(): Result {
         return try {
             callApi()
-            val output: Data = workDataOf("WORK_RESULT" to resultList.toString())
+            val output: Data = workDataOf("WORK_RESULT" to "result")
             Result.success(output)
         } catch (e: Exception) {
             Log.e("ABC", e.toString())
@@ -39,17 +37,14 @@ class AlarmWorker @AssistedInject constructor(
 
     private suspend fun callApi() {
         withContext(Dispatchers.IO) {
-            getNearPlacesUseCase.getNearPlaces(
+            val list = getNearPlacesUseCase.getNearPlaces(
                 1,
                 "아남타워",
                 126.969652,
                 37.553836,
                 BuildConfig.TMAP_APP_KEY
-            ).collectLatest {
-                resultList = it
-            }
+            )
+            Log.e("ABC", list.toString())
         }
-
     }
-
 }

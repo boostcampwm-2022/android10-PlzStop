@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -58,149 +57,19 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_panel"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginEnd="15dp"
+            android:layout_height="170dp"
+            android:layout_marginEnd="90dp"
             android:layout_marginTop="30dp"
             android:elevation="15dp"
-            android:background="@drawable/background_panel"
             android:visibility="@{placeSearchViewModel.panelVisibility}"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintEnd_toStartOf="@id/layout_compass"
-            app:layout_constraintTop_toTopOf="@id/layout_compass"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
 
-            <ImageView
-                android:id="@+id/image_view_panel_point"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_point_marker" />
-
-            <TextView
-                android:id="@+id/text_view_panel_title"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="19dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="@{placeSearchViewModel.geoLocation.title}"
-                android:textSize="22sp"
-                android:textColor="@color/white"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toEndOf="@id/image_view_panel_point"
-                app:layout_constraintEnd_toStartOf="@id/view_panel_bookmark"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="성복역" />
-
-            <View
-                android:id="@+id/view_panel_bookmark"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <ImageView
-                android:id="@+id/image_view_panel_bookmark"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                app:layout_constraintStart_toStartOf="@id/view_panel_bookmark"
-                app:layout_constraintEnd_toEndOf="@id/view_panel_bookmark"
-                app:layout_constraintTop_toTopOf="@id/view_panel_bookmark"
-                app:layout_constraintBottom_toBottomOf="@id/view_panel_bookmark"
-                app:srcCompat="@drawable/ic_bookmark" />
-
-            <TextView
-                android:id="@+id/text_view_panel_address"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:text="@{placeSearchViewModel.geoLocation.roadAddress}"
-                android:textSize="14sp"
-                android:textColor="#808590"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/text_view_panel_title"
-                app:layout_constraintBottom_toTopOf="@id/view_panel_start"
-                tools:text="서울 구로구 디지털로31길 41" />
-
-            <TextView
-                android:id="@+id/text_view_panel_distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="16dp"
-                android:text="@{placeSearchViewModel.distance.toString()}"
-                android:textSize="40sp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:text="1.6" />
-
-            <TextView
-                android:id="@+id/text_view_panel_distance_km"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginBottom="22dp"
-                android:text="@string/km"
-                android:textSize="20sp"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                app:layout_constraintStart_toEndOf="@id/text_view_panel_distance"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:text="km" />
-
-            <View
-                android:id="@+id/view_panel_start"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toStartOf="@id/view_panel_end"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <ImageView
-                android:id="@+id/image_view_panel_start"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:layout_constraintStart_toStartOf="@id/view_panel_start"
-                app:layout_constraintEnd_toEndOf="@id/view_panel_start"
-                app:layout_constraintTop_toTopOf="@id/view_panel_start"
-                app:layout_constraintBottom_toBottomOf="@id/view_panel_start"
-                app:srcCompat="@drawable/ic_start" />
-
-            <View
-                android:id="@+id/view_panel_end"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:background="@drawable/background_button"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
-
-            <ImageView
-                android:id="@+id/image_view_panel_end"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                app:layout_constraintStart_toStartOf="@id/view_panel_end"
-                app:layout_constraintEnd_toEndOf="@id/view_panel_end"
-                app:layout_constraintTop_toTopOf="@id/view_panel_end"
-                app:layout_constraintBottom_toBottomOf="@id/view_panel_end"
-                app:srcCompat="@drawable/ic_end" />
+            <include
+                android:id="@+id/home_panel"
+                layout="@layout/home_panel"
+                bind:placeSearchViewModel="@{placeSearchViewModel}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -209,8 +78,8 @@
             android:layout_height="52dp"
             android:elevation="15dp"
             android:background="@drawable/background_search"
-            app:layout_constraintStart_toStartOf="@+id/guideline_start"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/guideline_top">
 
             <TextView
@@ -316,9 +185,7 @@
                 <include
                     android:id="@+id/home_bottom_sheet"
                     layout="@layout/home_bottom_sheet"
-                    bind:alarmViewModel="@{alarmViewModel}"
-                    tools:layout_editor_absoluteX="0dp"
-                    tools:layout_editor_absoluteY="16dp" />
+                    bind:alarmViewModel="@{alarmViewModel}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -15,7 +15,6 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
-import com.stop.ui.map.MapFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -172,7 +171,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
             viewModel.busCurrentLocation = beforeLocation
 
-            tMap.makeMarker(
+            tMap.addMarker(
                 BUS_MARKER,
                 BUS_MARKER_IMG,
                 TMapPoint(nowLocation.latitude, nowLocation.longitude)

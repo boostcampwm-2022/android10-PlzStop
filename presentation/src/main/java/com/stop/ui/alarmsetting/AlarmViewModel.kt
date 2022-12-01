@@ -8,8 +8,8 @@ class AlarmViewModel : ViewModel() {
     private val _fakeAlarmUseCaseItem = MutableLiveData<AlarmUseCaseItem>()
     val fakeAlarmUseCaseItem: LiveData<AlarmUseCaseItem> = _fakeAlarmUseCaseItem
 
-    private val _bottomSheetVisibility = MutableLiveData(false)
-    val bottomSheetVisibility: LiveData<Boolean> = _bottomSheetVisibility
+    private val _isBottomSheetVisible = MutableLiveData(false)
+    val isBottomSheetVisible: LiveData<Boolean> = _isBottomSheetVisible
 
     init {
         _fakeAlarmUseCaseItem.value = AlarmUseCaseItem(
@@ -24,7 +24,7 @@ class AlarmViewModel : ViewModel() {
     }
 
     fun setVisibility(input: Boolean) {
-        _bottomSheetVisibility.value = input.not()
+        _isBottomSheetVisible.value = input.not()
     }
 }
 
