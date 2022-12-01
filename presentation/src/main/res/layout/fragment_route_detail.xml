@@ -12,13 +12,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:weightSum="6">
+        android:orientation="vertical">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_height="107dp">
 
             <ImageView
                 android:id="@+id/image_view_location"
@@ -26,16 +24,15 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_location"
                 android:layout_marginEnd="15dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/text_view_contents"
