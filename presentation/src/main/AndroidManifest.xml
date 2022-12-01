@@ -41,6 +41,7 @@
             android:name=".MainActivity"
             android:excludeFromRecents="true"
             android:exported="true"
+            android:launchMode="singleTask"
             android:showOnLockScreen="true"
             android:theme="@style/Theme.Splash">
 

@@ -28,7 +28,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
             val pendingIntent = PendingIntent.getActivity(context, alarmCode, Intent(context, MainActivity::class.java).apply {
                 putExtra("ALARM_CODE", alarmCode)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
             val builder = NotificationCompat.Builder(context, ALARM_RECEIVER_CHANNEL_ID)
@@ -50,7 +49,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
             Intent(context, MainActivity::class.java).apply {
                 putExtra("ALARM_CODE", alarmCode)
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 context.startActivity(this)
             }
         }
