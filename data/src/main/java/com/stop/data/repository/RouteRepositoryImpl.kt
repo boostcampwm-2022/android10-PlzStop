@@ -53,7 +53,7 @@ internal class RouteRepositoryImpl @Inject constructor(
         startSubwayStation: String,
         endSubwayStation: String
     ): SubwayRouteLocationUseCaseItem {
-        return remoteDataSource.getRoute(routeRequest).metaData.plan.itineraries.first {
+        return remoteDataSource.getRoute(routeRequest).first {
             it.legs.any { leg ->
                 leg.mode == "SUBWAY"
                         && leg.route?.contains(subwayLine) ?: false
