@@ -140,7 +140,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     override suspend fun getSeoulBusLastTime(
         stationId: String,
         lineId: String
-    ): List<LastTimeInfo> {
+    ): List<LastTimeInfo>? {
         with(wsBusApiService.getBusLastTime(stationId, lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.lastTimeMsgBody.lastTimes
@@ -173,10 +173,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime> {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>? {
         with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.lastTimes.map { it.toDomain() }
+                is NetworkResult.Success -> this.data.lastTimes?.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception

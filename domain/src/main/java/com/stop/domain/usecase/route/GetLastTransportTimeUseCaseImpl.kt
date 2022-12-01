@@ -299,10 +299,12 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     private suspend fun getSeoulBusLastTransportTime(
         transportIdRequest: TransportIdRequest
     ): String {
-        var lastTime = routeRepository.getSeoulBusLastTime(
+        val lastTimes = routeRepository.getSeoulBusLastTime(
             transportIdRequest.stationId,
             transportIdRequest.routeId
-        ).first().lastTime?.toInt() ?: throw ApiServerDataException()
+        ) ?: return getRectifiedGyeonggiBusLastTransportTime(transportIdRequest)
+
+        var lastTime = lastTimes.first().lastTime?.toInt() ?: throw ApiServerDataException()
 
         if (lastTime < MID_NIGHT) {
             lastTime += TIME_CORRECTION_VALUE
@@ -310,12 +312,31 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         return lastTime.toString().chunked(2).joinToString(":")
     }
 
+    private suspend fun getRectifiedGyeonggiBusLastTransportTime(
+        transportIdRequest: TransportIdRequest
+    ): String {
+        var newTransportIdRequest = convertGyeonggiBusStationId(transportIdRequest)
+        newTransportIdRequest = convertGyeonggiBusRouteId(newTransportIdRequest)
+
+        val lastTime = routeRepository.getGyeonggiBusLastTime(
+            newTransportIdRequest.routeId
+        )?.first() ?: throw ApiServerDataException()
+
+        val destinationIsLastStation = checkGyeonggiBusDestinationIsLastStation(newTransportIdRequest)
+
+        return if (destinationIsLastStation) {
+            addSecondsFormat(lastTime.upLastTime)
+        } else {
+            addSecondsFormat(lastTime.downLastTime)
+        }
+    }
+
     private suspend fun getGyeonggiBusLastTransportTime(
         transportIdRequest: TransportIdRequest
     ): String {
         val lastTime = routeRepository.getGyeonggiBusLastTime(
             transportIdRequest.routeId
-        ).first()
+        )?.first() ?: return getRectifiedSeoulBusLastTransportTime(transportIdRequest)
 
         val destinationIsLastStation = checkGyeonggiBusDestinationIsLastStation(transportIdRequest)
 
@@ -324,6 +345,25 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         } else {
             addSecondsFormat(lastTime.downLastTime)
         }
+    }
+
+    private suspend fun getRectifiedSeoulBusLastTransportTime(
+        transportIdRequest: TransportIdRequest
+    ) : String {
+        var newTransportIdRequest = convertSeoulBusStationId(transportIdRequest)
+        newTransportIdRequest = convertSeoulBusRouteId(newTransportIdRequest)
+
+        val lastTimes = routeRepository.getSeoulBusLastTime(
+            newTransportIdRequest.stationId,
+            newTransportIdRequest.routeId
+        ) ?: throw ApiServerDataException()
+
+        var lastTime = lastTimes.first().lastTime?.toInt() ?: throw ApiServerDataException()
+
+        if (lastTime < MID_NIGHT) {
+            lastTime += TIME_CORRECTION_VALUE
+        }
+        return lastTime.toString().chunked(2).joinToString(":")
     }
 
     private fun addSecondsFormat(time: String): String {
