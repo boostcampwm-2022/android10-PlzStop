@@ -95,8 +95,9 @@ class RouteFragment : Fragment() {
         }
 
         viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
-            binding.root.findNavController()
-                .navigate(R.id.action_routeFragment_to_routeDetailFragment)
+            it.getContentIfNotHandled()?.let {
+                binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
+            }
         }
     }
 
