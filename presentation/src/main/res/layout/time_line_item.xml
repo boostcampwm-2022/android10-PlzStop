@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/text_view_section_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/time_stick_border"
+            android:gravity="center"
+            android:minWidth="60dp"
+            android:paddingVertical="3dp"
+            android:layout_marginTop="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/dummy_view"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="15분" />
+
+        <Button
+            android:id="@+id/dummy_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_icon"
+            app:layout_constraintEnd_toEndOf="@id/image_view_icon"
+            app:layout_constraintStart_toStartOf="@id/image_view_icon"
+            app:layout_constraintTop_toTopOf="@id/image_view_icon"
+            tools:layout_editor_absoluteY="234dp" />
+
+        <ImageView
+            android:id="@+id/image_view_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/time_stick_round_background"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/time_line_directions_walk_16" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

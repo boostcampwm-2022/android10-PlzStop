@@ -38,4 +38,5 @@
     <string name="no_end_input">도착지가 입력되지 않았습니다.</string>
     <string name="km">km</string>
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
+    <string name="section_time">%1$s분</string>
 </resources>
