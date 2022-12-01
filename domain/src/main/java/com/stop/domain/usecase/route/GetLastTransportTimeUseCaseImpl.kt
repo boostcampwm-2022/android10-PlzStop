@@ -186,7 +186,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             stationsOfLine
         )
 
-        val weekType = whaWeekToday()
+        val weekType = getDayOfWeek()
 
         val enableDestinationStation = if (startStationIndex < endStationIndex) {
             stationsOfLine.subList(startStationIndex, endStationIndex)
@@ -284,7 +284,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
     /**
      * 요일 별로 막차 시간이 다르기 때문에, 앱을 실행하는 오늘의 요일도 받아야 한다.
      */
-    private fun whaWeekToday(): WeekType {
+    private fun getDayOfWeek(): WeekType {
         return WeekType.WEEK
     }
 
