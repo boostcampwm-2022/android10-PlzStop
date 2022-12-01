@@ -35,8 +35,8 @@ class RouteViewModel @Inject constructor(
     val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
-    private val _lastTimeResponse = MutableLiveData<List<String?>>()
-    val lastTimeResponse: LiveData<List<String?>>
+    private val _lastTimeResponse = MutableLiveData<Event<List<String?>>>()
+    val lastTimeResponse: LiveData<Event<List<String?>>>
         get() = _lastTimeResponse
 
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
@@ -69,7 +69,7 @@ class RouteViewModel @Inject constructor(
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
         viewModelScope.launch {
-            this@RouteViewModel._lastTimeResponse.value = getLastTransportTimeUseCase(itinerary)
+            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary))
         }
     }
 
@@ -90,7 +90,7 @@ class RouteViewModel @Inject constructor(
         val lastTimes = _lastTimeResponse.value ?: return "이 함수를 호출한 시점에 막차 데이터가 null인 논리적 오류가 발생했습니다."
 
         return clickedItinerary.routes.mapIndexed { index, route ->
-            "${route.start.name}(${lastTimes[index]})"
+            "${route.start.name}(${lastTimes.peekContent()[index]})"
         }.joinToString(" -> ")
     }
 }
