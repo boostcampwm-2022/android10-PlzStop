@@ -34,6 +34,13 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="16dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="55dp" />
+
         <TextView
             android:id="@+id/text_view_last_time"
             android:layout_width="0dp"
@@ -43,7 +50,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guideline_top"
             tools:text="막차가 23시30분에 도착할 예정이에요!!" />
 
         <androidx.cardview.widget.CardView
