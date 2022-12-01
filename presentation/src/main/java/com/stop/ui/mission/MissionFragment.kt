@@ -161,16 +161,18 @@ class MissionFragment : Fragment(), MissionHandler {
             viewLifecycleOwner.lifecycleScope.launch {
                 val timeUnit = (subwayRoute.sectionTime * SECOND_UNIT / subwayRoute.line.size).toLong()
                 subwayRoute.line.forEachIndexed { index, nowLocation ->
-                    if (index == 0) return@forEachIndexed
-                    else {
-                        val beforeLocation = subwayRoute.line[index - 1]
-                        tMap.drawMoveLine(
-                            TMapPoint(nowLocation.latitude, nowLocation.longitude),
-                            TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                            Marker.SUBWAY_LINE + (index - 1).toString(),
-                            Marker.SUBWAY_LINE_COLOR
-                        )
+                    if (index == 0) {
+                        return@forEachIndexed
                     }
+
+                    val beforeLocation = subwayRoute.line[index - 1]
+                    tMap.drawMoveLine(
+                        TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+                        Marker.SUBWAY_LINE + (index - 1).toString(),
+                        Marker.SUBWAY_LINE_COLOR
+                    )
+
                     viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
 
                     tMap.makeMarker(
