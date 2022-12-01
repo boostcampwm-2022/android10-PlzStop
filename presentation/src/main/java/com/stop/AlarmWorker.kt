@@ -10,8 +10,6 @@ import androidx.work.workDataOf
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 // 일단은 NearPlaceUseCase 이용하여서 데이터 가져오기 구현
 
@@ -34,17 +32,14 @@ class AlarmWorker @AssistedInject constructor(
     }
 
     private suspend fun callApi() {
-        withContext(Dispatchers.IO) {
-            val list = getNearPlacesUseCase.getNearPlaces(
-                1,
-                "아남타워",
-                126.969652,
-                37.553836,
-                BuildConfig.TMAP_APP_KEY
-            )
-            Log.e("ABC", list.toString())
-        }
-
+        val list = getNearPlacesUseCase.getNearPlaces(
+            1,
+            "아남타워",
+            126.969652,
+            37.553836,
+            BuildConfig.TMAP_APP_KEY
+        )
+        Log.e("ABC", list.toString())
     }
 
 }
