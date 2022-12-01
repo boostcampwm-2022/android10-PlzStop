@@ -34,7 +34,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="50dp"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
