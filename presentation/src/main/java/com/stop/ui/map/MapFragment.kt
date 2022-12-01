@@ -107,7 +107,8 @@ class MapFragment : Fragment(), MapHandler {
 
     private fun initNavigateAction() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
+            binding.root.findNavController()
+                .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
         /*
@@ -155,7 +156,11 @@ class MapFragment : Fragment(), MapHandler {
             event.getContentIfNotHandled()?.let { clickPlace ->
                 val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 
-                tMap.tMapView.setCenterPoint(clickTMapPoint.latitude, clickTMapPoint.longitude, true)
+                tMap.tMapView.setCenterPoint(
+                    clickTMapPoint.latitude,
+                    clickTMapPoint.longitude,
+                    true
+                )
                 tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, clickTMapPoint)
                 setPanel(clickTMapPoint)
             }
