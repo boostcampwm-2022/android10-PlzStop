@@ -22,16 +22,14 @@ internal data class GyeonggiBusLastTime(
     @PropertyElement(name = "nPeekAlloc")
     val maxTerm: String, // 최대 배차시간
 ) {
-    fun toDomain(): com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime {
-        return com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime(
-            upLastTime = upLastTime,
-            startStationId = startStationId,
-            startStationName = startStationName,
-            downLastTime = downLastTime,
-            endStationId = endStationId,
-            endStationName = endStationName,
-            minTerm = minTerm,
-            maxTerm = maxTerm,
-        )
-    }
+    fun toDomain() = com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime(
+        upLastTime = upLastTime,
+        startStationId = startStationId,
+        startStationName = startStationName,
+        downLastTime = downLastTime,
+        endStationId = endStationId,
+        endStationName = endStationName,
+        minTerm = minTerm,
+        maxTerm = maxTerm,
+    )
 }

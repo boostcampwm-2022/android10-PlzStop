@@ -10,10 +10,8 @@ internal data class GyeonggiBusRoute(
     @PropertyElement(name = "routeName")
     val busName: String,
 ) {
-    fun toDomain(): com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute {
-        return com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute(
-            routeId = routeId,
-            busName = busName,
-        )
-    }
+    fun toDomain() = com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute(
+        routeId = routeId,
+        busName = busName,
+    )
 }
