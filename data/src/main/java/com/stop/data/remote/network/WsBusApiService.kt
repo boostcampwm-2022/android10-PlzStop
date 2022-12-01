@@ -1,11 +1,10 @@
 package com.stop.data.remote.network
 
-import com.stop.data.BuildConfig
 import com.stop.data.remote.model.NetworkResult
-import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLastTimeResponse
-import com.stop.domain.model.route.seoul.bus.GetBusLineResponse
-import com.stop.domain.model.route.seoul.bus.GetBusStationArsIdResponse
+import com.stop.data.remote.model.nowlocation.bus.BusNowLocationResponse
+import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
+import com.stop.domain.model.route.seoul.bus.BusRouteResponse
+import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -15,26 +14,26 @@ internal interface WsBusApiService {
     suspend fun getBusArsId(
         @Query("stSrch") stationName: String,
         @Query("resultType") resultType: String = "json",
-    ): NetworkResult<GetBusStationArsIdResponse>
+    ): NetworkResult<BusStationArsIdResponse>
 
     @GET(GET_BUS_NOW_LOCATION_URL)
     suspend fun getBusNowLocation(
         @Query("busRouteId") busRouteId: String,
         @Query("resultType") resultType: String = JSON
-    ): NetworkResult<GetBusNowLocationResponse>
+    ): NetworkResult<BusNowLocationResponse>
 
     @GET(GET_BUS_LINE_URL)
-    suspend fun getBusLine(
+    suspend fun getBusRoute(
         @Query("arsId") stationId: String,
         @Query("resultType") resultType: String = "json",
-    ): NetworkResult<GetBusLineResponse>
+    ): NetworkResult<BusRouteResponse>
 
     @GET(GET_BUS_LAST_TIME_URL)
     suspend fun getBusLastTime(
         @Query("arsId") stationId: String,
         @Query("busRouteId") lineId: String,
         @Query("resultType") resultType: String = "json",
-    ): NetworkResult<GetBusLastTimeResponse>
+    ): NetworkResult<BusLastTimeResponse>
 
     companion object {
         private const val GET_BUS_ARS_URL = "stationinfo/getStationByName"

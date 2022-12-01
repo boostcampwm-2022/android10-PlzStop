@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stop.domain.model.route.TransportLastTimeInfo
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
@@ -13,7 +12,6 @@ import com.stop.model.ErrorType
 import com.stop.model.Event
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +20,8 @@ class RouteViewModel @Inject constructor(
     private val getRouteUseCase: GetRouteUseCase,
     private val getLastTransportTimeUseCase: GetLastTransportTimeUseCase,
 ) : ViewModel() {
+
+    var clickedItineraryIndex: Int = -1
 
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>
@@ -35,8 +35,8 @@ class RouteViewModel @Inject constructor(
     val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
-    private val _lastTimeResponse = MutableLiveData<TransportLastTimeInfo>()
-    val lastTimeResponse: LiveData<TransportLastTimeInfo>
+    private val _lastTimeResponse = MutableLiveData<List<String?>>()
+    val lastTimeResponse: LiveData<List<String?>>
         get() = _lastTimeResponse
 
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
@@ -61,18 +61,20 @@ class RouteViewModel @Inject constructor(
             endY = destinationValue.coordinate.latitude,
         )
 
-        viewModelScope.launch(Dispatchers.IO) {
-            _routeResponse.postValue(getRouteUseCase.getRoute(routeRequest))
+        viewModelScope.launch {
+            this@RouteViewModel._routeResponse.value = getRouteUseCase(routeRequest)
         }
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val lastTimeInfo =
-                getLastTransportTimeUseCase.getLastTransportTime(itinerary) ?: return@launch
-
-            _lastTimeResponse.postValue(lastTimeInfo)
+        checkClickedItinerary(itinerary)
+        viewModelScope.launch {
+            this@RouteViewModel._lastTimeResponse.value = getLastTransportTimeUseCase(itinerary)
         }
+    }
+
+    private fun checkClickedItinerary(itinerary: Itinerary) {
+        clickedItineraryIndex = _routeResponse.value?.indexOf(itinerary) ?: -1
     }
 
     fun setOrigin(place: Place) {
@@ -81,5 +83,14 @@ class RouteViewModel @Inject constructor(
 
     fun setDestination(place: Place) {
         _destination.value = place
+    }
+
+    fun getResult(): String {
+        val clickedItinerary = _routeResponse.value?.get(clickedItineraryIndex) ?: return "함수를 잘못 호출했습니다."
+        val lastTimes = _lastTimeResponse.value ?: return "이 함수를 호출한 시점에 막차 데이터가 null인 논리적 오류가 발생했습니다."
+
+        return clickedItinerary.routes.mapIndexed { index, route ->
+            "${route.start.name}(${lastTimes[index]})"
+        }.joinToString(" -> ")
     }
 }

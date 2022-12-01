@@ -5,11 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.stop.databinding.FragmentRouteDetailBinding
+import com.stop.ui.route.RouteViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RouteDetailFragment : Fragment() {
+
     private var _binding: FragmentRouteDetailBinding? = null
     private val binding get() = _binding!!
+
+    private val parentViewModel: RouteViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,7 +35,8 @@ class RouteDetailFragment : Fragment() {
     }
 
     private fun initBinding() {
-
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.parentViewModel = parentViewModel
     }
 
     private fun initView() {

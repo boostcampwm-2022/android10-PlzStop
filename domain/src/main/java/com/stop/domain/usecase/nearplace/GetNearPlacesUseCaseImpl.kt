@@ -9,18 +9,14 @@ internal class GetNearPlacesUseCaseImpl @Inject constructor(
 ) : GetNearPlacesUseCase {
 
     override suspend fun getNearPlaces(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double,
-        appKey: String
     ): List<Place> =
         nearPlaceRepository.getNearPlaces(
-            version,
             searchKeyword,
             centerLon,
-            centerLat,
-            appKey
+            centerLat
         )
 
 }

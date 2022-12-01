@@ -14,12 +14,10 @@ internal data class GyeonggiBusStation(
     @PropertyElement(name = "y")
     val latitude: String,
 ) {
-    fun toDomain(): com.stop.domain.model.route.gyeonggi.GyeonggiBusStation {
-        return com.stop.domain.model.route.gyeonggi.GyeonggiBusStation(
-            stationId = stationId,
-            stationName = stationName,
-            longitude = longitude,
-            latitude = latitude,
-        )
-    }
+    fun toDomain() = com.stop.domain.model.route.gyeonggi.GyeonggiBusStation(
+        stationId = stationId,
+        stationName = stationName,
+        longitude = longitude,
+        latitude = latitude,
+    )
 }

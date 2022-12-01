@@ -4,6 +4,6 @@ import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 
 interface GetBusNowLocationUseCase {
 
-    suspend fun getBusNowLocation(busRouteId: String): BusInfoUseCaseItem
+    suspend operator fun invoke(busRouteId: String): BusInfoUseCaseItem
 
 }

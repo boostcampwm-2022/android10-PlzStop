@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class LastTimeInfo(
     @Json(name = "lastBusTm")
-    val lastTime: String
+    val lastTime: String?
 )
