@@ -41,7 +41,7 @@ internal interface TmapApiService {
         private const val REVERSE_GEOCODING_COORDINATION_TYPE = "WGS84GEO"
         private const val REVERSE_GEOCODING_ADDRESS_TYPE = "A02"
 
-        private const val PLACE_SEARCH_URL = "/tmap/pois"
+        private const val PLACE_SEARCH_URL = "tmap/pois"
         private const val VERSION = 1
     }
 }
