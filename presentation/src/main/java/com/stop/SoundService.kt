@@ -73,7 +73,7 @@ class SoundService : LifecycleService() {
 
     private fun createNotification() {
         val notificationManager = this.getSystemService(NotificationManager::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isMoreThanOreo()) {
             if (notificationManager.getNotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID) == null) {
                 NotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID, DEFAULT_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {
                     notificationManager.createNotificationChannel(this)

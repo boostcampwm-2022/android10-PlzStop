@@ -4,7 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,11 +19,11 @@ class AlarmFunctions(
 
         val receiverIntent = Intent(context, AlarmReceiver::class.java)
         receiverIntent.apply {
-            putExtra("ALARM_REQUEST_CODE", alarmCode)
+            putExtra("ALARM_CODE", alarmCode)
             putExtra("ALARM_CONTENT", alarmContent)
         }
 
-        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        val pendingIntent = if (isMoreThanSnow()) {
             PendingIntent.getBroadcast(context, alarmCode, receiverIntent, PendingIntent.FLAG_IMMUTABLE)
         } else {
             PendingIntent.getBroadcast(context, alarmCode, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
@@ -62,7 +61,7 @@ class AlarmFunctions(
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        pendingIntent = if (isMoreThanSnow()) {
             PendingIntent.getBroadcast(context, alarmCode, intent, PendingIntent.FLAG_IMMUTABLE)
         } else {
             PendingIntent.getBroadcast(context, alarmCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
