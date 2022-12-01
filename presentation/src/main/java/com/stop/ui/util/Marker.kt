@@ -5,7 +5,7 @@ import com.stop.R
 
 object Marker {
     const val PLACE_MARKER = "place_marker"
-    const val PLACE_MARKER_IMG = R.drawable.ic_point_marker
+    const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
 
     const val PERSON_MARKER = "person_marker"
     const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
