@@ -1,8 +1,8 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
-    id 'com.google.dagger.hilt.android'
     id 'kotlin-kapt'
+    id 'com.google.dagger.hilt.android'
 }
 
 Properties properties = new Properties()
@@ -27,6 +27,7 @@ android {
         buildConfigField "String", "T_MAP_APP_KEY", properties['t_map_app_key']
         buildConfigField "String", "SUBWAY_KEY", properties['subway_key']
         buildConfigField "String", "BUS_KEY", properties['bus_key']
+        buildConfigField "String", "SW_OPEN_API_SEOUL_URL", properties['sw_open_api_seoul_url']
     }
 
     buildTypes {
@@ -76,9 +77,9 @@ dependencies {
 
     // Room
     implementation "androidx.room:room-runtime:2.4.3"
+    implementation "androidx.room:room-ktx:2.4.3"
     annotationProcessor "androidx.room:room-compiler:2.4.3"
     kapt "androidx.room:room-compiler:2.4.3"
-    implementation "androidx.room:room-ktx:2.4.3"
 
     //DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"

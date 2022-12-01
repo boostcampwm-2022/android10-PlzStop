@@ -1,13 +1,11 @@
 package com.stop.ui.placesearch
 
 import android.text.Editable
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stop.BuildConfig
 import com.stop.domain.model.geoLocation.GeoLocationInfo
 import com.stop.domain.model.nearplace.Place
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
@@ -21,6 +19,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.round
 
 @HiltViewModel
 class PlaceSearchViewModel @Inject constructor(
@@ -46,12 +45,15 @@ class PlaceSearchViewModel @Inject constructor(
 
     private val _searchKeyword = MutableStateFlow("")
     val searchKeyword : StateFlow<String> = _searchKeyword
-    
+
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
     val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
 
     private val _panelVisibility = MutableLiveData(View.GONE)
     val panelVisibility: LiveData<Int> = _panelVisibility
+
+    private val _distance = MutableLiveData<Float>()
+    val distance: LiveData<Float> = _distance
 
     fun afterTextChanged(s: Editable?) {
         _searchKeyword.value = s.toString()
@@ -64,17 +66,14 @@ class PlaceSearchViewModel @Inject constructor(
             try {
                 _nearPlaceList.emit(
                     getNearPlacesUseCase.getNearPlaces(
-                        TMAP_VERSION,
                         searchKeyword,
                         currentLocation.longitude,
-                        currentLocation.latitude,
-                        BuildConfig.TMAP_APP_KEY
+                        currentLocation.latitude
                     )
                 )
             } catch (e: Exception) {
                 setNearPlaceListEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
-                Log.d("PlaceSearchViewModel","getNearPlace 실패~ ${e.toString()}")
             }
         }
     }
@@ -93,15 +92,26 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
-    fun getGeoLocationInfo(lat: Double, lon: Double) {
-        viewModelScope.launch{
-            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(lat, lon)
+    fun getGeoLocationInfo(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
+            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
             _panelVisibility.value = View.VISIBLE
+            getDistance(latitude, longitude)
         }
     }
 
+    private fun getDistance(latitude: Double, longitude: Double) {
+        val startPoint = android.location.Location("Start")
+        val endPoint = android.location.Location("End")
+
+        startPoint.latitude = latitude
+        startPoint.longitude = longitude
+        endPoint.latitude = currentLocation.latitude
+        endPoint.longitude = currentLocation.longitude
+        _distance.value = round(startPoint.distanceTo(endPoint) / 100) / 10
+    }
+
     companion object {
-        private const val TMAP_VERSION = 1
         private val EXAMPLE_BOOKMARK_1 = Location(37.3931010, 126.9781449)
         private val EXAMPLE_BOOKMARK_2 = Location(37.55063543842469, 127.07369927986392)
         private val EXAMPLE_BOOKMARK_3 = Location(37.48450549635376, 126.89324337770405)

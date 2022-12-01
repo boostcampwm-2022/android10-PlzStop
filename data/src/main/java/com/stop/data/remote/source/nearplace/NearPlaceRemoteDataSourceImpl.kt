@@ -2,26 +2,22 @@ package com.stop.data.remote.source.nearplace
 
 import com.stop.data.model.nearplace.Place
 import com.stop.data.remote.model.NetworkResult
-import com.stop.data.remote.network.NearPlaceApiService
+import com.stop.data.remote.network.TmapApiService
 import javax.inject.Inject
 
 internal class NearPlaceRemoteDataSourceImpl @Inject constructor(
-    private val nearPlaceApiService: NearPlaceApiService
+    private val tmapApiService: TmapApiService
 ) : NearPlaceRemoteDataSource {
 
     override suspend fun getNearPlaces(
-        version: Int,
         searchKeyword: String,
         centerLon: Double,
-        centerLat: Double,
-        appKey: String
+        centerLat: Double
     ): Result<List<Place>> {
-        val result = nearPlaceApiService.getNearPlaces(
-            version,
-            searchKeyword,
-            centerLon,
-            centerLat,
-            appKey
+        val result = tmapApiService.getNearPlaces(
+            searchKeyword = searchKeyword,
+            centerLon = centerLon,
+            centerLat = centerLat
         )
         return runCatching {
             when (result) {

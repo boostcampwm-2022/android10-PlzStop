@@ -1,7 +1,7 @@
 package com.stop.data.remote.network
 
 import com.stop.data.remote.model.NetworkResult
-import com.stop.data.remote.model.nowlocation.GetBusNowLocationResponse
+import com.stop.data.remote.model.nowlocation.bus.BusNowLocationResponse
 import com.stop.domain.model.route.seoul.bus.BusLastTimeResponse
 import com.stop.domain.model.route.seoul.bus.BusRouteResponse
 import com.stop.domain.model.route.seoul.bus.BusStationArsIdResponse
@@ -20,7 +20,7 @@ internal interface WsBusApiService {
     suspend fun getBusNowLocation(
         @Query("busRouteId") busRouteId: String,
         @Query("resultType") resultType: String = JSON
-    ): NetworkResult<GetBusNowLocationResponse>
+    ): NetworkResult<BusNowLocationResponse>
 
     @GET(GET_BUS_LINE_URL)
     suspend fun getBusRoute(

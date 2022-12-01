@@ -1,6 +1,7 @@
 package com.stop.domain.repository
 
 import com.stop.domain.model.geoLocation.AddressType
+import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusLastTime
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusRoute
 import com.stop.domain.model.route.gyeonggi.GyeonggiBusStation
@@ -30,6 +31,12 @@ interface RouteRepository {
     suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo>
     suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo>
     suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>
+    suspend fun getSubwayRoute(
+        routeRequest: RouteRequest,
+        subwayLine: String,
+        startSubwayStation: String,
+        endSubwayStation: String
+    ): SubwayRouteLocationUseCaseItem
 
     suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation>
     suspend fun getGyeonggiBusRoute(stationId: String): List<GyeonggiBusRoute>

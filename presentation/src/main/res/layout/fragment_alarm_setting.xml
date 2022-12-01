@@ -9,6 +9,10 @@
             name="viewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
+        <variable
+            name="fragment"
+            type="com.stop.ui.alarmsetting.AlarmSettingFragment" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -174,6 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginBottom="9dp"
+            app:checkedButton="@id/button_sound"
             app:layout_constraintBottom_toTopOf="@id/toggle_group_mission"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_alarm_method"
@@ -217,6 +222,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginTop="9dp"
+            app:checkedButton="@id/button_mission_on"
             app:layout_constraintBottom_toTopOf="@id/text_view_register_alarm"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/text_view_mission_toggle"
@@ -246,10 +252,11 @@
             android:layout_marginBottom="24dp"
             android:background="@drawable/background_gray_d9_8"
             android:gravity="center"
-            android:textSize="16sp"
+            android:onClick="@{() -> fragment.setAlarmRegisterListener()}"
             android:paddingVertical="8dp"
             android:text="@string/register_alarm_text"
             android:textColor="@color/black"
+            android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"

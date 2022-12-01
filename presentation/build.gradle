@@ -62,10 +62,22 @@ dependencies {
     implementation files('libs/vsm-tmap-sdk-v2-android-1.6.60.aar')
     implementation files('libs/tmap-sdk-1.1.aar')
 
-    //Hilt
+    // Hilt
     implementation 'com.google.dagger:hilt-android:2.44'
-    kapt 'com.google.dagger:hilt-compiler:2.44'
+    kapt 'com.google.dagger:hilt-android-compiler:2.44'
+    implementation 'androidx.hilt:hilt-work:1.0.0'
+    kapt 'androidx.hilt:hilt-compiler:1.0.0'
+
+    // WorkManager
+    implementation 'androidx.work:work-runtime:2.7.1'
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     // LiveData
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+
+    // Lottie
+    implementation 'com.airbnb.android:lottie:3.6.1'
+
+    // Splash
+    implementation 'androidx.core:core-splashscreen:1.0.0'
 }

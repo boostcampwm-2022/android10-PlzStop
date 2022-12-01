@@ -5,8 +5,7 @@ import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
-import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
-import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCaseImpl
+import com.stop.domain.usecase.nowlocation.*
 import dagger.Module
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCaseImpl
@@ -54,5 +53,17 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun provideBusNowLocationUseCase(getBusNowLocationUseCaseImpl: GetBusNowLocationUseCaseImpl): GetBusNowLocationUseCase
+
+    @Binds
+    @Singleton
+    fun provideSubwayTrainNowLocationUseCase(getSubwayTrainNowLocationUseCaseImpl: GetSubwayTrainNowStationUseCaseImpl): GetSubwayTrainNowStationUseCase
+
+    @Binds
+    @Singleton
+    fun provideSubwayRouteUseCase(getSubwayRouteUseCaseImpl: GetSubwayRouteUseCaseImpl): GetSubwayRouteUseCase
+
+    @Binds
+    @Singleton
+    fun provideNowStationLocationUseCase(getNowStationLocationUseCaseImpl: GetNowStationLocationUseCaseImpl): GetNowStationLocationUseCase
 
 }
