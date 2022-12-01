@@ -107,9 +107,7 @@ class MissionViewModel @Inject constructor(
     private fun getBusNowLocation() {
         viewModelScope.launch {
             while (TIME_TEST < 60) {
-                getBusNowLocationUseCase(TEST_BUS_540_ID).apply {
-                    _busNowLocationInfo.value = this
-                }
+                this@MissionViewModel._busNowLocationInfo.value = getBusNowLocationUseCase(TEST_BUS_540_ID)
                 delay(5000)
                 TIME_TEST += 1
             }
@@ -134,7 +132,7 @@ class MissionViewModel @Inject constructor(
     private fun getSubwayRoute() {
         viewModelScope.launch {
             val startLocation = getNowStationLocation()
-            getSubwayRouteUseCase(
+            this@MissionViewModel._subwayRoute.value = getSubwayRouteUseCase(
                 RouteRequest(
                     startLocation.longitude,
                     startLocation.latitude,
@@ -144,9 +142,7 @@ class MissionViewModel @Inject constructor(
                 TEST_SUBWAY_NUMER.toString() + LINE,
                 startSubwayStation.dropLast(1), //"역" 버리기
                 TEST_END_SUBWAY_STATION
-            ).apply {
-                _subwayRoute.value = this
-            }
+            )
         }
     }
 
