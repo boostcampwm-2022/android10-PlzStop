@@ -8,7 +8,6 @@ import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
-import com.stop.R
 import com.stop.model.Location
 import com.stop.ui.map.MapHandler
 import com.stop.ui.mission.MissionHandler
@@ -60,7 +59,9 @@ open class TMap(
             val nowLocation = TMapPoint(location.latitude, location.longitude)
             if (handler is MissionHandler) {
                 if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation)
+                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, true)
+                } else {
+                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, false)
                 }
             } else if (handler is MapHandler) {
                 handler.setOnLocationChangeListener(location)
@@ -69,8 +70,8 @@ open class TMap(
             tMapView.setLocationPoint(location.latitude, location.longitude)
 
             addMarker(
-                PERSON_MARKER,
-                PERSON_MARKER_IMG,
+                Marker.PERSON_MARKER,
+                Marker.PERSON_MARKER_IMG,
                 nowLocation
             )
 
@@ -105,8 +106,5 @@ open class TMap(
 
         private const val KOREA_LONGITUDE_MIN = 124.661865
         private const val KOREA_LONGITUDE_MAX = 132.550049
-
-        private const val PERSON_MARKER = "person_marker"
-        private const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
     }
 }

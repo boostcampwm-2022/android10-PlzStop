@@ -19,6 +19,7 @@ import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
+import com.stop.ui.util.Marker
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
@@ -88,8 +89,8 @@ class MapFragment : Fragment(), MapHandler {
                 true
             )
             tMap.addMarker(
-                PERSON_MARKER,
-                PERSON_MARKER_IMG,
+                Marker.PERSON_MARKER,
+                Marker.PERSON_MARKER_IMG,
                 TMapPoint(
                     placeSearchViewModel.currentLocation.latitude,
                     placeSearchViewModel.currentLocation.longitude
@@ -141,7 +142,7 @@ class MapFragment : Fragment(), MapHandler {
         placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
             tMap.addMarker(
                 index.toString(),
-                BOOKMARK_MARKER_IMG,
+                Marker.BOOKMARK_MARKER_IMG,
                 TMapPoint(location.latitude, location.longitude)
             )
         }
@@ -153,7 +154,7 @@ class MapFragment : Fragment(), MapHandler {
                 val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 
                 tMap.tMapView.setCenterPoint(clickTMapPoint.latitude, clickTMapPoint.longitude, true)
-                tMap.addMarker(PLACE_MARKER, PLACE_MARKER_IMG, clickTMapPoint)
+                tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, clickTMapPoint)
                 setPanel(clickTMapPoint)
             }
         }
@@ -172,7 +173,7 @@ class MapFragment : Fragment(), MapHandler {
                         currentTMapPoint.latitude,
                         currentTMapPoint.longitude
                     )
-                    tMap.addMarker(PLACE_MARKER, PLACE_MARKER_IMG, currentTMapPoint)
+                    tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, currentTMapPoint)
                     setPanel(currentTMapPoint)
                 }
         }
@@ -189,7 +190,7 @@ class MapFragment : Fragment(), MapHandler {
     override fun setOnDisableScrollWIthZoomLevelListener() {
         if (binding.layoutPanel.visibility == View.VISIBLE) {
             binding.layoutPanel.visibility = View.GONE
-            tMap.tMapView.removeTMapMarkerItem(PLACE_MARKER)
+            tMap.tMapView.removeTMapMarkerItem(Marker.PLACE_MARKER)
         } else {
             setViewVisibility()
             mapUIVisibility = mapUIVisibility.xor(View.GONE)
@@ -228,14 +229,6 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     companion object {
-        private const val PLACE_MARKER = "place_marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
-
-        private const val PERSON_MARKER = "person_marker"
-        private const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
-
-        private const val BOOKMARK_MARKER_IMG = R.drawable.ic_bookmark_marker
-
         private val PERMISSIONS =
             arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }

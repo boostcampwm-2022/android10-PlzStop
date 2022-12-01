@@ -7,7 +7,7 @@ interface MissionHandler : Handler {
 
     fun alertTMapReady()
 
-    fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint)
+    fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint, canMakeLine: Boolean)
 
     fun setOnEnableScrollWithZoomLevelListener()
 

@@ -25,6 +25,7 @@ internal object NetworkModule {
 
     private const val T_MAP_APP_KEY_NAME = "appKey"
     private const val OPEN_API_SEOUL_KEY_NAME = "KEY"
+    private const val SW_OPEN_API_SEOUL_KEY_NAME = "KEY"
     private const val APIS_KEY_NAME = "ServiceKey"
     private const val WS_KEY_NAME = "ServiceKey"
 
@@ -130,6 +131,21 @@ internal object NetworkModule {
             .build()
     }
 
+    @Provides
+    @Named("SwOpenApiSeoul")
+    fun provideSwOpenApiSeoulRetrofitInstance(
+        okHttpClient: OkHttpClient,
+        moshi: Moshi,
+        resultCallAdapter: ResultCallAdapter.Factory,
+    ): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.SW_OPEN_API_SEOUL_URL)
+            .client(okHttpClient)
+            .addCallAdapterFactory(resultCallAdapter)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
     class CustomInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val url = chain.request().url.toUri().toString()
@@ -138,6 +154,10 @@ internal object NetworkModule {
                 url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(
                     OPEN_API_SEOUL_KEY_NAME,
                     BuildConfig.BUS_KEY
+                )
+                url.contains(BuildConfig.SW_OPEN_API_SEOUL_URL) -> Pair(
+                    SW_OPEN_API_SEOUL_KEY_NAME,
+                    BuildConfig.SUBWAY_KEY
                 )
                 url.contains(BuildConfig.T_MAP_URL) -> Pair(
                     T_MAP_APP_KEY_NAME,

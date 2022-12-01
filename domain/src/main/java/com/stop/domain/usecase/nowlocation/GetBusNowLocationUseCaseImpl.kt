@@ -8,7 +8,7 @@ class GetBusNowLocationUseCaseImpl @Inject constructor(
     private val nowLocationRepository: NowLocationRepository
 ) : GetBusNowLocationUseCase {
 
-    override suspend fun getBusNowLocation(busRouteId: String): BusInfoUseCaseItem {
+    override suspend operator fun invoke(busRouteId: String): BusInfoUseCaseItem {
         return nowLocationRepository.getBusNowLocation(busRouteId, TEST_ORDER)
     }
 

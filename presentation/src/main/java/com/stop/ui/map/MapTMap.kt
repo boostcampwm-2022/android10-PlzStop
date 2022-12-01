@@ -7,8 +7,8 @@ import com.skt.tmap.TMapView
 import com.skt.tmap.TMapView.OnClickListenerCallback
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.skt.tmap.poi.TMapPOIItem
-import com.stop.R
 import com.stop.model.Location
+import com.stop.ui.util.Marker
 import com.stop.ui.util.TMap
 import java.util.ArrayList
 
@@ -54,7 +54,7 @@ class MapTMap(
         TMapView.OnLongClickListenerCallBack { _, _, tMapPoint ->
             isLongClick = true
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
-            addMarker(PLACE_MARKER, PLACE_MARKER_IMG, tMapPoint)
+            addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, tMapPoint)
             handler.setPanel(tMapPoint)
         }
 
@@ -65,9 +65,6 @@ class MapTMap(
         }
 
     companion object {
-        private const val PLACE_MARKER = "place_marker"
-        private const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
-
         private const val SCROLL_NUM = 3
     }
 }
