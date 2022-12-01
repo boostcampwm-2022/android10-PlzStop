@@ -30,6 +30,14 @@ class AlarmFunctions(
             PendingIntent.getBroadcast(context, alarmCode, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            makeFullTime(lastTime).timeInMillis + (alarmTime * 60 * 1000),  // 막차 시간에서 알람시간 만큼 뺀 timeInMillis
+            pendingIntent
+        )
+    }
+
+    private fun makeFullTime(lastTime: String): Calendar {
         val currentTime = System.currentTimeMillis()
         val currentFormat = SimpleDateFormat("yyyy:MM:dd", Locale.getDefault())
         val currentDateTime = currentFormat.format(currentTime)
@@ -47,11 +55,7 @@ class AlarmFunctions(
         val calendar = Calendar.getInstance()
         calendar.time = dateTime
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis + (alarmTime * 60 * 1000),  // 막차 시간에서 알람시간 만큼 뺀 timeInMillis
-            pendingIntent
-        )
+        return calendar
     }
 
     fun cancelAlarm(alarmCode: Int) {
