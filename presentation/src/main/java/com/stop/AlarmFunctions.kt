@@ -32,7 +32,7 @@ class AlarmFunctions(
 
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
-            makeFullTime(lastTime).timeInMillis + (alarmTime * 60 * 1000),  // 막차 시간에서 알람시간 만큼 뺀 timeInMillis
+            makeFullTime(lastTime).timeInMillis - (alarmTime * 60 * 1000),
             pendingIntent
         )
     }
