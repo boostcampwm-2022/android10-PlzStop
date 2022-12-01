@@ -230,7 +230,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
         private val INIT_LOCATION = Location(0.0, 0.0)
 
-        private const val SECOND_UNIT = 1000
+        private const val SECOND_UNIT = 1_000
 
     }
 }
