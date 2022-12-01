@@ -117,11 +117,13 @@ class MapFragment : Fragment(), MapHandler {
         */
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+            val action = MapFragmentDirections.actionMapFragmentToRouteFragment().setStart(placeSearchViewModel.panelInfo)
+            binding.root.findNavController().navigate(action)
         }
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_routeFragment)
+            val action = MapFragmentDirections.actionMapFragmentToRouteFragment().setEnd(placeSearchViewModel.panelInfo)
+            binding.root.findNavController().navigate(action)
         }
     }
 
