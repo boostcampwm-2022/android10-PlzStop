@@ -33,26 +33,28 @@ class SoundService : LifecycleService() {
             getAlarmUseCase.getAlarm().collectLatest { alarmData ->
                 alarmData?.let {
                     if (it.alarmMethod) {
-                        mediaPlayer = MediaPlayer.create(this@SoundService, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
-                        mediaPlayer?.setWakeMode(this@SoundService, PowerManager.PARTIAL_WAKE_LOCK)
-                        mediaPlayer?.isLooping = true
-                        mediaPlayer?.start()
-                    } else {
-                        val pattern = longArrayOf(100, 200, 100, 200, 100, 200)
-                        val amplitude = intArrayOf(0, 50, 0, 100, 0, 200)
-                        if (isUnderOreo()) {
-                            vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                            vibrator?.vibrate(pattern, 0)
-                        } else if (isMoreThanOreoUnderRedVelVet()) {
-                            vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-                            val effect = VibrationEffect.createWaveform(pattern, amplitude, 0)
-                            vibrator?.vibrate(effect)
-                        } else if (isMoreThanSnow()) {
-                            vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
-                            val effect = VibrationEffect.createWaveform(pattern, amplitude, 0)
-                            val combinedVibration = CombinedVibration.createParallel(effect)
-                            vibratorManager?.vibrate(combinedVibration)
+                        mediaPlayer = MediaPlayer.create(this@SoundService, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)).apply {
+                            setWakeMode(this@SoundService, PowerManager.PARTIAL_WAKE_LOCK)
+                            isLooping = true
+                            start()
                         }
+                        return@let
+                    }
+
+                    val pattern = longArrayOf(100, 200, 100, 200, 100, 200)
+                    val amplitude = intArrayOf(0, 50, 0, 100, 0, 200)
+                    if (isUnderOreo()) {
+                        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                        vibrator?.vibrate(pattern, 0)
+                    } else if (isMoreThanOreoUnderRedVelVet()) {
+                        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+                        val effect = VibrationEffect.createWaveform(pattern, amplitude, 0)
+                        vibrator?.vibrate(effect)
+                    } else if (isMoreThanSnow()) {
+                        vibratorManager = getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                        val effect = VibrationEffect.createWaveform(pattern, amplitude, 0)
+                        val combinedVibration = CombinedVibration.createParallel(effect)
+                        vibratorManager?.vibrate(combinedVibration)
                     }
                 }
             }
