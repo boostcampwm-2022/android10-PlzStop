@@ -199,7 +199,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             subwayCircleType,
             weekType
         )
-        val suffix = checkStationCase(
+        val correctionValueByStationCase = checkStationCase(
             transportIdRequest.stationType,
             subwayCircleType,
             startStationIndex,
@@ -218,7 +218,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
          *
          */
         val result = lastTrainTime.firstOrNull {
-            enableDestinationStation.contains(it.destinationStationName).xor(suffix).not()
+            enableDestinationStation.contains(it.destinationStationName).xor(correctionValueByStationCase).not()
                     || transportIdRequest.destinationStation.name == it.destinationStationName
         }?.leftTime ?: throw IllegalArgumentException("막차 시간 로직이 잘못되었습니다.")
 
