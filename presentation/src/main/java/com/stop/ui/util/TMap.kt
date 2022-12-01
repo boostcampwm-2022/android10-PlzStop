@@ -69,7 +69,7 @@ open class TMap(
 
             tMapView.setLocationPoint(location.latitude, location.longitude)
 
-            makeMarker(
+            addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
                 nowLocation
@@ -86,7 +86,7 @@ open class TMap(
                 && location.latitude > KOREA_LATITUDE_MIN && location.latitude < KOREA_LATITUDE_MAX
     }
 
-    fun makeMarker(id: String, icon: Int, location: TMapPoint) {
+    fun addMarker(id: String, icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem().apply {
             this.id = id
             this.icon = ContextCompat.getDrawable(
@@ -106,6 +106,5 @@ open class TMap(
 
         private const val KOREA_LONGITUDE_MIN = 124.661865
         private const val KOREA_LONGITUDE_MAX = 132.550049
-
     }
 }

@@ -148,7 +148,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
             viewModel.busCurrentLocation = beforeLocation
 
-            tMap.makeMarker(
+            tMap.addMarker(
                 Marker.BUS_MARKER,
                 Marker.BUS_MARKER_IMG,
                 TMapPoint(nowLocation.latitude, nowLocation.longitude)
@@ -175,7 +175,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
                     viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
 
-                    tMap.makeMarker(
+                    tMap.addMarker(
                         Marker.SUBWAY_MARKER,
                         Marker.SUBWAY_MARKER_IMG,
                         TMapPoint(nowLocation.latitude, nowLocation.longitude)
@@ -206,7 +206,6 @@ class MissionFragment : Fragment(), MissionHandler {
             PERSON_LINE_NUM += 1
         }
         viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
-
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
