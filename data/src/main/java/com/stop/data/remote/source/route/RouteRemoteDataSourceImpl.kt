@@ -18,7 +18,7 @@ import com.stop.domain.model.route.tmap.origin.*
 import javax.inject.Inject
 
 internal class RouteRemoteDataSourceImpl @Inject constructor(
-    private val tmapApiService: TmapApiService,
+    private val tMapApiService: TmapApiService,
 //    private val fakeTmapApiService: FakeTmapApiService,
     private val openApiSeoulService: OpenApiSeoulService,
     private val wsBusApiService: WsBusApiService,
@@ -27,7 +27,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
         with(
-            tmapApiService.getRoutes(routeRequest.toMap())
+            tMapApiService.getRoutes(routeRequest.toMap())
         ) {
             return when (this) {
                 is NetworkResult.Success -> eraseDuplicateLeg(this.data.metaData.plan.itineraries)
@@ -43,7 +43,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         addressType: AddressType
     ): ReverseGeocodingResponse {
         with(
-            tmapApiService.getReverseGeocoding(
+            tMapApiService.getReverseGeocoding(
                 coordinate.latitude,
                 coordinate.longitude,
                 addressType = addressType.type
