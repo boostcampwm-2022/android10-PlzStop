@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class GetBusLastTimeResponse(
+data class BusStationArsIdResponse(
     @Json(name = "msgBody")
-    val lastTimeMsgBody: LastTimeMsgBody,
+    val arsIdMsgBody: ArsIdMsgBody,
 )

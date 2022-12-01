@@ -4,11 +4,11 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class BusLineInfo(
+data class BusRouteInfo(
     @Json(name = "busRouteNm")
-    val busLineName: String,
+    val busRouteName: String,
     @Json(name = "busRouteId")
-    val lineId: String,
+    val routeId: String,
     @Json(name = "term")
     val term: Int,
 )

@@ -6,7 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -22,8 +23,9 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    private val viewModel: RouteViewModel by viewModels()
-    private val adapter = RouteAdapter()
+    private val viewModel: RouteViewModel by activityViewModels()
+
+    private lateinit var adapter: RouteAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,12 +47,10 @@ class RouteFragment : Fragment() {
     private fun setBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
-        binding.executePendingBindings()
     }
 
     private fun setRecyclerView() {
-        binding.recyclerviewRoute.adapter = adapter
-        adapter.setOnItineraryClickListener(object: RouteAdapter.OnItineraryClickListener {
+        adapter = RouteAdapter(object: OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
                 /**
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
@@ -59,8 +59,8 @@ class RouteFragment : Fragment() {
                 viewModel.calculateLastTransportTime(itinerary)
             }
         })
+        binding.recyclerviewRoute.adapter = adapter
     }
-
 
     private fun setObserve() {
         viewModel.routeResponse.observe(viewLifecycleOwner) {
@@ -79,6 +79,10 @@ class RouteFragment : Fragment() {
 
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
+        }
+
+        viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
+            binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
         }
     }
 

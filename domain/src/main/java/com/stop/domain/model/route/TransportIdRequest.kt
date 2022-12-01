@@ -1,6 +1,7 @@
 package com.stop.domain.model.route
 
 import com.stop.domain.model.route.tmap.custom.Coordinate
+import com.stop.domain.model.route.tmap.custom.Place
 
 data class TransportIdRequest(
     val transportMoveType: TransportMoveType,
@@ -9,11 +10,13 @@ data class TransportIdRequest(
     val coordinate: Coordinate,
     val stationType: Int,
     val area: Area,
-    val lineId: String,
-    val lineName: String,
+    val routeId: String,
+    val routeName: String,
     val term: Int, // 배차 간격, 서울 버스는 노선을 구하는 과정에서 얻을 수 있기 때문에 넣음
+    val destinationStation: Place,
+    val destinationStationId: String,
 ) {
-    fun changeStationId(newStationId: String): TransportIdRequest {
+    fun changeStartStationId(newStationId: String): TransportIdRequest {
         return TransportIdRequest(
             transportMoveType = transportMoveType,
             stationId = newStationId,
@@ -21,13 +24,15 @@ data class TransportIdRequest(
             coordinate = coordinate,
             stationType = stationType,
             area = area,
-            lineId = lineId,
-            lineName = lineName,
+            routeId = routeId,
+            routeName = routeName,
             term = term,
+            destinationStation = destinationStation,
+            destinationStationId = destinationStationId,
         )
     }
 
-    fun changeLineId(newLineId: String, newTerm: Int?): TransportIdRequest {
+    fun changeDestinationStationId(newDestinationStationId: String): TransportIdRequest {
         return TransportIdRequest(
             transportMoveType = transportMoveType,
             stationId = stationId,
@@ -35,9 +40,27 @@ data class TransportIdRequest(
             coordinate = coordinate,
             stationType = stationType,
             area = area,
-            lineId = newLineId,
-            lineName = lineName,
+            routeId = routeId,
+            routeName = routeName,
+            term = term,
+            destinationStation = destinationStation,
+            destinationStationId = newDestinationStationId,
+        )
+    }
+
+    fun changeRouteId(newRouteId: String, newTerm: Int?): TransportIdRequest {
+        return TransportIdRequest(
+            transportMoveType = transportMoveType,
+            stationId = stationId,
+            stationName = stationName,
+            coordinate = coordinate,
+            stationType = stationType,
+            area = area,
+            routeId = newRouteId,
+            routeName = routeName,
             term = newTerm ?: term,
+            destinationStation = destinationStation,
+            destinationStationId = destinationStationId,
         )
     }
 }

@@ -5,5 +5,5 @@ import com.stop.domain.model.route.tmap.RouteRequest
 
 interface GetRouteUseCase {
 
-    suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary>
+    suspend operator fun invoke(routeRequest: RouteRequest): List<Itinerary>
 }

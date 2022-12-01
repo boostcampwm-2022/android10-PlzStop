@@ -10,17 +10,17 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetRouteUseCase {
 
-    override suspend fun getRoute(routeRequest: RouteRequest): List<Itinerary> {
-        val originRouteData = routeRepository.getRoute(routeRequest)
+    override suspend operator fun invoke(routeRequest: RouteRequest): List<Itinerary> {
+        val originItineraries = routeRepository.getRoute(routeRequest)
 
-        return originRouteData.metaData.plan.itineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
+        return originItineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
 
                     routes + when (moveType) {
                         MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType)
-                        MoveType.WALK -> createWalkRoute(leg, moveType)
+                        MoveType.WALK, MoveType.TRANSFER -> createWalkRoute(leg, moveType)
                         else -> return@fold routes
                     }
                 } catch (e: Exception) {
@@ -45,7 +45,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             distance = leg.distance,
             end = with(leg.end) {
                 Place(
-                    name = name,
+                    name = name.replace("(중)", ""),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -56,7 +56,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             sectionTime = leg.sectionTime,
             start = with(leg.start) {
                 Place(
-                    name = name,
+                    name = name.replace("(중)", ""),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -73,7 +73,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                             longitude = lon
                         ),
                         stationId = stationID,
-                        stationName = stationName,
+                        stationName = stationName.replace("(중)", ""),
                     )
                 }
             } ?: listOf(),
