@@ -28,10 +28,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // TODO 버튼을 통해서 소리나 진동 끄기로 바꿔야함 !!
-        val intent = Intent(this, SoundService::class.java)
-        this.stopService(intent)
-
         setStartDestination()
         hideStatusBar()
         showOverLockScreen()
