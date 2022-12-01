@@ -1,17 +1,16 @@
 package com.stop.data.remote.model.nowlocation.subway
 
-import android.util.Log
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.stop.data.model.nowlocation.SubwayTrainRealTimePositionRepositoryItem
 
 @JsonClass(generateAdapter = true)
 data class SubwayTrainNowLocationResponse(
-    val realtimePositionList: List<TrainLocationInfo>
+    @Json(name = "realtimePositionList")
+    val realtimePositions: List<TrainLocationInfo>
 ) {
     fun toRepositoryModel(trainNumber: String): SubwayTrainRealTimePositionRepositoryItem {
-        Log.d("MissionFragment","mission ${realtimePositionList.first { it.trainNumber == trainNumber }}")
-
-        return realtimePositionList.first { it.trainNumber == trainNumber }.run {
+        return realtimePositions.first { it.trainNumber == trainNumber }.run {
              SubwayTrainRealTimePositionRepositoryItem(
                 subwayId = subwayId,
                 subwayName = stationName,
