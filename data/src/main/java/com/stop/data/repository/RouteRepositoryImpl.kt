@@ -76,7 +76,7 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getSeoulBusRoute(stationId)
     }
 
-    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo> {
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>? {
         return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
     }
 
@@ -88,7 +88,7 @@ internal class RouteRepositoryImpl @Inject constructor(
         return remoteDataSource.getGyeonggiBusRoute(stationId)
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime> {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>? {
         return remoteDataSource.getGyeonggiBusLastTime(lineId)
     }
 
