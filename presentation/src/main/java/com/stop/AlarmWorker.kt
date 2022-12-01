@@ -33,11 +33,9 @@ class AlarmWorker @AssistedInject constructor(
 
     private suspend fun callApi() {
         val list = getNearPlacesUseCase.getNearPlaces(
-            1,
             "아남타워",
             126.969652,
-            37.553836,
-            BuildConfig.TMAP_APP_KEY
+            37.553836
         )
         Log.e("ABC", list.toString())
     }
