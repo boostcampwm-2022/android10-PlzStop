@@ -20,7 +20,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
 
                     routes + when (moveType) {
                         MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType)
-                        MoveType.WALK -> createWalkRoute(leg, moveType)
+                        MoveType.WALK, MoveType.TRANSFER -> createWalkRoute(leg, moveType)
                         else -> return@fold routes
                     }
                 } catch (e: Exception) {
