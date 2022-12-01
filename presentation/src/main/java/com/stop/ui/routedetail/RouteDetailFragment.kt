@@ -12,11 +12,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RouteDetailFragment : Fragment() {
-
     private var _binding: FragmentRouteDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val parentViewModel: RouteViewModel by activityViewModels()
+    private val routeViewModel: RouteViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +35,7 @@ class RouteDetailFragment : Fragment() {
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.parentViewModel = parentViewModel
+        binding.routeViewModel = routeViewModel
     }
 
     private fun initView() {
