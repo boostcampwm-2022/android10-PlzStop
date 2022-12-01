@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -21,14 +22,17 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class MapFragment : Fragment(), MapHandler {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
     private val alarmViewModel: AlarmViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+    private val mapViewModel: MapViewModel by viewModels()
 
     private lateinit var tMap: MapTMap
     private var mapUIVisibility = View.GONE
@@ -59,6 +63,7 @@ class MapFragment : Fragment(), MapHandler {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.placeSearchViewModel = placeSearchViewModel
         binding.alarmViewModel = alarmViewModel
+        binding.mapViewModel = mapViewModel
     }
 
     private fun initTMap() {
@@ -230,7 +235,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     override fun setPanel(tMapPoint: TMapPoint) {
-        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
+        mapViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
     }
 
     companion object {
