@@ -28,7 +28,6 @@ class TimeLineAdapter : ListAdapter<Route, TimeLineViewHolder>(diffUtil) {
     companion object {
         private val diffUtil = object : DiffUtil.ItemCallback<Route>() {
             override fun areItemsTheSame(oldRoute: Route, newRoute: Route): Boolean {
-                return false
                 return oldRoute.sectionTime == newRoute.sectionTime &&
                         oldRoute.mode == newRoute.mode
             }

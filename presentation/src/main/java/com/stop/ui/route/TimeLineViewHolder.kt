@@ -33,7 +33,7 @@ class TimeLineViewHolder(
             }
             else -> R.drawable.time_line_help_16
         }
-
+        binding.imageViewIcon.visibility = View.VISIBLE
 
         val drawable = ContextCompat.getDrawable(binding.root.context, imageSrc)
             ?: throw IllegalArgumentException()
