@@ -1,14 +1,14 @@
 package com.stop.ui.route
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.activityViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -94,8 +94,9 @@ class RouteFragment : Fragment() {
             }
         }
 
-        viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
+        viewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { response ->
+                viewModel.lastTimes = response.toMutableList()
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
