@@ -20,32 +20,17 @@
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_bus"
-        android:roundIcon="@mipmap/ic_bus_round"
         android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_bus_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Splash"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
 
-
-        <activity
-            android:name=".TestActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:launchMode="singleTop"
-            android:showOnLockScreen="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-
         <receiver
             android:name=".AlarmReceiver"
-            android:enabled="true"/>
+            android:enabled="true" />
 
-        <service
-            android:name=".SoundService"/>
+        <service android:name=".SoundService" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"
@@ -54,7 +39,11 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:showOnLockScreen="true"
+            android:theme="@style/Theme.Splash">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

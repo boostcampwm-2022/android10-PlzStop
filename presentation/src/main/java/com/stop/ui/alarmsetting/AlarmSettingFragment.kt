@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.stop.AlarmFunctions
@@ -125,18 +126,12 @@ class AlarmSettingFragment : Fragment() {
         alarmSettingViewModel.saveAlarm()
         makeAlarm()
         //makeAlarmWorker()
-        //binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
+        binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
     }
 
-    private var test = true
     private fun makeAlarm() {
-        if (test) {
-            alarmFunctions.callAlarm("10:00:00", 4, 123, "막차알림")
-            test = !test
-        } else {
-            alarmFunctions.cancelAlarm(123)
-            test = !test
-        }
+        //TODO 알람 바꿔야함
+        alarmFunctions.callAlarm("00:00:05", 4, 123, "막차알림")
     }
 
     private fun makeAlarmWorker() {

@@ -11,7 +11,7 @@ import androidx.core.app.NotificationCompat
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        val requestCode = intent.extras?.getInt("ALARM_REQUEST_CODE") ?: -1
+        val alarmCode = intent.extras?.getInt("ALARM_CODE") ?: -1
         val alarmContent = intent.extras?.getString("ALARM_CONTENT") ?: ""
 
         val soundServiceIntent = Intent(context, SoundService::class.java)
@@ -26,8 +26,8 @@ class AlarmReceiver : BroadcastReceiver() {
                 }
             }
 
-            val pendingIntent = PendingIntent.getActivity(context, requestCode, Intent(context, TestActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            val pendingIntent = PendingIntent.getActivity(context, alarmCode, Intent(context, MainActivity::class.java).apply {
+                putExtra("ALARM_CODE", alarmCode)
             }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
             val builder = NotificationCompat.Builder(context, ALARM_RECEIVER_CHANNEL_ID)
@@ -47,8 +47,8 @@ class AlarmReceiver : BroadcastReceiver() {
         } else {
             context.startService(soundServiceIntent)
 
-            Intent(context, TestActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            Intent(context, MainActivity::class.java).apply {
+                putExtra("ALARM_CODE", alarmCode)
                 context.startActivity(this)
             }
         }

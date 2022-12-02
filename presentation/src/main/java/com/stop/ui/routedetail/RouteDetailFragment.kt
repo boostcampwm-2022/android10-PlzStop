@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
 import com.stop.ui.route.RouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +42,10 @@ class RouteDetailFragment : Fragment() {
     }
 
     private fun initView() {
-
+        //TODO 임시 화면이동 로직
+        binding.root.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
+        }
     }
 
     override fun onDestroyView() {
