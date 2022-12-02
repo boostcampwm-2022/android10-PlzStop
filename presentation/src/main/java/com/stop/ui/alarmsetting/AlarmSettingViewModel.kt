@@ -34,7 +34,8 @@ class AlarmSettingViewModel @Inject constructor(
             "현대 아남타워",
             listOf("도보", "버스5517", "신림역", "선릉역", "도보"),
             "23:30",
-            alarmTime.value.toString(),
+            alarmTime.value ?: 0,
+            123,
             alarmMethod,
             isMission
         )

@@ -12,6 +12,7 @@ import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.model.Event
 import com.stop.model.Location
+import com.stop.model.route.Coordinate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -28,6 +29,8 @@ class PlaceSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     var currentLocation = Location(0.0, 0.0)
+
+    var panelInfo: com.stop.model.route.Place? = null
 
     private val _nearPlaceList = MutableStateFlow<List<Place>>(emptyList())
     val nearPlaceList: StateFlow<List<Place>> = _nearPlaceList
@@ -95,9 +98,20 @@ class PlaceSearchViewModel @Inject constructor(
     fun getGeoLocationInfo(latitude: Double, longitude: Double) {
         viewModelScope.launch {
             _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+
+            readySendValue(latitude, longitude)
             _panelVisibility.value = View.VISIBLE
             getDistance(latitude, longitude)
         }
+    }
+
+    private fun readySendValue(latitude: Double, longitude: Double) {
+        val clickedValue = _geoLocation.value ?: return
+
+        panelInfo = com.stop.model.route.Place(
+            clickedValue.title,
+            Coordinate(latitude.toString(), longitude.toString())
+        )
     }
 
     private fun getDistance(latitude: Double, longitude: Double) {

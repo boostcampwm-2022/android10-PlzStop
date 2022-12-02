@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'androidx.navigation.safeargs'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
     id 'com.google.dagger.hilt.android'
     id 'com.google.gms.google-services'
 }
@@ -92,4 +93,6 @@ dependencies {
     // Add the dependencies for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
 
+    // LifeCycle Service
+    implementation 'androidx.lifecycle:lifecycle-service:2.5.1'
 }
