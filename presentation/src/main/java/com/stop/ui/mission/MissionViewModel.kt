@@ -8,6 +8,8 @@ import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetNowStationLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayRouteUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowStationUseCase
+import com.stop.model.ErrorType
+import com.stop.model.Event
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +40,10 @@ class MissionViewModel @Inject constructor(
     private val _estimatedTimeRemaining = MutableLiveData<Int>()
     val estimatedTimeRemaining: LiveData<Int>
         get() = _estimatedTimeRemaining
+
+    private val _errorMessage = MutableLiveData<Event<ErrorType>>()
+    val errorMessage: LiveData<Event<ErrorType>>
+        get() = _errorMessage
 
     val leftMinute: LiveData<String> = Transformations.switchMap(estimatedTimeRemaining) {
         MutableLiveData<String>().apply {
@@ -132,17 +138,22 @@ class MissionViewModel @Inject constructor(
     private fun getSubwayRoute() {
         viewModelScope.launch {
             val startLocation = getNowStationLocation()
-            this@MissionViewModel._subwayRoute.value = getSubwayRouteUseCase(
-                RouteRequest(
-                    startLocation.longitude,
-                    startLocation.latitude,
-                    TEST_SUBWAY_LONG,
-                    TEST_SUBWAY_LAT
-                ),
-                TEST_SUBWAY_NUMER.toString() + LINE,
-                startSubwayStation.dropLast(1), //"역" 버리기
-                TEST_END_SUBWAY_STATION
-            )
+            try {
+                this@MissionViewModel._subwayRoute.value = getSubwayRouteUseCase(
+                    RouteRequest(
+                        startLocation.longitude,
+                        startLocation.latitude,
+                        TEST_SUBWAY_LONG,
+                        TEST_SUBWAY_LAT
+                    ),
+                    TEST_SUBWAY_NUMER.toString() + LINE,
+                    startSubwayStation.dropLast(1), //"역" 버리기
+                    TEST_END_SUBWAY_STATION
+                )
+            } catch (exception: IllegalArgumentException) {
+                _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
+                return@launch
+            }
         }
     }
 

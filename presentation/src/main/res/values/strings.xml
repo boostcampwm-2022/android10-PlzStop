@@ -39,4 +39,5 @@
     <string name="km">km</string>
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
     <string name="section_time">%1$s분</string>
+    <string name="route_result_not_exist">경로 검색 결과가 존재하지 않습니다.</string>
 </resources>

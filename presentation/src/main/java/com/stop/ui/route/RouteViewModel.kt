@@ -62,7 +62,12 @@ class RouteViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            this@RouteViewModel._routeResponse.value = getRouteUseCase(routeRequest)
+            val itineraries = getRouteUseCase(routeRequest)
+            if (itineraries.isEmpty()) {
+                _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
+                return@launch
+            }
+            this@RouteViewModel._routeResponse.value = itineraries
         }
     }
 
