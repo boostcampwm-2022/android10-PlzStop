@@ -31,12 +31,12 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingVertical="10dp"
-            android:text="@{viewModel.origin.name}"
             android:background="@drawable/round_border"
+            android:paddingVertical="10dp"
             app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/button_back_to_home"
+            app:set_place_name="@{viewModel.origin}"
             tools:text="이앤씨벤쳐드림타워3차" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -56,12 +56,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:paddingVertical="10dp"
             android:background="@drawable/round_border"
-            android:text="@{viewModel.destination.name}"
+            android:paddingVertical="10dp"
             app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/text_view_origin"
+            app:set_place_name="@{viewModel.destination}"
             tools:text="Naver1784" />
 
 
