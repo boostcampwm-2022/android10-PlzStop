@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
@@ -17,7 +18,7 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
-import com.stop.ui.alarmsetting.AlarmViewModel
+import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class MapFragment : Fragment(), MapHandler {
     private var _binding: FragmentMapBinding? = null
     private val binding get() = _binding!!
 
-    private val alarmViewModel: AlarmViewModel by activityViewModels()
+    private val alarmViewModel: AlarmSettingViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
     private lateinit var tMap: MapTMap
@@ -46,6 +47,7 @@ class MapFragment : Fragment(), MapHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        alarmViewModel.getAlarm()
         initTMap()
         initView()
         initNavigateAction()
@@ -98,11 +100,6 @@ class MapFragment : Fragment(), MapHandler {
             )
         }
 
-        binding.layoutBookmark.setOnClickListener {
-            alarmViewModel.isBottomSheetVisible.value?.let {
-                alarmViewModel.setVisibility(it)
-            }
-        }
     }
 
     private fun initNavigateAction() {
@@ -131,7 +128,7 @@ class MapFragment : Fragment(), MapHandler {
     private fun initBottomSheetBehavior() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.isBottomSheetVisible.observe(viewLifecycleOwner) { isBottomSheetVisible ->
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) { isBottomSheetVisible ->
             if (isBottomSheetVisible) {
                 behavior.state = BottomSheetBehavior.STATE_EXPANDED
                 behavior.maxHeight = convertDpToPx(200)

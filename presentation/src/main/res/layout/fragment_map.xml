@@ -10,7 +10,7 @@
 
         <variable
             name="alarmViewModel"
-            type="com.stop.ui.alarmsetting.AlarmViewModel" />
+            type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,6 +70,7 @@
                 android:id="@+id/home_panel"
                 layout="@layout/home_panel"
                 bind:placeSearchViewModel="@{placeSearchViewModel}" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,6 +103,7 @@
                 app:layout_constraintTop_toTopOf="@id/layout_search"
                 app:layout_constraintBottom_toBottomOf="@id/layout_search"
                 app:srcCompat="@drawable/ic_search" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -124,6 +126,7 @@
                 app:layout_constraintTop_toTopOf="@id/layout_compass"
                 app:layout_constraintBottom_toBottomOf="@id/layout_compass"
                 app:srcCompat="@drawable/ic_compass" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,6 +149,7 @@
                 app:layout_constraintTop_toTopOf="@id/layout_current"
                 app:layout_constraintBottom_toBottomOf="@id/layout_current"
                 app:srcCompat="@drawable/ic_location" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -167,6 +171,7 @@
                 app:layout_constraintTop_toTopOf="@id/layout_bookmark"
                 app:layout_constraintBottom_toBottomOf="@id/layout_bookmark"
                 app:srcCompat="@drawable/ic_bookmark" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -186,7 +191,11 @@
                     android:id="@+id/home_bottom_sheet"
                     layout="@layout/home_bottom_sheet"
                     bind:alarmViewModel="@{alarmViewModel}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

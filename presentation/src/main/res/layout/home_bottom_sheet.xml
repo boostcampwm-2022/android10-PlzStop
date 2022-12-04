@@ -7,7 +7,7 @@
 
         <variable
             name="alarmViewModel"
-            type="com.stop.ui.alarmsetting.AlarmViewModel" />
+            type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,7 +29,7 @@
             android:id="@+id/home_bottom_sheet_no_alarm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{alarmViewModel.isBottomSheetVisible ? View.GONE : View.VISIBLE}"
+            android:visibility="@{alarmViewModel.isAlarmItemNotNull() ? View.GONE : View.VISIBLE}"
             app:layout_constraintTop_toBottomOf="@id/home_bottom_sheet_drag_handle">
 
             <TextView
@@ -45,6 +45,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>
