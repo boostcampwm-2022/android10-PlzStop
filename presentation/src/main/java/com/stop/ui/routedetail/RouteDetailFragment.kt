@@ -11,11 +11,13 @@ import com.stop.ui.route.RouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RouteDetailFragment : Fragment() {
+class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private var _binding: FragmentRouteDetailBinding? = null
     private val binding get() = _binding!!
 
     private val routeViewModel: RouteViewModel by activityViewModels()
+
+    private lateinit var tMap: RouteDetailTMap
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,12 +32,24 @@ class RouteDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initTMap()
         initView()
+    }
+
+    override fun alertTMapReady() {
+
     }
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.routeViewModel = routeViewModel
+    }
+
+    private fun initTMap() {
+        tMap = RouteDetailTMap(requireActivity(), this)
+        tMap.init()
+
+        binding.frameLayoutContainer.addView(tMap.tMapView)
     }
 
     private fun initView() {

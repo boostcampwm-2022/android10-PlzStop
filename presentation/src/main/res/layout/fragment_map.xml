@@ -69,8 +69,8 @@
 
             <include
                 android:id="@+id/home_panel"
-                layout="@layout/home_panel"
-                bind:placeSearchViewModel="@{placeSearchViewModel}" />
+                bind:placeSearchViewModel="@{placeSearchViewModel}"
+                layout="@layout/home_panel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -185,8 +185,8 @@
 
                 <include
                     android:id="@+id/home_bottom_sheet"
-                    layout="@layout/home_bottom_sheet"
-                    bind:alarmViewModel="@{alarmViewModel}" />
+                    bind:alarmViewModel="@{alarmViewModel}"
+                    layout="@layout/home_bottom_sheet" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
