@@ -2,7 +2,7 @@ package com.stop.data.local.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.stop.data.model.alarm.RecentPlaceSearchItem
+import com.stop.data.model.nearplace.PlaceRepositoryItem
 
 @Entity
 data class RecentPlaceSearchEntity(
@@ -15,7 +15,7 @@ data class RecentPlaceSearchEntity(
     val centerLon: Double
 ) {
 
-    fun toRepositoryModel() = RecentPlaceSearchItem(
+    fun toRepositoryModel() = PlaceRepositoryItem(
         name = name,
         radius = radius,
         fullAddressRoad = fullAddressRoad,

@@ -1,9 +1,9 @@
 package com.stop.domain.usecase.nearplace
 
-import com.stop.domain.model.nearplace.RecentPlaceSearch
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 
 interface InsertRecentPlaceSearchUseCase {
 
-    suspend fun insertRecentPlaceSearch(recentPlaceSearch: RecentPlaceSearch)
+    suspend fun insertRecentPlaceSearch(placeUseCaseItem: PlaceUseCaseItem)
 
 }

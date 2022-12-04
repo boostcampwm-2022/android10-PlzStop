@@ -1,6 +1,6 @@
 package com.stop.domain.usecase.nearplace
 
-import com.stop.domain.model.nearplace.Place
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import com.stop.domain.repository.NearPlaceRepository
 import javax.inject.Inject
 
@@ -12,7 +12,7 @@ internal class GetNearPlacesUseCaseImpl @Inject constructor(
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double,
-    ): List<Place> =
+    ): List<PlaceUseCaseItem> =
         nearPlaceRepository.getNearPlaces(
             searchKeyword,
             centerLon,

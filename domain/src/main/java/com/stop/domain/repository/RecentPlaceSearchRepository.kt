@@ -1,13 +1,13 @@
 package com.stop.domain.repository
 
-import com.stop.domain.model.nearplace.RecentPlaceSearch
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import kotlinx.coroutines.flow.Flow
 
 interface RecentPlaceSearchRepository {
 
-    suspend fun insertRecentPlaceSearch(recentPlaceSearch: RecentPlaceSearch)
+    suspend fun insertRecentPlaceSearch(placeUseCaseItem: PlaceUseCaseItem)
 
-    fun getAllRecentPlaceSearch(): Flow<List<RecentPlaceSearch>>
+    fun getAllRecentPlaceSearch(): Flow<List<PlaceUseCaseItem>>
 
     suspend fun deleteAllRecentPlaceSearch()
 

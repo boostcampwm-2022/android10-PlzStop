@@ -62,6 +62,7 @@ class PlaceSearchFragment : Fragment() {
             placeSearchViewModel.setClickPlace(it)
             placeSearchViewModel.setNearPlacesEmpty()
 
+
             binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
         }
     }

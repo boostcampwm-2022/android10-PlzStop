@@ -170,7 +170,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun observeClickPlace() {
-        placeSearchViewModel.clickPlace.observe(viewLifecycleOwner) { event ->
+        placeSearchViewModel.clickPlaceUseCaseItem.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { clickPlace ->
                 val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 

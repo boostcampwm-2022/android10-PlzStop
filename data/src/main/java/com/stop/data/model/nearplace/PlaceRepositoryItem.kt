@@ -1,9 +1,10 @@
 package com.stop.data.model.nearplace
 
-import com.stop.domain.model.nearplace.Place
+import com.stop.data.local.model.RecentPlaceSearchEntity
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
 
-data class Place(
+data class PlaceRepositoryItem(
     val name: String,
     val radius: String,
     val fullAddressRoad: String,
@@ -11,12 +12,20 @@ data class Place(
     val centerLon: Double
 ) {
 
-    fun toUseCaseModel() = Place(
+    fun toUseCaseModel() = PlaceUseCaseItem(
         name = name,
         radius = radius,
         fullAddressRoad = fullAddressRoad,
         centerLat = centerLat,
         centerLon = centerLon
+    )
+
+    fun toDataSourceModel() = RecentPlaceSearchEntity(
+        name = name,
+        radius = radius,
+        fullAddressRoad = fullAddressRoad,
+        centerLat = centerLat,
+        centerLon = centerLon,
     )
 
     fun toNowStationLocationUseCaseModel() = NowStationLocationUseCaseItem(
