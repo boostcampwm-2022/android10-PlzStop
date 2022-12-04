@@ -15,6 +15,7 @@ import com.stop.AlarmFunctions
 import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
+import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.ui.route.ClickRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
@@ -66,8 +67,6 @@ class AlarmSettingFragment : Fragment() {
 
     private fun initView() {
         with(binding) {
-            textViewWalk.text = getString(R.string.last_transport_walking_time, 10)
-
             numberPickerAlarmTime.minValue = 0
             numberPickerAlarmTime.maxValue = 60
 
@@ -89,7 +88,16 @@ class AlarmSettingFragment : Fragment() {
     }
 
     fun setAlarmRegisterListener() {
-        alarmSettingViewModel.saveAlarm()
+        val alarmUseCaseItem = AlarmUseCaseItem(
+            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음",
+            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음",
+            routes = clickRouteViewModel.clickRoute?.routes ?: emptyList(),
+            lastTime = clickRouteViewModel.lastTime,
+            0,
+            ALARM_CODE,
+            true
+        )
+        alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
         makeAlarm()
         //makeAlarmWorker()
         binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
@@ -116,4 +124,9 @@ class AlarmSettingFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
+
+    companion object {
+        const val ALARM_CODE = 123
+    }
+
 }

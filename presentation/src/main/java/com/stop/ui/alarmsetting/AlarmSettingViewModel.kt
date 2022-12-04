@@ -24,29 +24,19 @@ class AlarmSettingViewModel @Inject constructor(
     var alarmMethod = true
 
     private val _alarmItem = MutableStateFlow<AlarmUseCaseItem?>(null)
-    val alarmItem : StateFlow<AlarmUseCaseItem?> = _alarmItem
+    val alarmItem: StateFlow<AlarmUseCaseItem?> = _alarmItem
 
     private val _isAlarmItemNotNull = MutableStateFlow(false)
-    val isAlarmItemNotNull : StateFlow<Boolean> = _isAlarmItemNotNull
+    val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
 
-    fun saveAlarm() {
-        val alarmUseCaseItem = AlarmUseCaseItem(
-            "쑥고개로 2다길 1",
-            "현대 아남타워",
-            listOf("도보", "버스5517", "신림역", "선릉역", "도보"),
-            "23:30:00",
-            alarmTime.value ?: 0,
-            123,
-            alarmMethod
-        )
-
+    fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveAlarmUseCase.saveAlarm(alarmUseCaseItem)
+            saveAlarmUseCase.saveAlarm(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
         }
     }
 
     fun getAlarm() {
-        viewModelScope.launch(Dispatchers.IO){
+        viewModelScope.launch(Dispatchers.IO) {
             getAlarmUseCase.getAlarm().collectLatest {
                 _alarmItem.value = it
 
