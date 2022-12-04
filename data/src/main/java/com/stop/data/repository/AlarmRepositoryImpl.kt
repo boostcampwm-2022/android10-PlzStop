@@ -21,8 +21,7 @@ internal class AlarmRepositoryImpl @Inject constructor(
                 alarmUseCaseItem.lastTime,
                 alarmUseCaseItem.alarmTime,
                 alarmUseCaseItem.alarmCode,
-                alarmUseCaseItem.alarmMethod,
-                alarmUseCaseItem.isMission
+                alarmUseCaseItem.alarmMethod
             )
         )
     }
