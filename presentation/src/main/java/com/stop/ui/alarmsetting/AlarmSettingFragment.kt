@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -27,7 +26,7 @@ class AlarmSettingFragment : Fragment() {
     private var _binding: FragmentAlarmSettingBinding? = null
     private val binding get() = _binding!!
 
-    private val alarmSettingViewModel by viewModels<AlarmSettingViewModel>()
+    private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
     private val clickRouteViewModel by activityViewModels<ClickRouteViewModel>()
 
     private lateinit var alarmFunctions: AlarmFunctions

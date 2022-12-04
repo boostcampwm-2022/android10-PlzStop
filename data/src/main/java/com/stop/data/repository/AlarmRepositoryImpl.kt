@@ -19,6 +19,7 @@ internal class AlarmRepositoryImpl @Inject constructor(
                 alarmUseCaseItem.endPosition,
                 alarmUseCaseItem.routes,
                 alarmUseCaseItem.lastTime,
+                alarmUseCaseItem.walkTime,
                 alarmUseCaseItem.alarmTime,
                 alarmUseCaseItem.alarmCode,
                 alarmUseCaseItem.alarmMethod
