@@ -60,7 +60,7 @@ class PlaceSearchFragment : Fragment() {
 
         nearPlaceAdapter.onItemClick = {
             placeSearchViewModel.setClickPlace(it)
-            placeSearchViewModel.setNearPlaceListEmpty()
+            placeSearchViewModel.setNearPlacesEmpty()
 
             binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
         }
@@ -129,7 +129,7 @@ class PlaceSearchFragment : Fragment() {
         placeSearchViewModel.searchKeyword.debounce(100)
             .onEach {
                 if(it.isBlank()){
-                    placeSearchViewModel.setNearPlaceListEmpty()
+                    placeSearchViewModel.setNearPlacesEmpty()
                 }else{
                     placeSearchViewModel.getNearPlaces(it)
                 }

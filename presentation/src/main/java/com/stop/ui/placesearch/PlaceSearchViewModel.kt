@@ -32,8 +32,11 @@ class PlaceSearchViewModel @Inject constructor(
 
     var panelInfo: com.stop.model.route.Place? = null
 
-    private val _nearPlaceList = MutableStateFlow<List<Place>>(emptyList())
-    val nearPlaceList: StateFlow<List<Place>> = _nearPlaceList
+    private val _nearPlaces = MutableStateFlow<List<Place>>(emptyList())
+    val nearPlaces: StateFlow<List<Place>> = _nearPlaces
+
+    private val _isNearPlacesNotEmpty = MutableStateFlow(false)
+    val isNearPlacesNotEmpty: StateFlow<Boolean> = _isNearPlacesNotEmpty
 
     var bookmarks = mutableListOf(EXAMPLE_BOOKMARK_1, EXAMPLE_BOOKMARK_2, EXAMPLE_BOOKMARK_3)
 
@@ -47,7 +50,7 @@ class PlaceSearchViewModel @Inject constructor(
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
     private val _searchKeyword = MutableStateFlow("")
-    val searchKeyword : StateFlow<String> = _searchKeyword
+    val searchKeyword: StateFlow<String> = _searchKeyword
 
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
     val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
@@ -67,22 +70,25 @@ class PlaceSearchViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             try {
-                _nearPlaceList.emit(
+                _nearPlaces.emit(
                     getNearPlacesUseCase.getNearPlaces(
                         searchKeyword,
                         currentLocation.longitude,
                         currentLocation.latitude
                     )
                 )
+
+                _isNearPlacesNotEmpty.value = true
             } catch (e: Exception) {
-                setNearPlaceListEmpty()
+                setNearPlacesEmpty()
                 errorMessageChannel.send(e.message ?: "something is wrong")
             }
         }
     }
 
-    fun setNearPlaceListEmpty() {
-        _nearPlaceList.value = emptyList()
+    fun setNearPlacesEmpty() {
+        _nearPlaces.value = emptyList()
+        _isNearPlacesNotEmpty.value = false
     }
 
     fun setClickPlace(place: Place) {
