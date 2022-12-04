@@ -15,9 +15,10 @@ import com.stop.AlarmFunctions
 import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
-import com.stop.ui.route.RouteViewModel
+import com.stop.ui.route.ClickRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
@@ -26,7 +27,7 @@ class AlarmSettingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val alarmSettingViewModel by viewModels<AlarmSettingViewModel>()
-    private val routeViewModel by activityViewModels<RouteViewModel>()
+    private val clickRouteViewModel by activityViewModels<ClickRouteViewModel>()
 
     private lateinit var alarmFunctions: AlarmFunctions
 
@@ -55,14 +56,16 @@ class AlarmSettingFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             alarmViewModel = alarmSettingViewModel
-            routeViewModel = routeViewModel
+            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음"
+            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음"
+            lastTime = clickRouteViewModel.lastTime
+            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0
             fragment = this@AlarmSettingFragment
         }
     }
 
     private fun initView() {
         with(binding) {
-            textViewLastTime.text = getString(R.string.last_transport_arrival_time, 23, 30)
             textViewWalk.text = getString(R.string.last_transport_walking_time, 10)
 
             numberPickerAlarmTime.minValue = 0

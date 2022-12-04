@@ -10,8 +10,20 @@
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
         <variable
-            name="routeViewModel"
-            type="com.stop.ui.route.RouteViewModel" />
+            name="startPosition"
+            type="String" />
+
+        <variable
+            name="endPosition"
+            type="String" />
+
+        <variable
+            name="lastTime"
+            type="String" />
+
+        <variable
+            name="walkTime"
+            type="int" />
 
         <variable
             name="fragment"
@@ -54,7 +66,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="8dp"
-            android:text="출발지 : 아남타워"
+            android:text="@{@string/start_position_text(startPosition)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -71,7 +83,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:padding="8dp"
-            android:text="도착지 : 강남역"
+            android:text="@{@string/end_position_text(endPosition)}"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -87,10 +99,10 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="21sp"
+            android:text="@{@string/last_transport_arrival_time(lastTime)}"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_end_position"
-            tools:text="막차가 23시30분에 도착할 예정이에요!!" />
+            app:layout_constraintTop_toBottomOf="@id/text_view_end_position" />
 
 
         <ImageView
@@ -109,10 +121,10 @@
             android:textColor="@color/black"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@id/image_view_walk"
+            android:text="@{@string/last_transport_walking_time(walkTime)}"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toEndOf="@id/image_view_walk"
-            app:layout_constraintTop_toTopOf="@id/image_view_walk"
-            tools:text="막차까지 도보 시간이 10분 소요될것으로 예상돼요!!" />
+            app:layout_constraintTop_toTopOf="@id/image_view_walk" />
 
         <NumberPicker
             android:id="@+id/number_picker_alarm_time"

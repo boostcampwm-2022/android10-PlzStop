@@ -24,8 +24,8 @@
     <string name="mission_toggle_text">미션 여부</string>
     <string name="on_text">ON</string>
     <string name="off_text">OFF</string>
-    <string name="last_transport_arrival_time">막차가 %1$d시 %2$d분에 도착할 예정이에요!!</string>
-    <string name="last_transport_walking_time">막차까지 도보 시간이 %1$d분 소요될것으로 예상돼요!!</string>
+    <string name="last_transport_arrival_time">막차가 %1$s에 도착할 예정이에요!!</string>
+    <string name="last_transport_walking_time">막차까지 도보 시간이 %1$d분 소요될것으로 예상되요!!</string>
     <string name="alarm_time_text">알람이 막차시간\n%1$d분 전에\n울리도록 설정하시겠습니까?</string>
     <string name="register_alarm_text">알람 등록</string>
     <string name="search_hint">장소, 주소 검색</string>

@@ -22,7 +22,8 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    private val viewModel: RouteViewModel by activityViewModels()
+    private val routeViewModel: RouteViewModel by activityViewModels()
+    private val clickRouteViewModel : ClickRouteViewModel by activityViewModels()
 
     private val args: RouteFragmentArgs by navArgs()
 
@@ -48,7 +49,7 @@ class RouteFragment : Fragment() {
 
     private fun setBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        binding.viewModel = routeViewModel
     }
 
     private fun setListener() {
@@ -69,21 +70,22 @@ class RouteFragment : Fragment() {
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
-                viewModel.calculateLastTransportTime(itinerary)
+                routeViewModel.calculateLastTransportTime(itinerary)
+                clickRouteViewModel.clickRoute = itinerary
             }
         })
         binding.recyclerviewRoute.adapter = adapter
     }
 
     private fun setObserve() {
-        viewModel.routeResponse.observe(viewLifecycleOwner) {
+        routeViewModel.routeResponse.observe(viewLifecycleOwner) {
             if (it == null) {
                 return@observe
             }
             adapter.submitList(it)
         }
 
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
+        routeViewModel.errorMessage.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { errorType ->
                 val message = when (errorType) {
                     ErrorType.NO_START -> getString(R.string.no_start_input)
@@ -94,9 +96,9 @@ class RouteFragment : Fragment() {
             }
         }
 
-        viewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
+        routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                viewModel.lastTimes = response.toMutableList()
+                routeViewModel.lastTimes = response.toMutableList()
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
@@ -104,12 +106,12 @@ class RouteFragment : Fragment() {
 
     private fun setStartAndDestinationText() {
         args.start?.let {
-            viewModel.setOrigin(it)
+            routeViewModel.setOrigin(it)
         }
         args.end?.let {
-            viewModel.setDestination(it)
+            routeViewModel.setDestination(it)
         }
-        viewModel.getRoute()
+        routeViewModel.getRoute()
     }
 
     override fun onDestroyView() {
