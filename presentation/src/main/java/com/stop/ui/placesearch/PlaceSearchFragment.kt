@@ -61,7 +61,7 @@ class PlaceSearchFragment : Fragment() {
         nearPlaceAdapter.onItemClick = {
             placeSearchViewModel.setClickPlace(it)
             placeSearchViewModel.setNearPlacesEmpty()
-
+            placeSearchViewModel.insertRecentSearchPlace(it)
 
             binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
         }

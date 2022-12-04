@@ -101,6 +101,7 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun setNearPlacesEmpty() {
         _nearPlaces.value = emptyList()
+        _searchKeyword.value = ""
         _isNearPlacesNotEmpty.value = false
     }
 
