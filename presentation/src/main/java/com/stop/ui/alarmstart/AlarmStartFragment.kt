@@ -53,11 +53,14 @@ class AlarmStartFragment : Fragment() {
         with(binding) {
             buttonAlarmTurnOff.setOnClickListener {
                 turnOffSoundService()
+                alarmSettingViewModel.deleteAlarm()
+                requireActivity().finish()
             }
 
             textViewMissionStart.setOnClickListener {
                 turnOffSoundService()
                 root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
+                alarmSettingViewModel.deleteAlarm()
             }
         }
     }

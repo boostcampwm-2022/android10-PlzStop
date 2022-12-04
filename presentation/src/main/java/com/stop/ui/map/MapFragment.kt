@@ -2,7 +2,6 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +38,7 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+
         initBinding()
 
         return binding.root
@@ -47,11 +47,11 @@ class MapFragment : Fragment(), MapHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        alarmViewModel.getAlarm()
         initTMap()
         initView()
         initNavigateAction()
         initBottomSheetBehavior()
+        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -128,14 +128,35 @@ class MapFragment : Fragment(), MapHandler {
     private fun initBottomSheetBehavior() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) { isBottomSheetVisible ->
-            if (isBottomSheetVisible) {
-                behavior.state = BottomSheetBehavior.STATE_EXPANDED
-                behavior.maxHeight = convertDpToPx(200)
-            } else {
-                behavior.maxHeight = convertDpToPx(100)
-            }
+        alarmViewModel.getAlarm()
+
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+            behavior.isDraggable = it
         }
+
+        behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
+                        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
+                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.GONE
+                        binding.homeBottomSheet.textViewAlarmState.visibility = View.VISIBLE
+                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.VISIBLE
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> Unit
+                    BottomSheetBehavior.STATE_DRAGGING -> Unit
+                    BottomSheetBehavior.STATE_SETTLING -> Unit
+                    BottomSheetBehavior.STATE_HIDDEN -> Unit
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+
+        })
     }
 
     private fun addBookmarkMarker() {
@@ -210,12 +231,12 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun convertDpToPx(dp: Int): Int {
-        return TypedValue.applyDimension(
-            TypedValue.COMPLEX_UNIT_DIP,
-            dp.toFloat(),
-            resources.displayMetrics
-        ).toInt()
+    private fun listenButtonClick(){
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            alarmViewModel.deleteAlarm()
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
     }
 
     override fun onDestroyView() {

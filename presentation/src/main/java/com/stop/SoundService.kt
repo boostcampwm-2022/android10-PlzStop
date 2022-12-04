@@ -61,8 +61,6 @@ class SoundService : LifecycleService() {
                     }
                 }
             }
-
-            deleteAlarmUseCase.deleteAlarm()
         }
     }
 

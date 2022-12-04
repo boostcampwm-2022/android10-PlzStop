@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.alarm.AlarmUseCaseItem
+import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AlarmSettingViewModel @Inject constructor(
     private val saveAlarmUseCase: SaveAlarmUseCase,
-    private val getAlarmUseCase: GetAlarmUseCase
+    private val getAlarmUseCase: GetAlarmUseCase,
+    private val deleteAlarmUseCase: DeleteAlarmUseCase
 ) : ViewModel() {
 
     val alarmTime = MutableLiveData(0)
@@ -42,6 +44,12 @@ class AlarmSettingViewModel @Inject constructor(
 
                 _isAlarmItemNotNull.value = it != null
             }
+        }
+    }
+
+    fun deleteAlarm(){
+        viewModelScope.launch(Dispatchers.IO){
+            deleteAlarmUseCase.deleteAlarm()
         }
     }
 
