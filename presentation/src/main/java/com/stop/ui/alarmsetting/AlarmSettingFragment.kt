@@ -93,6 +93,7 @@ class AlarmSettingFragment : Fragment() {
             endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음",
             routes = clickRouteViewModel.clickRoute?.routes ?: emptyList(),
             lastTime = clickRouteViewModel.lastTime,
+            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0,
             0,
             ALARM_CODE,
             true
