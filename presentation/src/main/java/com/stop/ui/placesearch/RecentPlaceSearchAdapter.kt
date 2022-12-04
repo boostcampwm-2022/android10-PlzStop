@@ -5,28 +5,28 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.stop.databinding.ItemNearPlaceBinding
+import com.stop.databinding.ItemRecentSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 
-class NearPlaceAdapter : ListAdapter<PlaceUseCaseItem, NearPlaceAdapter.ViewHolder>(diffUtil) {
+class RecentPlaceSearchAdapter(
+    private var onItemClick: (PlaceUseCaseItem) -> Unit
+) : ListAdapter<PlaceUseCaseItem, RecentPlaceSearchAdapter.ViewHolder>(diffUtil) {
 
-    var onItemClick: ((PlaceUseCaseItem) -> Unit)? = null
-
-    class ViewHolder(private val binding: ItemNearPlaceBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemRecentSearchBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(placeUseCaseItem: PlaceUseCaseItem) {
-            binding.place = placeUseCaseItem
+            binding.placeItem = placeUseCaseItem
             binding.executePendingBindings()
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(ItemNearPlaceBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return ViewHolder(ItemRecentSearchBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(currentList[position])
         holder.itemView.setOnClickListener {
-            onItemClick?.invoke(currentList[holder.adapterPosition])
+            onItemClick.invoke(currentList[holder.adapterPosition])
         }
     }
 

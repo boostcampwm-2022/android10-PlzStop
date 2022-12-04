@@ -7,7 +7,7 @@ import com.stop.data.model.nearplace.PlaceRepositoryItem
 @Entity
 data class RecentPlaceSearchEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0,
+    val id: Int? = null,
     val name: String,
     val radius: String,
     val fullAddressRoad: String,

@@ -16,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
@@ -31,7 +32,8 @@ class PlaceSearchFragment : Fragment() {
 
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
-    private lateinit var nearPlaceAdapter: NearPlaceAdapter
+    private lateinit var placeSearchAdapter: PlaceSearchAdapter
+    private lateinit var recentPlaceSearchAdapter: RecentPlaceSearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,6 +44,13 @@ class PlaceSearchFragment : Fragment() {
         initBinding()
 
         return binding.root
+    }
+
+    private fun initBinding() {
+        binding.apply {
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = placeSearchViewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,16 +64,24 @@ class PlaceSearchFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        nearPlaceAdapter = NearPlaceAdapter()
-        binding.recyclerViewPlace.adapter = nearPlaceAdapter
-
-        nearPlaceAdapter.onItemClick = {
-            placeSearchViewModel.setClickPlace(it)
-            placeSearchViewModel.setNearPlacesEmpty()
-            placeSearchViewModel.insertRecentSearchPlace(it)
-
-            binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+        placeSearchAdapter = PlaceSearchAdapter{
+            clickPlace(it)
         }
+        recentPlaceSearchAdapter = RecentPlaceSearchAdapter{
+            clickPlace(it)
+        }
+
+        binding.recyclerViewPlace.adapter = placeSearchAdapter
+        binding.layoutRecentSearch.recyclerViewRecentSearch.adapter = recentPlaceSearchAdapter
+    }
+
+    private fun clickPlace(placeUseCaseItem: PlaceUseCaseItem) {
+        placeSearchViewModel.setClickPlace(placeUseCaseItem)
+        placeSearchViewModel.setNearPlacesEmpty()
+        placeSearchViewModel.insertRecentSearchPlace(placeUseCaseItem)
+
+        binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+
     }
 
     private fun buttonClick() {
@@ -77,13 +94,6 @@ class PlaceSearchFragment : Fragment() {
             textViewSelectMap.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
-        }
-    }
-
-    private fun initBinding() {
-        binding.apply {
-            lifecycleOwner = viewLifecycleOwner
-            viewModel = placeSearchViewModel
         }
     }
 
