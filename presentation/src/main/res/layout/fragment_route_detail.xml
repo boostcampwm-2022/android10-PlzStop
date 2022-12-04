@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -43,16 +44,14 @@
                 android:textSize="40sp"
                 android:gravity="center" />
 
-            <TextView
-                android:id="@+id/text_view_drawer"
+            <include
+                android:id="@+id/route_detail_drawer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="50dp"
-                android:text="DRAWER"
-                android:background="#64BCD4"
-                android:textSize="40sp"
-                android:gravity="center"
-                android:layout_gravity="start" />
+                android:layout_marginEnd="30dp"
+                android:layout_gravity="start"
+                layout="@layout/route_detail_drawer"
+                bind:routeViewModel="@{routeViewModel}" />
         </androidx.drawerlayout.widget.DrawerLayout>
     </LinearLayout>
 </layout>
