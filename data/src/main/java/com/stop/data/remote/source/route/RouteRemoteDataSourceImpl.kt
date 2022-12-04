@@ -100,7 +100,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSubwayStationLastTime(
         stationId: String,
-        subwayCircleType: SubwayCircleType,
+        transportDirectionType: TransportDirectionType,
         weekType: WeekType,
     ): List<StationLastTime> {
         with(
@@ -108,7 +108,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                 serviceName = "SearchLastTrainTimeByIDService",
                 stationId = stationId,
                 weekTag = weekType.divisionValue,
-                inOutTag = subwayCircleType.divisionValue,
+                inOutTag = transportDirectionType.divisionValue,
             )
         ) {
             return when (this) {

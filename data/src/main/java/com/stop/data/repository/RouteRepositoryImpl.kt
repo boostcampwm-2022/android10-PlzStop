@@ -8,7 +8,7 @@ import com.stop.domain.model.route.gyeonggi.*
 import com.stop.domain.model.route.seoul.bus.*
 import com.stop.domain.model.route.seoul.subway.Station
 import com.stop.domain.model.route.seoul.subway.StationLastTime
-import com.stop.domain.model.route.seoul.subway.SubwayCircleType
+import com.stop.domain.model.route.seoul.subway.TransportDirectionType
 import com.stop.domain.model.route.seoul.subway.WeekType
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.Coordinate
@@ -46,10 +46,10 @@ internal class RouteRepositoryImpl @Inject constructor(
 
     override suspend fun getSubwayStationLastTime(
         stationId: String,
-        subwayCircleType: SubwayCircleType,
+        transportDirectionType: TransportDirectionType,
         weekType: WeekType,
     ): List<StationLastTime> {
-        return remoteDataSource.getSubwayStationLastTime(stationId, subwayCircleType, weekType)
+        return remoteDataSource.getSubwayStationLastTime(stationId, transportDirectionType, weekType)
     }
 
     override suspend fun getSubwayRoute(

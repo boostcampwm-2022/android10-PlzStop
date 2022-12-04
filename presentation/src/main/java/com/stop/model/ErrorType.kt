@@ -5,5 +5,8 @@ import com.stop.R
 enum class ErrorType(val stringResourcesId: Int) {
     NO_START(R.string.no_start_input),
     NO_END(R.string.no_end_input),
-    NO_ROUTE_RESULT(R.string.route_result_not_exist)
+    NO_ROUTE_RESULT(R.string.route_result_not_exist),
+    TRANSPORT_LAST_TIME_IS_NOT_RECEIVED_YET(R.string.transport_last_time_is_not_received_yet),
+    AVAILABLE_TRAIN_NO_EXIST_YET(R.string.available_train_no_exist_yet),
+    API_CHANGED(R.string.api_changed),
 }

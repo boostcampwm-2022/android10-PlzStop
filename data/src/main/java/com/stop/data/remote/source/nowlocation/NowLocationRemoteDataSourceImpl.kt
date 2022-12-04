@@ -1,8 +1,8 @@
 package com.stop.data.remote.source.nowlocation
 
 import com.stop.data.model.nowlocation.BusInfoRepositoryItem
-import com.stop.data.model.nowlocation.SubwayTrainRealTimePositionRepositoryItem
 import com.stop.data.remote.model.NetworkResult
+import com.stop.data.remote.model.nowlocation.subway.TrainLocationInfo
 import com.stop.data.remote.network.SwOpenApiSeoulService
 import com.stop.data.remote.network.WsBusApiService
 import javax.inject.Inject
@@ -23,10 +23,10 @@ internal class NowLocationRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getSubwayTrainNowStation(trainNumber: String, subwayNumber: Int): SubwayTrainRealTimePositionRepositoryItem {
+    override suspend fun getSubwayTrainNowStation(subwayNumber: Int): List<TrainLocationInfo> {
         with(swOpenApiSeoulService.getSubwayTrainNowStationInfo(stationName = subwayNumber.toString() + LINE)) {
             return when (this) {
-                is NetworkResult.Success -> data.toRepositoryModel(trainNumber)
+                is NetworkResult.Success -> data.realtimePositions
                 is NetworkResult.Failure -> throw IllegalArgumentException(message)
                 is NetworkResult.NetworkError -> throw exception
                 is NetworkResult.Unexpected -> throw  exception

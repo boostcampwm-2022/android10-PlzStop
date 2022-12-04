@@ -1,8 +1,12 @@
 package com.stop.ui.mission
 
 import androidx.lifecycle.*
+import com.stop.domain.model.ApiChangedException
+import com.stop.domain.model.AvailableTrainNoExistException
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
+import com.stop.domain.model.nowlocation.TrainLocationInfoDomain
+import com.stop.domain.model.route.TransportLastTime
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.usecase.nowlocation.GetBusNowLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetNowStationLocationUseCase
@@ -24,10 +28,17 @@ class MissionViewModel @Inject constructor(
     private val getBusNowLocationUseCase: GetBusNowLocationUseCase,
     private val getSubwayTrainNowStationUseCase: GetSubwayTrainNowStationUseCase,
     private val getNowStationLocationUseCase: GetNowStationLocationUseCase,
-    private val getSubwayRouteUseCase: GetSubwayRouteUseCase
+    private val getSubwayRouteUseCase: GetSubwayRouteUseCase,
 ) : ViewModel() {
 
+    class AlreadyHandledException : Exception()
+
     private val random = Random(System.currentTimeMillis())
+
+    // TODO: TransportLastTime은 RouteViewModel에서 전달해주는 데이터를 사용함
+    private val _transportLastTime = MutableLiveData<TransportLastTime>()
+    val transportLastTime: LiveData<TransportLastTime>
+        get() = _transportLastTime
 
     private val _destination = MutableLiveData<String>()
     val destination: LiveData<String>
@@ -113,7 +124,8 @@ class MissionViewModel @Inject constructor(
     private fun getBusNowLocation() {
         viewModelScope.launch {
             while (TIME_TEST < 60) {
-                this@MissionViewModel._busNowLocationInfo.value = getBusNowLocationUseCase(TEST_BUS_540_ID)
+                this@MissionViewModel._busNowLocationInfo.value =
+                    getBusNowLocationUseCase(TEST_BUS_540_ID)
                 delay(5000)
                 TIME_TEST += 1
             }
@@ -121,15 +133,22 @@ class MissionViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getSubwayTrainNowLocation() = withContext(Dispatchers.Main) {
-        getSubwayTrainNowStationUseCase(TEST_TRAIN_NUMBER, TEST_SUBWAY_NUMER)
+    private suspend fun getSubwayTrainNowLocation(): TrainLocationInfoDomain {
+        val lastTimeValue = transportLastTime.value
+
+        if (lastTimeValue == null) {
+            _errorMessage.value = Event(ErrorType.TRANSPORT_LAST_TIME_IS_NOT_RECEIVED_YET)
+            throw AlreadyHandledException()
+        }
+
+        return getSubwayTrainNowStationUseCase(lastTimeValue, TEST_SUBWAY_NUMER)
     }
 
-
     private suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
-        startSubwayStation = getSubwayTrainNowLocation().stationName
+        val trainLocationInfo = getSubwayTrainNowLocation()
+
         getNowStationLocationUseCase(
-            startSubwayStation,
+            trainLocationInfo.currentStationName,
             personCurrentLocation.longitude,
             personCurrentLocation.latitude
         )
@@ -152,7 +171,11 @@ class MissionViewModel @Inject constructor(
                 )
             } catch (exception: IllegalArgumentException) {
                 _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
-                return@launch
+            } catch (exception: ApiChangedException) {
+                _errorMessage.value = Event(ErrorType.API_CHANGED)
+            } catch (exception: AvailableTrainNoExistException) {
+                _errorMessage.value = Event(ErrorType.AVAILABLE_TRAIN_NO_EXIST_YET)
+            } catch (_: AlreadyHandledException) {
             }
         }
     }
@@ -171,7 +194,6 @@ class MissionViewModel @Inject constructor(
 
         private const val TEST_SUBWAY_NUMER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
-        private const val TEST_TRAIN_NUMBER = "4591"
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
         private const val TEST_SUBWAY_LONG = "126.85359515"
