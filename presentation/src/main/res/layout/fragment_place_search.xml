@@ -102,7 +102,7 @@
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
             app:layout_constraintTop_toBottomOf="@id/text_view_current_location"
-            app:places="@{viewModel.nearPlaceList}" />
+            app:items="@{viewModel.nearPlaceList}" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
