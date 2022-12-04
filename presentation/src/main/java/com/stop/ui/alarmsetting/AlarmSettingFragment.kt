@@ -105,7 +105,7 @@ class AlarmSettingFragment : Fragment() {
 
     private fun makeAlarm() {
         //TODO 알람 바꿔야함
-        alarmFunctions.callAlarm("00:00:05", 4, 123, "막차알림")
+        alarmFunctions.callAlarm("00:00:05", 4, ALARM_CODE, "막차알림")
     }
 
     private fun makeAlarmWorker() {
