@@ -43,6 +43,9 @@ class RouteViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage
 
+    var tempItinerary: Itinerary = Itinerary("", listOf(), 0.0, 0, 0, 0)
+    var tempLastTime = mutableListOf<String?>()
+
     fun getRoute() {
         val originValue = _origin.value ?: let {
             _errorMessage.value = Event(ErrorType.NO_START)

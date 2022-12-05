@@ -1,6 +1,7 @@
 package com.stop.ui.route
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.model.route.tmap.custom.TransportRoute
 import com.stop.model.ErrorType
 import com.stop.model.route.Coordinate
 import com.stop.model.route.Place
@@ -56,6 +58,16 @@ class RouteFragment : Fragment() {
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
+                itinerary.routes.forEach {
+                    if (it is TransportRoute) {
+                        Log.d("itinerary", it.start.name)
+                        it.lines.forEach { it2 ->
+                            Log.d("itinerary", it2.toString())
+                        }
+                    }
+                }
+                Log.d("itinerary", itinerary.toString())
+                viewModel.tempItinerary = itinerary
                 viewModel.calculateLastTransportTime(itinerary)
             }
         })
@@ -82,7 +94,8 @@ class RouteFragment : Fragment() {
         }
 
         viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let {
+            it.getContentIfNotHandled()?.let { response ->
+                viewModel.tempLastTime = response.toMutableList()
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }

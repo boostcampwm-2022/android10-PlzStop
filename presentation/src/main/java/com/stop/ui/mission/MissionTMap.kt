@@ -17,6 +17,7 @@ class MissionTMap(
             lineColor = color
             outLineColor = color
         }
+        
         tMapView.addTMapPolyLine(polyLine)
     }
 
