@@ -32,7 +32,9 @@ class RouteDetailTMap(
             addTMapPoints(convertToTMapPoint(route.end.coordinate))
             polyLine = TMapPolyLine(route.start.name, tMapPoints).apply {
                 lineColor = setLineColor(route)
-                lineWidth = 5F
+                lineWidth = LINE_WIDTH
+                outLineColor = ContextCompat.getColor(tMapView.context, R.color.white)
+                outLineWidth = OUT_LINE_WIDTH
             }
             tMapView.addTMapPolyLine(polyLine)
         }
@@ -82,5 +84,10 @@ class RouteDetailTMap(
             is WalkRoute -> ContextCompat.getColor(tMapView.context, R.color.main_yellow)
             else -> ContextCompat.getColor(tMapView.context, R.color.main_light_grey)
         }
+    }
+
+    companion object {
+        private const val LINE_WIDTH = 7F
+        private const val OUT_LINE_WIDTH = 10F
     }
 }

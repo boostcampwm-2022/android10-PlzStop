@@ -96,10 +96,7 @@ open class TMap(
     fun addMarker(id: String, icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem().apply {
             this.id = id
-            this.icon = ContextCompat.getDrawable(
-                context,
-                icon
-            )?.toBitmap()
+            this.icon = ContextCompat.getDrawable(context, icon)?.toBitmap()
             tMapPoint = location
         }
 
