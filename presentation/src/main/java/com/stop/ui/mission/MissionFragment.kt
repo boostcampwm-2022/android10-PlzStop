@@ -88,6 +88,7 @@ class MissionFragment : Fragment(), MissionHandler {
             )
 
             tMap.isTracking = true
+            tMap.isTransportTracking = false
         }
 
         binding.layoutBusCurrent.setOnClickListener {
@@ -98,6 +99,7 @@ class MissionFragment : Fragment(), MissionHandler {
             )
 
             tMap.isTracking = false
+            tMap.isTransportTracking = true
         }
 
     }
@@ -164,6 +166,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 Marker.BUS_MARKER_IMG,
                 TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
             )
+            tMap.trackingTransport(beforeLocation)
         }
     }
 
@@ -223,6 +226,7 @@ class MissionFragment : Fragment(), MissionHandler {
         tMap.apply {
             tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
                 isTracking = false
+                isTransportTracking = false
             }
         }
     }
