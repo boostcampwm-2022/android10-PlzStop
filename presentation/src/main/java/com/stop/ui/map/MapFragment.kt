@@ -58,7 +58,6 @@ class MapFragment : Fragment(), MapHandler {
         requestPermissionsLauncher.launch(PERMISSIONS)
 
         tMap.initListener()
-        addBookmarkMarker()
         observeClickPlace()
         observeClickCurrentLocation()
     }
@@ -108,12 +107,6 @@ class MapFragment : Fragment(), MapHandler {
                 .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
-        /*
-        binding.layoutBookmark.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_mapFragment_to_bookMarkFragment)
-        }
-        */
-
         binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
             val action = MapFragmentDirections.actionMapFragmentToRouteFragment().setStart(placeSearchViewModel.panelInfo)
             binding.root.findNavController().navigate(action)
@@ -157,16 +150,6 @@ class MapFragment : Fragment(), MapHandler {
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
 
         })
-    }
-
-    private fun addBookmarkMarker() {
-        placeSearchViewModel.bookmarks.forEachIndexed { index, location ->
-            tMap.addMarker(
-                index.toString(),
-                Marker.BOOKMARK_MARKER_IMG,
-                TMapPoint(location.latitude, location.longitude)
-            )
-        }
     }
 
     private fun observeClickPlace() {
@@ -227,7 +210,6 @@ class MapFragment : Fragment(), MapHandler {
             layoutSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
-            layoutBookmark.visibility = mapUIVisibility
         }
     }
 

@@ -43,8 +43,6 @@ class PlaceSearchViewModel @Inject constructor(
     private val _isNearPlacesNotEmpty = MutableStateFlow(false)
     val isNearPlacesNotEmpty: StateFlow<Boolean> = _isNearPlacesNotEmpty
 
-    var bookmarks = mutableListOf(EXAMPLE_BOOKMARK_1, EXAMPLE_BOOKMARK_2, EXAMPLE_BOOKMARK_3)
-
     private val errorMessageChannel = Channel<String>()
     val errorMessage = errorMessageChannel.receiveAsFlow()
 
@@ -155,12 +153,6 @@ class PlaceSearchViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             deleteRecentPlaceSearchUseCase.deleteAllRecentPlaceSearch()
         }
-    }
-
-    companion object {
-        private val EXAMPLE_BOOKMARK_1 = Location(37.3931010, 126.9781449)
-        private val EXAMPLE_BOOKMARK_2 = Location(37.55063543842469, 127.07369927986392)
-        private val EXAMPLE_BOOKMARK_3 = Location(37.48450549635376, 126.89324337770405)
     }
 
 }

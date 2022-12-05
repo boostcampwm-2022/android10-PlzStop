@@ -4,6 +4,7 @@
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="placeSearchViewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
@@ -58,13 +59,13 @@
             android:id="@+id/layout_panel"
             android:layout_width="0dp"
             android:layout_height="170dp"
-            android:layout_marginEnd="90dp"
             android:layout_marginTop="30dp"
+            android:layout_marginEnd="90dp"
             android:elevation="15dp"
             android:visibility="@{placeSearchViewModel.panelVisibility}"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
+            app:layout_constraintStart_toStartOf="@id/guideline_start">
 
             <include
                 android:id="@+id/home_panel"
@@ -77,10 +78,10 @@
             android:id="@+id/layout_search"
             android:layout_width="0dp"
             android:layout_height="52dp"
-            android:elevation="15dp"
             android:background="@drawable/background_search"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            android:elevation="15dp"
             app:layout_constraintEnd_toStartOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toTopOf="@id/guideline_top">
 
             <TextView
@@ -91,17 +92,17 @@
                 android:layout_marginBottom="1dp"
                 android:gravity="center_vertical"
                 android:text="@string/search_hint"
-                android:textSize="17sp"
-                android:textColor="#808590" />
+                android:textColor="#808590"
+                android:textSize="17sp" />
 
             <ImageView
                 android:id="@+id/image_view_search"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                app:layout_constraintBottom_toBottomOf="@id/layout_search"
                 app:layout_constraintStart_toStartOf="@id/layout_search"
                 app:layout_constraintTop_toTopOf="@id/layout_search"
-                app:layout_constraintBottom_toBottomOf="@id/layout_search"
                 app:srcCompat="@drawable/ic_search" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -111,20 +112,20 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginBottom="10dp"
-            android:elevation="15dp"
             android:background="@drawable/background_button"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toTopOf="@id/layout_current">
+            android:elevation="15dp"
+            app:layout_constraintBottom_toTopOf="@id/layout_current"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
             <ImageView
                 android:id="@+id/image_view_compass"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/layout_compass"
-                app:layout_constraintEnd_toEndOf="@id/layout_compass"
-                app:layout_constraintTop_toTopOf="@id/layout_compass"
                 app:layout_constraintBottom_toBottomOf="@id/layout_compass"
+                app:layout_constraintEnd_toEndOf="@id/layout_compass"
+                app:layout_constraintStart_toStartOf="@id/layout_compass"
+                app:layout_constraintTop_toTopOf="@id/layout_compass"
                 app:srcCompat="@drawable/ic_compass" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -134,43 +135,21 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginBottom="10dp"
-            android:elevation="15dp"
             android:background="@drawable/background_button"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toTopOf="@id/layout_bookmark">
+            android:elevation="15dp"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
             <ImageView
                 android:id="@+id/image_view_current"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/layout_current"
-                app:layout_constraintEnd_toEndOf="@id/layout_current"
-                app:layout_constraintTop_toTopOf="@id/layout_current"
                 app:layout_constraintBottom_toBottomOf="@id/layout_current"
+                app:layout_constraintEnd_toEndOf="@id/layout_current"
+                app:layout_constraintStart_toStartOf="@id/layout_current"
+                app:layout_constraintTop_toTopOf="@id/layout_current"
                 app:srcCompat="@drawable/ic_location" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_bookmark"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:elevation="15dp"
-            android:background="@drawable/background_button"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
-
-            <ImageView
-                android:id="@+id/image_view_bookmark"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="@id/layout_bookmark"
-                app:layout_constraintEnd_toEndOf="@id/layout_bookmark"
-                app:layout_constraintTop_toTopOf="@id/layout_bookmark"
-                app:layout_constraintBottom_toBottomOf="@id/layout_bookmark"
-                app:srcCompat="@drawable/ic_bookmark" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -183,9 +162,9 @@
                 android:id="@+id/layout_home_bottom_sheet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+                app:behavior_hideable="false"
                 app:behavior_peekHeight="100dp"
-                app:behavior_hideable="false">
+                app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
                 <include
                     android:id="@+id/home_bottom_sheet"
