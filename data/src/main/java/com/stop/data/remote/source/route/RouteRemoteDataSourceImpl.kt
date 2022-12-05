@@ -108,7 +108,11 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                 serviceName = "SearchLastTrainTimeByIDService",
                 stationId = stationId,
                 weekTag = weekType.divisionValue,
-                inOutTag = transportDirectionType.divisionValue,
+                inOutTag = when (transportDirectionType) {
+                    TransportDirectionType.INNER, TransportDirectionType.TO_END -> "1"
+                    TransportDirectionType.OUTER, TransportDirectionType.TO_FIRST -> "2"
+                    TransportDirectionType.UNKNOWN -> throw IllegalArgumentException()
+                },
             )
         ) {
             return when (this) {

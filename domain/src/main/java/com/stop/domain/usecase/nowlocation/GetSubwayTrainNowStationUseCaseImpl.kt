@@ -35,8 +35,8 @@ class GetSubwayTrainNowStationUseCaseImpl @Inject constructor(
         }
 
         return when (transportLastTime.transportDirectionType) {
-            TransportDirectionType.OUTER -> possibleTrains.first()
-            TransportDirectionType.INNER -> possibleTrains.last()
+            TransportDirectionType.OUTER, TransportDirectionType.TO_FIRST -> possibleTrains.first()
+            TransportDirectionType.INNER, TransportDirectionType.TO_END -> possibleTrains.last()
             TransportDirectionType.UNKNOWN -> throw ApiChangedException()
         }
     }

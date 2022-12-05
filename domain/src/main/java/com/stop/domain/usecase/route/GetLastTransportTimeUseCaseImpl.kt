@@ -273,9 +273,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             }
         } else {
             if (startStationIndex < endStationIndex) {
-                TransportDirectionType.OUTER
+                TransportDirectionType.TO_FIRST
             } else {
-                TransportDirectionType.INNER
+                TransportDirectionType.TO_END
             }
         }
     }
@@ -341,7 +341,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = listOf(),
             enableDestinationStation = listOf(),
-            transportDirectionType = TransportDirectionType.UNKNOWN,
+            transportDirectionType = TransportDirectionType.UNKNOWN, // TODO: 서울 버스의 상행, 하행 구현
         )
     }
 
@@ -503,9 +503,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         }
 
         if (startIndex < endIndex) {
-            return Pair(TransportDirectionType.INNER, startIndex)
+            return Pair(TransportDirectionType.TO_END, startIndex)
         }
-        return Pair(TransportDirectionType.OUTER, startIndex)
+        return Pair(TransportDirectionType.TO_FIRST, startIndex)
     }
 
     private suspend fun convertSeoulBusRouteId(
