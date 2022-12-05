@@ -142,6 +142,13 @@ class MissionFragment : Fragment(), MissionHandler {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         }
+        viewModel.transportIsArrived.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isArrived ->
+                if (isArrived) {
+                    Toast.makeText(requireContext(), "도착했습니다.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     private fun drawBusLocationLine() {

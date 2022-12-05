@@ -55,6 +55,10 @@ class MissionViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage
 
+    private val _transportIsArrived = MutableLiveData<Event<Boolean>>()
+    val transportIsArrived: LiveData<Event<Boolean>>
+        get() = _transportIsArrived
+
     val leftMinute: LiveData<String> = Transformations.switchMap(estimatedTimeRemaining) {
         MutableLiveData<String>().apply {
             value = (it / TIME_UNIT).toString().padStart(TIME_DIGIT, '0')
@@ -80,8 +84,15 @@ class MissionViewModel @Inject constructor(
     lateinit var startSubwayStation: String
 
     init {
-        getBusNowLocation()
-        getSubwayRoute()
+        startMission()
+    }
+
+    fun startMission() {
+        val transportLastTime = _transportLastTime.value ?: return
+        when (transportLastTime.transportMoveType) {
+            TransportMoveType.BUS -> getBusNowLocation(transportLastTime)
+            TransportMoveType.SUBWAY -> getSubwayRoute()
+        }
     }
 
     fun setDestination(inputDestination: String) {
@@ -121,20 +132,14 @@ class MissionViewModel @Inject constructor(
         }
     }
 
-    private fun getBusNowLocation() {
-        val lastTimeValue = _transportLastTime.value
-        if (lastTimeValue == null) {
-            _errorMessage.value = Event(ErrorType.TRANSPORT_LAST_TIME_IS_NOT_RECEIVED_YET)
-            throw AlreadyHandledException()
-        }
-
+    private fun getBusNowLocation(transportLastTime: TransportLastTime) {
         viewModelScope.launch {
             /**
              * 이 작업은 알람 화면에서 진행되고,
              * 탑승해야 하는 버스 아이디 1개만 전해줍니다.
              * 여기서는 임의로 중간에 있는 버스를 선택했습니다.
              */
-            var busVehicleIds = getBusesOnRouteUseCase(lastTimeValue)
+            var busVehicleIds = getBusesOnRouteUseCase(transportLastTime)
             if (busVehicleIds.isEmpty()) {
                 _errorMessage.value = Event(ErrorType.AVAILABLE_BUS_NO_EXIST_YET)
                 throw AlreadyHandledException()
@@ -162,12 +167,17 @@ class MissionViewModel @Inject constructor(
                 }
                 delay(5000)
             }
-            _errorMessage.value = Event(ErrorType.MISSION_SOMETHING_WRONG)
+            val transportIsArrived = _transportIsArrived.value?.peekContent()
+            if (transportIsArrived != true) {
+                _errorMessage.value = Event(ErrorType.MISSION_SOMETHING_WRONG)
+                return@launch
+            }
         }
     }
 
     // TODO: 버스가 도착했을 때 처리하기
     private fun busArrivedAtDestination() {
+        _transportIsArrived.value = Event(true)
     }
 
     private suspend fun getSubwayTrainNowLocation(): TrainLocationInfoDomain {
@@ -225,9 +235,6 @@ class MissionViewModel @Inject constructor(
         private const val ONE_SECOND = 1
         private const val RANDOM_LIMIT = 5
         private const val ZERO = 0
-
-        private const val TEST_BUS_540_ROUTE_ID = "100100083"
-        private var TIME_TEST = 0
 
         private const val TEST_SUBWAY_LINE_NUMBER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
