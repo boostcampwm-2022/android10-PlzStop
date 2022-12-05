@@ -1,22 +1,24 @@
 package com.stop.ui.alarmsetting
 
 import android.os.Bundle
-import android.transition.AutoTransition
-import android.transition.TransitionManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.stop.AlarmFunctions
 import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
+import com.stop.domain.model.alarm.AlarmUseCaseItem
+import com.stop.ui.route.ClickRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
+import kotlin.math.roundToInt
 
 @AndroidEntryPoint
 class AlarmSettingFragment : Fragment() {
@@ -24,7 +26,8 @@ class AlarmSettingFragment : Fragment() {
     private var _binding: FragmentAlarmSettingBinding? = null
     private val binding get() = _binding!!
 
-    private val alarmSettingViewModel by viewModels<AlarmSettingViewModel>()
+    private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
+    private val clickRouteViewModel by activityViewModels<ClickRouteViewModel>()
 
     private lateinit var alarmFunctions: AlarmFunctions
 
@@ -44,58 +47,29 @@ class AlarmSettingFragment : Fragment() {
 
         alarmFunctions = AlarmFunctions(requireActivity())
         initView()
-        setButtonListener()
         setToggleListener()
+
+        // TODO 뷰모델 가져와서 경로 막차시간 등 연결 작업해야함
     }
 
     private fun initBinding() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
-            viewModel = alarmSettingViewModel
+            alarmViewModel = alarmSettingViewModel
+            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음"
+            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음"
+            lastTime = clickRouteViewModel.lastTime
+            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0
             fragment = this@AlarmSettingFragment
         }
     }
 
     private fun initView() {
         with(binding) {
-            textViewLastTime.text = getString(R.string.last_transport_arrival_time, 23, 30)
-            textViewWalk.text = getString(R.string.last_transport_walking_time, 10)
-
             numberPickerAlarmTime.minValue = 0
             numberPickerAlarmTime.maxValue = 60
 
             buttonSound.isCheckable = true
-            buttonMissionOn.isCheckable = true
-        }
-    }
-
-    private fun setButtonListener() {
-        with(binding) {
-            textViewRouteContent.setOnClickListener {
-                if (textViewTransportContent.visibility == View.VISIBLE) {
-                    setTransportViewGone()
-                } else {
-                    setTransportViewVisible()
-                }
-            }
-        }
-    }
-
-    private fun setTransportViewGone() {
-        with(binding) {
-            TransitionManager.beginDelayedTransition(cardViewRoute, AutoTransition())
-            textViewTransportContent.visibility = View.GONE
-            textViewRouteContent.setCompoundDrawables(null, null, null, null)
-            textViewRouteContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0)
-        }
-    }
-
-    private fun setTransportViewVisible() {
-        with(binding) {
-            TransitionManager.beginDelayedTransition(cardViewRoute, AutoTransition())
-            textViewTransportContent.visibility = View.VISIBLE
-            textViewRouteContent.setCompoundDrawables(null, null, null, null)
-            textViewRouteContent.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0)
         }
     }
 
@@ -109,34 +83,29 @@ class AlarmSettingFragment : Fragment() {
                     }
                 }
             }
-
-            toggleGroupMission.addOnButtonCheckedListener { _, checkedId, isChecked ->
-                if (isChecked) {
-                    when (checkedId) {
-                        R.id.button_mission_on -> alarmSettingViewModel.isMission = true
-                        else -> alarmSettingViewModel.isMission = false
-                    }
-                }
-            }
         }
     }
 
     fun setAlarmRegisterListener() {
-        alarmSettingViewModel.saveAlarm()
+        val alarmUseCaseItem = AlarmUseCaseItem(
+            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음",
+            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음",
+            routes = clickRouteViewModel.clickRoute?.routes ?: emptyList(),
+            lastTime = clickRouteViewModel.lastTime,
+            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0,
+            0,
+            ALARM_CODE,
+            true
+        )
+        alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
         makeAlarm()
         //makeAlarmWorker()
-        //binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
+        binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
     }
 
-    private var test = true
     private fun makeAlarm() {
-        if (test) {
-            alarmFunctions.callAlarm("10:00:00", 4, 123, "막차알림")
-            test = !test
-        } else {
-            alarmFunctions.cancelAlarm(123)
-            test = !test
-        }
+        //TODO 알람 바꿔야함
+        alarmFunctions.callAlarm("00:00:05", 4, ALARM_CODE, "막차알림")
     }
 
     private fun makeAlarmWorker() {
@@ -155,4 +124,9 @@ class AlarmSettingFragment : Fragment() {
         _binding = null
         super.onDestroyView()
     }
+
+    companion object {
+        const val ALARM_CODE = 123
+    }
+
 }

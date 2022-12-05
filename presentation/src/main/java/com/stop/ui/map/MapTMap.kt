@@ -10,7 +10,6 @@ import com.skt.tmap.poi.TMapPOIItem
 import com.stop.model.Location
 import com.stop.ui.util.Marker
 import com.stop.ui.util.TMap
-import java.util.ArrayList
 
 class MapTMap(
     context: Context,

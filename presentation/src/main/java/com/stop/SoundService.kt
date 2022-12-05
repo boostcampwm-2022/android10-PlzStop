@@ -10,6 +10,7 @@ import android.os.*
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
+import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -21,6 +22,8 @@ class SoundService : LifecycleService() {
 
     @Inject
     lateinit var getAlarmUseCase: GetAlarmUseCase
+    @Inject
+    lateinit var deleteAlarmUseCase: DeleteAlarmUseCase
 
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
@@ -73,7 +76,7 @@ class SoundService : LifecycleService() {
 
     private fun createNotification() {
         val notificationManager = this.getSystemService(NotificationManager::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isMoreThanOreo()) {
             if (notificationManager.getNotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID) == null) {
                 NotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID, DEFAULT_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {
                     notificationManager.createNotificationChannel(this)
@@ -100,6 +103,7 @@ class SoundService : LifecycleService() {
             vibratorManager?.cancel()
         }
         vibratorManager = null
+
         super.onDestroy()
     }
 

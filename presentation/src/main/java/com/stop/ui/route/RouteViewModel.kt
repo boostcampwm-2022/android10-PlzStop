@@ -40,6 +40,8 @@ class RouteViewModel @Inject constructor(
     val lastTimeResponse: LiveData<Event<List<TransportLastTime?>>>
         get() = _lastTimeResponse
 
+    var lastTimes = mutableListOf<String?>()
+
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage

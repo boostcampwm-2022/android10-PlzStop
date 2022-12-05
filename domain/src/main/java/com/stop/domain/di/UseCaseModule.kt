@@ -3,7 +3,7 @@ package com.stop.domain.di
 import com.stop.domain.usecase.alarm.*
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCaseImpl
-import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.domain.usecase.nearplace.*
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCaseImpl
 import com.stop.domain.usecase.nowlocation.*
 import dagger.Module
@@ -69,5 +69,23 @@ internal interface UseCaseModule {
     @Binds
     @Singleton
     fun provideGetBusesOnRouteUseCase(getBusesOnRouteUseCaseImpl: GetBusesOnRouteUseCaseImpl): GetBusesOnRouteUseCase
+
+    @Binds
+    @Singleton
+    fun provideGetRecentPlaceSearchUseCase(
+        getRecentPlaceSearchUseCaseImpl: GetRecentPlaceSearchUseCaseImpl
+    ): GetRecentPlaceSearchUseCase
+
+    @Binds
+    @Singleton
+    fun provideDeleteRecentPlaceSearchUseCase(
+        deleteRecentPlaceSearchUseCaseImpl: DeleteRecentPlaceSearchUseCaseImpl
+    ): DeleteRecentPlaceSearchUseCase
+
+    @Binds
+    @Singleton
+    fun provideInsertRecentPlaceSearchUseCase(
+        insertRecentPlaceSearchUseCaseImpl: InsertRecentPlaceSearchUseCaseImpl
+    ): InsertRecentPlaceSearchUseCase
 
 }
