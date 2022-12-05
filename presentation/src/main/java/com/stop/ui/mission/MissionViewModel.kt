@@ -7,7 +7,11 @@ import com.stop.domain.model.nowlocation.BusCurrentInformationUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.nowlocation.TrainLocationInfoDomain
 import com.stop.domain.model.nowlocation.TransportState
+import com.stop.domain.model.route.Area
 import com.stop.domain.model.route.TransportLastTime
+import com.stop.domain.model.route.TransportMoveType
+import com.stop.domain.model.route.TransportStation
+import com.stop.domain.model.route.seoul.subway.TransportDirectionType
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.usecase.nowlocation.*
 import com.stop.model.ErrorType
@@ -84,6 +88,29 @@ class MissionViewModel @Inject constructor(
     lateinit var startSubwayStation: String
 
     init {
+        // 영등포04 버스
+        _transportLastTime.value = TransportLastTime(
+            transportMoveType = TransportMoveType.BUS,
+            area = Area.SEOUL,
+            lastTime = "23:50:50",
+            destinationStationName = "대림요양병원",
+            stationsUntilStart = listOf(
+                TransportStation(stationName = "대림역", stationId = "118900002"),
+                TransportStation(stationName = "대림역", stationId = "116000200"),
+                TransportStation(stationName = "대림역7호선", stationId = "118900008"),
+                TransportStation(stationName = "우성2차아파트", stationId = "118900012"),
+                TransportStation(stationName = "대림3동주민센터", stationId = "118900187"),
+                TransportStation(stationName = "정현부페", stationId = "118900021"),
+                TransportStation(stationName = "국민은행", stationId = "118900188"),
+//                TransportStation(stationName = "대림요양병원", stationId = "118900028"),
+//                TransportStation(stationName = "대림요양병원", stationId = "118900028"),
+//                TransportStation(stationName = "신길건영아파트", stationId = "118000531"),
+//                TransportStation(stationName = "성락교회", stationId = "118900036"),
+            ),
+            enableDestinationStation = listOf(),
+            transportDirectionType = TransportDirectionType.TO_END,
+            routeId = "118900001"
+        )
         startMission()
     }
 
