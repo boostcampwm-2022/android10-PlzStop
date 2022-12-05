@@ -23,12 +23,14 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.nav_graph)
-        graph.setStartDestination(R.id.alarmStartFragment)
+        intent?.extras?.getInt("ALARM_CODE")?.let {
+            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val inflater = navHostFragment.navController.navInflater
+            val graph = inflater.inflate(R.navigation.nav_graph)
+            graph.setStartDestination(R.id.alarmStartFragment)
 
-        navHostFragment.navController.graph = graph
+            navHostFragment.navController.graph = graph
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
