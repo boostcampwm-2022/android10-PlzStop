@@ -50,4 +50,10 @@
     <string name="notification_title">막차 알림</string>
     <string name="alarm_cancel_text">취소하기</string>
     <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
+
+    <string name="mission_notification_channel_id">mission_notification_channel_id</string>
+    <string name="mission_notification_channel_name">mission_notification_channel_name</string>
+    <string name="mission_notification_title">실시간 위치 추적중</string>
+    <string name="mission_cancel_text">취소하기</string>
+    <string name="mission_content_text">정류장까지 달려~!</string>
 </resources>

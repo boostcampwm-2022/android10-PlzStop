@@ -49,6 +49,7 @@ class MissionFragment : Fragment(), MissionHandler {
         initTMap()
         initView()
         setObserve()
+        viewModel.makeMissionWorker("23:30:00")
     }
 
     override fun onDestroyView() {

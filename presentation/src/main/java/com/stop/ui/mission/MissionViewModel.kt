@@ -1,6 +1,10 @@
 package com.stop.ui.mission
 
 import androidx.lifecycle.*
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.stop.LastTimeCheckWorker
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -9,6 +13,7 @@ import com.stop.domain.usecase.nowlocation.GetNowStationLocationUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayRouteUseCase
 import com.stop.domain.usecase.nowlocation.GetSubwayTrainNowStationUseCase
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,7 +27,8 @@ class MissionViewModel @Inject constructor(
     private val getBusNowLocationUseCase: GetBusNowLocationUseCase,
     private val getSubwayTrainNowStationUseCase: GetSubwayTrainNowStationUseCase,
     private val getNowStationLocationUseCase: GetNowStationLocationUseCase,
-    private val getSubwayRouteUseCase: GetSubwayRouteUseCase
+    private val getSubwayRouteUseCase: GetSubwayRouteUseCase,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     private val random = Random(System.currentTimeMillis())
@@ -146,6 +152,32 @@ class MissionViewModel @Inject constructor(
         }
     }
 
+    fun makeMissionWorker(time: String) {
+        val workData = workDataOf(
+            AlarmSettingFragment.LAST_TIME to time,
+            AlarmSettingFragment.ALARM_TIME to 0
+        )
+
+        val workRequest = OneTimeWorkRequestBuilder<MissionWorker>()
+            .setInputData(workData)
+            .build()
+
+        workManager.enqueue(workRequest)
+    }
+
+    fun makeAlarmWorker(time : String) {
+        val workData = workDataOf(
+            AlarmSettingFragment.LAST_TIME to time,
+            AlarmSettingFragment.ALARM_TIME to 0
+        )
+
+        val workRequest = OneTimeWorkRequestBuilder<LastTimeCheckWorker>()
+            .setInputData(workData)
+            .build()
+
+        workManager.enqueue(workRequest)
+    }
+
     companion object {
         private const val DELAY_TIME = 1000L
         private const val TIME_ZERO = 0
@@ -160,7 +192,7 @@ class MissionViewModel @Inject constructor(
 
         private const val TEST_SUBWAY_NUMER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
-        private const val TEST_TRAIN_NUMBER = "4591"
+        private const val TEST_TRAIN_NUMBER = "4330"
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
         private const val TEST_SUBWAY_LONG = "126.85359515"
