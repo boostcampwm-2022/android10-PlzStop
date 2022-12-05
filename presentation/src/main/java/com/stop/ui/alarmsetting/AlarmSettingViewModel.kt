@@ -3,10 +3,18 @@ package com.stop.ui.alarmsetting
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.workDataOf
+import com.stop.AlarmFunctions
+import com.stop.LastTimeCheckWorker
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +27,9 @@ import javax.inject.Inject
 class AlarmSettingViewModel @Inject constructor(
     private val saveAlarmUseCase: SaveAlarmUseCase,
     private val getAlarmUseCase: GetAlarmUseCase,
-    private val deleteAlarmUseCase: DeleteAlarmUseCase
+    private val deleteAlarmUseCase: DeleteAlarmUseCase,
+    private val alarmFunctions: AlarmFunctions,
+    private val workManager: WorkManager
 ) : ViewModel() {
 
     val alarmTime = MutableLiveData(0)
@@ -47,10 +57,31 @@ class AlarmSettingViewModel @Inject constructor(
         }
     }
 
-    fun deleteAlarm(){
-        viewModelScope.launch(Dispatchers.IO){
+    fun deleteAlarm() {
+        viewModelScope.launch(Dispatchers.IO) {
             deleteAlarmUseCase.deleteAlarm()
         }
+    }
+
+    fun callAlarm(time: String) {
+        alarmFunctions.callAlarm(time, alarmTime.value ?: 0, ALARM_CODE)
+    }
+
+    fun cancelAlarm() {
+        alarmFunctions.cancelAlarm(ALARM_CODE)
+    }
+
+    fun makeAlarmWorker(time : String) {
+        val workData = workDataOf(
+            LAST_TIME to time,
+            ALARM_TIME to alarmTime.value
+        )
+
+        val workRequest = OneTimeWorkRequestBuilder<LastTimeCheckWorker>()
+            .setInputData(workData)
+            .build()
+
+        workManager.enqueue(workRequest)
     }
 
 }

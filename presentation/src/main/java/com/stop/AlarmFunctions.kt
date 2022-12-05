@@ -11,13 +11,12 @@ class AlarmFunctions(
 
     private lateinit var pendingIntent: PendingIntent
 
-    fun callAlarm(lastTime: String, alarmTime: Int, alarmCode: Int, alarmContent: String) {
+    fun callAlarm(lastTime: String, alarmTime: Int, alarmCode: Int) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         val receiverIntent = Intent(context, AlarmReceiver::class.java)
         receiverIntent.apply {
             putExtra("ALARM_CODE", alarmCode)
-            putExtra("ALARM_CONTENT", alarmContent)
         }
 
         val pendingIntent = if (isMoreThanSnow()) {

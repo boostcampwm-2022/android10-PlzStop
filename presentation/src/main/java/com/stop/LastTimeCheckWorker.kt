@@ -10,6 +10,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
@@ -24,8 +26,14 @@ class LastTimeCheckWorker @AssistedInject constructor(
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    override suspend fun doWork(): Result {
+    private val lastTime by lazy {
+        inputData.getString(LAST_TIME)
+    }
+    private val alarmTime by lazy {
+        inputData.getInt(ALARM_TIME, 0)
+    }
 
+    override suspend fun doWork(): Result {
         setForeground(createForegroundInfo())
         checkLastTransportTime()
 
@@ -66,6 +74,8 @@ class LastTimeCheckWorker @AssistedInject constructor(
     }
 
     private suspend fun checkLastTransportTime() {
+        //TODO 막차시간 갱신시 알람 삭제 후 등록 로직필요
+
         while (isStopped.not()) {
             getNearPlacesUseCase.getNearPlaces(
                 "아남타워",
@@ -73,7 +83,7 @@ class LastTimeCheckWorker @AssistedInject constructor(
                 37.553836
             )
 
-            val delayTime = getDelayTime("18:18:00")
+            val delayTime = getDelayTime()
             if (delayTime == 0L) {
                 this.onStopped()
             } else {
@@ -82,8 +92,8 @@ class LastTimeCheckWorker @AssistedInject constructor(
         }
     }
 
-    private fun getDelayTime(lastTime: String): Long {
-        val fullLastTimeMillis = makeFullTime(lastTime).timeInMillis
+    private fun getDelayTime(): Long {
+        val fullLastTimeMillis = makeFullTime(lastTime ?: "").timeInMillis
         val currentTimeMillis = System.currentTimeMillis()
 
         return when (val diffTimeMillis =
