@@ -46,4 +46,8 @@
     <string name="available_bus_no_exist_yet">탑승할 수 있는 버스가 아직 없습니다.</string>
     <string name="bus_disappear_suddenly">버스가 갑자기 사라졌습니다.</string>
     <string name="mission_something_wrong">미션 진행 중 무언가 잘못되었습니다.</string>
+    <string name="image_view_reset_content_description">출발지, 도착지를 모두 비웁니다.</string>
+    <string name="image_view_swap_origin_with_destination_content_description">출발지와 도착지를 바꿉니다.</string>
+    <string name="image_view_exit_content_description">경로 검색 화면을 종료합니다.</string>
+    <string name="image_view_icon_content_description">승차지의 종류를 나타내는 아이콘입니다.</string>
 </resources>
