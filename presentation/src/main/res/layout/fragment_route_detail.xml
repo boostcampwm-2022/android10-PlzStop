@@ -2,6 +2,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -17,23 +18,102 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="107dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/main_dark_grey">
 
-            <ImageView
-                android:id="@+id/image_view_location"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_location"
-                android:layout_marginEnd="15dp"
-                android:layout_marginBottom="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="15dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="10dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_end="15dp" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/background_search"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintEnd_toStartOf="@id/image_view_close"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
+
+                <TextView
+                    android:id="@+id/text_view_origin"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="1dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@{routeViewModel.origin.name}"
+                    android:textSize="17sp"
+                    android:textColor="@color/main_light_grey"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/image_view_arrow_right"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:text="출발지" />
+
+                <ImageView
+                    android:id="@+id/image_view_arrow_right"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:srcCompat="@drawable/ic_arrow_right" />
+
+                <TextView
+                    android:id="@+id/text_view_destination"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="1dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@{routeViewModel.destination.name}"
+                    android:textSize="17sp"
+                    android:textColor="@color/main_light_grey"
+                    app:layout_constraintStart_toEndOf="@id/image_view_arrow_right"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:text="도착지" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <ImageView
+                android:id="@+id/image_view_close"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                app:layout_constraintEnd_toEndOf="@id/guideline_end"
+                app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+                app:srcCompat="@drawable/ic_close" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="0dp"
+            android:layout_weight="6">
 
             <FrameLayout
                 android:id="@+id/frame_layout_container"
