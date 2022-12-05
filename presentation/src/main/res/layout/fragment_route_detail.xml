@@ -18,8 +18,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="120dp"
             android:background="@color/main_dark_grey">
 
             <androidx.constraintlayout.widget.Guideline
@@ -34,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_end="10dp" />
+                app:layout_constraintGuide_end="5dp" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline_bottom"
@@ -46,7 +45,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginEnd="5dp"
                 android:background="@drawable/background_search"
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintEnd_toStartOf="@id/image_view_close"
@@ -103,7 +102,7 @@
                 android:id="@+id/image_view_close"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:padding="3dp"
+                android:padding="4dp"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
                 app:srcCompat="@drawable/ic_close" />
@@ -112,8 +111,7 @@
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="6">
+            android:layout_height="match_parent">
 
             <FrameLayout
                 android:id="@+id/frame_layout_container"

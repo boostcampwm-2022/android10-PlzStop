@@ -2,8 +2,10 @@ package com.stop.ui.routedetail
 
 import android.content.Context
 import android.graphics.Color
+import androidx.core.content.ContextCompat
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
+import com.stop.R
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.ui.util.TMap
 
@@ -23,8 +25,8 @@ class RouteDetailTMap(
             addTMapPoints(convertToTMapPoint(route.start.coordinate))
 
             when (route) {
-                is WalkRoute -> drawWalkRoute(route)
                 is TransportRoute -> drawTransportRoute(route)
+                is WalkRoute -> drawWalkRoute(route)
             }
 
             addTMapPoints(convertToTMapPoint(route.end.coordinate))
@@ -36,6 +38,12 @@ class RouteDetailTMap(
         }
     }
 
+    private fun drawTransportRoute(route: TransportRoute) {
+        route.lines.forEach { line ->
+            addTMapPoints(convertToTMapPoint(Coordinate(line.longitude, line.latitude)))
+        }
+    }
+
     private fun drawWalkRoute(route: WalkRoute) {
         route.steps.forEach { step ->
             step.lineString.split(" ").forEach { coordinate ->
@@ -43,12 +51,6 @@ class RouteDetailTMap(
 
                 addTMapPoints(TMapPoint(points.last().toDouble(), points.first().toDouble()))
             }
-        }
-    }
-
-    private fun drawTransportRoute(route: TransportRoute) {
-        route.lines.forEach { line ->
-            addTMapPoints(convertToTMapPoint(Coordinate(line.longitude, line.latitude)))
         }
     }
 
@@ -63,11 +65,10 @@ class RouteDetailTMap(
     }
 
     private fun setLineColor(route: Route): Int {
-        return when (route.mode) {
-            MoveType.WALK -> Color.GRAY
-            MoveType.BUS -> Color.CYAN
-            MoveType.SUBWAY -> Color.MAGENTA
-            else -> Color.YELLOW
+        return when (route) {
+            is TransportRoute -> Color.parseColor("#${route.routeColor}")
+            is WalkRoute -> ContextCompat.getColor(tMapView.context, R.color.main_yellow)
+            else -> ContextCompat.getColor(tMapView.context, R.color.main_light_grey)
         }
     }
 }
