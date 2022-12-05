@@ -33,7 +33,7 @@ class RouteDetailTMap(
             polyLine = TMapPolyLine(route.start.name, tMapPoints).apply {
                 lineColor = setLineColor(route)
                 lineWidth = LINE_WIDTH
-                outLineColor = ContextCompat.getColor(tMapView.context, R.color.white)
+                outLineColor = Color.WHITE
                 outLineWidth = OUT_LINE_WIDTH
             }
             tMapView.addTMapPolyLine(polyLine)
