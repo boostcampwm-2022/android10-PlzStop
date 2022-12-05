@@ -6,6 +6,7 @@ data class TransportLastTime(
     val transportMoveType : TransportMoveType,
     val area : Area,
     val lastTime: String,
+    val timeToBoard: String,
     val destinationStationName: String,
     val stationsUntilStart: List<TransportStation>,
     val enableDestinationStation: List<TransportStation>,

@@ -15,6 +15,8 @@ data class TransportIdRequest(
     val term: Int, // 배차 간격, 서울 버스는 노선을 구하는 과정에서 얻을 수 있기 때문에 넣음
     val destinationStation: Place,
     val destinationStationId: String,
+    val sectionTime: Int,
+    val cumulativeSectionTime: Int,
 ) {
     fun changeStartStationId(newStationId: String): TransportIdRequest {
         return TransportIdRequest(
@@ -29,6 +31,8 @@ data class TransportIdRequest(
             term = term,
             destinationStation = destinationStation,
             destinationStationId = destinationStationId,
+            sectionTime = sectionTime,
+            cumulativeSectionTime = cumulativeSectionTime,
         )
     }
 
@@ -45,6 +49,8 @@ data class TransportIdRequest(
             term = term,
             destinationStation = destinationStation,
             destinationStationId = newDestinationStationId,
+            sectionTime = sectionTime,
+            cumulativeSectionTime = cumulativeSectionTime,
         )
     }
 
@@ -61,6 +67,8 @@ data class TransportIdRequest(
             term = newTerm ?: term,
             destinationStation = destinationStation,
             destinationStationId = destinationStationId,
+            sectionTime = sectionTime,
+            cumulativeSectionTime = cumulativeSectionTime,
         )
     }
 }

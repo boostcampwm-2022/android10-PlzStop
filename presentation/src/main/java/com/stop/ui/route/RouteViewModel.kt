@@ -40,7 +40,7 @@ class RouteViewModel @Inject constructor(
     val lastTimeResponse: LiveData<Event<List<TransportLastTime?>>>
         get() = _lastTimeResponse
 
-    var lastTimes = mutableListOf<String?>()
+    var lastTimes: List<TransportLastTime?>? = null
 
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
     val errorMessage: LiveData<Event<ErrorType>>
@@ -77,7 +77,7 @@ class RouteViewModel @Inject constructor(
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
         viewModelScope.launch {
-            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary))
+            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary) )
         }
     }
 

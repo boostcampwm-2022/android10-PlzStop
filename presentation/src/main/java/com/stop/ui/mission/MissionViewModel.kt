@@ -109,7 +109,8 @@ class MissionViewModel @Inject constructor(
             ),
             enableDestinationStation = listOf(),
             transportDirectionType = TransportDirectionType.TO_END,
-            routeId = "118900001"
+            routeId = "118900001",
+            timeToBoard = "23:40:50",
         )
         startMission()
     }

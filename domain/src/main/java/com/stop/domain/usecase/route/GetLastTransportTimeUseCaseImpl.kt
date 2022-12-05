@@ -116,6 +116,8 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
 
     // 승차지, 도착지, 고유 번호를 알아내는데 필요한 정보로만 구성된 데이터 클래스로 변환하기
     private suspend fun createTransportIdRequests(itinerary: Itinerary): List<TransportIdRequest?> {
+        var cumulativeSectionTime = 0
+
         return itinerary.routes.fold(listOf()) { transportIdRequests, route ->
             when (route) {
                 is WalkRoute -> transportIdRequests + null
@@ -123,6 +125,9 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                     val startStation = route.stations.first()
                     val transportMoveType = TransportMoveType.getMoveTypeByName(route.mode.name)
                         ?: return@fold transportIdRequests
+
+                    val sectionTime = route.sectionTime.toInt()
+                    cumulativeSectionTime += sectionTime
 
                     transportIdRequests + TransportIdRequest(
                         transportMoveType = transportMoveType,
@@ -136,6 +141,8 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                         term = NOT_YET_CALCULATED,
                         destinationStation = route.end,
                         destinationStationId = UNKNOWN_ID,
+                        sectionTime = sectionTime,
+                        cumulativeSectionTime = cumulativeSectionTime,
                     )
                 }
                 else -> transportIdRequests + null
@@ -232,6 +239,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             transportMoveType = transportIdRequest.transportMoveType,
             area = transportIdRequest.area,
             lastTime = result,
+            timeToBoard = subtractSectionTimeFromLastTime(
+                transportIdRequest.cumulativeSectionTime,
+                result
+            ),
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = stationsUntilStart.map {
                 TransportStation(
@@ -248,6 +259,19 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             transportDirectionType = subwayCircleType,
             routeId = transportIdRequest.routeId,
         )
+    }
+
+    private fun subtractSectionTimeFromLastTime(sectionTime: Int, lastTime: String): String {
+        val (hour, minute, second) = lastTime.split(":").map { it.toInt() }
+        val lastTimeSecond = hour * 60 * 60 + minute * 60 + second
+
+        val realLastTimeSecond = lastTimeSecond - sectionTime
+
+        val realHour = realLastTimeSecond / 60 / 60
+        val realMinute = ((realLastTimeSecond / 60) % 60).toString().padStart(TIME_DIGIT, '0')
+        val realSeconds = (realLastTimeSecond % 60).toString().padStart(TIME_DIGIT, '0')
+
+        return "$realHour:$realMinute:$realSeconds"
     }
 
     private fun checkInnerOrOuter(
@@ -335,10 +359,16 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             lastTime += TIME_CORRECTION_VALUE
         }
 
+        val lastTimeString = lastTime.toString().chunked(2).joinToString(":")
+
         return TransportLastTime(
             transportMoveType = TransportMoveType.BUS,
             area = Area.SEOUL,
-            lastTime = lastTime.toString().chunked(2).joinToString(":"),
+            lastTime = lastTimeString,
+            timeToBoard = subtractSectionTimeFromLastTime(
+                transportIdRequest.cumulativeSectionTime,
+                lastTimeString
+            ),
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = listOf(),
             enableDestinationStation = listOf(),
@@ -389,6 +419,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             area = newTransportIdRequest.area,
             transportDirectionType = directionType,
             lastTime = time,
+            timeToBoard = subtractSectionTimeFromLastTime(
+                newTransportIdRequest.cumulativeSectionTime,
+                time
+            ),
             destinationStationName = newTransportIdRequest.destinationStation.name,
             stationsUntilStart = stationsUntilStart,
             enableDestinationStation = listOf(),
@@ -435,6 +469,10 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             area = transportIdRequest.area,
             transportDirectionType = directionType,
             lastTime = time,
+            timeToBoard = subtractSectionTimeFromLastTime(
+                transportIdRequest.cumulativeSectionTime,
+                time
+            ),
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = stationsUntilStart,
             enableDestinationStation = listOf(),
@@ -459,10 +497,16 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             lastTime += TIME_CORRECTION_VALUE
         }
 
+        val lastTimeString = lastTime.toString().chunked(2).joinToString(":")
+
         return TransportLastTime(
             transportMoveType = TransportMoveType.BUS,
             area = Area.SEOUL,
-            lastTime = lastTime.toString().chunked(2).joinToString(":"),
+            lastTime = lastTimeString,
+            timeToBoard = subtractSectionTimeFromLastTime(
+                newTransportIdRequest.cumulativeSectionTime,
+                lastTimeString
+            ),
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = listOf(),
             enableDestinationStation = listOf(),
@@ -683,6 +727,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
         private const val KOREA_LONGITUDE = 127
         private const val KOREA_LATITUDE = 37
         private const val CORRECTION_VALUE = 100_000
+        private const val TIME_DIGIT = 2
 
         private const val EMPIRICAL_DISTINCTION = 20
 
