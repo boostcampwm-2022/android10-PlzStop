@@ -143,8 +143,8 @@ class MissionViewModel @Inject constructor(
             val temporalIndex = busVehicleIds.size / 2
             busVehicleIds = listOf(busVehicleIds[temporalIndex])
 
-            while (busVehicleIds.isEmpty()) {
-                val busCurrentInformation = getBusNowLocationUseCase(lastTimeValue, busVehicleIds)
+            while (busVehicleIds.isNotEmpty()) {
+                val busCurrentInformation = getBusNowLocationUseCase(transportLastTime, busVehicleIds)
                 this@MissionViewModel._busNowLocationInfo.value = busCurrentInformation
 
                 busVehicleIds = busVehicleIds.foldIndexed(listOf()) { index, ids, id ->
