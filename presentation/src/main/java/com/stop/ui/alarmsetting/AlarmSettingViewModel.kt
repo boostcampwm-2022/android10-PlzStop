@@ -21,6 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +41,8 @@ class AlarmSettingViewModel @Inject constructor(
 
     private val _isAlarmItemNotNull = MutableStateFlow(false)
     val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
+
+    private lateinit var workerId : UUID
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -80,8 +83,13 @@ class AlarmSettingViewModel @Inject constructor(
         val workRequest = OneTimeWorkRequestBuilder<LastTimeCheckWorker>()
             .setInputData(workData)
             .build()
+        workerId = workRequest.id
 
         workManager.enqueue(workRequest)
+    }
+
+    fun removeAlarmWorker(){
+        workManager.cancelWorkById(workerId)
     }
 
 }
