@@ -4,9 +4,6 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
 
 class AlarmFunctions(
     private val context: Context
@@ -34,27 +31,6 @@ class AlarmFunctions(
             makeFullTime(lastTime).timeInMillis - (alarmTime * 60 * 1000),
             pendingIntent
         )
-    }
-
-    private fun makeFullTime(lastTime: String): Calendar {
-        val currentTime = System.currentTimeMillis()
-        val currentFormat = SimpleDateFormat("yyyy:MM:dd", Locale.getDefault())
-        val currentDateTime = currentFormat.format(currentTime)
-        val fullTime = "$currentDateTime:$lastTime"
-
-
-        val dateFormat = SimpleDateFormat("yyyy:MM:dd:HH:mm:ss", Locale.getDefault())
-        var dateTime = Date()
-        try {
-            dateTime = dateFormat.parse(fullTime) as Date
-        } catch (e: ParseException) {
-            e.printStackTrace()
-        }
-
-        val calendar = Calendar.getInstance()
-        calendar.time = dateTime
-
-        return calendar
     }
 
     fun cancelAlarm(alarmCode: Int) {
