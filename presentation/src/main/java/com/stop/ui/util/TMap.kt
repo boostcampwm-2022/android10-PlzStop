@@ -66,7 +66,7 @@ open class TMap(
     }
 
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
-        if (location != null && checkKoreaLocation(location)) {
+        if (location != null && checkLocationInTMapLocation(location)) {
             val beforeLocation = tMapView.locationPoint
             val nowLocation = TMapPoint(location.latitude, location.longitude)
             if (handler is MissionHandler) {
@@ -93,9 +93,9 @@ open class TMap(
         }
     }
 
-    private fun checkKoreaLocation(location: android.location.Location): Boolean {
-        return location.longitude > KOREA_LONGITUDE_MIN && location.longitude < KOREA_LONGITUDE_MAX
-                && location.latitude > KOREA_LATITUDE_MIN && location.latitude < KOREA_LATITUDE_MAX
+    private fun checkLocationInTMapLocation(location: android.location.Location): Boolean {
+        return TMapView.MIN_LON < location.longitude && location.longitude < TMapView.MAX_LON
+                && TMapView.MIN_LAT < location.latitude && location.latitude < TMapView.MAX_LAT
     }
 
     fun addMarker(id: String, icon: Int, location: TMapPoint) {
@@ -110,13 +110,5 @@ open class TMap(
 
         tMapView.removeTMapMarkerItem(id)
         tMapView.addTMapMarkerItem(marker)
-    }
-
-    companion object {
-        private const val KOREA_LATITUDE_MIN = 32.814978
-        private const val KOREA_LATITUDE_MAX = 39.036253
-
-        private const val KOREA_LONGITUDE_MIN = 124.661865
-        private const val KOREA_LONGITUDE_MAX = 132.550049
     }
 }
