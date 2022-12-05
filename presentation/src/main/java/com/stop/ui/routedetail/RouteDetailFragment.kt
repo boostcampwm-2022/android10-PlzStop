@@ -51,7 +51,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     }
 
     override fun alertTMapReady() {
-        drawRoute()
+        tMap.drawRoutes(routeViewModel.tempItinerary.routes)
     }
 
     private fun initBinding() {
@@ -173,19 +173,6 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
 
         tMap.tMapView.zoomToSpan(maxLatitude - minLatitude, maxLongitude - minLongitude)
         tMap.tMapView.zoomLevel -= 1
-        /*
-        while (true) {
-            if (tMap.tMapView.leftTopPoint.latitude > maxLatitude &&
-                tMap.tMapView.leftTopPoint.longitude < minLatitude &&
-                    tMap.tMapView.rightBottomPoint.latitude < minLatitude &&
-                    tMap.tMapView.rightBottomPoint.longitude > maxLatitude) {
-                break
-            }
-
-            tMap.tMapView.zoomLevel += 1
-        }
-
-         */
     }
 
     private fun convertToTMapPoint(coordinate: Coordinate): TMapPoint {
