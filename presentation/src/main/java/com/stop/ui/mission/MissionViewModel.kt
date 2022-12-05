@@ -141,7 +141,7 @@ class MissionViewModel @Inject constructor(
             throw AlreadyHandledException()
         }
 
-        return getSubwayTrainNowStationUseCase(lastTimeValue, TEST_SUBWAY_NUMER)
+        return getSubwayTrainNowStationUseCase(lastTimeValue, TEST_SUBWAY_LINE_NUMBER)
     }
 
     private suspend fun getNowStationLocation() = withContext(Dispatchers.Main) {
@@ -165,7 +165,7 @@ class MissionViewModel @Inject constructor(
                         TEST_SUBWAY_LONG,
                         TEST_SUBWAY_LAT
                     ),
-                    TEST_SUBWAY_NUMER.toString() + LINE,
+                    TEST_SUBWAY_LINE_NUMBER.toString() + LINE,
                     startSubwayStation.dropLast(1), //"역" 버리기
                     TEST_END_SUBWAY_STATION
                 )
@@ -192,7 +192,7 @@ class MissionViewModel @Inject constructor(
         private const val TEST_BUS_540_ID = "100100083"
         private var TIME_TEST = 0
 
-        private const val TEST_SUBWAY_NUMER = 4
+        private const val TEST_SUBWAY_LINE_NUMBER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
