@@ -36,6 +36,7 @@ class RouteDetailTMap(
             }
             tMapView.addTMapPolyLine(polyLine)
         }
+        setRouteDetailFocus()
     }
 
     private fun drawTransportRoute(route: TransportRoute) {
@@ -52,6 +53,17 @@ class RouteDetailTMap(
                 addTMapPoints(TMapPoint(points.last().toDouble(), points.first().toDouble()))
             }
         }
+    }
+
+    private fun setRouteDetailFocus() {
+        val maxLatitude = latitudes.max()
+        val minLatitude = latitudes.min()
+        val maxLongitude = longitudes.max()
+        val minLongitude = longitudes.min()
+
+        tMapView.setCenterPoint((maxLatitude + minLatitude) / 2, (maxLongitude + minLongitude) / 2)
+        tMapView.zoomToSpan(maxLatitude - minLatitude, maxLongitude - minLongitude)
+        tMapView.zoomLevel -= 1
     }
 
     private fun addTMapPoints(point: TMapPoint) {
