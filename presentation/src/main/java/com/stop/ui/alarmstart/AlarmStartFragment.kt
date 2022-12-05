@@ -6,27 +6,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
+import com.stop.ui.alarmsetting.AlarmSettingViewModel
 
 class AlarmStartFragment : Fragment() {
 
     private var _binding: FragmentAlarmStartBinding? = null
     private val binding get() = _binding!!
 
+    private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentAlarmStartBinding.inflate(
             inflater,
             container,
             false
         )
 
+        initBinding()
+
         return binding.root
+    }
+
+    private fun initBinding(){
+        binding.apply {
+            alarmSettingViewModel.getAlarm()
+            lifecycleOwner = viewLifecycleOwner
+            viewModel = alarmSettingViewModel
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,15 +51,23 @@ class AlarmStartFragment : Fragment() {
 
     private fun listenButton() {
         with(binding) {
-            textViewAlarmQuit.setOnClickListener {
-                val intent = Intent(context, SoundService::class.java)
-                context?.stopService(intent)
+            buttonAlarmTurnOff.setOnClickListener {
+                turnOffSoundService()
+                alarmSettingViewModel.deleteAlarm()
+                requireActivity().finish()
             }
 
             textViewMissionStart.setOnClickListener {
+                turnOffSoundService()
                 root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
+                alarmSettingViewModel.deleteAlarm()
             }
         }
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(context, SoundService::class.java)
+        requireContext().stopService(intent)
     }
 
     override fun onDestroyView() {

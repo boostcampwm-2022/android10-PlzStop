@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"/>
 
         <variable
             name="alarmViewModel"
-            type="com.stop.ui.alarmsetting.AlarmViewModel" />
+            type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,30 +21,30 @@
             android:layout_height="5dp"
             android:layout_marginTop="17dp"
             android:background="@drawable/background_panel"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/home_bottom_sheet_no_alarm"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_view_alarm_state"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{alarmViewModel.isBottomSheetVisible ? View.GONE : View.VISIBLE}"
-            app:layout_constraintTop_toBottomOf="@id/home_bottom_sheet_drag_handle">
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:text="@{alarmViewModel.isAlarmItemNotNull ? @string/exist_alarm : @string/non_exist_alarm}"
+            android:textColor="#808590"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="@id/home_bottom_sheet_drag_handle" />
 
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:layout_marginBottom="25dp"
-                android:text="@string/no_alarm"
-                android:textColor="#808590"
-                android:textSize="15sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <include
+            android:id="@+id/layout_state_expanded"
+            layout="@layout/bottom_sheet_home_state_expanded"
+            android:visibility="gone"
+            bind:viewModel="@{alarmViewModel}"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

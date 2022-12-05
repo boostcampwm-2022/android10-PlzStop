@@ -1,6 +1,6 @@
 package com.stop.data.remote.source.nearplace
 
-import com.stop.data.model.nearplace.Place
+import com.stop.data.model.nearplace.PlaceRepositoryItem
 
 interface NearPlaceRemoteDataSource {
 
@@ -8,6 +8,6 @@ interface NearPlaceRemoteDataSource {
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double
-    ): Result<List<Place>>
+    ): Result<List<PlaceRepositoryItem>>
 
 }

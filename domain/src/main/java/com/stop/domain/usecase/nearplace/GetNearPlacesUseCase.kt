@@ -1,6 +1,6 @@
 package com.stop.domain.usecase.nearplace
 
-import com.stop.domain.model.nearplace.Place
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 
 interface GetNearPlacesUseCase {
 
@@ -8,6 +8,6 @@ interface GetNearPlacesUseCase {
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double
-    ): List<Place>
+    ): List<PlaceUseCaseItem>
 
 }

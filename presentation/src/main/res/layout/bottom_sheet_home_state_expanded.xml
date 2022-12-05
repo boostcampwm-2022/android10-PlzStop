@@ -126,7 +126,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="@string/alarm_turn_off_text"
+            android:text="@string/alarm_delete_text"
             android:textColor="@color/black"
             android:textSize="24sp"
             android:textStyle="bold"
