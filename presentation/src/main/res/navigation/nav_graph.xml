@@ -44,6 +44,9 @@
         <action
             android:id="@+id/action_routeDetailFragment_to_alarmSetting"
             app:destination="@id/alarmSetting" />
+        <action
+            android:id="@+id/action_routeDetailFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/alarmSetting"

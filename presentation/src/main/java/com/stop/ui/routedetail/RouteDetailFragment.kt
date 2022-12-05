@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
+import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
 import com.stop.ui.route.RouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,7 +55,9 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     }
 
     private fun initView() {
-
+        binding.imageViewClose.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_mapFragment)
+        }
     }
 
     override fun onDestroyView() {
