@@ -143,24 +143,26 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun drawBusLocationLine() {
-        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
+        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocations ->
+            val nowLocation = nowLocations.first()
+
             if (beforeLocation != INIT_LOCATION) {
                 tMap.drawMoveLine(
-                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                    TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble()),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                    Marker.BUS_LINE + BUS_LINE_NUM.toString(),
+                    Marker.BUS_LINE +  BUS_LINE_NUM.toString(),
                     Marker.BUS_LINE_COLOR
                 )
                 BUS_LINE_NUM += 1
             }
-            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+            beforeLocation = Location(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
 
             viewModel.busCurrentLocation = beforeLocation
 
             tMap.addMarker(
                 Marker.BUS_MARKER,
                 Marker.BUS_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
             )
         }
     }

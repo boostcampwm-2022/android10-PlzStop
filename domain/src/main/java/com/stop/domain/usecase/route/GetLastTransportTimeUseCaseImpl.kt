@@ -193,7 +193,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             stationsUntilStart = stationsOfLine.subList(0, startStationIndex + 1)
             enableDestinationStation = stationsOfLine.subList(startStationIndex, endStationIndex)
         } else {
-            stationsUntilStart = stationsOfLine.subList(startStationIndex + 1, stationsOfLine.size)
+            stationsUntilStart = stationsOfLine.subList(startStationIndex, stationsOfLine.size)
             enableDestinationStation =
                 stationsOfLine.subList(endStationIndex + 1, startStationIndex + 1)
         }
@@ -246,6 +246,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
                 )
             },
             transportDirectionType = subwayCircleType,
+            routeId = transportIdRequest.routeId,
         )
     }
 
@@ -342,6 +343,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             stationsUntilStart = listOf(),
             enableDestinationStation = listOf(),
             transportDirectionType = TransportDirectionType.UNKNOWN, // TODO: 서울 버스의 상행, 하행 구현
+            routeId = transportIdRequest.routeId,
         )
     }
 
@@ -390,6 +392,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             destinationStationName = newTransportIdRequest.destinationStation.name,
             stationsUntilStart = stationsUntilStart,
             enableDestinationStation = listOf(),
+            routeId = newTransportIdRequest.routeId,
         )
     }
 
@@ -435,6 +438,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             destinationStationName = transportIdRequest.destinationStation.name,
             stationsUntilStart = stationsUntilStart,
             enableDestinationStation = listOf(),
+            routeId = transportIdRequest.routeId,
         )
     }
 
@@ -463,6 +467,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             stationsUntilStart = listOf(),
             enableDestinationStation = listOf(),
             transportDirectionType = TransportDirectionType.UNKNOWN,
+            routeId = transportIdRequest.routeId,
         )
     }
 

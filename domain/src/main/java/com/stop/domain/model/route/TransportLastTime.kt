@@ -10,4 +10,5 @@ data class TransportLastTime(
     val stationsUntilStart: List<TransportStation>,
     val enableDestinationStation: List<TransportStation>,
     val transportDirectionType: TransportDirectionType,
+    val routeId: String,
 )

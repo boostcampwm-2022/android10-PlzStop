@@ -66,4 +66,8 @@ internal interface UseCaseModule {
     @Singleton
     fun provideNowStationLocationUseCase(getNowStationLocationUseCaseImpl: GetNowStationLocationUseCaseImpl): GetNowStationLocationUseCase
 
+    @Binds
+    @Singleton
+    fun provideGetBusesOnRouteUseCase(getBusesOnRouteUseCaseImpl: GetBusesOnRouteUseCaseImpl): GetBusesOnRouteUseCase
+
 }
