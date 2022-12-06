@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface RecentPlaceSearchDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertRecentPlaceSearchEntity(recentPlaceSearchEntity: RecentPlaceSearchEntity)
+    suspend fun insertRecentPlaceSearchEntity(recentPlaceSearchEntity: RecentPlaceSearchEntity) : Long
 
     @Query("SELECT * FROM RecentPlaceSearchEntity ORDER BY id DESC")
     fun getAllRecentPlaceSearchEntity(): Flow<List<RecentPlaceSearchEntity>>
