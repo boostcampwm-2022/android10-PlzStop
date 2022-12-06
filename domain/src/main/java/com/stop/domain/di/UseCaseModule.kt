@@ -68,6 +68,10 @@ internal interface UseCaseModule {
 
     @Binds
     @Singleton
+    fun provideGetBusesOnRouteUseCase(getBusesOnRouteUseCaseImpl: GetBusesOnRouteUseCaseImpl): GetBusesOnRouteUseCase
+
+    @Binds
+    @Singleton
     fun provideGetRecentPlaceSearchUseCase(
         getRecentPlaceSearchUseCaseImpl: GetRecentPlaceSearchUseCaseImpl
     ): GetRecentPlaceSearchUseCase

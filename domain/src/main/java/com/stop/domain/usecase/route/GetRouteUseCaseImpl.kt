@@ -13,6 +13,10 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     override suspend operator fun invoke(routeRequest: RouteRequest): List<Itinerary> {
         val originItineraries = routeRepository.getRoute(routeRequest)
 
+        if (originItineraries.isEmpty()) {
+            return listOf()
+        }
+
         return originItineraries.fold(listOf()) itinerary@{ itineraries, itinerary ->
             val result = itinerary.legs.fold(listOf<Route>()) { routes, leg ->
                 try {
