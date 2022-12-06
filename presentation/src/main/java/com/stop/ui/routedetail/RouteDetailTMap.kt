@@ -7,10 +7,11 @@ import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
 import com.stop.R
 import com.stop.domain.model.route.tmap.custom.*
+import com.stop.ui.util.Marker
 import com.stop.ui.util.TMap
 
 class RouteDetailTMap(
-    context: Context,
+    private val context: Context,
     private val handler: RouteDetailHandler,
 ) : TMap(context, handler) {
     private val tMapPoints = arrayListOf<TMapPoint>()
@@ -30,14 +31,10 @@ class RouteDetailTMap(
             }
 
             addTMapPoints(convertToTMapPoint(route.end.coordinate))
-            polyLine = TMapPolyLine(route.start.name, tMapPoints).apply {
-                lineColor = setLineColor(route)
-                lineWidth = LINE_WIDTH
-                outLineColor = Color.WHITE
-                outLineWidth = OUT_LINE_WIDTH
-            }
+            polyLine = setPolyLine(route)
             tMapView.addTMapPolyLine(polyLine)
         }
+        addStartAndDestinationMarker(routes)
         setRouteDetailFocus()
     }
 
@@ -55,6 +52,34 @@ class RouteDetailTMap(
                 addTMapPoints(TMapPoint(points.last().toDouble(), points.first().toDouble()))
             }
         }
+    }
+
+    private fun setPolyLine(route: Route): TMapPolyLine {
+        val lineColor = when (route) {
+            is TransportRoute -> Color.parseColor("#${route.routeColor}")
+            is WalkRoute -> ContextCompat.getColor(context, R.color.main_yellow)
+            else -> ContextCompat.getColor(context, R.color.main_light_grey)
+        }
+
+        return TMapPolyLine(route.start.name, tMapPoints).apply {
+            this.lineColor = lineColor
+            lineWidth = LINE_WIDTH
+            outLineColor = Color.WHITE
+            outLineWidth = OUT_LINE_WIDTH
+        }
+    }
+
+    private fun addStartAndDestinationMarker(routes: List<Route>) {
+        addMarker(
+            Marker.START_MARKER,
+            Marker.START_MARKER_IMG,
+            convertToTMapPoint(routes.first().start.coordinate)
+        )
+        addMarker(
+            Marker.DESTINATION_MARKER,
+            Marker.DESTINATION_MARKER_IMG,
+            convertToTMapPoint(routes.last().end.coordinate)
+        )
     }
 
     private fun setRouteDetailFocus() {
@@ -76,14 +101,6 @@ class RouteDetailTMap(
 
     private fun convertToTMapPoint(coordinate: Coordinate): TMapPoint {
         return TMapPoint(coordinate.latitude.toDouble(), coordinate.longitude.toDouble())
-    }
-
-    private fun setLineColor(route: Route): Int {
-        return when (route) {
-            is TransportRoute -> Color.parseColor("#${route.routeColor}")
-            is WalkRoute -> ContextCompat.getColor(tMapView.context, R.color.main_yellow)
-            else -> ContextCompat.getColor(tMapView.context, R.color.main_light_grey)
-        }
     }
 
     companion object {
