@@ -37,6 +37,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
 
         initTMap()
         initView()
+        setRecyclerView()
     }
 
     override fun alertTMapReady() {
@@ -66,6 +67,13 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         binding.imageViewClose.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_mapFragment)
         }
+    }
+
+    private fun setRecyclerView() {
+        val adapter = RouteDetailAdapter()
+
+        binding.routeDetailDrawer.recyclerViewRouteDetail.adapter = adapter
+        adapter.submitList(routeViewModel.tempItinerary.routes)
     }
 
     override fun onDestroyView() {
