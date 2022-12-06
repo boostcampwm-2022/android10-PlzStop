@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
-import com.stop.model.ErrorType
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -87,10 +86,7 @@ class RouteFragment : Fragment() {
 
         routeViewModel.errorMessage.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { errorType ->
-                val message = when (errorType) {
-                    ErrorType.NO_START -> getString(R.string.no_start_input)
-                    ErrorType.NO_END -> getString(R.string.no_end_input)
-                }
+                val message = getString(errorType.stringResourcesId)
 
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
@@ -98,7 +94,7 @@ class RouteFragment : Fragment() {
 
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                routeViewModel.lastTimes = response.toMutableList()
+                clickRouteViewModel.lastTimes = response
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }

@@ -47,17 +47,17 @@ internal class ResultCall<T : Any>(private val call: Call<T>) : Call<NetworkResu
                         this@ResultCall,
                         Response.success(NetworkResult.Success(responseBody))
                     )
-                } else {
-                    callback.onResponse(
-                        this@ResultCall,
-                        Response.success(
-                            NetworkResult.Failure(
-                                response.code(),
-                                response.errorBody()?.string()
-                            )
+                    return
+                }
+                callback.onResponse(
+                    this@ResultCall,
+                    Response.success(
+                        NetworkResult.Failure(
+                            response.code(),
+                            response.errorBody()?.string()
                         )
                     )
-                }
+                )
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {

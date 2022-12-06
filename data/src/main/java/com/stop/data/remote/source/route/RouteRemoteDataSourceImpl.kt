@@ -1,5 +1,6 @@
 package com.stop.data.remote.source.route
 
+import com.squareup.moshi.JsonDataException
 import com.stop.data.remote.model.NetworkResult
 import com.stop.data.remote.network.ApisDataService
 import com.stop.data.remote.network.OpenApiSeoulService
@@ -30,7 +31,11 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
             tMapApiService.getRoutes(routeRequest.toMap())
         ) {
             return when (this) {
-                is NetworkResult.Success -> eraseDuplicateLeg(this.data.metaData.plan.itineraries)
+                is NetworkResult.Success -> {
+                    val itineraries = this.data.metaData?.plan?.itineraries
+                        ?: throw JsonDataException(NO_ROUTE_RESULT)
+                    eraseDuplicateLeg(itineraries)
+                }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -95,7 +100,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getSubwayStationLastTime(
         stationId: String,
-        subwayCircleType: SubwayCircleType,
+        transportDirectionType: TransportDirectionType,
         weekType: WeekType,
     ): List<StationLastTime> {
         with(
@@ -103,7 +108,11 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                 serviceName = "SearchLastTrainTimeByIDService",
                 stationId = stationId,
                 weekTag = weekType.divisionValue,
-                inOutTag = subwayCircleType.divisionValue,
+                inOutTag = when (transportDirectionType) {
+                    TransportDirectionType.INNER, TransportDirectionType.TO_END -> "1"
+                    TransportDirectionType.OUTER, TransportDirectionType.TO_FIRST -> "2"
+                    TransportDirectionType.UNKNOWN -> throw IllegalArgumentException()
+                },
             )
         ) {
             return when (this) {
@@ -242,5 +251,6 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
     companion object {
         private const val NO_SUBWAY_STATION = "해당하는 지하철역이 없습니다."
+        private const val NO_ROUTE_RESULT = "경로 검색 결과가 없습니다."
     }
 }
