@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -90,6 +91,7 @@ class MissionFragment : Fragment(), MissionHandler {
             )
 
             tMap.isTracking = true
+            tMap.isTransportTracking = false
         }
 
         binding.layoutBusCurrent.setOnClickListener {
@@ -100,6 +102,7 @@ class MissionFragment : Fragment(), MissionHandler {
             )
 
             tMap.isTracking = false
+            tMap.isTransportTracking = true
         }
 
     }
@@ -134,28 +137,46 @@ class MissionFragment : Fragment(), MissionHandler {
                     })
             }
         }
+
+        viewModel.errorMessage.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { errorType ->
+                val message = getString(errorType.stringResourcesId)
+
+                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+            }
+        }
+        viewModel.transportIsArrived.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isArrived ->
+                if (isArrived) {
+                    Toast.makeText(requireContext(), "도착했습니다.", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     private fun drawBusLocationLine() {
-        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocation ->
+        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocations ->
+            val nowLocation = nowLocations.first()
+
             if (beforeLocation != INIT_LOCATION) {
                 tMap.drawMoveLine(
-                    TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                    TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble()),
                     TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                    Marker.BUS_LINE + BUS_LINE_NUM.toString(),
+                    Marker.BUS_LINE +  BUS_LINE_NUM.toString(),
                     Marker.BUS_LINE_COLOR
                 )
                 BUS_LINE_NUM += 1
             }
-            beforeLocation = Location(nowLocation.latitude, nowLocation.longitude)
+            beforeLocation = Location(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
 
             viewModel.busCurrentLocation = beforeLocation
 
             tMap.addMarker(
                 Marker.BUS_MARKER,
                 Marker.BUS_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
             )
+            tMap.trackingTransport(beforeLocation)
         }
     }
 
@@ -216,6 +237,7 @@ class MissionFragment : Fragment(), MissionHandler {
         tMap.apply {
             tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
                 isTracking = false
+                isTransportTracking = false
             }
         }
     }

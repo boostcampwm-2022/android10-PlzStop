@@ -10,6 +10,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.assisted.Assisted
@@ -20,24 +21,28 @@ import kotlinx.coroutines.delay
 class LastTimeCheckWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val getNearPlacesUseCase: GetNearPlacesUseCase
+    private val getNearPlacesUseCase: GetNearPlacesUseCase,
+    private val alarmFunctions: AlarmFunctions
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager =
         context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private val lastTime by lazy {
-        inputData.getString(LAST_TIME)
-    }
+    private var lastTime = ""
     private val alarmTime by lazy {
         inputData.getInt(ALARM_TIME, 0)
     }
 
     override suspend fun doWork(): Result {
+        initData()
         setForeground(createForegroundInfo())
         checkLastTransportTime()
 
         return Result.success()
+    }
+
+    private fun initData(){
+        lastTime = inputData.getString(LAST_TIME) ?: ""
     }
 
     private fun createForegroundInfo(): ForegroundInfo {
@@ -74,14 +79,21 @@ class LastTimeCheckWorker @AssistedInject constructor(
     }
 
     private suspend fun checkLastTransportTime() {
-        //TODO 막차시간 갱신시 알람 삭제 후 등록 로직필요
-
         while (isStopped.not()) {
+           //TODO 막차시간 가져오는 API로 변경 해야합니다.
             getNearPlacesUseCase.getNearPlaces(
                 "아남타워",
                 126.969652,
                 37.553836
             )
+
+            val resultLastTime = "21:04:00"
+
+            if(lastTime != resultLastTime && resultLastTime != null){
+                lastTime = resultLastTime
+                alarmFunctions.cancelAlarm(ALARM_CODE)
+                alarmFunctions.callAlarm(resultLastTime, alarmTime, ALARM_CODE)
+            }
 
             val delayTime = getDelayTime()
             if (delayTime == 0L) {
@@ -93,7 +105,7 @@ class LastTimeCheckWorker @AssistedInject constructor(
     }
 
     private fun getDelayTime(): Long {
-        val fullLastTimeMillis = makeFullTime(lastTime ?: "").timeInMillis
+        val fullLastTimeMillis = makeFullTime(lastTime).timeInMillis
         val currentTimeMillis = System.currentTimeMillis()
 
         return when (val diffTimeMillis =

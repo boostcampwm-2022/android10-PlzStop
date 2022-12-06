@@ -128,7 +128,8 @@ class PlaceSearchViewModel @Inject constructor(
 
         panelInfo = com.stop.model.route.Place(
             clickedValue.title,
-            Coordinate(latitude.toString(), longitude.toString())
+            Coordinate(latitude.toString(), longitude.toString()),
+            clickedValue.roadAddress,
         )
     }
 

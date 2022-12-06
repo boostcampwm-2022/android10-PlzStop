@@ -3,13 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-        <variable
-            name="itinerary"
-            type="com.stop.domain.model.route.tmap.custom.Itinerary" />
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,19 +27,18 @@
             app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
             tools:text="1시간 10분" />
 
-        <TextView
-            android:id="@+id/text_view_expected_route"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_time_line"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            tools:listitem="@layout/time_line_item"
             android:layout_marginBottom="16dp"
-            android:ellipsize="end"
-            android:maxLines="3"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
-            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/text_view_expected_required_time"
-            tools:text="출발지 -> 1호선 Xxx역 -> 5315번 버스 환승 -> 2호선 Xxx역 환승 -> 도착지" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text"
+            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
+            app:layout_constraintStart_toStartOf="@+id/guideline_start_vertical" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_vertical"
@@ -67,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="80dp" />
+            app:layout_constraintGuide_end="16dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
