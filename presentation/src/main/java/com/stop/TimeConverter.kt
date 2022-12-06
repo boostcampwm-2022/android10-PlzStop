@@ -12,11 +12,11 @@ fun makeFullTime(time: String): Calendar {
 
 
     val dateFormat = SimpleDateFormat("yyyy:MM:dd:HH:mm:ss", Locale.getDefault())
-    var dateTime = Date()
-    try {
-        dateTime = dateFormat.parse(fullTime) as Date
+    val dateTime = try {
+        dateFormat.parse(fullTime) as Date
     } catch (e: ParseException) {
         e.printStackTrace()
+        Date()
     }
 
     val calendar = Calendar.getInstance()
