@@ -7,7 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.stop.AlarmFunctions
@@ -100,7 +101,9 @@ class AlarmSettingFragment : Fragment() {
         alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
         makeAlarm()
         //makeAlarmWorker()
-        binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
+        val navController = findNavController()
+        navController.setGraph(R.navigation.nav_graph)
+        navController.popBackStack(R.id.action_global_mapFragment, false)
     }
 
     private fun makeAlarm() {
