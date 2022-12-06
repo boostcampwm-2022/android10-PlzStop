@@ -94,7 +94,7 @@ class RouteFragment : Fragment() {
 
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                clickRouteViewModel.lastTimes = response
+                routeViewModel.lastTimes = response
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }

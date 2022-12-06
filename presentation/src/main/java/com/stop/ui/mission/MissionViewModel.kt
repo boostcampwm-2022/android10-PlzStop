@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.ApiChangedException
 import com.stop.domain.model.AvailableTrainNoExistException
 import com.stop.domain.model.nowlocation.BusCurrentInformationUseCaseItem
