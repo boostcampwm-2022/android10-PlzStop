@@ -5,6 +5,7 @@ data class TransportRoute(
     override val end: Place,
     override val mode: MoveType,
     override val sectionTime: Double,
+    override val proportionOfSectionTime: Int,
     override val start: Place,
     val lines: List<Coordinate>,
     val stations: List<Station>,

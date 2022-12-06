@@ -23,8 +23,8 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                     val moveType = MoveType.getMoveTypeByName(leg.mode)
 
                     routes + when (moveType) {
-                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType)
-                        MoveType.WALK, MoveType.TRANSFER -> createWalkRoute(leg, moveType)
+                        MoveType.SUBWAY, MoveType.BUS -> createPublicTransportRoute(leg, moveType, itinerary.totalTime)
+                        MoveType.WALK, MoveType.TRANSFER -> createWalkRoute(leg, moveType, itinerary.totalTime)
                         else -> return@fold routes
                     }
                 } catch (e: Exception) {
@@ -44,7 +44,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
 
-    private fun createPublicTransportRoute(leg: Leg, moveType: MoveType): TransportRoute {
+    private fun createPublicTransportRoute(leg: Leg, moveType: MoveType, totalTime: Int): TransportRoute {
         return TransportRoute(
             distance = leg.distance,
             end = with(leg.end) {
@@ -58,6 +58,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             },
             mode = moveType,
             sectionTime = leg.sectionTime,
+            proportionOfSectionTime = calculateProportionOfSectionTime(leg.sectionTime, totalTime),
             start = with(leg.start) {
                 Place(
                     name = name.replace("(중)", ""),
@@ -87,6 +88,10 @@ internal class GetRouteUseCaseImpl @Inject constructor(
         )
     }
 
+    private fun calculateProportionOfSectionTime(sectionTime: Double, totalTime: Int): Int {
+        return (sectionTime / totalTime * 100).toInt()
+    }
+
     private fun createCoordinates(linesString: String): List<Coordinate> {
         return linesString.split(" ").map {
             val (latitude, longitude) = it.split(",")
@@ -94,7 +99,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
         }
     }
 
-    private fun createWalkRoute(leg: Leg, moveType: MoveType): WalkRoute {
+    private fun createWalkRoute(leg: Leg, moveType: MoveType, totalTime: Int): WalkRoute {
         return WalkRoute(
             distance = leg.distance,
             end = with(leg.end) {
@@ -108,6 +113,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             },
             mode = moveType,
             sectionTime = leg.sectionTime,
+            proportionOfSectionTime = calculateProportionOfSectionTime(leg.sectionTime, totalTime),
             start = with(leg.start) {
                 Place(
                     name = name,

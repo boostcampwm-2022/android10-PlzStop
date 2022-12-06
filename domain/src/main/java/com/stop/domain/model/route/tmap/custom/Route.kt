@@ -5,5 +5,6 @@ interface Route {
     val end: Place
     val mode: MoveType
     val sectionTime: Double
+    val proportionOfSectionTime: Int
     val start: Place
 }
