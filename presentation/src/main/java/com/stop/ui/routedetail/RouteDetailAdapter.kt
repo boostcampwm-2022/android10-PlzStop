@@ -6,16 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.databinding.RoutePathItemBinding
-import com.stop.domain.model.route.tmap.custom.Route
+import com.stop.model.route.RouteItem
 
 class RouteDetailAdapter(
     // private val onRouteDetailClickListener: OnRouteDetailClickListener
-): ListAdapter<Route, RecyclerView.ViewHolder>(diffUtil) {
+): ListAdapter<RouteItem, RecyclerView.ViewHolder>(diffUtil) {
     class PathViewHolder(
         private val binding: RoutePathItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(route: Route) {
-            binding.route = route
+        fun bind(routeItem: RouteItem) {
+            binding.routeItem = routeItem
         }
     }
 
@@ -30,13 +30,13 @@ class RouteDetailAdapter(
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<Route>() {
-            override fun areItemsTheSame(oldRoute: Route, newRoute: Route): Boolean {
-                return oldRoute.start.name == newRoute.start.name
+        private val diffUtil = object : DiffUtil.ItemCallback<RouteItem>() {
+            override fun areItemsTheSame(oldItem: RouteItem, newItem: RouteItem): Boolean {
+                return oldItem.name == newItem.name
             }
 
-            override fun areContentsTheSame(oldRoute: Route, newRoute: Route): Boolean {
-                return oldRoute::class == newRoute::class
+            override fun areContentsTheSame(oldItem: RouteItem, newItem: RouteItem): Boolean {
+                return oldItem == newItem
             }
         }
     }

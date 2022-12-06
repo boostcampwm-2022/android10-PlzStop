@@ -73,7 +73,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         val adapter = RouteDetailAdapter()
 
         binding.routeDetailDrawer.recyclerViewRouteDetail.adapter = adapter
-        adapter.submitList(routeViewModel.tempItinerary.routes)
+        adapter.submitList(routeViewModel.getRouteItems())
     }
 
     override fun onDestroyView() {

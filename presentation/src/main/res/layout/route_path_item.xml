@@ -6,8 +6,8 @@
 
     <data>
         <variable
-            name="route"
-            type="com.stop.domain.model.route.tmap.custom.Route" />
+            name="routeItem"
+            type="com.stop.model.route.RouteItem" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="150dp"
-            android:text="@{route.start.name}"
+            android:text="@{routeItem.name}"
             android:textSize="15sp"
             android:gravity="center"
             app:layout_constraintStart_toStartOf="parent"

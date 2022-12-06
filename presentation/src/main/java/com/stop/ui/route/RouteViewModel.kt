@@ -1,15 +1,17 @@
 package com.stop.ui.route
 
+import android.graphics.Color
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.route.tmap.RouteRequest
-import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
 import com.stop.domain.usecase.route.GetRouteUseCase
 import com.stop.model.ErrorType
 import com.stop.model.Event
+import com.stop.model.route.*
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -45,6 +47,7 @@ class RouteViewModel @Inject constructor(
 
     var tempItinerary: Itinerary = Itinerary("", listOf(), 0.0, 0, 0, 0)
     var tempLastTime = mutableListOf<String?>()
+    var routeItemColor = 0
 
     fun getRoute() {
         val originValue = _origin.value ?: let {
@@ -95,5 +98,61 @@ class RouteViewModel @Inject constructor(
         return clickedItinerary.routes.mapIndexed { index, route ->
             "${route.start.name}(${lastTimes.peekContent()[index]})"
         }.joinToString(" -> ")
+    }
+
+    fun getRouteItems(): List<RouteItem> {
+        val routeItems = mutableListOf<RouteItem>()
+
+        tempItinerary.routes.forEachIndexed { index, route ->
+            routeItems.add(
+                RouteItem(
+                    name = getRouteItemName(index, route),
+                    coordinate = route.start.coordinate,
+                    mode = route.mode,
+                    distance = route.distance,
+                    travelTime = route.sectionTime.toInt(),
+                    lastTime = tempLastTime[index],
+                    beforeColor = getRouteItemColor(route, false),
+                    currentColor = getRouteItemColor(route, true),
+                    type = RouteItemType.PATH
+                )
+            )
+        }
+        routeItems.add(0, routeItems.first().toFirstRouteItem())
+        destination.value?.let {
+            routeItems.add(routeItems.last().toLastRouteItem(it.name, it.coordinate))
+        }
+
+        return routeItems.toList()
+    }
+
+    private fun getRouteItemName(index: Int, route: Route): String {
+        return if (index == 0) {
+            origin.value?.name ?: ""
+        } else {
+            route.start.name
+        }
+    }
+
+    private fun getRouteItemColor(route: Route, isCurrent: Boolean): Int {
+        return if (isCurrent) {
+            routeItemColor = when (route) {
+                is TransportRoute -> Color.parseColor("#${route.routeColor}")
+                is WalkRoute -> Color.parseColor(MAIN_YELLOW)
+                else -> Color.parseColor(MAIN_LIGHT_GREY)
+            }
+            routeItemColor
+        } else {
+            if (routeItemColor != 0) {
+                routeItemColor
+            } else {
+                getRouteItemColor(route, true)
+            }
+        }
+    }
+
+    companion object {
+        private const val MAIN_YELLOW = "#FFC766"
+        private const val MAIN_LIGHT_GREY = "#808590"
     }
 }
