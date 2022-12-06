@@ -7,21 +7,24 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
+import com.stop.LastTimeCheckWorker.Companion.NOTIFICATION_ID
 
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         val alarmCode = intent.extras?.getInt("ALARM_CODE") ?: -1
-        val alarmContent = intent.extras?.getString("ALARM_CONTENT") ?: ""
 
         val soundServiceIntent = Intent(context, SoundService::class.java)
 
         if (isMoreThanOreo()) {
             context.startForegroundService(soundServiceIntent)
 
+            val id = context.getString(R.string.notification_channel_id)
+            val name = context.getString(R.string.notification_channel_name)
+
             val notificationManager = context.getSystemService(NotificationManager::class.java)
-            if (notificationManager.getNotificationChannel(ALARM_RECEIVER_CHANNEL_ID) == null) {
-                NotificationChannel(ALARM_RECEIVER_CHANNEL_ID, ALARM_RECEIVER_CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH).apply {
+            if (notificationManager.getNotificationChannel(id) == null) {
+                NotificationChannel(id, name, NotificationManager.IMPORTANCE_HIGH).apply {
                     notificationManager.createNotificationChannel(this)
                 }
             }
@@ -30,17 +33,20 @@ class AlarmReceiver : BroadcastReceiver() {
                 putExtra("ALARM_CODE", alarmCode)
             }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
-            val builder = NotificationCompat.Builder(context, ALARM_RECEIVER_CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_baseline_alarm_on_24)
-                .setContentTitle(LAST_TRANSPORT_NOTIFICATION_TITLE)
-                .setContentText(alarmContent)
+            val title = context.getString(R.string.notification_title)
+            val content = context.getString(R.string.alarm_content_text)
+
+            val builder = NotificationCompat.Builder(context, id)
+                .setSmallIcon(R.mipmap.ic_bus)
+                .setContentTitle(title)
+                .setContentText(content)
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setFullScreenIntent(pendingIntent, true)
 
             try {
-                notificationManager.notify(ALARM_NOTIFICATION_ID, builder.build())
+                notificationManager.notify(NOTIFICATION_ID, builder.build())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -52,13 +58,6 @@ class AlarmReceiver : BroadcastReceiver() {
                 context.startActivity(this)
             }
         }
-    }
-
-    companion object {
-        const val ALARM_RECEIVER_CHANNEL_ID = "ALARM_RECEIVER_CHANNEL_ID"
-        const val ALARM_RECEIVER_CHANNEL_NAME = "ALARM_RECEIVER_CHANNEL_NAME"
-        const val ALARM_NOTIFICATION_ID = 123
-        private const val LAST_TRANSPORT_NOTIFICATION_TITLE = "막차 알림"
     }
 
 }

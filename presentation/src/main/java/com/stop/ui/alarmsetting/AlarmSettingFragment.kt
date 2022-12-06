@@ -1,23 +1,17 @@
 package com.stop.ui.alarmsetting
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.stop.AlarmFunctions
-import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.ui.route.ClickRouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 @AndroidEntryPoint
@@ -28,8 +22,6 @@ class AlarmSettingFragment : Fragment() {
 
     private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
     private val clickRouteViewModel by activityViewModels<ClickRouteViewModel>()
-
-    private lateinit var alarmFunctions: AlarmFunctions
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -45,7 +37,6 @@ class AlarmSettingFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        alarmFunctions = AlarmFunctions(requireActivity())
         initView()
         setToggleListener()
 
@@ -97,27 +88,12 @@ class AlarmSettingFragment : Fragment() {
             ALARM_CODE,
             true
         )
+
         alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
-        makeAlarm()
-        //makeAlarmWorker()
+        alarmSettingViewModel.callAlarm(clickRouteViewModel.lastTime)
+        alarmSettingViewModel.makeAlarmWorker(clickRouteViewModel.lastTime)
+
         binding.root.findNavController().navigate(R.id.action_alarmSetting_to_mapFragment)
-    }
-
-    private fun makeAlarm() {
-        //TODO 알람 바꿔야함
-        alarmFunctions.callAlarm("00:00:05", 4, ALARM_CODE, "막차알림")
-    }
-
-    private fun makeAlarmWorker() {
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<AlarmWorker>(15, TimeUnit.MINUTES)
-            .build()
-        val workManager = WorkManager.getInstance(requireContext())
-        workManager.enqueue(periodicWorkRequest)
-        workManager.getWorkInfoByIdLiveData(periodicWorkRequest.id)
-            .observe(viewLifecycleOwner) { info ->
-                val outPutData = info.outputData.getString("WORK_RESULT")
-                Log.e("ABC", outPutData.toString())
-            }
     }
 
     override fun onDestroyView() {
@@ -127,6 +103,8 @@ class AlarmSettingFragment : Fragment() {
 
     companion object {
         const val ALARM_CODE = 123
+        const val LAST_TIME = "lastTime"
+        const val ALARM_TIME = "alarmTime"
     }
 
 }

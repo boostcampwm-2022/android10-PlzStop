@@ -7,7 +7,6 @@ import com.stop.domain.model.route.tmap.custom.Itinerary
 class ClickRouteViewModel : ViewModel() {
 
     var clickRoute : Itinerary? = null
-    var lastTimes: List<TransportLastTime?>? = null
-    val lastTime = "23:30:00"
+    var lastTime = "21:03:00"
 
 }

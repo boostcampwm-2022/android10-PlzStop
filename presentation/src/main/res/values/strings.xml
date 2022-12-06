@@ -44,6 +44,11 @@
     <string name="alarm_delete_text">알람 삭제</string>
     <string name="recent_search_text">최근기록</string>
     <string name="delete_recent_search_text">최근기록 삭제</string>
+    <string name="notification_channel_id">notification_channel_id</string>
+    <string name="notification_channel_name">notification_channel_name</string>
+    <string name="notification_title">막차 알림</string>
+    <string name="alarm_cancel_text">취소하기</string>
+    <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
     <string name="section_time">%1$s분</string>
     <string name="route_result_not_exist">경로 검색 결과가 존재하지 않습니다.</string>
