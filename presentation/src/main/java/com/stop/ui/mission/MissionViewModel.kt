@@ -4,7 +4,6 @@ import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.stop.LastTimeCheckWorker
 import com.stop.domain.model.nowlocation.BusInfoUseCaseItem
 import com.stop.domain.model.nowlocation.SubwayRouteLocationUseCaseItem
 import com.stop.domain.model.route.tmap.RouteRequest
@@ -165,19 +164,6 @@ class MissionViewModel @Inject constructor(
         workManager.enqueue(workRequest)
     }
 
-    fun makeAlarmWorker(time : String) {
-        val workData = workDataOf(
-            AlarmSettingFragment.LAST_TIME to time,
-            AlarmSettingFragment.ALARM_TIME to 0
-        )
-
-        val workRequest = OneTimeWorkRequestBuilder<LastTimeCheckWorker>()
-            .setInputData(workData)
-            .build()
-
-        workManager.enqueue(workRequest)
-    }
-
     companion object {
         private const val DELAY_TIME = 1000L
         private const val TIME_ZERO = 0
@@ -192,11 +178,13 @@ class MissionViewModel @Inject constructor(
 
         private const val TEST_SUBWAY_NUMER = 4
         private const val LINE = "호선" //임시로.. 종성님이 어떻게 넘겨주시느냐에 따라 달림
-        private const val TEST_TRAIN_NUMBER = "4330"
+        private const val TEST_TRAIN_NUMBER = "4589"
 
         private const val TEST_SUBWAY_LAT = "37.30973177"
         private const val TEST_SUBWAY_LONG = "126.85359515"
         private const val TEST_END_SUBWAY_STATION = "한대앞"
+
+        private const val TRANSPORT_TYPE = "TRANSPORT_TYPE"
 
     }
 

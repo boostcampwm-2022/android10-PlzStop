@@ -1,5 +1,6 @@
 package com.stop.ui.mission
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
@@ -7,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -191,6 +193,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     override fun alertTMapReady() {
         //mimicUserMove()
+        requestPermissionsLauncher.launch(PERMISSIONS)
         tMap.setTrackingMode()
         drawBusLocationLine()
         drawSubwayLocationLine()
@@ -217,6 +220,14 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.entries.any { it.value }) {
+            tMap.setTrackingMode()
+        }
+    }
+
     companion object {
 
         private const val DESTINATION = "구로3동현대아파트"
@@ -231,6 +242,9 @@ class MissionFragment : Fragment(), MissionHandler {
         private val INIT_LOCATION = Location(0.0, 0.0)
 
         private const val SECOND_UNIT = 1_000
+
+        private val PERMISSIONS =
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     }
 }
