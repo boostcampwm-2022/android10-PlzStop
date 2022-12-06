@@ -9,11 +9,19 @@ import com.stop.databinding.RoutePathItemBinding
 import com.stop.model.route.RouteItem
 
 class RouteDetailAdapter(
-    // private val onRouteDetailClickListener: OnRouteDetailClickListener
+    private val onRouteItemClickListener: OnRouteItemClickListener
 ): ListAdapter<RouteItem, RecyclerView.ViewHolder>(diffUtil) {
-    class PathViewHolder(
+    inner class PathViewHolder(
         private val binding: RoutePathItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.root.setOnClickListener {
+                binding.routeItem?.let { routeItem ->
+                    onRouteItemClickListener.clickRouteItem(routeItem.coordinate)
+                }
+            }
+        }
+
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
         }
@@ -21,8 +29,9 @@ class RouteDetailAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
+        val binding = RoutePathItemBinding.inflate(inflater, parent, false)
 
-        return PathViewHolder(RoutePathItemBinding.inflate(inflater, parent, false))
+        return PathViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {

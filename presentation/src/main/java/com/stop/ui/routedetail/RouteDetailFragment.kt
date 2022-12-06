@@ -10,6 +10,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
+import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.ui.route.RouteViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -70,7 +71,11 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     }
 
     private fun setRecyclerView() {
-        val adapter = RouteDetailAdapter()
+        val adapter = RouteDetailAdapter(object : OnRouteItemClickListener {
+            override fun clickRouteItem(coordinate: Coordinate) {
+                tMap.setRouteItemFocus(coordinate)
+            }
+        })
 
         binding.routeDetailDrawer.recyclerViewRouteDetail.adapter = adapter
         adapter.submitList(routeViewModel.getRouteItems())

@@ -103,6 +103,11 @@ class RouteDetailTMap(
         return TMapPoint(coordinate.latitude.toDouble(), coordinate.longitude.toDouble())
     }
 
+    fun setRouteItemFocus(coordinate: Coordinate) {
+        tMapView.setCenterPoint(coordinate.latitude.toDouble(), coordinate.longitude.toDouble(), true)
+        tMapView.zoomLevel = 16
+    }
+
     companion object {
         private const val LINE_WIDTH = 7F
         private const val OUT_LINE_WIDTH = 10F
