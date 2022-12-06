@@ -1,14 +1,15 @@
 package com.stop.ui.route
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.fragment.app.activityViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -22,11 +23,12 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val routeViewModel: RouteViewModel by activityViewModels()
-    private val clickRouteViewModel : ClickRouteViewModel by activityViewModels()
+    private val clickRouteViewModel: ClickRouteViewModel by activityViewModels()
 
     private val args: RouteFragmentArgs by navArgs()
 
     private lateinit var adapter: RouteAdapter
+    private var progressDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +46,7 @@ class RouteFragment : Fragment() {
         setRecyclerView()
         setStartAndDestinationText()
         setObserve()
+        initDialog()
     }
 
     private fun setBinding() {
@@ -69,6 +72,7 @@ class RouteFragment : Fragment() {
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
+                progressDialog?.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
                 clickRouteViewModel.clickRoute = itinerary
             }
@@ -95,6 +99,7 @@ class RouteFragment : Fragment() {
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 routeViewModel.lastTimes = response
+                progressDialog?.dismiss()
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
@@ -108,6 +113,15 @@ class RouteFragment : Fragment() {
             routeViewModel.setDestination(it)
         }
         routeViewModel.getRoute()
+    }
+
+    private fun initDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
+        progressDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        progressDialog?.window?.setBackgroundDrawableResource(R.color.transparent)
     }
 
     override fun onDestroyView() {

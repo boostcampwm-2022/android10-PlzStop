@@ -13,4 +13,5 @@
     <color name="gray_d9">#D9D9D9</color>
     <color name="main_dark_grey">#404550</color>
     <color name="main_light_grey">#808590</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>
