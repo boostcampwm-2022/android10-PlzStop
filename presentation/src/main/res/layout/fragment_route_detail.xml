@@ -9,6 +9,10 @@
         <variable
             name="routeViewModel"
             type="com.stop.ui.route.RouteViewModel" />
+
+        <variable
+            name="itinerary"
+            type="com.stop.domain.model.route.tmap.custom.Itinerary" />
     </data>
 
     <LinearLayout
@@ -111,7 +115,8 @@
         <androidx.drawerlayout.widget.DrawerLayout
             android:id="@+id/drawer_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            tools:openDrawer="start">
 
             <FrameLayout
                 android:id="@+id/frame_layout_container"
@@ -128,7 +133,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="30dp"
                 android:layout_gravity="start"
-                bind:routeViewModel="@{routeViewModel}"
+                bind:itinerary="@{itinerary}"
                 layout="@layout/route_detail_drawer" />
         </androidx.drawerlayout.widget.DrawerLayout>
     </LinearLayout>

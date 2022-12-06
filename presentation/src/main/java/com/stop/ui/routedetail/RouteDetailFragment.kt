@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.stop.R
@@ -45,6 +46,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.routeViewModel = routeViewModel
+        binding.itinerary = routeViewModel.tempItinerary
     }
 
     private fun initTMap() {
@@ -55,6 +57,8 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     }
 
     private fun initView() {
+        binding.drawerLayout.openDrawer(GravityCompat.START)
+
         binding.imageViewClose.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_mapFragment)
         }

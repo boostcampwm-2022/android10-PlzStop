@@ -1,25 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="com.stop.ui.util.DrawerStringUtils" />
+
         <variable
-            name="routeViewModel"
-            type="com.stop.ui.route.RouteViewModel" />
+            name="itinerary"
+            type="com.stop.domain.model.route.tmap.custom.Itinerary" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="30dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="30dp" />
 
         <TextView
-            android:id="@+id/text_view_drawer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="DRAWER"
-            android:background="#64BCD4"
-            android:textSize="40sp"
-            android:gravity="center" />
+            android:id="@+id/text_view_time"
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="10dp"
+            android:text="@{DrawerStringUtils.getTimeString(itinerary.totalTime)}"
+            android:textSize="27sp"
+            android:textColor="@color/main_dark_grey"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="1시간 17분"/>
+
+        <TextView
+            android:id="@+id/text_view_information"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{DrawerStringUtils.getInformationString(itinerary)}"
+            android:textSize="13sp"
+            android:textColor="@color/main_light_grey"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintTop_toBottomOf="@id/text_view_time"
+            tools:text="34km   도보 6분   3,300원   대기 3분 예상"/>
+
+        <View
+            android:id="@+id/view_alarm"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/background_route_detail_button"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintTop_toBottomOf="@id/text_view_information" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/view_alarm"
+            app:layout_constraintEnd_toEndOf="@id/view_alarm"
+            app:layout_constraintTop_toTopOf="@id/view_alarm"
+            app:layout_constraintBottom_toBottomOf="@id/view_alarm">
+
+            <ImageView
+                android:id="@+id/image_view_alarm"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_alarm" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="2dp"
+                android:text="@string/alarm_setting"
+                android:textSize="13sp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/image_view_alarm"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

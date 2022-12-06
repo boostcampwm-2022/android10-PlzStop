@@ -96,6 +96,7 @@ class RouteFragment : Fragment() {
         viewModel.lastTimeResponse.observe(viewLifecycleOwner) {
             it.getContentIfNotHandled()?.let { response ->
                 viewModel.tempLastTime = response.toMutableList()
+                Log.d("itinerary", response.toMutableList().toString())
                 binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
