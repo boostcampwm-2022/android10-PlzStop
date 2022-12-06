@@ -59,6 +59,10 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private fun initView() {
         binding.drawerLayout.openDrawer(GravityCompat.START)
 
+        binding.routeDetailDrawer.viewAlarm.setOnClickListener {
+            binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
+        }
+
         binding.imageViewClose.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_mapFragment)
         }
