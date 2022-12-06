@@ -68,7 +68,7 @@ class TimeLineViewHolder(
         val drawable =
             ContextCompat.getDrawable(binding.root.context, R.drawable.time_stick_round_background)
                 ?: throw IllegalArgumentException()
-        binding.imageViewIcon.background = drawable
+        binding.viewIcon.background = drawable
         binding.viewIcon.background.setTintList(null)
     }
 }
