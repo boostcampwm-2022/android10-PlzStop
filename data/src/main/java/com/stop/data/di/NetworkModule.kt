@@ -11,8 +11,11 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.Response
+import okhttp3.ResponseBody.Companion.toResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -28,6 +31,9 @@ internal object NetworkModule {
     private const val SW_OPEN_API_SEOUL_KEY_NAME = "KEY"
     private const val APIS_KEY_NAME = "ServiceKey"
     private const val WS_KEY_NAME = "ServiceKey"
+
+    private const val TRANSPORT_URL = "transit/routes"
+    private const val FAKE_JSON_URL = "response.json"
 
     @Provides
     @Singleton
@@ -150,6 +156,20 @@ internal object NetworkModule {
         override fun intercept(chain: Interceptor.Chain): Response {
             val url = chain.request().url.toUri().toString()
 
+            if (chain.request().url.toUri().toString().contains(TRANSPORT_URL)) {
+                val response = readJson(FAKE_JSON_URL)
+                return chain.proceed(chain.request())
+                    .newBuilder()
+                    .code(200)
+                    .protocol(Protocol.HTTP_2)
+                    .message("success")
+                    .body(
+                        response.toByteArray()
+                            .toResponseBody("application/json".toMediaTypeOrNull())
+                    ).addHeader("content-type", "application/json")
+                    .build()
+            }
+
             val (name: String, key: String) = when {
                 url.contains(BuildConfig.OPEN_API_SEOUL_URL) -> Pair(
                     OPEN_API_SEOUL_KEY_NAME,
@@ -176,6 +196,12 @@ internal object NetworkModule {
                     .build()
                 proceed(newRequest)
             }
+
+        }
+
+        private fun readJson(fileName: String): String {
+            return Thread.currentThread().contextClassLoader?.getResource(fileName)
+                ?.readText() ?: ""
         }
     }
 }
