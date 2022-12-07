@@ -20,7 +20,6 @@ open class TMap(
     lateinit var initLocation: Location
 
     var isTracking = true
-//    var isTransportTracking = false
 
     fun init() {
         tMapView = TMapView(context).apply {
@@ -54,38 +53,17 @@ open class TMap(
         manager.setOnLocationChangeListener(onLocationChangeListener)
     }
 
-//    fun trackingTransport(location: Location) {
-//        if (isTransportTracking.not()) {
-//            return
-//        }
-//        tMapView.setCenterPoint(
-//            location.latitude,
-//            location.longitude,
-//            true
-//        )
-//    }
-
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null && checkLocationInTMapLocation(location)) {
-            val beforeLocation = tMapView.locationPoint
             val nowLocation = TMapPoint(location.latitude, location.longitude)
-            if (handler is MissionHandler) {
-                if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, true)
-                } else {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, false)
-                }
-            } else if (handler is MapHandler) {
-                handler.setOnLocationChangeListener(location)
-            }
 
-            tMapView.setLocationPoint(location.latitude, location.longitude)
-
+            (handler as MapHandler).setOnLocationChangeListener(location)
             addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
                 nowLocation
             )
+            tMapView.setLocationPoint(location.latitude, location.longitude)
 
             if (isTracking) {
                 tMapView.setCenterPoint(location.latitude, location.longitude, true)
@@ -106,6 +84,7 @@ open class TMap(
                 icon
             )?.toBitmap()
             tMapPoint = location
+            isAnimation = false
         }
 
         tMapView.removeTMapMarkerItem(id)

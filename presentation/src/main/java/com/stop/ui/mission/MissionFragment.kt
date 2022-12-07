@@ -34,8 +34,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var tMap: MissionTMap
 
-    private var points = arrayListOf<TMapPoint>()
-
     private var state = State.FOREGROUND
 
     override fun onCreateView(
@@ -161,7 +159,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
-        tMap.setTrackingMode()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -176,33 +173,36 @@ class MissionFragment : Fragment(), MissionHandler {
         ActivityResultContracts.RequestMultiplePermissions()
     ) { permissions ->
         if (permissions.entries.any { it.value }) {
-            tMap.setTrackingMode()
+            tMap.isTracking = false
         }
     }
 
     private fun drawPersonLine() {
         var first = 0
+        lateinit var beforeLocation: Location
         lifecycleScope.launch {
             viewModel.userLocation.collect { userLocation ->
-                if (first == 0) {
-                    first += 1
-                } else if (first == 1) {
-                    points.add(userLocation)
+                if (first < 2) {
+                    beforeLocation = userLocation
                     first += 1
                 } else {
-                    tMap.tMapView.removeTMapPolyLine(Marker.PERSON_LINE + PERSON_LINE_NUM.toString())
-                    Log.d("MissionWorker", "drawLine $points")
-                    points.add(userLocation)
+                    val nowLocation = TMapPoint(userLocation.latitude, userLocation.longitude)
                     tMap.drawMoveLine(
-                        points,
+                        nowLocation,
+                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
                         Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
                         Marker.PERSON_LINE_COLOR
                     )
-
+                    tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
+                    viewModel.personCurrentLocation = userLocation
+                    if (tMap.isTracking) {
+                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                    }
+                    beforeLocation = userLocation
+                    PERSON_LINE_NUM += 1
                 }
 
             }
-
         }
     }
 

@@ -3,12 +3,9 @@ package com.stop.ui.mission
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.stop.domain.model.route.TransportLastTime
-import com.stop.domain.usecase.nowlocation.*
 import com.stop.model.ErrorType
 import com.stop.model.Event
 import com.stop.model.Location
-import com.stop.model.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -106,13 +103,6 @@ class MissionViewModel @Inject constructor(
 
         workManager.enqueue(workRequest)
     }
-
-    fun setOnState(state: State) {
-        if (state == State.FOREGROUND) {
-
-        }
-    }
-
 
     companion object {
         private const val DELAY_TIME = 1000L

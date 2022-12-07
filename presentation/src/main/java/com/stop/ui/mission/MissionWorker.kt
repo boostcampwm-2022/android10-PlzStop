@@ -17,9 +17,9 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
-import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.isMoreThanOreo
+import com.stop.model.Location
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
@@ -74,7 +74,7 @@ class MissionWorker @AssistedInject constructor(
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     if (location != null) {
-                        missionManager.userLocation.value = TMapPoint(location.latitude, location.longitude)
+                        missionManager.userLocation.value = Location(location.latitude, location.longitude)
                     }
                 }
             }
