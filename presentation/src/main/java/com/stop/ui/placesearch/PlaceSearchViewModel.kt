@@ -1,6 +1,5 @@
 package com.stop.ui.placesearch
 
-import android.text.Editable
 import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,12 +27,13 @@ import kotlin.math.round
 class PlaceSearchViewModel @Inject constructor(
     private val getNearPlacesUseCase: GetNearPlacesUseCase,
     private val geoLocationUseCase: GeoLocationUseCase,
-    private val getRecentPlaceSearchUseCase: GetRecentPlaceSearchUseCase,
+    getRecentPlaceSearchUseCase: GetRecentPlaceSearchUseCase,
     private val deleteRecentPlaceSearchUseCase: DeleteRecentPlaceSearchUseCase,
     private val insertRecentPlaceSearchUseCase: InsertRecentPlaceSearchUseCase
 ) : ViewModel() {
 
-    var currentLocation = Location(0.0, 0.0)
+    // 기본 주소로 서울역 주소 지정
+    var currentLocation = Location(37.553836, 126.969652)
 
     var panelInfo: com.stop.model.route.Place? = null
 
@@ -52,9 +52,6 @@ class PlaceSearchViewModel @Inject constructor(
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
-    private val _searchKeyword = MutableStateFlow("")
-    val searchKeyword: StateFlow<String> = _searchKeyword
-
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
     val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
 
@@ -64,17 +61,9 @@ class PlaceSearchViewModel @Inject constructor(
     private val _distance = MutableLiveData<Float>()
     val distance: LiveData<Float> = _distance
 
-    val recentPlaceSearch: StateFlow<List<PlaceUseCaseItem>> =
-        getRecentPlaceSearchUseCase.getAllRecentPlaceSearch()
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(),
-                initialValue = emptyList()
-            )
-
-    fun afterTextChanged(s: Editable?) {
-        _searchKeyword.value = s.toString()
-    }
+    val recentPlaceSearch: StateFlow<List<PlaceUseCaseItem>> = getRecentPlaceSearchUseCase.getAllRecentPlaceSearch().stateIn(
+            scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = emptyList()
+        )
 
     fun getNearPlaces(
         searchKeyword: String,
@@ -83,9 +72,7 @@ class PlaceSearchViewModel @Inject constructor(
             try {
                 _nearPlaces.emit(
                     getNearPlacesUseCase.getNearPlaces(
-                        searchKeyword,
-                        currentLocation.longitude,
-                        currentLocation.latitude
+                        searchKeyword, currentLocation.longitude, currentLocation.latitude
                     )
                 )
 
@@ -99,7 +86,6 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun setNearPlacesEmpty() {
         _nearPlaces.value = emptyList()
-        _searchKeyword.value = ""
         _isNearPlacesNotEmpty.value = false
     }
 

@@ -15,9 +15,11 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.stop.R
+import com.stop.bindingadapter.textChangesToFlow
 import com.stop.databinding.FragmentPlaceSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -64,10 +66,10 @@ class PlaceSearchFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        placeSearchAdapter = PlaceSearchAdapter{
+        placeSearchAdapter = PlaceSearchAdapter {
             clickPlace(it)
         }
-        recentPlaceSearchAdapter = RecentPlaceSearchAdapter{
+        recentPlaceSearchAdapter = RecentPlaceSearchAdapter {
             clickPlace(it)
         }
 
@@ -136,16 +138,17 @@ class PlaceSearchFragment : Fragment() {
     }
 
     @OptIn(FlowPreview::class)
-    private fun observeSearchKeyword(){
-        placeSearchViewModel.searchKeyword.debounce(100)
-            .onEach {
-                if(it.isBlank()){
-                    placeSearchViewModel.setNearPlacesEmpty()
-                }else{
-                    placeSearchViewModel.getNearPlaces(it)
+    private fun observeSearchKeyword() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val editTextFlow = binding.textInputEditTextPlaceSearch.textChangesToFlow()
+
+            editTextFlow
+                .debounce(500)
+                .onEach {
+                    placeSearchViewModel.getNearPlaces(it.toString())
                 }
-            }
-            .launchIn(lifecycleScope)
+                .launchIn(this)
+        }
     }
 
     override fun onDestroyView() {
