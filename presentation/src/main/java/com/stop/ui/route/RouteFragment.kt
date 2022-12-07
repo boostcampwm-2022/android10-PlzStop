@@ -16,6 +16,8 @@ import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.model.route.tmap.custom.TransportRoute
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -63,12 +63,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/bookMarkFragment"
-        android:name="com.stop.ui.bookmark.BookMarkFragment"
-        android:label="fragment_book_mark"
-        tools:layout="@layout/fragment_book_mark" />
-
-    <fragment
         android:id="@+id/alarmStartFragment"
         android:name="com.stop.ui.alarmstart.AlarmStartFragment"
         android:label="fragment_alarm_start"

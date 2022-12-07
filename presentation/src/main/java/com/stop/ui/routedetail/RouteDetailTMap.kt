@@ -61,7 +61,7 @@ class RouteDetailTMap(
             else -> ContextCompat.getColor(context, R.color.main_light_grey)
         }
 
-        return TMapPolyLine(route.start.name, tMapPoints).apply {
+        return TMapPolyLine(route.start.name + route.end.name, tMapPoints).apply {
             this.lineColor = lineColor
             lineWidth = LINE_WIDTH
             outLineColor = Color.WHITE

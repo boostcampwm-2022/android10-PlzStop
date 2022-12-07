@@ -11,10 +11,6 @@
             type="com.stop.ui.route.RouteResultViewModel" />
 
         <variable
-            name="routeViewModel"
-            type="com.stop.ui.route.RouteViewModel" />
-
-        <variable
             name="itinerary"
             type="com.stop.domain.model.route.tmap.custom.Itinerary" />
     </data>
@@ -68,7 +64,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="@{routeViewModel.origin.name}"
+                    android:text="@{routeResultViewModel.origin.name}"
                     android:textSize="17sp"
                     android:textColor="@color/main_light_grey"
                     app:layout_constraintStart_toStartOf="parent"
@@ -95,7 +91,7 @@
                     android:maxLines="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="@{routeViewModel.destination.name}"
+                    android:text="@{routeResultViewModel.destination.name}"
                     android:textSize="17sp"
                     android:textColor="@color/main_light_grey"
                     app:layout_constraintStart_toEndOf="@id/image_view_arrow_right"
