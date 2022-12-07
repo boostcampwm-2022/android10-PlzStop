@@ -140,16 +140,19 @@ class RouteViewModel @Inject constructor(
             MoveType.WALK -> R.drawable.ic_walk_white
             MoveType.BUS -> R.drawable.ic_bus_white
             MoveType.SUBWAY -> R.drawable.ic_subway_white
+            MoveType.TRANSFER -> R.drawable.ic_transfer_white
             else -> R.drawable.ic_star_white
         }
     }
 
     private fun getRouteItemColor(route: Route, isCurrent: Boolean): Int {
         return if (isCurrent) {
-            routeItemColor = when (route) {
-                is TransportRoute -> Color.parseColor("#${route.routeColor}")
-                is WalkRoute -> Color.parseColor(MAIN_WALK_GREY)
-                else -> Color.parseColor(MAIN_YELLOW)
+            routeItemColor = if (route is TransportRoute) {
+                Color.parseColor("#${route.routeColor}")
+            } else if (route.mode == MoveType.WALK) {
+                Color.parseColor(MAIN_WALK_GREY)
+            } else {
+                Color.parseColor(MAIN_YELLOW)
             }
             routeItemColor
         } else {
