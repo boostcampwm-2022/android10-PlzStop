@@ -13,7 +13,6 @@
     <string name="current_location_text">현재위치</string>
     <string name="select_map_text">지도에서 선택</string>
     <string name="distance_km">%1$skm</string>
-    <string name="location_address_search_text">장소, 주소 검색</string>
     <string name="mission_close_image_view_description">미션 종료 버튼입니다.</string>
     <string name="minute_and_second">%1$s:%2$s</string>
     <string name="number_format">%1$s%2$d</string>
@@ -66,4 +65,6 @@
     <string name="image_view_swap_origin_with_destination_content_description">출발지와 도착지를 바꿉니다.</string>
     <string name="image_view_exit_content_description">경로 검색 화면을 종료합니다.</string>
     <string name="image_view_icon_content_description">승차지의 종류를 나타내는 아이콘입니다.</string>
+    <string name="loading_text">Loading..</string>
+    <string name="recent_search_no_data_tet">장소, 주소를 검색하세요</string>
 </resources>

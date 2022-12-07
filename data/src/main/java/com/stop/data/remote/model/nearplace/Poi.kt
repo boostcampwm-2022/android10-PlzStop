@@ -2,6 +2,7 @@ package com.stop.data.remote.model.nearplace
 
 import com.squareup.moshi.JsonClass
 import com.stop.data.model.nearplace.PlaceRepositoryItem
+import kotlin.math.round
 
 @JsonClass(generateAdapter = true)
 data class Poi(
@@ -45,7 +46,7 @@ data class Poi(
         val road = newAddressList.newAddress.firstOrNull()
         return PlaceRepositoryItem(
             name = name,
-            radius = radius,
+            radius = (round(radius.toDouble() * 100) / 100).toString(),
             fullAddressRoad = road?.fullAddressRoad ?: "",
             centerLat = road?.centerLat?.toDouble() ?: 0.0,
             centerLon = road?.centerLon?.toDouble() ?: 0.0

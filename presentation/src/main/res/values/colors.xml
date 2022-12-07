@@ -16,4 +16,7 @@
     <color name="main_lighter_grey">#EEEEEE</color>
     <color name="main_walk_grey">#C0C5CA</color>
     <color name="main_yellow">#FFC766</color>
+    <color name="transparent">#00FFFFFF</color>
+    <color name="hint_text_color">#808590</color>
+    <color name="blue">#2196F3</color>
 </resources>

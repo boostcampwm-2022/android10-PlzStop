@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.stop.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,22 +37,14 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
-
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        hideStatusBar()
+        binding.navHostFragment.setPadding(0, 0, 0, this.navigationHeight())
         showOverLockScreen()
-    }
-
-
-    private fun hideStatusBar() {
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-        )
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
