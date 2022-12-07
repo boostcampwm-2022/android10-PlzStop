@@ -16,7 +16,7 @@ import com.stop.AlarmWorker
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
 import com.stop.domain.model.alarm.AlarmUseCaseItem
-import com.stop.ui.route.ClickRouteViewModel
+import com.stop.ui.route.RouteResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
@@ -28,7 +28,7 @@ class AlarmSettingFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
-    private val clickRouteViewModel by activityViewModels<ClickRouteViewModel>()
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
     private lateinit var alarmFunctions: AlarmFunctions
 
@@ -54,13 +54,22 @@ class AlarmSettingFragment : Fragment() {
     }
 
     private fun initBinding() {
+        val itinerary = routeResultViewModel.itinerary.value ?: throw IllegalArgumentException()
+
+        val transportLastTimes = routeResultViewModel.lastTimes.value
+            ?: throw IllegalArgumentException()
+
+        val transportLastTime = transportLastTimes.filterNotNull().sortedBy {
+            it.timeToBoard
+        }.first()
+
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             alarmViewModel = alarmSettingViewModel
-            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음"
-            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음"
-            lastTime = clickRouteViewModel.lastTime
-            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0
+            startPosition = itinerary.routes.first().start.name
+            endPosition = itinerary.routes.last().end.name
+            lastTime = transportLastTime.timeToBoard
+            walkTime = (itinerary.routes.first().sectionTime.div(60)).roundToInt()
             fragment = this@AlarmSettingFragment
         }
     }
@@ -88,12 +97,21 @@ class AlarmSettingFragment : Fragment() {
     }
 
     fun setAlarmRegisterListener() {
+        val itinerary = routeResultViewModel.itinerary.value ?: throw IllegalArgumentException()
+
+        val transportLastTimes = routeResultViewModel.lastTimes.value
+            ?: throw IllegalArgumentException()
+
+        val transportLastTime = transportLastTimes.filterNotNull().sortedBy {
+            it.timeToBoard
+        }.first()
+
         val alarmUseCaseItem = AlarmUseCaseItem(
-            startPosition = clickRouteViewModel.clickRoute?.routes?.first()?.start?.name ?: "출발지 없음",
-            endPosition = clickRouteViewModel.clickRoute?.routes?.last()?.end?.name ?: "도착지 없음",
-            routes = clickRouteViewModel.clickRoute?.routes ?: emptyList(),
-            lastTime = clickRouteViewModel.lastTime,
-            walkTime = (clickRouteViewModel.clickRoute?.routes?.first()?.sectionTime?.div(60))?.roundToInt() ?: 0,
+            startPosition = itinerary.routes.first().start.name,
+            endPosition = itinerary.routes.last().end.name,
+            routes = itinerary.routes,
+            lastTime = transportLastTime.timeToBoard,
+            walkTime = (itinerary.routes.first().sectionTime.div(60)).roundToInt(),
             0,
             ALARM_CODE,
             true

@@ -80,10 +80,7 @@ class PlaceSearchFragment : Fragment() {
         placeSearchViewModel.setNearPlacesEmpty()
         placeSearchViewModel.insertRecentSearchPlace(placeUseCaseItem)
 
-        val navController = findNavController()
-        navController.setGraph(R.navigation.nav_graph)
-        navController.navigate(R.id.action_global_mapFragment)
-
+        findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
     }
 
     private fun buttonClick() {
@@ -91,15 +88,11 @@ class PlaceSearchFragment : Fragment() {
             textViewCurrentLocation.setOnClickListener {
                 placeSearchViewModel.setClickCurrentLocation()
 
-                val navController = findNavController()
-                navController.setGraph(R.navigation.nav_graph)
-                navController.navigate(R.id.action_global_mapFragment)
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
 
             textViewSelectMap.setOnClickListener {
-                val navController = findNavController()
-                navController.setGraph(R.navigation.nav_graph)
-                navController.navigate(R.id.action_global_mapFragment)
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
         }
     }

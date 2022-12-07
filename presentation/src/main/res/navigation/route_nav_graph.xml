@@ -3,17 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/route_nav_graph"
     xmlns:tools="http://schemas.android.com/tools"
-    app:startDestination="@id/placeSearchFragment">
+    app:startDestination="@id/routeFragment">
 
-    <fragment
-        android:id="@+id/placeSearchFragment"
-        android:name="com.stop.ui.placesearch.PlaceSearchFragment"
-        android:label="fragment_place_search"
-        tools:layout="@layout/fragment_place_search">
-        <action
-            android:id="@+id/action_placeSearchFragment_to_nav_graph"
-            app:destination="@id/nav_graph" />
-    </fragment>
     <fragment
         android:id="@+id/routeFragment"
         tools:layout="@layout/fragment_route"
@@ -32,9 +23,6 @@
             android:defaultValue="@null"
             app:argType="com.stop.model.route.Place"
             app:nullable="true" />
-        <action
-            android:id="@+id/action_routeFragment_to_placeSearchFragment"
-            app:destination="@id/placeSearchFragment" />
     </fragment>
     <fragment
         android:id="@+id/routeDetailFragment"

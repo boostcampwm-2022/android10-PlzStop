@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -22,7 +24,7 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val routeViewModel: RouteViewModel by activityViewModels()
-    private val clickRouteViewModel : ClickRouteViewModel by activityViewModels()
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
     private val args: RouteFragmentArgs by navArgs()
 
@@ -53,12 +55,14 @@ class RouteFragment : Fragment() {
 
     private fun setListener() {
         binding.textViewOrigin.setOnClickListener {
-            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.nav_graph)
+            navController.navigate(R.id.action_global_placeSearchFragment)
         }
         binding.textViewDestination.setOnClickListener {
-            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.nav_graph)
+            navController.navigate(R.id.action_global_placeSearchFragment)
         }
     }
 
@@ -70,7 +74,7 @@ class RouteFragment : Fragment() {
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
                 routeViewModel.calculateLastTransportTime(itinerary)
-                clickRouteViewModel.clickRoute = itinerary
+                routeResultViewModel.setItineraries(itinerary)
             }
         })
         binding.recyclerviewRoute.adapter = adapter
@@ -94,8 +98,9 @@ class RouteFragment : Fragment() {
 
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                clickRouteViewModel.lastTimes = response
-                binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
+                routeResultViewModel.setLastTimes(response)
+                binding.root.findNavController()
+                    .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
     }

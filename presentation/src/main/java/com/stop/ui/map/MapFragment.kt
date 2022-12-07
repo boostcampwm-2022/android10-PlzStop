@@ -106,7 +106,7 @@ class MapFragment : Fragment(), MapHandler {
     private fun initNavigateAction() {
         binding.textViewSearch.setOnClickListener {
             binding.root.findNavController()
-                .navigate(R.id.action_mapFragment_to_route_nav_graph)
+                .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {

@@ -5,14 +5,24 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mapFragment">
 
+
+    <fragment
+        android:id="@+id/placeSearchFragment"
+        android:name="com.stop.ui.placesearch.PlaceSearchFragment"
+        android:label="fragment_place_search"
+        tools:layout="@layout/fragment_place_search">
+        <action
+            android:id="@+id/action_placeSearchFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.stop.ui.map.MapFragment"
         android:label="MapFragment"
         tools:layout="@layout/fragment_map">
         <action
-            android:id="@+id/action_mapFragment_to_route_nav_graph"
-            app:destination="@id/route_nav_graph" />
+            android:id="@+id/action_mapFragment_to_placeSearchFragment"
+            app:destination="@id/placeSearchFragment" />
         <argument
             android:name="currentLocation"
             android:defaultValue="@null"
@@ -38,5 +48,8 @@
     <action
         android:id="@+id/action_global_mapFragment"
         app:destination="@id/mapFragment" />
+    <action
+        android:id="@+id/action_global_placeSearchFragment"
+        app:destination="@id/placeSearchFragment" />
 
 </navigation>
