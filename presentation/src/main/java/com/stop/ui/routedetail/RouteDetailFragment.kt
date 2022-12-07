@@ -76,6 +76,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
             findNavController().apply {
                 setGraph(R.navigation.nav_graph)
                 popBackStack(R.id.action_global_mapFragment, false)
+                requireActivity().viewModelStore.clear()
             }
         }
     }
