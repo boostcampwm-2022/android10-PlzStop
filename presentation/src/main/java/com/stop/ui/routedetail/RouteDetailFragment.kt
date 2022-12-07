@@ -9,9 +9,13 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.stop.R
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
+import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.ui.route.RouteViewModel
+import com.stop.ui.route.RouteResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,6 +26,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private val routeViewModel: RouteViewModel by activityViewModels()
 
     private lateinit var tMap: RouteDetailTMap
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,6 +52,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
+        binding.routeResultViewModel = routeResultViewModel
         binding.routeViewModel = routeViewModel
         binding.itinerary = routeViewModel.tempItinerary
     }

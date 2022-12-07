@@ -1,6 +1,6 @@
 package com.stop.domain.repository
 
-import com.stop.domain.model.nearplace.Place
+import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import com.stop.domain.model.nowlocation.NowStationLocationUseCaseItem
 
 interface NearPlaceRepository {
@@ -9,7 +9,7 @@ interface NearPlaceRepository {
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double
-    ): List<Place>
+    ): List<PlaceUseCaseItem>
 
     suspend fun getNowStationLocationInfo(
         searchKeyword: String,

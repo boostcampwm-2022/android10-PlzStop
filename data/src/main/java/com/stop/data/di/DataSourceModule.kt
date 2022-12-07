@@ -1,5 +1,7 @@
 package com.stop.data.di
 
+import com.stop.data.local.source.alarm.RecentPlaceSearchLocalDataSource
+import com.stop.data.local.source.alarm.RecentPlaceSearchLocalDataSourceImpl
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSource
 import com.stop.data.remote.source.nearplace.NearPlaceRemoteDataSourceImpl
 import com.stop.data.remote.source.nowlocation.NowLocationRemoteDataSource
@@ -33,5 +35,11 @@ internal interface DataSourceModule {
     fun provideNowLocationRemoteDataSource(
         nowLocationRemoteDataSourceImpl: NowLocationRemoteDataSourceImpl
     ): NowLocationRemoteDataSource
+
+    @Binds
+    @Singleton
+    fun provideRecentPlaceSearchLocalDataSource(
+        recentPlaceSearchLocalDataSourceImpl: RecentPlaceSearchLocalDataSourceImpl
+    ) : RecentPlaceSearchLocalDataSource
 
 }

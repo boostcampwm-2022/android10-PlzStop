@@ -15,73 +15,61 @@
         android:layout_height="match_parent"
         tools:context=".ui.route.RouteFragment">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_back_to_home"
-            style="@style/Widget.AppCompat.Button.Small"
+        <ImageView
+            android:id="@+id/image_view_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_baseline_close_24"
-            app:layout_constraintDimensionRatio="1:1"
+            android:contentDescription="@string/image_view_exit_content_description"
             app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
-            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal" />
+            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
+            app:srcCompat="@drawable/ic_baseline_close_24" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_origin"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        <TextView
+            android:id="@+id/text_view_origin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
+            android:background="@drawable/round_border"
+            android:padding="10dp"
+            app:layout_constraintEnd_toStartOf="@id/image_view_swap_origin_with_destination"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/button_back_to_home">
+            app:layout_constraintTop_toBottomOf="@id/image_view_exit"
+            app:set_place_name="@{viewModel.origin}"
+            tools:text="이앤씨벤쳐드림타워3차" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_input_edit_text_origin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.origin.name}"
-                tools:text="이앤씨벤쳐드림타워3차" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_swap_origin_with_destination"
-            style="@style/Widget.AppCompat.Button.Small"
+        <ImageView
+            android:id="@+id/image_view_swap_origin_with_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_baseline_swap_vert_24"
-            app:layout_constraintBottom_toBottomOf="@id/text_input_layout_origin"
-            app:layout_constraintDimensionRatio="1:1"
+            android:contentDescription="@string/image_view_swap_origin_with_destination_content_description"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_origin"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
-            app:layout_constraintTop_toTopOf="@id/text_input_layout_origin" />
+            app:layout_constraintTop_toTopOf="@id/text_view_origin"
+            app:srcCompat="@drawable/ic_baseline_swap_vert_24" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_layout_destination"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <TextView
+            android:id="@+id/text_view_destination"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toStartOf="@id/button_swap_origin_with_destination"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/round_border"
+            android:padding="10dp"
+            app:layout_constraintEnd_toStartOf="@id/image_view_reset"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_origin">
+            app:layout_constraintTop_toBottomOf="@id/text_view_origin"
+            app:set_place_name="@{viewModel.destination}"
+            tools:text="Naver1784" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_input_edit_text_destination"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{viewModel.destination.name}"
-                tools:text="Naver1784" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/button_erase_origin_and_destination"
-            style="@style/Widget.AppCompat.Button.Small"
+        <ImageView
+            android:id="@+id/image_view_reset"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_baseline_replay_24"
-            app:layout_constraintBottom_toBottomOf="@id/text_input_layout_destination"
-            app:layout_constraintDimensionRatio="1:1"
+            android:contentDescription="@string/image_view_reset_content_description"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_destination"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
-            app:layout_constraintTop_toTopOf="@id/text_input_layout_destination" />
+            app:layout_constraintTop_toTopOf="@id/text_view_destination"
+            app:srcCompat="@drawable/ic_baseline_replay_24" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_route"
@@ -92,7 +80,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_destination"
+            app:layout_constraintTop_toBottomOf="@id/text_view_destination"
             tools:listitem="@layout/route_item" />
 
         <androidx.constraintlayout.widget.Guideline

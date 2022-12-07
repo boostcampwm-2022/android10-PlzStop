@@ -1,6 +1,6 @@
 package com.stop.domain.model.nearplace
 
-data class Place(
+data class PlaceUseCaseItem(
     val name: String,
     val radius: String,
     val fullAddressRoad: String,

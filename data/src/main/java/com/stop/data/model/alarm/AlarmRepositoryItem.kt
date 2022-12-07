@@ -2,15 +2,17 @@ package com.stop.data.model.alarm
 
 import com.stop.data.local.model.Alarm
 import com.stop.domain.model.alarm.AlarmUseCaseItem
+import com.stop.domain.model.route.tmap.custom.Route
 
 data class AlarmRepositoryItem(
     val startPosition: String,
     val endPosition: String,
-    val routes: List<String>,
-    val lastTime: String,
-    val alarmTime: String,
-    val alarmMethod: Boolean,
-    val isMission: Boolean,
+    val routes: List<Route>,
+    val lastTime: String, // 막차 시간 -> 23:30:15 시분초
+    val walkTime : Int, // 도보시간 -> 분단위
+    val alarmTime: Int, // 10분 전 알람 설정 -> 10
+    val alarmCode: Int, // 알람을 식별하기 위한 알람 ID
+    val alarmMethod: Boolean, // true 소리 false 진동
 ) {
 
     fun toUseCaseModel() = AlarmUseCaseItem(
@@ -18,9 +20,10 @@ data class AlarmRepositoryItem(
         endPosition,
         routes,
         lastTime,
+        walkTime,
         alarmTime,
-        alarmMethod,
-        isMission
+        alarmCode,
+        alarmMethod
     )
 
     fun toDataSourceModel() = Alarm(
@@ -28,9 +31,10 @@ data class AlarmRepositoryItem(
         endPosition,
         routes,
         lastTime,
+        walkTime,
         alarmTime,
-        alarmMethod,
-        isMission
+        alarmCode,
+        alarmMethod
     )
 
 }

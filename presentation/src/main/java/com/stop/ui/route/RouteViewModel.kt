@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.R
+import com.stop.domain.model.route.TransportLastTime
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
@@ -38,8 +39,8 @@ class RouteViewModel @Inject constructor(
     val routeResponse: LiveData<List<Itinerary>>
         get() = _routeResponse
 
-    private val _lastTimeResponse = MutableLiveData<Event<List<String?>>>()
-    val lastTimeResponse: LiveData<Event<List<String?>>>
+    private val _lastTimeResponse = MutableLiveData<Event<List<TransportLastTime?>>>()
+    val lastTimeResponse: LiveData<Event<List<TransportLastTime?>>>
         get() = _lastTimeResponse
 
     private val _errorMessage = MutableLiveData<Event<ErrorType>>()
@@ -69,14 +70,19 @@ class RouteViewModel @Inject constructor(
         )
 
         viewModelScope.launch {
-            this@RouteViewModel._routeResponse.value = getRouteUseCase(routeRequest)
+            val itineraries = getRouteUseCase(routeRequest)
+            if (itineraries.isEmpty()) {
+                _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
+                return@launch
+            }
+            this@RouteViewModel._routeResponse.value = itineraries
         }
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
         viewModelScope.launch {
-            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary))
+            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary) )
         }
     }
 
@@ -90,15 +96,6 @@ class RouteViewModel @Inject constructor(
 
     fun setDestination(place: Place) {
         _destination.value = place
-    }
-
-    fun getResult(): String {
-        val clickedItinerary = _routeResponse.value?.get(clickedItineraryIndex) ?: return "함수를 잘못 호출했습니다."
-        val lastTimes = _lastTimeResponse.value ?: return "이 함수를 호출한 시점에 막차 데이터가 null인 논리적 오류가 발생했습니다."
-
-        return clickedItinerary.routes.mapIndexed { index, route ->
-            "${route.start.name}(${lastTimes.peekContent()[index]})"
-        }.joinToString(" -> ")
     }
 
     fun getRouteItems(): List<RouteItem> {

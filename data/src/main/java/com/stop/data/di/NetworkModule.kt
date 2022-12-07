@@ -1,9 +1,13 @@
 package com.stop.data.di
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.stop.data.BuildConfig
 import com.stop.data.remote.ResultCallAdapter
+import com.stop.domain.model.route.tmap.custom.Route
+import com.stop.domain.model.route.tmap.custom.TransportRoute
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import dagger.Module
@@ -46,6 +50,11 @@ internal object NetworkModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
+            .add(PolymorphicJsonAdapterFactory
+                .of(Route::class.java,"Route")
+                .withSubtype(TransportRoute::class.java, "TransportRoute")
+                .withSubtype(WalkRoute::class.java, "WalkRoute")
+            )
             .addLast(KotlinJsonAdapterFactory())
             .build()
     }
