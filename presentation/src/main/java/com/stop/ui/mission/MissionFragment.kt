@@ -47,7 +47,6 @@ class MissionFragment : Fragment(), MissionHandler {
         setDataBinding()
         initViewModel()
         initTMap()
-        initView()
         setObserve()
         drawPersonLine()
 
@@ -62,6 +61,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
+        binding.fragment = this@MissionFragment
     }
 
     private fun initTMap() {
@@ -76,21 +76,32 @@ class MissionFragment : Fragment(), MissionHandler {
         viewModel.countDownWith(LEFT_TIME)
     }
 
-    private fun initView() {
-        binding.layoutCompass.setOnClickListener {
-            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+    fun setCompassMode() {
+        tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+    }
+
+    fun setPersonCurrent() {
+        tMap.tMapView.setCenterPoint(
+            viewModel.personCurrentLocation.latitude,
+            viewModel.personCurrentLocation.longitude,
+            true
+        )
+
+        tMap.isTracking = true
+        tMap.tMapView.zoomLevel = 16
+    }
+
+    fun setZoomOut() {
+        with(tMap) {
+            latitudes.clear()
+            longitudes.clear()
+            latitudes.add(TEST_DESTINATION.latitude)
+            longitudes.add(TEST_DESTINATION.longitude)
+            latitudes.add(viewModel.personCurrentLocation.latitude)
+            longitudes.add(viewModel.personCurrentLocation.longitude)
+            setRouteDetailFocus()
+            isTracking = false
         }
-
-        binding.layoutPersonCurrent.setOnClickListener {
-            tMap.tMapView.setCenterPoint(
-                viewModel.personCurrentLocation.latitude,
-                viewModel.personCurrentLocation.longitude,
-                true
-            )
-
-            tMap.isTracking = true
-        }
-
     }
 
     private fun setObserve() {
