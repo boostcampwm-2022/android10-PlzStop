@@ -75,7 +75,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         binding.imageViewClose.setOnClickListener {
             findNavController().apply {
                 setGraph(R.navigation.nav_graph)
-                navigate(R.id.action_global_mapFragment)
+                popBackStack(R.id.action_global_mapFragment, false)
             }
         }
     }
