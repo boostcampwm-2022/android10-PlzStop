@@ -122,6 +122,7 @@ class AlarmSettingFragment : Fragment() {
         val navController = findNavController()
         navController.setGraph(R.navigation.nav_graph)
         navController.popBackStack(R.id.action_global_mapFragment, false)
+        requireActivity().viewModelStore.clear()
     }
 
     private fun makeAlarm() {
