@@ -1,6 +1,7 @@
 package com.stop.ui.placesearch
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -24,6 +26,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class PlaceSearchFragment : Fragment() {
@@ -54,14 +57,21 @@ class PlaceSearchFragment : Fragment() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initTextEditText()
         initAdapter()
         buttonClick()
         listenEditTextChange()
         logErrorMessage()
         listenSearchEditText()
+    }
+
+    private fun initTextEditText(){
+        binding.textInputEditTextPlaceSearch.requestFocus()
+        showKeyBoard()
     }
 
     private fun initAdapter() {
@@ -116,6 +126,11 @@ class PlaceSearchFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showKeyBoard() {
+        val imm = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.textInputEditTextPlaceSearch, InputMethodManager.SHOW_IMPLICIT)
     }
 
     private fun hideKeyBoard() {
