@@ -20,7 +20,7 @@ open class TMap(
     lateinit var initLocation: Location
 
     var isTracking = true
-    var isTransportTracking = false
+//    var isTransportTracking = false
 
     fun init() {
         tMapView = TMapView(context).apply {
@@ -54,16 +54,16 @@ open class TMap(
         manager.setOnLocationChangeListener(onLocationChangeListener)
     }
 
-    fun trackingTransport(location: Location) {
-        if (isTransportTracking.not()) {
-            return
-        }
-        tMapView.setCenterPoint(
-            location.latitude,
-            location.longitude,
-            true
-        )
-    }
+//    fun trackingTransport(location: Location) {
+//        if (isTransportTracking.not()) {
+//            return
+//        }
+//        tMapView.setCenterPoint(
+//            location.latitude,
+//            location.longitude,
+//            true
+//        )
+//    }
 
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null && checkLocationInTMapLocation(location)) {

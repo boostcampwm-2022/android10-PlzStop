@@ -38,6 +38,11 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove" />
 
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="location"
+            tools:node="merge" />
+
         <activity
             android:name=".MainActivity"
             android:excludeFromRecents="true"

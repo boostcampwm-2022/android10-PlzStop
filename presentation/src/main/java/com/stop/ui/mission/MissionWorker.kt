@@ -5,6 +5,8 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
+import android.os.Build
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
@@ -15,9 +17,9 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
+import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.isMoreThanOreo
-import com.stop.model.Location
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.delay
@@ -38,13 +40,13 @@ class MissionWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         setForeground(createForegroundInfo())
-        initLocation()
+        getPersonLocation()
         test()
-        Log.d("MissionWorker","personMovements ${missionManager.personMovements}")
+        fusedLocationClient.removeLocationUpdates(locationCallback)
         return Result.success()
     }
 
-    private fun initLocation() {
+    private fun getPersonLocation() {
         if (ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -60,7 +62,7 @@ class MissionWorker @AssistedInject constructor(
                 if (location == null) {
                     Log.d("MissionWorker", "location get fail")
                 } else {
-                    Log.d("MissionWorker", "initLocation ${location.latitude} , ${location.longitude}")
+                    Log.d("MissionWorker", "initLocation(last) ${location.latitude} , ${location.longitude}")
                 }
             }
             .addOnFailureListener {
@@ -72,36 +74,19 @@ class MissionWorker @AssistedInject constructor(
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     if (location != null) {
-                        missionManager.personMovements.add(Location(location.latitude, location.longitude))
+                        missionManager.userLocation.value = TMapPoint(location.latitude, location.longitude)
                     }
                 }
             }
         }
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-
     }
-
-    private fun getPersonLocation() {
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) {
-                Log.d("MissionWorker", "entire locationResult ${locationResult.locations}")
-                for (location in locationResult.locations) {
-                    if (location != null) {
-                        val latitude = location.latitude
-                        val longitude = location.longitude
-                        Log.d("MissionWorker", "lat ${latitude} long ${longitude}")
-                    }
-                }
-            }
-        }
-    }
-
 
     private suspend fun test() {
         while (NUM < 60) {
             Log.d("MissionWorker", "찍히나 테스트 ${NUM}")
             NUM += 1
-            delay(1000)
+            delay(5000)
         }
     }
 
@@ -123,6 +108,10 @@ class MissionWorker @AssistedInject constructor(
             .setOngoing(true) // 사용자가 지우지 못하도록 막음
             .addAction(android.R.drawable.ic_delete, cancel, intent)
             .build()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return ForegroundInfo(NOTIFICATION_ID, notification, FOREGROUND_SERVICE_TYPE_LOCATION)
+        }
 
         return ForegroundInfo(NOTIFICATION_ID, notification)
     }

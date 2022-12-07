@@ -152,11 +152,10 @@
             android:id="@+id/layout_person_current"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
             android:elevation="15dp"
             android:background="@drawable/background_button"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toTopOf="@id/layout_bus_current">
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
 
             <ImageView
                 android:id="@+id/image_view_person_current_location"
@@ -170,27 +169,26 @@
                 app:srcCompat="@drawable/ic_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_bus_current"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:elevation="15dp"
-            android:background="@drawable/background_button"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/layout_bus_current"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:elevation="15dp"-->
+<!--            android:background="@drawable/background_button"-->
+<!--            app:layout_constraintEnd_toEndOf="@id/guideline_end"-->
+<!--            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom">-->
 
-            <ImageView
-                android:id="@+id/image_view_bus_current_location"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:elevation="15dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:srcCompat="@drawable/ic_bus" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
+<!--            <ImageView-->
+<!--                android:id="@+id/image_view_bus_current_location"-->
+<!--                android:layout_width="30dp"-->
+<!--                android:layout_height="30dp"-->
+<!--                android:elevation="15dp"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:srcCompat="@drawable/ic_bus" />-->
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

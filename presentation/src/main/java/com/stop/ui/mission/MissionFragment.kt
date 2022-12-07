@@ -5,11 +5,12 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.ContextWrapper
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -17,9 +18,9 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
+import com.stop.model.State
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -34,6 +35,12 @@ class MissionFragment : Fragment(), MissionHandler {
     private lateinit var tMap: MissionTMap
 
     private var beforeLocation = INIT_LOCATION
+
+    private var points = arrayListOf<TMapPoint>()
+
+    private var backgroundPoints = arrayListOf<TMapPoint>()
+
+    private var state = State.FOREGROUND
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +59,21 @@ class MissionFragment : Fragment(), MissionHandler {
         initTMap()
         initView()
         setObserve()
-        viewModel.makeMissionWorker("23:30:00")
+        setNotification()
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("MissionWorker", "onResume")
+
+        state = State.FOREGROUND
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("MissionWorker", "onStop")
+        state = State.BACKGROUND
     }
 
     override fun onDestroyView() {
@@ -91,18 +112,6 @@ class MissionFragment : Fragment(), MissionHandler {
             )
 
             tMap.isTracking = true
-            tMap.isTransportTracking = false
-        }
-
-        binding.layoutBusCurrent.setOnClickListener {
-            tMap.tMapView.setCenterPoint(
-                viewModel.busCurrentLocation.latitude,
-                viewModel.busCurrentLocation.longitude,
-                true
-            )
-
-            tMap.isTracking = false
-            tMap.isTransportTracking = true
         }
 
     }
@@ -154,90 +163,89 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    private fun drawBusLocationLine() {
-        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocations ->
-            val nowLocation = nowLocations.first()
-
-            if (beforeLocation != INIT_LOCATION) {
-                tMap.drawMoveLine(
-                    TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble()),
-                    TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                    Marker.BUS_LINE +  BUS_LINE_NUM.toString(),
-                    Marker.BUS_LINE_COLOR
-                )
-                BUS_LINE_NUM += 1
-            }
-            beforeLocation = Location(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
-
-            viewModel.busCurrentLocation = beforeLocation
-
-            tMap.addMarker(
-                Marker.BUS_MARKER,
-                Marker.BUS_MARKER_IMG,
-                TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
-            )
-            tMap.trackingTransport(beforeLocation)
-        }
-    }
-
-    private fun drawSubwayLocationLine() {
-        viewModel.subwayRoute.observe(viewLifecycleOwner) { subwayRoute ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                val timeUnit = (subwayRoute.sectionTime * SECOND_UNIT / subwayRoute.line.size).toLong()
-                subwayRoute.line.forEachIndexed { index, nowLocation ->
-                    if (index == 0) {
-                        return@forEachIndexed
-                    }
-
-                    val beforeLocation = subwayRoute.line[index - 1]
-                    tMap.drawMoveLine(
-                        TMapPoint(nowLocation.latitude, nowLocation.longitude),
-                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                        Marker.SUBWAY_LINE + (index - 1).toString(),
-                        Marker.SUBWAY_LINE_COLOR
-                    )
-
-                    viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
-
-                    tMap.addMarker(
-                        Marker.SUBWAY_MARKER,
-                        Marker.SUBWAY_MARKER_IMG,
-                        TMapPoint(nowLocation.latitude, nowLocation.longitude)
-                    )
-
-                    delay(timeUnit)
-                }
-            }
-
-        }
-    }
+//    private fun drawBusLocationLine() {
+//        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocations ->
+//            val nowLocation = nowLocations.first()
+//
+//            if (beforeLocation != INIT_LOCATION) {
+//                tMap.drawMoveLine(
+//                    TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble()),
+//                    TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+//                    Marker.BUS_LINE +  BUS_LINE_NUM.toString(),
+//                    Marker.BUS_LINE_COLOR
+//                )
+//                BUS_LINE_NUM += 1
+//            }
+//            beforeLocation = Location(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
+//
+//            viewModel.busCurrentLocation = beforeLocation
+//
+//            tMap.addMarker(
+//                Marker.BUS_MARKER,
+//                Marker.BUS_MARKER_IMG,
+//                TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
+//            )
+//            tMap.trackingTransport(beforeLocation)
+//        }
+//    }
+//
+//    private fun drawSubwayLocationLine() {
+//        viewModel.subwayRoute.observe(viewLifecycleOwner) { subwayRoute ->
+//            viewLifecycleOwner.lifecycleScope.launch {
+//                val timeUnit = (subwayRoute.sectionTime * SECOND_UNIT / subwayRoute.line.size).toLong()
+//                subwayRoute.line.forEachIndexed { index, nowLocation ->
+//                    if (index == 0) {
+//                        return@forEachIndexed
+//                    }
+//
+//                    val beforeLocation = subwayRoute.line[index - 1]
+//                    tMap.drawMoveLine(
+//                        TMapPoint(nowLocation.latitude, nowLocation.longitude),
+//                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+//                        Marker.SUBWAY_LINE + (index - 1).toString(),
+//                        Marker.SUBWAY_LINE_COLOR
+//                    )
+//
+//                    viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+//
+//                    tMap.addMarker(
+//                        Marker.SUBWAY_MARKER,
+//                        Marker.SUBWAY_MARKER_IMG,
+//                        TMapPoint(nowLocation.latitude, nowLocation.longitude)
+//                    )
+//
+//                    delay(timeUnit)
+//                }
+//            }
+//
+//        }
+//    }
 
     override fun alertTMapReady() {
-        //mimicUserMove()
         requestPermissionsLauncher.launch(PERMISSIONS)
         tMap.setTrackingMode()
-        drawBusLocationLine()
-        drawSubwayLocationLine()
+//        drawBusLocationLine()
+//        drawSubwayLocationLine()
     }
 
     override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint, canMakeLine: Boolean) {
-        if (canMakeLine) {
-            tMap.drawMoveLine(
-                nowLocation,
-                beforeLocation,
-                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
-                Marker.PERSON_LINE_COLOR
-            )
-            PERSON_LINE_NUM += 1
-        }
-        viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+//        if (canMakeLine) {
+//            tMap.drawMoveLine(
+//                nowLocation,
+//                beforeLocation,
+//                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+//                Marker.PERSON_LINE_COLOR
+//            )
+//            PERSON_LINE_NUM += 1
+//        }
+
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
         tMap.apply {
             tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
                 isTracking = false
-                isTransportTracking = false
+//                isTransportTracking = false
             }
         }
     }
@@ -248,6 +256,82 @@ class MissionFragment : Fragment(), MissionHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
+    }
+
+    private fun setNotification() {
+        test()
+    }
+
+    private fun test() {
+        var first = 0
+        lifecycleScope.launch {
+            viewModel.userLocation.collect { userLocation ->
+                if (first == 0) {
+                    first += 1
+                } else if (first == 1) {
+                    points.add(userLocation)
+                    first += 1
+                } else {
+                    tMap.tMapView.removeTMapPolyLine(Marker.PERSON_LINE + PERSON_LINE_NUM.toString())
+                    Log.d("MissionWorker", "drawLine $points")
+                    points.add(userLocation)
+                    tMap.drawMoveLine(
+                        points,
+                        Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+                        Marker.PERSON_LINE_COLOR
+                    )
+                    //PERSON_LINE_NUM += 1
+
+                }
+
+            }
+
+        }
+    }
+
+    private fun drawPersonLine() {
+        lateinit var nowLocation: TMapPoint
+        lateinit var beforeLocation: TMapPoint
+        //if (viewModel.userState.value is UserState.Foreground) {
+//            nowLocation = viewModel.getLocation()
+//            if (PERSON_LINE_NUM == 0) {
+//                viewModel.initLocation.observe(viewLifecycleOwner){
+//                    beforeLocation = it
+//                }
+//            }
+//            tMap.drawMoveLine(
+//                nowLocation,
+//                beforeLocation,
+//                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+//                Marker.PERSON_LINE_COLOR
+//            )
+//            PERSON_LINE_NUM += 1
+//            beforeLocation = nowLocation
+//            viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+//
+//            Log.d("MissionWorker", "location value ${viewModel.userState.value}")
+//        }
+//        else {
+//            val allLocation = viewModel.getAllLocation()
+//            allLocation.forEachIndexed { index, nowLocationInAll ->
+//                if (index == 0) {
+//                    tMap.drawMoveLine(
+//                        nowLocationInAll,
+//                        beforeLocation,
+//                        Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+//                        Marker.PERSON_LINE_COLOR
+//                    )
+//                } else {
+//                    tMap.drawMoveLine(
+//                        nowLocationInAll,
+//                        beforeLocation,
+//                        Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+//                        Marker.PERSON_LINE_COLOR
+//                    )
+//                }
+//                beforeLocation = nowLocationInAll
+//            }
+//        }
     }
 
     companion object {
