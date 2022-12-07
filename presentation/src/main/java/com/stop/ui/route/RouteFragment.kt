@@ -1,10 +1,12 @@
 package com.stop.ui.route
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -29,6 +31,7 @@ class RouteFragment : Fragment() {
     private val args: RouteFragmentArgs by navArgs()
 
     private lateinit var adapter: RouteAdapter
+    private lateinit var backPressedCallback: OnBackPressedCallback
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +39,19 @@ class RouteFragment : Fragment() {
     ): View {
         _binding = FragmentRouteBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        backPressedCallback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val navController = findNavController()
+                navController.setGraph(R.navigation.nav_graph)
+                navController.popBackStack(R.id.action_global_mapFragment, false)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -104,6 +120,8 @@ class RouteFragment : Fragment() {
             }
         }
     }
+
+
 
     private fun setStartAndDestinationText() {
         args.start?.let {
