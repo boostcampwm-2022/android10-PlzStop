@@ -11,6 +11,7 @@ import com.stop.BuildConfig
 import com.stop.model.Location
 import com.stop.ui.map.MapHandler
 import com.stop.ui.mission.MissionHandler
+import com.stop.ui.routedetail.RouteDetailHandler
 
 open class TMap(
     private val context: Context,
@@ -30,13 +31,19 @@ open class TMap(
                 tMapView.mapType = TMapView.MapType.DEFAULT
                 tMapView.zoomLevel = 16
 
-                if (this@TMap.handler is MissionHandler) {
-                    (this@TMap.handler).alertTMapReady()
-                    (this@TMap.handler).setOnEnableScrollWithZoomLevelListener()
-                } else if (this@TMap.handler is MapHandler) {
-                    (this@TMap.handler).alertTMapReady()
-
+                when (this@TMap.handler) {
+                    is MapHandler -> {
+                        (this@TMap.handler).alertTMapReady()
+                    }
+                    is RouteDetailHandler -> {
+                        (this@TMap.handler).alertTMapReady()
+                    }
+                    is MissionHandler -> {
+                        (this@TMap.handler).alertTMapReady()
+                        (this@TMap.handler).setOnEnableScrollWithZoomLevelListener()
+                    }
                 }
+
                 initLocation = Location(tMapView.locationPoint.latitude, tMapView.locationPoint.longitude)
             }
         }
@@ -101,10 +108,7 @@ open class TMap(
     fun addMarker(id: String, icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem().apply {
             this.id = id
-            this.icon = ContextCompat.getDrawable(
-                context,
-                icon
-            )?.toBitmap()
+            this.icon = ContextCompat.getDrawable(context, icon)?.toBitmap()
             tMapPoint = location
         }
 

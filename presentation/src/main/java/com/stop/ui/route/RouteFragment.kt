@@ -2,12 +2,12 @@ package com.stop.ui.route
 
 import android.content.Context
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.fragment.app.activityViewModels
@@ -122,8 +122,6 @@ class RouteFragment : Fragment() {
             }
         }
     }
-
-
 
     private fun setStartAndDestinationText() {
         args.start?.let {

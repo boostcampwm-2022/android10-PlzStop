@@ -7,6 +7,12 @@ object Marker {
     const val PLACE_MARKER = "place_marker"
     const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
 
+    const val START_MARKER = "start_marker"
+    const val START_MARKER_IMG = R.drawable.ic_start_marker
+
+    const val DESTINATION_MARKER = "destination_marker"
+    const val DESTINATION_MARKER_IMG = R.drawable.ic_destination_marker
+
     const val PERSON_MARKER = "person_marker"
     const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
     const val PERSON_LINE = "person_line"
@@ -23,5 +29,4 @@ object Marker {
     const val SUBWAY_MARKER_IMG = R.drawable.ic_subway_marker
     const val SUBWAY_LINE = "subway_line"
     const val SUBWAY_LINE_COLOR = Color.BLUE
-
 }

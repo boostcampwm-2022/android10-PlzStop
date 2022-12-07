@@ -49,6 +49,10 @@
     <string name="alarm_cancel_text">취소하기</string>
     <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
+    <string name="alarm_setting">알람 설정</string>
+    <string name="last_time">현재 막차</string>
+    <string name="start">출발지</string>
+    <string name="end">도착지</string>
     <string name="section_time">%1$s분</string>
     <string name="route_result_not_exist">경로 검색 결과가 존재하지 않습니다.</string>
     <string name="transport_last_time_is_not_received_yet">막차 시간 데이터가 입력되지 않았습니다.</string>
