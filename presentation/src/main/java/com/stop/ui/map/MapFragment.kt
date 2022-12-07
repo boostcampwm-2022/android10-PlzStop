@@ -12,9 +12,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
+import com.stop.RouteNavGraphDirections
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -108,13 +110,17 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
-            val action = MapFragmentDirections.actionMapFragmentToRouteFragment().setStart(placeSearchViewModel.panelInfo)
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.route_nav_graph)
+            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setStart(placeSearchViewModel.panelInfo)
+            navController.navigate(action)
         }
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
-            val action = MapFragmentDirections.actionMapFragmentToRouteFragment().setEnd(placeSearchViewModel.panelInfo)
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.route_nav_graph)
+            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setEnd(placeSearchViewModel.panelInfo)
+            navController.navigate(action)
         }
     }
 

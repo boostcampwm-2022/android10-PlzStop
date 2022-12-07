@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/route_nav_graph"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/routeFragment">
+
+    <fragment
+        android:id="@+id/routeFragment"
+        tools:layout="@layout/fragment_route"
+        android:name="com.stop.ui.route.RouteFragment"
+        android:label="RouteFragment">
+        <action
+            android:id="@+id/action_routeFragment_to_routeDetailFragment"
+            app:destination="@id/routeDetailFragment" />
+        <argument
+            android:name="start"
+            android:defaultValue="@null"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true" />
+        <argument
+            android:name="end"
+            android:defaultValue="@null"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/routeDetailFragment"
+        tools:layout="@layout/fragment_route_detail"
+        android:name="com.stop.ui.routedetail.RouteDetailFragment"
+        android:label="RouteDetailFragment">
+        <action
+            android:id="@+id/action_routeDetailFragment_to_alarmSetting"
+            app:destination="@id/alarmSetting" />
+    </fragment>
+    <fragment
+        android:id="@+id/alarmSetting"
+        android:name="com.stop.ui.alarmsetting.AlarmSettingFragment"
+        android:label="fragment_alarm_setting"
+        tools:layout="@layout/fragment_alarm_setting">
+    </fragment>
+    <action
+        android:id="@+id/action_global_routeFragment"
+        app:popUpTo="@id/routeFragment"
+        app:destination="@id/routeFragment" />
+</navigation>

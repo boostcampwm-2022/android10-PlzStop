@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
 
         intent?.extras?.getInt("ALARM_CODE")?.let {
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val inflater = navHostFragment.navController.navInflater
             val graph = inflater.inflate(R.navigation.nav_graph)
             graph.setStartDestination(R.id.alarmStartFragment)
@@ -87,7 +88,10 @@ class MainActivity : AppCompatActivity() {
         if (isMoreThanOreoMr1()) {
             setShowWhenLocked(true)
             setTurnScreenOn(true)
-            (getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager).requestDismissKeyguard(this, null)
+            (getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager).requestDismissKeyguard(
+                this,
+                null
+            )
         }
     }
 
