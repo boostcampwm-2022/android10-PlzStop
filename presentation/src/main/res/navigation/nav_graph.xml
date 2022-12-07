@@ -38,31 +38,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/routeDetailFragment"
-        android:name="com.stop.ui.routedetail.RouteDetailFragment"
-        android:label="RouteDetailFragment" >
-
-        <action
-            android:id="@+id/action_routeDetailFragment_to_alarmSetting"
-            app:destination="@id/alarmSetting" />
-
-        <action
-            android:id="@+id/action_routeDetailFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/alarmSetting"
-        android:name="com.stop.ui.alarmsetting.AlarmSettingFragment"
-        android:label="fragment_alarm_setting"
-        tools:layout="@layout/fragment_alarm_setting" >
-
-        <action
-            android:id="@+id/action_alarmSetting_to_mapFragment"
-            app:destination="@id/mapFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/alarmStartFragment"
         android:name="com.stop.ui.alarmstart.AlarmStartFragment"
         android:label="fragment_alarm_start"

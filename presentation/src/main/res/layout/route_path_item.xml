@@ -124,10 +124,10 @@
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"
-            app:layout_constraintStart_toStartOf="@+id/image_view_current_line"
-            app:layout_constraintEnd_toEndOf="@+id/image_view_current_line"
-            app:layout_constraintTop_toTopOf="@+id/image_view_current_line"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_current_line"
+            app:layout_constraintStart_toStartOf="@id/image_view_current_line"
+            app:layout_constraintEnd_toEndOf="@id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="@id/image_view_current_line"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
             app:imageResource="@{routeItem.mode}"
             tools:src="@drawable/ic_walk_white" />
 
