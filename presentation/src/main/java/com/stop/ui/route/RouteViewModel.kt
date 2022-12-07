@@ -148,8 +148,8 @@ class RouteViewModel @Inject constructor(
         return if (isCurrent) {
             routeItemColor = when (route) {
                 is TransportRoute -> Color.parseColor("#${route.routeColor}")
-                is WalkRoute -> Color.parseColor(MAIN_YELLOW)
-                else -> Color.parseColor(MAIN_LIGHT_GREY)
+                is WalkRoute -> Color.parseColor(MAIN_WALK_GREY)
+                else -> Color.parseColor(MAIN_YELLOW)
             }
             routeItemColor
         } else {
@@ -162,7 +162,7 @@ class RouteViewModel @Inject constructor(
     }
 
     companion object {
+        private const val MAIN_WALK_GREY = "#C0C5CA"
         private const val MAIN_YELLOW = "#FFC766"
-        private const val MAIN_LIGHT_GREY = "#808590"
     }
 }

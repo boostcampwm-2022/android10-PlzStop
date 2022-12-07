@@ -13,5 +13,6 @@
     <color name="main_dark_grey">#404550</color>
     <color name="main_light_grey">#808590</color>
     <color name="main_lighter_grey">#EEEEEE</color>
+    <color name="main_walk_grey">#C0C5CA</color>
     <color name="main_yellow">#FFC766</color>
 </resources>

@@ -61,6 +61,10 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private fun initView() {
         binding.layoutDrawer.openDrawer(GravityCompat.START)
 
+        binding.imageViewArrowDrawer.setOnClickListener {
+            binding.layoutDrawer.openDrawer(GravityCompat.START)
+        }
+
         binding.routeDetailDrawer.viewAlarm.setOnClickListener {
             binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
         }
@@ -73,6 +77,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
     private fun setRecyclerView() {
         val adapter = RouteDetailAdapter(object : OnRouteItemClickListener {
             override fun clickRouteItem(coordinate: Coordinate) {
+                binding.layoutDrawer.closeDrawer(GravityCompat.START)
                 tMap.setRouteItemFocus(coordinate)
             }
         })
