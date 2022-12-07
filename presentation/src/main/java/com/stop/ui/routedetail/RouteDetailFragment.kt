@@ -5,20 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
-import com.stop.ui.route.RouteViewModel
+import com.stop.ui.route.RouteResultViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RouteDetailFragment : Fragment() {
 
     private var _binding: FragmentRouteDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding
+        get() = _binding!!
 
-    private val parentViewModel: RouteViewModel by activityViewModels()
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,13 +39,13 @@ class RouteDetailFragment : Fragment() {
 
     private fun initBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.parentViewModel = parentViewModel
+        binding.routeResultViewModel = routeResultViewModel
     }
 
     private fun initView() {
         //TODO 임시 화면이동 로직
         binding.root.setOnClickListener {
-            binding.root.findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
+            findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
         }
     }
 

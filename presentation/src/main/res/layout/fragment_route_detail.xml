@@ -4,8 +4,8 @@
 
     <data>
         <variable
-            name="parentViewModel"
-            type="com.stop.ui.route.RouteViewModel" />
+            name="routeResultViewModel"
+            type="com.stop.ui.route.RouteResultViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -17,7 +17,7 @@
             android:id="@+id/text_view_result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{parentViewModel.getResult()}"
+            android:text="@{routeResultViewModel.lastTimes.toString()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

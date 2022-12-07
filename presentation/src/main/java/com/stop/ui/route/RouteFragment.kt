@@ -1,15 +1,18 @@
 package com.stop.ui.route
 
-import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
@@ -23,12 +26,12 @@ class RouteFragment : Fragment() {
         get() = _binding!!
 
     private val routeViewModel: RouteViewModel by activityViewModels()
-    private val clickRouteViewModel: ClickRouteViewModel by activityViewModels()
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
     private val args: RouteFragmentArgs by navArgs()
 
     private lateinit var adapter: RouteAdapter
-    private var progressDialog: AlertDialog? = null
+    private lateinit var backPressedCallback: OnBackPressedCallback
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,6 +39,19 @@ class RouteFragment : Fragment() {
     ): View {
         _binding = FragmentRouteBinding.inflate(layoutInflater)
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        backPressedCallback = object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                val navController = findNavController()
+                navController.setGraph(R.navigation.nav_graph)
+                navController.popBackStack(R.id.action_global_mapFragment, false)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,7 +62,6 @@ class RouteFragment : Fragment() {
         setRecyclerView()
         setStartAndDestinationText()
         setObserve()
-        initDialog()
     }
 
     private fun setBinding() {
@@ -56,12 +71,14 @@ class RouteFragment : Fragment() {
 
     private fun setListener() {
         binding.textViewOrigin.setOnClickListener {
-            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.nav_graph)
+            navController.navigate(R.id.action_global_placeSearchFragment)
         }
         binding.textViewDestination.setOnClickListener {
-            val action = RouteFragmentDirections.actionRouteFragmentToPlaceSearchFragment()
-            binding.root.findNavController().navigate(action)
+            val navController = findNavController()
+            navController.setGraph(R.navigation.nav_graph)
+            navController.navigate(R.id.action_global_placeSearchFragment)
         }
     }
 
@@ -72,9 +89,8 @@ class RouteFragment : Fragment() {
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
-                progressDialog?.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
-                clickRouteViewModel.clickRoute = itinerary
+                routeResultViewModel.setItineraries(itinerary)
             }
         })
         binding.recyclerviewRoute.adapter = adapter
@@ -98,12 +114,16 @@ class RouteFragment : Fragment() {
 
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
-                routeViewModel.lastTimes = response
-                progressDialog?.dismiss()
-                binding.root.findNavController().navigate(R.id.action_routeFragment_to_routeDetailFragment)
+                routeResultViewModel.setLastTimes(response)
+                routeResultViewModel.setOrigin(routeViewModel.origin.value)
+                routeResultViewModel.setDestination(routeViewModel.destination.value)
+                binding.root.findNavController()
+                    .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
     }
+
+
 
     private fun setStartAndDestinationText() {
         args.start?.let {
@@ -113,15 +133,6 @@ class RouteFragment : Fragment() {
             routeViewModel.setDestination(it)
         }
         routeViewModel.getRoute()
-    }
-
-    private fun initDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
-        progressDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-        progressDialog?.window?.setBackgroundDrawableResource(R.color.transparent)
     }
 
     override fun onDestroyView() {

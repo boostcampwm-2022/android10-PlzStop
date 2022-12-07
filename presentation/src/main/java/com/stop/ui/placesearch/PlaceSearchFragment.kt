@@ -15,9 +15,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.stop.R
-import com.stop.bindingadapter.textChangesToFlow
 import com.stop.databinding.FragmentPlaceSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-
 
 @AndroidEntryPoint
 class PlaceSearchFragment : Fragment() {
@@ -57,7 +55,6 @@ class PlaceSearchFragment : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -91,19 +88,19 @@ class PlaceSearchFragment : Fragment() {
         placeSearchViewModel.setNearPlacesEmpty()
         placeSearchViewModel.insertRecentSearchPlace(placeUseCaseItem)
 
-        binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
-
+        findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
     }
 
     private fun buttonClick() {
         with(binding) {
             layoutRecentSearch.textViewCurrentLocation.setOnClickListener {
                 placeSearchViewModel.setClickCurrentLocation()
-                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
 
             layoutRecentSearch.textViewSelectMap.setOnClickListener {
-                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
         }
     }
