@@ -16,8 +16,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.placesearch.PlaceSearchFragment"
-        tools:theme="@style/Theme.Material3.Light.NoActionBar">
+        tools:context=".ui.placesearch.PlaceSearchFragment">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_start"
@@ -63,49 +62,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:id="@+id/text_view_current_location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/background_gray_d9_8"
-            android:drawablePadding="3dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="@string/current_location_text"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:drawableStartCompat="@drawable/ic_baseline_location_searching_16"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_input_layout_place_search" />
-
-        <TextView
-            android:id="@+id/text_view_select_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/background_gray_d9_8"
-            android:drawablePadding="3dp"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp"
-            android:text="@string/select_map_text"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            app:drawableStartCompat="@drawable/ic_baseline_map_16"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_current_location"
-            app:layout_constraintStart_toEndOf="@id/text_view_current_location"
-            app:layout_constraintTop_toTopOf="@id/text_view_current_location" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:id="@+id/divider"
-            android:layout_width="0dp"
-            android:layout_height="3dp"
-            android:layout_marginTop="12dp"
-            app:dividerColor="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_current_location" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_place"
             android:layout_width="0dp"
@@ -117,7 +73,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_place_search"
             tools:visibility="gone" />
 
         <include
@@ -129,7 +85,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintTop_toBottomOf="@id/text_input_layout_place_search"
             bind:viewModel="@{viewModel}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

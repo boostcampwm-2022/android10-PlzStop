@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
@@ -16,6 +18,43 @@
         tools:theme="@style/Theme.Material3.Light.NoActionBar">
 
         <TextView
+            android:id="@+id/text_view_current_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:drawablePadding="3dp"
+            android:text="@string/current_location_text"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_baseline_location_searching_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_view_select_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:drawablePadding="3dp"
+            android:text="@string/select_map_text"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            app:drawableStartCompat="@drawable/ic_baseline_map_16"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_current_location"
+            app:layout_constraintStart_toEndOf="@id/text_view_current_location"
+            app:layout_constraintTop_toTopOf="@id/text_view_current_location" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            app:dividerColor="@color/light_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_current_location" />
+
+        <TextView
             android:id="@+id/text_view_recent_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,43 +64,58 @@
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="12dp"
-            app:dividerColor="@color/light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_recent_search" />
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_recent_search"
             items="@{viewModel.recentPlaceSearch}"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginVertical="12dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/button_delete_recent_search"
+            app:layout_constraintBottom_toTopOf="@id/text_view_history_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_recent_search" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/button_delete_recent_search"
-            style="@style/Widget.Material3.Button.OutlinedButton"
+        <TextView
+            android:id="@+id/text_view_history_delete"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
             android:onClick="@{() -> viewModel.deleteRecentSearchPlace()}"
             android:text="@string/delete_recent_search_text"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:textSize="14sp"
+            android:visibility="@{viewModel.recentPlaceSearch.empty ? View.GONE : View.VISIBLE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_recent_search" />
+
+        <ImageView
+            android:id="@+id/image_view_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.recentPlaceSearch.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/text_view_recent_search"
+            app:layout_constraintVertical_bias="0.3"
+            app:srcCompat="@drawable/icon_error" />
+
+        <TextView
+            android:id="@+id/text_view_no_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/recent_search_no_data_tet"
+            android:textColor="@color/hint_text_color"
+            android:visibility="@{viewModel.recentPlaceSearch.empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_no_data" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -87,12 +87,12 @@ class PlaceSearchFragment : Fragment() {
 
     private fun buttonClick() {
         with(binding) {
-            textViewCurrentLocation.setOnClickListener {
+            layoutRecentSearch.textViewCurrentLocation.setOnClickListener {
                 placeSearchViewModel.setClickCurrentLocation()
                 binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
 
-            textViewSelectMap.setOnClickListener {
+            layoutRecentSearch.textViewSelectMap.setOnClickListener {
                 binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
         }
