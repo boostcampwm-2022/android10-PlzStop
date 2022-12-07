@@ -18,7 +18,11 @@ class TimeLineViewHolder(
     private val greyColor =
         ContextCompat.getColor(binding.root.context, R.color.grey_for_route_walk)
 
+    private var proportionOfSectionTime: Float = 0f
+
     fun bind(route: Route, position: Int) {
+        proportionOfSectionTime = route.proportionOfSectionTime
+
         val text = binding.root.resources.getString(
             R.string.section_time,
             (route.sectionTime / 60).toInt().toString()
@@ -51,6 +55,12 @@ class TimeLineViewHolder(
             is TransportRoute -> setIdentityColor(route)
             else -> setDefaultColor()
         }
+    }
+
+
+    fun adjustViewHolderSize(parentWidth: Int) {
+        val layoutParams = binding.root.layoutParams
+        layoutParams.width = (parentWidth * proportionOfSectionTime).toInt()
     }
 
     private fun setIdentityColor(route: TransportRoute) {
