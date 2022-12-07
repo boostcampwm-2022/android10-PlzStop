@@ -20,6 +20,9 @@ open class TMap(
     lateinit var tMapView: TMapView
     lateinit var initLocation: Location
 
+    val latitudes = arrayListOf<Double>()
+    val longitudes = arrayListOf<Double>()
+
     var isTracking = true
 
     fun init() {
@@ -94,4 +97,16 @@ open class TMap(
         tMapView.removeTMapMarkerItem(id)
         tMapView.addTMapMarkerItem(marker)
     }
+
+    fun setRouteDetailFocus() {
+        val maxLatitude = latitudes.max()
+        val minLatitude = latitudes.min()
+        val maxLongitude = longitudes.max()
+        val minLongitude = longitudes.min()
+
+        tMapView.setCenterPoint((maxLatitude + minLatitude) / 2, (maxLongitude + minLongitude) / 2)
+        tMapView.zoomToSpan(maxLatitude - minLatitude, maxLongitude - minLongitude)
+        tMapView.zoomLevel -= 1
+    }
+
 }

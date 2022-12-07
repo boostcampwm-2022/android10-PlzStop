@@ -172,13 +172,15 @@ class MissionFragment : Fragment(), MissionHandler {
                     }
                     1 -> {
                         beforeLocation = userLocation
-                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                         tMap.addMarker(
                             Marker.PERSON_MARKER,
                             Marker.PERSON_MARKER_IMG,
                             TMapPoint(userLocation.latitude, userLocation.longitude)
                         )
                         viewModel.personCurrentLocation = userLocation
+                        tMap.latitudes.add(userLocation.latitude)
+                        tMap.longitudes.add(userLocation.longitude)
+                        tMap.setRouteDetailFocus()
                         first += 1
                     }
                     else -> {
@@ -206,6 +208,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun makeDestinationMarker() {
         tMap.addMarker(Marker.DESTINATION_MARKER, Marker.DESTINATION_MARKER_IMG, TEST_DESTINATION)
+        tMap.latitudes.add(TEST_DESTINATION.latitude)
+        tMap.longitudes.add(TEST_DESTINATION.longitude)
     }
 
     companion object {

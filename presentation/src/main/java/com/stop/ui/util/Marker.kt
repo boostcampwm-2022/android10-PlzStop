@@ -10,8 +10,8 @@ object Marker {
     const val START_MARKER = "start_marker"
     const val START_MARKER_IMG = R.drawable.ic_start_marker
 
-    const val DESTINATION_MARKER = "destination_marker"
-    const val DESTINATION_MARKER_IMG = R.drawable.ic_destination_marker
+    const val END_MARKER = "end_marker"
+    const val END_MARKER_IMG = R.drawable.ic_destination_marker
 
     const val PERSON_MARKER = "person_marker"
     const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
