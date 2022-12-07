@@ -115,6 +115,8 @@ class RouteFragment : Fragment() {
         routeViewModel.lastTimeResponse.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { response ->
                 routeResultViewModel.setLastTimes(response)
+                routeResultViewModel.setOrigin(routeViewModel.origin.value)
+                routeResultViewModel.setDestination(routeViewModel.destination.value)
                 binding.root.findNavController()
                     .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
