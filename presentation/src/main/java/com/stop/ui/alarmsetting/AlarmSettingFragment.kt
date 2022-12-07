@@ -120,6 +120,7 @@ class AlarmSettingFragment : Fragment() {
         makeAlarm()
         //makeAlarmWorker()
         val navController = findNavController()
+        navController.getBackStackEntry(R.id.mapFragment).savedStateHandle.set(BACK_STACK_KEY, true)
         navController.setGraph(R.navigation.nav_graph)
         navController.popBackStack(R.id.action_global_mapFragment, false)
     }
@@ -148,6 +149,7 @@ class AlarmSettingFragment : Fragment() {
 
     companion object {
         const val ALARM_CODE = 123
+        const val BACK_STACK_KEY = "isCreatedFromPopBackStack"
     }
 
 }

@@ -19,6 +19,7 @@ import com.stop.R
 import com.stop.RouteNavGraphDirections
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
@@ -49,6 +50,7 @@ class MapFragment : Fragment(), MapHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        handleActivityViewModels()
         initTMap()
         initView()
         initNavigateAction()
@@ -62,6 +64,19 @@ class MapFragment : Fragment(), MapHandler {
         tMap.initListener()
         observeClickPlace()
         observeClickCurrentLocation()
+    }
+
+    private fun handleActivityViewModels() {
+        findNavController().currentBackStackEntry?.savedStateHandle?.getLiveData<Boolean>(
+            AlarmSettingFragment.BACK_STACK_KEY
+        )?.observe(viewLifecycleOwner) { isBackstackRestoredFromAlarmSetting ->
+            if (isBackstackRestoredFromAlarmSetting) {
+                requireActivity().viewModelStore.clear()
+            }
+            findNavController().currentBackStackEntry?.savedStateHandle?.remove<Boolean>(
+                AlarmSettingFragment.BACK_STACK_KEY
+            )
+        }
     }
 
     private fun initBinding() {
@@ -112,14 +127,16 @@ class MapFragment : Fragment(), MapHandler {
         binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setStart(placeSearchViewModel.panelInfo)
+            val action = RouteNavGraphDirections.actionGlobalRouteFragment()
+                .setStart(placeSearchViewModel.panelInfo)
             navController.navigate(action)
         }
 
         binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setEnd(placeSearchViewModel.panelInfo)
+            val action = RouteNavGraphDirections.actionGlobalRouteFragment()
+                .setEnd(placeSearchViewModel.panelInfo)
             navController.navigate(action)
         }
     }
@@ -129,7 +146,7 @@ class MapFragment : Fragment(), MapHandler {
 
         alarmViewModel.getAlarm()
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
 
@@ -219,7 +236,7 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick(){
+    private fun listenButtonClick() {
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
