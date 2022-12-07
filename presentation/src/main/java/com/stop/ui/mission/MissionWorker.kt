@@ -3,7 +3,9 @@ package com.stop.ui.mission
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 import android.os.Build
@@ -17,6 +19,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
+import com.stop.MainActivity
 import com.stop.R
 import com.stop.isMoreThanOreo
 import com.stop.model.Location
@@ -81,12 +84,12 @@ class MissionWorker @AssistedInject constructor(
     private fun createForegroundInfo(): ForegroundInfo {
         val id = applicationContext.getString(R.string.mission_notification_channel_id)
         val title = applicationContext.getString(R.string.mission_notification_title)
-        val cancel = applicationContext.getString(R.string.alarm_cancel_text)
-
-        val intent = WorkManager.getInstance(applicationContext)
-            .createCancelPendingIntent(getId())
 
         createChannel(id)
+
+        val pendingIntent = PendingIntent.getActivity(applicationContext, MISSION_CODE, Intent(applicationContext, MainActivity::class.java).apply {
+            putExtra("MISSION_CODE", MISSION_CODE)
+        }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(applicationContext, id)
             .setContentTitle(title)
@@ -94,7 +97,7 @@ class MissionWorker @AssistedInject constructor(
             .setContentText(NOTIFICATION_CONTENT)
             .setSmallIcon(R.mipmap.ic_bus)
             .setOngoing(true) // 사용자가 지우지 못하도록 막음
-            .addAction(android.R.drawable.ic_delete, cancel, intent)
+            .setContentIntent(pendingIntent)
             .build()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -121,6 +124,7 @@ class MissionWorker @AssistedInject constructor(
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
         private var NUM = 0
         private const val INTERVAL_UNIT = 1000L
+        private const val MISSION_CODE = 88
     }
 
 }
