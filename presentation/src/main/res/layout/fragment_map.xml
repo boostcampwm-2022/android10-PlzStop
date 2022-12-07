@@ -46,8 +46,8 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_end="115dp" />
 
-        <FrameLayout
-            android:id="@+id/frame_layout_container"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -72,23 +72,18 @@
             app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toTopOf="@id/guideline_top" />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_panel"
+        <include
+            android:id="@+id/home_panel"
             android:layout_width="0dp"
             android:layout_height="170dp"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="90dp"
             android:elevation="15dp"
-            android:visibility="@{placeSearchViewModel.panelVisibility}"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/guideline_start">
-
-            <include
-                android:id="@+id/home_panel"
-                bind:placeSearchViewModel="@{placeSearchViewModel}"
-                layout="@layout/home_panel" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            bind:placeSearchViewModel="@{placeSearchViewModel}"
+            layout="@layout/home_panel" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_compass"

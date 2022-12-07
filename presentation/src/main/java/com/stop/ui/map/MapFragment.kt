@@ -74,7 +74,7 @@ class MapFragment : Fragment(), MapHandler {
         tMap = MapTMap(requireActivity(), this)
         tMap.init()
 
-        binding.frameLayoutContainer.addView(tMap.tMapView)
+        binding.layoutContainer.addView(tMap.tMapView)
     }
 
     private fun initView() {
@@ -109,14 +109,14 @@ class MapFragment : Fragment(), MapHandler {
                 .navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
-        binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
+        binding.homePanel.viewPanelStart.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.route_nav_graph)
             val action = RouteNavGraphDirections.actionGlobalRouteFragment().setStart(placeSearchViewModel.panelInfo)
             navController.navigate(action)
         }
 
-        binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
+        binding.homePanel.viewPanelEnd.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.route_nav_graph)
             val action = RouteNavGraphDirections.actionGlobalRouteFragment().setEnd(placeSearchViewModel.panelInfo)
@@ -202,8 +202,8 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     override fun setOnDisableScrollWIthZoomLevelListener() {
-        if (binding.layoutPanel.visibility == View.VISIBLE) {
-            binding.layoutPanel.visibility = View.GONE
+        if (binding.homePanel.layoutPanel.visibility == View.VISIBLE) {
+            binding.homePanel.layoutPanel.visibility = View.GONE
             tMap.tMapView.removeTMapMarkerItem(Marker.PLACE_MARKER)
         } else {
             setViewVisibility()
