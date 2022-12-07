@@ -40,4 +40,6 @@
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
     <string name="alarm_setting">알람 설정</string>
     <string name="last_time">현재 막차</string>
+    <string name="start">출발지</string>
+    <string name="end">도착지</string>
 </resources>

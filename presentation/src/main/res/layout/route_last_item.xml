@@ -5,8 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="com.stop.ui.util.DrawerStringUtils" />
-
         <variable
             name="routeItem"
             type="com.stop.model.route.RouteItem" />
@@ -14,7 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="60dp"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.Guideline
@@ -32,58 +30,32 @@
             app:layout_constraintGuide_end="30dp" />
 
         <TextView
-            android:id="@+id/text_view_name"
+            android:id="@+id/text_view_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
-            android:text="@{routeItem.name}"
-            android:textColor="@color/main_dark_grey"
-            android:textSize="15sp"
+            android:text="@string/end"
+            android:textColor="@color/main_light_grey"
+            android:textSize="12sp"
             android:gravity="center_vertical"
             app:layout_constraintStart_toEndOf="@id/image_view_current_line"
             app:layout_constraintTop_toTopOf="@id/image_view_current_line"
             app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
-            tools:text="이엔씨드림타워3차" />
+            tools:text="도착지" />
 
         <TextView
-            android:id="@+id/text_view_information"
+            android:id="@+id/text_view_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="@{DrawerStringUtils.getRouteItemInformationString(routeItem)}"
-            android:textSize="13sp"
-            android:textColor="@color/main_light_grey"
-            android:gravity="center_vertical"
-            app:layout_constraintStart_toStartOf="@id/text_view_name"
-            app:layout_constraintTop_toBottomOf="@id/text_view_name"
-            tools:text="512m    16분"/>
-
-        <TextView
-            android:id="@+id/text_view_last_time_1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5dp"
-            android:text="@{routeItem.lastTime != null ? @string/last_time : null}"
-            android:textSize="12sp"
-            android:textColor="@color/main_light_grey"
-            android:gravity="center_vertical"
-            app:layout_constraintEnd_toStartOf="@id/text_view_last_time_2"
-            app:layout_constraintTop_toTopOf="@id/text_view_last_time_2"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_last_time_2"
-            tools:text="현재 막차"/>
-
-        <TextView
-            android:id="@+id/text_view_last_time_2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:text="@{routeItem.lastTime}"
-            android:textSize="15sp"
+            android:layout_marginStart="10dp"
+            android:text="@{routeItem.name}"
             android:textColor="@color/main_dark_grey"
+            android:textSize="15sp"
             android:gravity="center_vertical"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="23:17:50"/>
+            app:layout_constraintStart_toEndOf="@id/text_view_start"
+            app:layout_constraintTop_toTopOf="@id/image_view_current_line"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
+            tools:text="Naver1784" />
 
         <View
             android:id="@+id/view_before_line"
@@ -102,21 +74,20 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="15dp"
-            android:tint="@{routeItem.currentColor}"
+            android:tint="@{routeItem.beforeColor}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_circle"
-            tools:tint="@color/main_light_grey" />
+            tools:tint="@color/main_yellow" />
 
         <ImageView
             android:layout_width="15dp"
             android:layout_height="15dp"
+            android:background="@drawable/ic_star_white"
             app:layout_constraintStart_toStartOf="@+id/image_view_current_line"
             app:layout_constraintEnd_toEndOf="@+id/image_view_current_line"
             app:layout_constraintTop_toTopOf="@+id/image_view_current_line"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_current_line"
-            app:imageResource="@{routeItem.mode}"
-            tools:src="@drawable/ic_walk_white" />
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_current_line" />
 
         <View
             android:id="@+id/view_line"
