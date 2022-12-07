@@ -20,7 +20,6 @@ import com.stop.databinding.FragmentPlaceSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -62,7 +61,7 @@ class PlaceSearchFragment : Fragment() {
         buttonClick()
         listenEditTextChange()
         logErrorMessage()
-        observeSearchKeyword()
+        listenSearchEditText()
     }
 
     private fun initAdapter() {
@@ -137,8 +136,7 @@ class PlaceSearchFragment : Fragment() {
         }
     }
 
-    @OptIn(FlowPreview::class)
-    private fun observeSearchKeyword() {
+    private fun listenSearchEditText() {
         lifecycleScope.launch(Dispatchers.IO) {
             val editTextFlow = binding.textInputEditTextPlaceSearch.textChangesToFlow()
 
