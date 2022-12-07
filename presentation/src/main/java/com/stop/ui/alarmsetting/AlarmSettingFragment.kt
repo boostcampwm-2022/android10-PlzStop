@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentAlarmSettingBinding
 import com.stop.domain.model.alarm.AlarmUseCaseItem
@@ -108,8 +109,8 @@ class AlarmSettingFragment : Fragment() {
         )
 
         alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
-        alarmSettingViewModel.callAlarm(clickRouteViewModel.lastTime)
-        alarmSettingViewModel.makeAlarmWorker(clickRouteViewModel.lastTime)
+        alarmSettingViewModel.callAlarm(transportLastTime.timeToBoard)
+        alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
 
         val navController = findNavController()
         navController.setGraph(R.navigation.nav_graph)
