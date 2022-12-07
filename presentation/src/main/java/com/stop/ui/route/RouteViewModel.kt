@@ -110,7 +110,7 @@ class RouteViewModel @Inject constructor(
                     name = getRouteItemName(index, route),
                     coordinate = route.start.coordinate,
                     mode = getRouteItemMode(route),
-                    distance = route.distance,
+                    distance = getRouteItemDistance(route),
                     travelTime = route.sectionTime.toInt(),
                     lastTime = tempLastTime[index],
                     beforeColor = getRouteItemColor(route, false),
@@ -142,6 +142,21 @@ class RouteViewModel @Inject constructor(
             MoveType.SUBWAY -> R.drawable.ic_subway_white
             MoveType.TRANSFER -> R.drawable.ic_transfer_white
             else -> R.drawable.ic_star_white
+        }
+    }
+
+    private fun getRouteItemDistance(route: Route): Double {
+        return if (route.mode == MoveType.TRANSFER) {
+            val startPoint = android.location.Location("Start")
+            val endPoint = android.location.Location("End")
+
+            startPoint.latitude = route.start.coordinate.latitude.toDouble()
+            startPoint.longitude = route.start.coordinate.longitude.toDouble()
+            endPoint.latitude = route.end.coordinate.latitude.toDouble()
+            endPoint.longitude = route.end.coordinate.longitude.toDouble()
+            startPoint.distanceTo(endPoint).toDouble()
+        } else {
+            route.distance
         }
     }
 
