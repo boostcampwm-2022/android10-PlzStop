@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
         <import type="com.stop.ui.util.DrawerStringUtils" />
 
         <variable
@@ -64,10 +63,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text="@string/last_time"
+            android:text="@{routeItem.lastTime != null ? @string/last_time : null}"
             android:textSize="12sp"
             android:textColor="@color/main_light_grey"
-            android:visibility="@{routeItem.lastTime != null ? View.VISIBLE : View.INVISIBLE}"
             android:gravity="center_vertical"
             app:layout_constraintEnd_toStartOf="@id/text_view_last_time_2"
             app:layout_constraintTop_toTopOf="@id/text_view_last_time_2"
@@ -86,17 +84,6 @@
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:text="23:17:50"/>
-
-        <View
-            android:id="@+id/view_before_line"
-            android:layout_width="6dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="-5dp"
-            android:background="@{routeItem.beforeColor}"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/image_view_current_line"
-            tools:background="@color/main_yellow" />
 
         <View
             android:id="@+id/view_current_line"
