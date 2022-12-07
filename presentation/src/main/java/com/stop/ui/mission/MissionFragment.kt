@@ -18,7 +18,6 @@ import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.model.Location
-import com.stop.model.State
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -144,6 +143,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
+        makeDestinationMarker()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -205,6 +205,10 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
+    private fun makeDestinationMarker() {
+        tMap.addMarker(Marker.DESTINATION_MARKER, Marker.DESTINATION_MARKER_IMG, TEST_DESTINATION)
+    }
+
     companion object {
 
         private const val DESTINATION = "구로3동현대아파트"
@@ -216,6 +220,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
         private val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        private val TEST_DESTINATION = TMapPoint(37.553836, 126.969652)
 
     }
 }

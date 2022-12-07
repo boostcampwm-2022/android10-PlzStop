@@ -11,4 +11,7 @@ object Marker {
     const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
     const val PERSON_LINE = "person_line"
     const val PERSON_LINE_COLOR = Color.MAGENTA
+
+    const val DESTINATION_MARKER = "destination_marker"
+    const val DESTINATION_MARKER_IMG = R.drawable.ic_start_marker
 }
