@@ -42,7 +42,7 @@ class AlarmSettingViewModel @Inject constructor(
     private val _isAlarmItemNotNull = MutableStateFlow(false)
     val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
 
-    private lateinit var workerId : UUID
+    private lateinit var workerId: UUID
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -64,17 +64,18 @@ class AlarmSettingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             deleteAlarmUseCase.deleteAlarm()
         }
+        cancelAlarm()
     }
 
     fun callAlarm(time: String) {
         alarmFunctions.callAlarm(time, alarmTime.value ?: 0, ALARM_CODE)
     }
 
-    fun cancelAlarm() {
+    private fun cancelAlarm() {
         alarmFunctions.cancelAlarm(ALARM_CODE)
     }
 
-    fun makeAlarmWorker(time : String) {
+    fun makeAlarmWorker(time: String) {
         val workData = workDataOf(
             LAST_TIME to time,
             ALARM_TIME to alarmTime.value
@@ -88,7 +89,7 @@ class AlarmSettingViewModel @Inject constructor(
         workManager.enqueue(workRequest)
     }
 
-    fun removeAlarmWorker(){
+    fun removeAlarmWorker() {
         workManager.cancelWorkById(workerId)
     }
 
