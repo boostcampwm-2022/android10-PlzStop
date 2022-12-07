@@ -1,6 +1,8 @@
 package com.stop.ui.util
 
+import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.model.route.RouteItem
 import java.text.DecimalFormat
 
 object DrawerStringUtils {
@@ -17,17 +19,36 @@ object DrawerStringUtils {
     }
 
     @JvmStatic
-    fun getInformationString(itinerary: Itinerary): String {
-        val informationString = StringBuilder()
+    fun getTopInformationString(itinerary: Itinerary): String {
+        val topInformationString = StringBuilder()
 
-        informationString.append("${getDistanceString(itinerary.totalDistance)}    ")
-        informationString.append("도보 ${getTimeString(itinerary.walkTime)}    ")
-        informationString.append(
+        topInformationString.append("${getDistanceString(itinerary.totalDistance)}    ")
+        topInformationString.append("도보 ${getTimeString(itinerary.walkTime)}    ")
+        topInformationString.append(
             "${DecimalFormat("#,###").format(itinerary.totalFare.dropLast(0).toInt())}원    "
         )
-        informationString.append("환승 ${itinerary.transferCount}회")
+        topInformationString.append("환승 ${itinerary.transferCount}회")
 
-        return informationString.toString()
+        return topInformationString.toString()
+    }
+
+    @JvmStatic
+    fun getRouteItemInformationString(routeItem: RouteItem): String {
+        val routeItemInformationString = StringBuilder()
+
+        routeItemInformationString.append("${getDistanceString(routeItem.distance)}    ")
+        routeItemInformationString.append(getTimeString(routeItem.travelTime))
+
+        return routeItemInformationString.toString()
+    }
+
+    @JvmStatic
+    fun getLastTimeString(lastTime: String?): String {
+        return if (lastTime != null) {
+            "막차 $lastTime"
+        } else {
+            ""
+        }
     }
 
     private fun getDistanceString(distance: Double): String {

@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.stop.R
 import com.stop.domain.model.route.tmap.RouteRequest
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
@@ -108,7 +109,7 @@ class RouteViewModel @Inject constructor(
                 RouteItem(
                     name = getRouteItemName(index, route),
                     coordinate = route.start.coordinate,
-                    mode = route.mode,
+                    mode = getRouteItemMode(route),
                     distance = route.distance,
                     travelTime = route.sectionTime.toInt(),
                     lastTime = tempLastTime[index],
@@ -131,6 +132,15 @@ class RouteViewModel @Inject constructor(
             origin.value?.name ?: ""
         } else {
             route.start.name
+        }
+    }
+
+    private fun getRouteItemMode(route: Route): Int {
+        return when (route.mode) {
+            MoveType.WALK -> R.drawable.ic_walk_white
+            MoveType.BUS -> R.drawable.ic_bus_white
+            MoveType.SUBWAY -> R.drawable.ic_subway_white
+            else -> R.drawable.ic_star_white
         }
     }
 
