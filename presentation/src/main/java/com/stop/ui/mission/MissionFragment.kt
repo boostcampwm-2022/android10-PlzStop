@@ -3,7 +3,6 @@ package com.stop.ui.mission
 import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -66,7 +65,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun initTMap() {
-        tMap = MissionTMap((requireContext() as ContextWrapper).baseContext, this)
+        tMap = MissionTMap(requireActivity(), this)
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.tMapView)

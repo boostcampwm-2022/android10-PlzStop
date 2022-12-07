@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.route.TransportLastTime
 import com.stop.domain.model.route.tmap.RouteRequest
-import com.stop.domain.model.route.tmap.custom.Itinerary
+import com.stop.domain.model.route.tmap.custom.*
 import com.stop.domain.usecase.route.GetLastTransportTimeUseCase
 import com.stop.domain.usecase.route.GetRouteUseCase
 import com.stop.model.ErrorType
@@ -22,7 +22,7 @@ class RouteViewModel @Inject constructor(
     private val getLastTransportTimeUseCase: GetLastTransportTimeUseCase,
 ) : ViewModel() {
 
-    var clickedItineraryIndex: Int = -1
+    private var clickedItineraryIndex: Int = -1
 
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>

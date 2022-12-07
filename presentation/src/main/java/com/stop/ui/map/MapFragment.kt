@@ -71,7 +71,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initTMap() {
-        tMap = MapTMap(requireContext(), this)
+        tMap = MapTMap(requireActivity(), this)
         tMap.init()
 
         binding.frameLayoutContainer.addView(tMap.tMapView)

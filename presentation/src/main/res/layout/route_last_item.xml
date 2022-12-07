@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="routeItem"
+            type="com.stop.model.route.RouteItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="30dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="30dp" />
+
+        <TextView
+            android:id="@+id/text_view_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="@string/end"
+            android:textColor="@color/main_light_grey"
+            android:textSize="12sp"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toEndOf="@id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="@id/image_view_current_line"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
+            tools:text="도착지" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@{routeItem.name}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="15sp"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toEndOf="@id/text_view_start"
+            app:layout_constraintTop_toTopOf="@id/image_view_current_line"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
+            tools:text="Naver1784" />
+
+        <View
+            android:id="@+id/view_before_line"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="-5dp"
+            android:background="@{routeItem.beforeColor}"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/image_view_current_line"
+            tools:background="@color/main_yellow" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_view_current_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="15dp"
+            android:tint="@{routeItem.beforeColor}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle"
+            tools:tint="@color/main_yellow" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:background="@drawable/ic_star_white"
+            app:layout_constraintStart_toStartOf="@+id/image_view_current_line"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="@+id/image_view_current_line"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_current_line" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@color/main_lighter_grey"
+            app:layout_constraintStart_toEndOf="@id/view_before_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

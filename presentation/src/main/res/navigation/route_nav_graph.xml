@@ -24,6 +24,7 @@
             app:argType="com.stop.model.route.Place"
             app:nullable="true" />
     </fragment>
+
     <fragment
         android:id="@+id/routeDetailFragment"
         tools:layout="@layout/fragment_route_detail"
@@ -33,6 +34,7 @@
             android:id="@+id/action_routeDetailFragment_to_alarmSetting"
             app:destination="@id/alarmSetting" />
     </fragment>
+
     <fragment
         android:id="@+id/alarmSetting"
         android:name="com.stop.ui.alarmsetting.AlarmSettingFragment"

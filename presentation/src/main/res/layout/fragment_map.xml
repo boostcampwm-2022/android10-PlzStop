@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
-
         <variable
             name="placeSearchViewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
@@ -86,9 +86,8 @@
 
             <include
                 android:id="@+id/home_panel"
-                layout="@layout/home_panel"
-                bind:placeSearchViewModel="@{placeSearchViewModel}" />
-
+                bind:placeSearchViewModel="@{placeSearchViewModel}"
+                layout="@layout/home_panel" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -111,7 +110,6 @@
                 app:layout_constraintStart_toStartOf="@id/layout_compass"
                 app:layout_constraintTop_toTopOf="@id/layout_compass"
                 app:srcCompat="@drawable/ic_compass" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -134,7 +132,6 @@
                 app:layout_constraintStart_toStartOf="@id/layout_current"
                 app:layout_constraintTop_toTopOf="@id/layout_current"
                 app:srcCompat="@drawable/ic_location" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -152,13 +149,9 @@
 
                 <include
                     android:id="@+id/home_bottom_sheet"
-                    layout="@layout/home_bottom_sheet"
-                    bind:alarmViewModel="@{alarmViewModel}" />
-
+                    bind:alarmViewModel="@{alarmViewModel}"
+                    layout="@layout/home_bottom_sheet" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
