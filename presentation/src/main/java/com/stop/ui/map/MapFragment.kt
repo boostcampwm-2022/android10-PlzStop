@@ -1,6 +1,7 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
+import com.stop.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -222,6 +224,7 @@ class MapFragment : Fragment(), MapHandler {
     private fun listenButtonClick(){
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
+            turnOffSoundService()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
@@ -239,6 +242,11 @@ class MapFragment : Fragment(), MapHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(context, SoundService::class.java)
+        requireContext().stopService(intent)
     }
 
     companion object {
