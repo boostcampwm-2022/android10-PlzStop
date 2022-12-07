@@ -57,18 +57,6 @@ class MissionWorker @AssistedInject constructor(
         ) {
             return
         }
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location ->
-                if (location == null) {
-                    Log.d("MissionWorker", "location get fail")
-                } else {
-                    Log.d("MissionWorker", "initLocation(last) ${location.latitude} , ${location.longitude}")
-                }
-            }
-            .addOnFailureListener {
-                Log.d("MissionWorker", "location error is ${it.message}")
-                it.printStackTrace()
-            }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {

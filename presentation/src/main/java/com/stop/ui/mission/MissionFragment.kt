@@ -34,8 +34,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var tMap: MissionTMap
 
-    private var state = State.FOREGROUND
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -55,19 +53,6 @@ class MissionFragment : Fragment(), MissionHandler {
         setObserve()
         drawPersonLine()
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("MissionWorker", "onResume")
-
-        state = State.FOREGROUND
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("MissionWorker", "onStop")
-        state = State.BACKGROUND
     }
 
     override fun onDestroyView() {
@@ -182,24 +167,38 @@ class MissionFragment : Fragment(), MissionHandler {
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
             viewModel.userLocation.collect { userLocation ->
-                if (first < 2) {
-                    beforeLocation = userLocation
-                    first += 1
-                } else {
-                    val nowLocation = TMapPoint(userLocation.latitude, userLocation.longitude)
-                    tMap.drawMoveLine(
-                        nowLocation,
-                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                        Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
-                        Marker.PERSON_LINE_COLOR
-                    )
-                    tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
-                    viewModel.personCurrentLocation = userLocation
-                    if (tMap.isTracking) {
-                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                when (first) {
+                    0 -> {
+                        first += 1
                     }
-                    beforeLocation = userLocation
-                    PERSON_LINE_NUM += 1
+                    1 -> {
+                        beforeLocation = userLocation
+                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                        tMap.addMarker(
+                            Marker.PERSON_MARKER,
+                            Marker.PERSON_MARKER_IMG,
+                            TMapPoint(userLocation.latitude, userLocation.longitude)
+                        )
+                        viewModel.personCurrentLocation = userLocation
+                        first += 1
+                    }
+                    else -> {
+                        Log.d("MissionWorker", "그리는 중 $userLocation $beforeLocation")
+                        val nowLocation = TMapPoint(userLocation.latitude, userLocation.longitude)
+                        tMap.drawMoveLine(
+                            nowLocation,
+                            TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
+                            Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+                            Marker.PERSON_LINE_COLOR
+                        )
+                        tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
+                        viewModel.personCurrentLocation = userLocation
+                        if (tMap.isTracking) {
+                            tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                        }
+                        beforeLocation = userLocation
+                        PERSON_LINE_NUM += 1
+                    }
                 }
 
             }

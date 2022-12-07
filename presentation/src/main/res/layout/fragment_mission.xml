@@ -109,7 +109,8 @@
             android:background="@drawable/background_close_button"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            android:onClick="@{() -> viewModel.cancelMission()}">
 
             <ImageView
                 android:id="@+id/image_view_mission_close"

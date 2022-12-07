@@ -1,5 +1,6 @@
 package com.stop.ui.mission
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
@@ -9,13 +10,14 @@ import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 import kotlin.random.Random
 
 @HiltViewModel
 class MissionViewModel @Inject constructor(
     private val workManager: WorkManager,
-    private val missionManager: MissionManager
+    missionManager: MissionManager
 ) : ViewModel() {
 
     private val random = Random(System.currentTimeMillis())
@@ -55,6 +57,8 @@ class MissionViewModel @Inject constructor(
     var personCurrentLocation = Location(37.553836, 126.969652)
 
     val userLocation = missionManager.userLocation
+
+    lateinit var requestId: UUID
 
     init {
         makeMissionWorker()
@@ -101,7 +105,14 @@ class MissionViewModel @Inject constructor(
         val workRequest = OneTimeWorkRequestBuilder<MissionWorker>()
             .build()
 
+        requestId = workRequest.id
+
         workManager.enqueue(workRequest)
+    }
+
+    fun cancelMission() {
+        Log.d("MissionWorker","취소 되나연")
+        workManager.cancelWorkById(requestId)
     }
 
     companion object {
