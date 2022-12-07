@@ -11,7 +11,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
@@ -40,7 +39,6 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-
         initBinding()
 
         return binding.root
@@ -53,7 +51,7 @@ class MapFragment : Fragment(), MapHandler {
         initView()
         initNavigateAction()
         initBottomSheetBehavior()
-        listenButtonClick()
+        initBottomSheetView()
     }
 
     override fun alertTMapReady() {
@@ -105,22 +103,27 @@ class MapFragment : Fragment(), MapHandler {
 
     private fun initNavigateAction() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController()
-                .navigate(R.id.action_mapFragment_to_placeSearchFragment)
+            findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
         binding.homePanel.viewPanelStart.setOnClickListener {
-            val navController = findNavController()
-            navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setStart(placeSearchViewModel.panelInfo)
-            navController.navigate(action)
+            findNavController().apply {
+                setGraph(R.navigation.route_nav_graph)
+                navigate(
+                    RouteNavGraphDirections.actionGlobalRouteFragment()
+                        .setStart(placeSearchViewModel.panelInfo)
+                )
+            }
         }
 
         binding.homePanel.viewPanelEnd.setOnClickListener {
-            val navController = findNavController()
-            navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setEnd(placeSearchViewModel.panelInfo)
-            navController.navigate(action)
+            findNavController().apply {
+                setGraph(R.navigation.route_nav_graph)
+                navigate(
+                    RouteNavGraphDirections.actionGlobalRouteFragment()
+                        .setEnd(placeSearchViewModel.panelInfo)
+                )
+            }
         }
     }
 
@@ -128,8 +131,7 @@ class MapFragment : Fragment(), MapHandler {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
         alarmViewModel.getAlarm()
-
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
 
@@ -154,8 +156,16 @@ class MapFragment : Fragment(), MapHandler {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
-
         })
+    }
+
+    private fun initBottomSheetView() {
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            alarmViewModel.deleteAlarm()
+        }
     }
 
     private fun observeClickPlace() {
@@ -163,6 +173,7 @@ class MapFragment : Fragment(), MapHandler {
             event.getContentIfNotHandled()?.let { clickPlace ->
                 val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 
+                tMap.isTracking = false
                 tMap.tMapView.setCenterPoint(
                     clickTMapPoint.latitude,
                     clickTMapPoint.longitude,
@@ -183,6 +194,7 @@ class MapFragment : Fragment(), MapHandler {
                     val currentTMapPoint =
                         TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
+                    tMap.isTracking = false
                     tMap.tMapView.setCenterPoint(
                         currentTMapPoint.latitude,
                         currentTMapPoint.longitude
@@ -216,14 +228,6 @@ class MapFragment : Fragment(), MapHandler {
             textViewSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
-        }
-    }
-
-    private fun listenButtonClick(){
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
-            alarmViewModel.deleteAlarm()
-            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
