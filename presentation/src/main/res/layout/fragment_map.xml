@@ -23,21 +23,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="15dp" />
+            app:layout_constraintGuide_begin="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="15dp" />
+            app:layout_constraintGuide_end="16dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="55dp" />
+            app:layout_constraintGuide_begin="35dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_bottom"
@@ -55,6 +55,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/text_view_search"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:background="@drawable/background_search"
+            android:drawablePadding="15dp"
+            android:elevation="15dp"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/search_hint"
+            android:textColor="@color/hint_text_color"
+            android:textSize="17sp"
+            app:drawableStartCompat="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_panel"
             android:layout_width="0dp"
@@ -71,39 +88,6 @@
                 android:id="@+id/home_panel"
                 layout="@layout/home_panel"
                 bind:placeSearchViewModel="@{placeSearchViewModel}" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layout_search"
-            android:layout_width="0dp"
-            android:layout_height="52dp"
-            android:background="@drawable/background_search"
-            android:elevation="15dp"
-            app:layout_constraintEnd_toStartOf="@id/guideline_end"
-            app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toTopOf="@id/guideline_top">
-
-            <TextView
-                android:id="@+id/text_view_search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="50dp"
-                android:layout_marginBottom="1dp"
-                android:gravity="center_vertical"
-                android:text="@string/search_hint"
-                android:textColor="#808590"
-                android:textSize="17sp" />
-
-            <ImageView
-                android:id="@+id/image_view_search"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                app:layout_constraintBottom_toBottomOf="@id/layout_search"
-                app:layout_constraintStart_toStartOf="@id/layout_search"
-                app:layout_constraintTop_toTopOf="@id/layout_search"
-                app:srcCompat="@drawable/ic_search" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

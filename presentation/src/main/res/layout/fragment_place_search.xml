@@ -42,22 +42,24 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_place_search"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:theme="@style/TextInputLayoutStyle"
             app:endIconMode="clear_text"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
             app:layout_constraintTop_toTopOf="@id/guideline_top"
-            app:startIconDrawable="@drawable/ic_baseline_search_24">
+            app:startIconDrawable="@drawable/ic_search">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_edit_text_place_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/location_address_search_text"
+                android:hint="@string/search_hint"
                 android:imeOptions="actionSearch"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textSize="17sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
