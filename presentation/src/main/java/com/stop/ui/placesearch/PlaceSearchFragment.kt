@@ -1,7 +1,6 @@
 package com.stop.ui.placesearch
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -17,6 +15,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.stop.R
+import com.stop.bindingadapter.textChangesToFlow
 import com.stop.databinding.FragmentPlaceSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import dagger.hilt.android.AndroidEntryPoint
@@ -66,7 +65,7 @@ class PlaceSearchFragment : Fragment() {
         listenSearchEditText()
     }
 
-    private fun initTextEditText(){
+    private fun initTextEditText() {
         binding.textInputEditTextPlaceSearch.requestFocus()
         showKeyBoard()
     }
