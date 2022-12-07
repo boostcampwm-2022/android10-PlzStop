@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.stop.R
 import com.stop.databinding.FragmentPlaceSearchBinding
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
@@ -80,19 +80,19 @@ class PlaceSearchFragment : Fragment() {
         placeSearchViewModel.setNearPlacesEmpty()
         placeSearchViewModel.insertRecentSearchPlace(placeUseCaseItem)
 
-        binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
-
+        findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
     }
 
     private fun buttonClick() {
         with(binding) {
             textViewCurrentLocation.setOnClickListener {
                 placeSearchViewModel.setClickCurrentLocation()
-                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
 
             textViewSelectMap.setOnClickListener {
-                binding.root.findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
             }
         }
     }

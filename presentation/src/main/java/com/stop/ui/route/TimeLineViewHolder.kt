@@ -18,7 +18,11 @@ class TimeLineViewHolder(
     private val greyColor =
         ContextCompat.getColor(binding.root.context, R.color.grey_for_route_walk)
 
+    private var proportionOfSectionTime: Float = 0f
+
     fun bind(route: Route, position: Int) {
+        proportionOfSectionTime = route.proportionOfSectionTime
+
         val text = binding.root.resources.getString(
             R.string.section_time,
             (route.sectionTime / 60).toInt().toString()
@@ -53,6 +57,12 @@ class TimeLineViewHolder(
         }
     }
 
+
+    fun adjustViewHolderSize(parentWidth: Int) {
+        val layoutParams = binding.root.layoutParams
+        layoutParams.width = (parentWidth * proportionOfSectionTime).toInt()
+    }
+
     private fun setIdentityColor(route: TransportRoute) {
         val identityColor = Color.parseColor("#${route.routeColor}")
         binding.textViewSectionTime.setBackgroundColor(identityColor)
@@ -68,7 +78,7 @@ class TimeLineViewHolder(
         val drawable =
             ContextCompat.getDrawable(binding.root.context, R.drawable.time_stick_round_background)
                 ?: throw IllegalArgumentException()
-        binding.imageViewIcon.background = drawable
+        binding.viewIcon.background = drawable
         binding.viewIcon.background.setTintList(null)
     }
 }

@@ -37,8 +37,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text"
-            app:layout_constraintEnd_toStartOf="@+id/guideline_end_vertical"
-            app:layout_constraintStart_toStartOf="@+id/guideline_start_vertical" />
+            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_vertical"
