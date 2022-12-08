@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 
 @HiltWorker
 class MissionWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val missionManager: MissionManager
 ) : CoroutineWorker(context, workerParameters) {
@@ -43,7 +43,9 @@ class MissionWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         setForeground(createForegroundInfo())
         getPersonLocation()
-        test()
+        while (missionManager.isMissionOver.value.not()) {
+            delay(INTERVAL_UNIT)
+        }
         fusedLocationClient.removeLocationUpdates(locationCallback)
         return Result.success()
     }
@@ -72,21 +74,13 @@ class MissionWorker @AssistedInject constructor(
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
-    private suspend fun test() {
-        while (NUM < 60) {
-            Log.d("MissionWorker", "찍히나 테스트 ${NUM}")
-            NUM += 1
-            delay(5000)
-        }
-    }
-
     private fun createForegroundInfo(): ForegroundInfo {
         val id = applicationContext.getString(R.string.mission_notification_channel_id)
         val title = applicationContext.getString(R.string.mission_notification_title)
 
         createChannel(id)
 
-        val pendingIntent = PendingIntent.getActivity(applicationContext, MISSION_CODE, Intent(applicationContext, MainActivity::class.java).apply {
+        val pendingIntent = PendingIntent.getActivity(context, 0, Intent(applicationContext, MainActivity::class.java).apply {
             putExtra("MISSION_CODE", MISSION_CODE)
         }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 

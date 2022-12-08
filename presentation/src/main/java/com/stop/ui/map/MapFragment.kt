@@ -54,7 +54,6 @@ class MapFragment : Fragment(), MapHandler {
         super.onViewCreated(view, savedInstanceState)
 
         initTMap()
-        initView()
         initNavigateAction()
         initBottomSheetBehavior()
         listenButtonClick()
@@ -81,6 +80,8 @@ class MapFragment : Fragment(), MapHandler {
         tMap.init()
 
         binding.frameLayoutContainer.addView(tMap.tMapView)
+
+        initView()
     }
 
     private fun initView() {

@@ -109,4 +109,14 @@ open class TMap(
         tMapView.zoomLevel -= 1
     }
 
+    fun getDistance(startLatitude: Double, startLongitude: Double, endLatitude: Double, endLongitude: Double): Float {
+        val startPoint = android.location.Location("Start")
+        val endPoint = android.location.Location("End")
+
+        startPoint.latitude = startLatitude
+        startPoint.longitude = startLongitude
+        endPoint.latitude = endLatitude
+        endPoint.longitude = endLongitude
+        return startPoint.distanceTo(endPoint)
+    }
 }

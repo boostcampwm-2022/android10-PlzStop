@@ -44,10 +44,13 @@ class AlarmSettingViewModel @Inject constructor(
     private val _isAlarmItemNotNull = MutableStateFlow(false)
     val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
 
-    private lateinit var workerId: UUID
+    private lateinit var workerId : UUID
 
     private val _lastTimeCountDown = MutableLiveData("")
     val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
+
+    private val _isMissionFail = MutableLiveData(false)
+    val isMissionFail: LiveData<Boolean> = _isMissionFail
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -80,7 +83,7 @@ class AlarmSettingViewModel @Inject constructor(
         alarmFunctions.cancelAlarm()
     }
 
-    fun makeAlarmWorker(time: String) {
+    fun makeAlarmWorker(time : String) {
         val workData = workDataOf(
             LAST_TIME to time,
             ALARM_TIME to alarmTime.value
@@ -113,6 +116,7 @@ class AlarmSettingViewModel @Inject constructor(
                     oldTimeMillis = System.currentTimeMillis()
                 }
             }
+            _isMissionFail.postValue(true)
         }
     }
 

@@ -3,6 +3,7 @@ package com.stop.ui.mission
 import android.content.Context
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.ui.util.TMap
 
 class MissionTMap(
@@ -28,4 +29,13 @@ class MissionTMap(
         tMapView.addTMapPolyLine(polyLine)
     }
 
+    fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
+        route.steps.forEach { step ->
+            step.lineString.split(" ").forEach { coordinate ->
+                val points = coordinate.split(",")
+
+                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
+            }
+        }
+    }
 }
