@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.findNavController
 import com.stop.R
-import com.stop.SoundService
+import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 

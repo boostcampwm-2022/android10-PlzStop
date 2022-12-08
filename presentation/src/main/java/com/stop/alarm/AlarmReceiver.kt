@@ -1,4 +1,4 @@
-package com.stop
+package com.stop.alarm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,7 +7,10 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
-import com.stop.LastTimeCheckWorker.Companion.NOTIFICATION_ID
+import com.stop.alarm.LastTimeCheckWorker.Companion.NOTIFICATION_ID
+import com.stop.MainActivity
+import com.stop.R
+import com.stop.isMoreThanOreo
 
 class AlarmReceiver : BroadcastReceiver() {
 

@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.stop.AlarmFunctions
-import com.stop.LastTimeCheckWorker
+import com.stop.alarm.AlarmFunctions
+import com.stop.alarm.LastTimeCheckWorker
 import com.stop.convertTimeMillisToString
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
@@ -45,7 +45,7 @@ class AlarmSettingViewModel @Inject constructor(
     private val _isAlarmItemNotNull = MutableStateFlow(false)
     val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
 
-    private lateinit var workerId : UUID
+    private lateinit var workerId: UUID
 
     private val _lastTimeCountDown = MutableLiveData("")
     val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
@@ -81,7 +81,7 @@ class AlarmSettingViewModel @Inject constructor(
         alarmFunctions.cancelAlarm(ALARM_CODE)
     }
 
-    fun makeAlarmWorker(time : String) {
+    fun makeAlarmWorker(time: String) {
         val workData = workDataOf(
             LAST_TIME to time,
             ALARM_TIME to alarmTime.value

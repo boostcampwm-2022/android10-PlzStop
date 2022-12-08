@@ -18,7 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
-import com.stop.SoundService
+import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
