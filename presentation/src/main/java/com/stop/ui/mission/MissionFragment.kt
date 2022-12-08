@@ -2,7 +2,6 @@ package com.stop.ui.mission
 
 import android.Manifest
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -35,7 +34,7 @@ class MissionFragment : Fragment(), MissionHandler {
         get() = _binding!!
 
     private val missionViewModel: MissionViewModel by viewModels()
-    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
+    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap
 
@@ -54,9 +53,7 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onViewCreated(view, savedInstanceState)
 
         setDataBinding()
-        initViewModel()
         initTMap()
-        setObserve()
         setMissionOver()
 
     }
@@ -69,7 +66,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = missionViewModel
+        binding.missionViewModel = missionViewModel
+        binding.alarmSettingViewModel = alarmSettingViewModel
         binding.fragment = this@MissionFragment
     }
 
@@ -78,10 +76,6 @@ class MissionFragment : Fragment(), MissionHandler {
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.tMapView)
-    }
-
-    private fun initViewModel() {
-        missionViewModel.countDownWith(LEFT_TIME)
     }
 
     fun setCompassMode() {
@@ -116,38 +110,6 @@ class MissionFragment : Fragment(), MissionHandler {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
         findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
-    }
-
-    private fun setObserve() {
-        val shortAnimationDuration =
-            resources.getInteger(android.R.integer.config_shortAnimTime)
-
-        missionViewModel.timeIncreased.observe(viewLifecycleOwner) {
-            val sign = if (it > 0) {
-                PLUS
-            } else {
-                MINUS
-            }
-            binding.textViewChangedTime.text =
-                resources.getString(R.string.number_format).format(sign, it)
-            binding.textViewChangedTime.apply {
-                alpha = 0f
-                visibility = View.VISIBLE
-                animate().alpha(1f)
-                    .setDuration(shortAnimationDuration.toLong())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            animate().alpha(0f)
-                                .setDuration(shortAnimationDuration.toLong())
-                                .setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        binding.textViewChangedTime.visibility = View.GONE
-                                    }
-                                })
-                        }
-                    })
-            }
-        }
     }
 
     override fun alertTMapReady() {
@@ -326,10 +288,6 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     companion object {
-        private const val PLUS = "+"
-        private const val MINUS = ""
-        private const val LEFT_TIME = 60
-
         private var PERSON_LINE_NUM = 0
 
         private val PERMISSIONS =

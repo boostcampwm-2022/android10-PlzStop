@@ -6,12 +6,16 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="missionViewModel"
             type="com.stop.ui.mission.MissionViewModel" />
 
         <variable
             name="fragment"
             type="com.stop.ui.mission.MissionFragment" />
+
+        <variable
+            name="alarmSettingViewModel"
+            type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -62,7 +66,7 @@
             android:layout_height="0dp"
             android:layout_marginHorizontal="10dp"
             android:gravity="center_vertical"
-            android:text="@{viewModel.destination.name}"
+            android:text="@{missionViewModel.destination.name}"
             android:textColor="@color/main_dark_grey"
             android:textSize="17sp"
             android:textStyle="bold"
@@ -86,7 +90,7 @@
             android:shadowDx="7.0"
             android:shadowDy="7.0"
             android:shadowRadius="15.0"
-            android:text="@{@string/minute_and_second(viewModel.leftMinute, viewModel.leftSecond)}"
+            android:text="@{alarmSettingViewModel.lastTimeCountDown}"
             android:textColor="@color/main_dark_grey"
             android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
