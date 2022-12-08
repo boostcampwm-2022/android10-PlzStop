@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
 import com.stop.MainActivity
@@ -124,7 +123,7 @@ class MissionWorker @AssistedInject constructor(
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
         private var NUM = 0
         private const val INTERVAL_UNIT = 1000L
-        private const val MISSION_CODE = 88
+        const val MISSION_CODE = 88
     }
 
 }
