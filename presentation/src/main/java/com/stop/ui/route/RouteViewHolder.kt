@@ -39,25 +39,49 @@ class RouteViewHolder(
         binding.textViewExpectedRequiredTime.text = secondToHourAndMinute(itinerary.totalTime)
         val routeItems = mutableListOf<RouteItem>()
 
-        itinerary.routes.forEach { route ->
+        itinerary.routes.drop(1).forEachIndexed { index, route ->
+            if (route.mode == MoveType.TRANSFER) {
+                return@forEachIndexed
+            }
+            val (typeName, mode) = if (index == itinerary.routes.size - 2){
+                Pair("하차", R.drawable.ic_star_white)
+            } else {
+                Pair(getTypeName(route), getRouteItemMode(route))
+            }
+
             routeItems.add(
                 RouteItem(
                     name = route.start.name,
                     coordinate = route.start.coordinate,
-                    mode = getRouteItemMode(route),
-                    distance = route.distance,
+                    mode = mode,
+                    distance = getRouteItemDistance(route),
                     travelTime = route.sectionTime.toInt(),
                     lastTime = "",
                     beforeColor = getRouteItemColor(route, false),
                     currentColor = getRouteItemColor(route, true),
                     type = RouteItemType.PATH,
-                    typeName = getTypeName(route),
+                    typeName = typeName,
                 )
             )
         }
         adapter.submitList(routeItems)
         binding.timeLineContainer.post {
             binding.timeLineContainer.submitList(itinerary.routes)
+        }
+    }
+
+    private fun getRouteItemDistance(route: Route): Double {
+        return if (route.mode == MoveType.TRANSFER) {
+            val startPoint = android.location.Location("Start")
+            val endPoint = android.location.Location("End")
+
+            startPoint.latitude = route.start.coordinate.latitude.toDouble()
+            startPoint.longitude = route.start.coordinate.longitude.toDouble()
+            endPoint.latitude = route.end.coordinate.latitude.toDouble()
+            endPoint.longitude = route.end.coordinate.longitude.toDouble()
+            startPoint.distanceTo(endPoint).toDouble()
+        } else {
+            route.distance
         }
     }
 
