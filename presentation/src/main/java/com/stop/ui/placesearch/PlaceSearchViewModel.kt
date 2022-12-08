@@ -145,4 +145,7 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
+    fun setPanelVisibility(panelVisibility: Int) {
+        _panelVisibility.value = panelVisibility
+    }
 }

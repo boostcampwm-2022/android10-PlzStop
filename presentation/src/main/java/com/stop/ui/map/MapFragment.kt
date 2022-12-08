@@ -243,6 +243,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     override fun onDestroyView() {
+        placeSearchViewModel.setPanelVisibility(binding.homePanel.layoutPanel.visibility)
         binding.layoutContainer.removeView(tMap.tMapView)
         _binding = null
 
