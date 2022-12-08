@@ -251,6 +251,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
+        alarmViewModel.lastTimeCountDown.value?.let {
+            if(it.isBlank()){
+                alarmViewModel.startCountDownTimer()
+            }
+        }
         findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
