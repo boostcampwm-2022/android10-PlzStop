@@ -253,7 +253,7 @@ class MapFragment : Fragment(), MapHandler {
 
     fun setMissionStart() {
         Log.d("MissionWorker","mission 버튼 클릭")
-        binding.root.findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+       findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {
