@@ -58,7 +58,7 @@ class MapTMap(
             isLongClick = true
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
             addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, tMapPoint)
-            handler.setPanel(tMapPoint)
+            handler.setPanel(tMapPoint, false)
         }
 
     private val onEnableScrollWithZoomLevelCallback =

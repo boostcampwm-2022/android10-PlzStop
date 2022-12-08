@@ -6,3 +6,9 @@ data class GeoLocationInfo(
     val lotAddress: String,
     val distance: String
 )
+
+fun GeoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName: String): GeoLocationInfo {
+    return this.copy(
+        title = clickedPlaceName
+    )
+}

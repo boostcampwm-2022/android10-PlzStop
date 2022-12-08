@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.geoLocation.GeoLocationInfo
+import com.stop.domain.model.geoLocation.toClickedGeoLocationInfo
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.nearplace.DeleteRecentPlaceSearchUseCase
@@ -34,11 +35,10 @@ class PlaceSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 기본 주소로 서울역 주소 지정
-    var currentLocation = Location(37.553836, 126.969652)
-
-    var panelInfo: com.stop.model.route.Place? = null
-
     var tMap: MapTMap? = null
+    var currentLocation = Location(37.553836, 126.969652)
+    var clickedPlaceName = ""
+    var panelInfo: com.stop.model.route.Place? = null
 
     private val _nearPlaces = MutableStateFlow<List<PlaceUseCaseItem>>(emptyList())
     val nearPlaces: StateFlow<List<PlaceUseCaseItem>> = _nearPlaces
@@ -94,6 +94,7 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun setClickPlace(placeUseCaseItem: PlaceUseCaseItem) {
         _clickPlaceUseCaseItem.value = Event(placeUseCaseItem)
+        clickedPlaceName = placeUseCaseItem.name
     }
 
     fun setClickCurrentLocation() {
@@ -102,12 +103,18 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
-    fun getGeoLocationInfo(latitude: Double, longitude: Double) {
+    fun getGeoLocationInfo(latitude: Double, longitude: Double, isClickedFromPlaceSearch: Boolean) {
         viewModelScope.launch {
-            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+            val geoLocationInfo = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+
+            _geoLocation.value = if (isClickedFromPlaceSearch) {
+                geoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName)
+            } else {
+                geoLocationInfo
+            }
+            _panelVisibility.value = View.VISIBLE
 
             readySendValue(latitude, longitude)
-            _panelVisibility.value = View.VISIBLE
             getDistance(latitude, longitude)
         }
     }

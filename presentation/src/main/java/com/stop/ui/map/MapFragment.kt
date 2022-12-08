@@ -191,7 +191,7 @@ class MapFragment : Fragment(), MapHandler {
                     true
                 )
                 tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, clickTMapPoint)
-                setPanel(clickTMapPoint)
+                setPanel(clickTMapPoint, true)
             }
         }
     }
@@ -211,13 +211,17 @@ class MapFragment : Fragment(), MapHandler {
                         currentTMapPoint.longitude
                     )
                     tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, currentTMapPoint)
-                    setPanel(currentTMapPoint)
+                    setPanel(currentTMapPoint, false)
                 }
         }
     }
 
-    override fun setPanel(tMapPoint: TMapPoint) {
-        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
+    override fun setPanel(tMapPoint: TMapPoint, isClickedFromPlaceSearch: Boolean) {
+        placeSearchViewModel.getGeoLocationInfo(
+            tMapPoint.latitude,
+            tMapPoint.longitude,
+            isClickedFromPlaceSearch
+        )
     }
 
     override fun setOnLocationChangeListener(location: android.location.Location) {
