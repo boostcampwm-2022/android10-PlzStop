@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class RouteIdMsgBody(
     @Json(name = "itemList")
-    val busRoutes: List<BusRouteInfo>
+    val busRoutes: List<BusRouteInfo>?
 )

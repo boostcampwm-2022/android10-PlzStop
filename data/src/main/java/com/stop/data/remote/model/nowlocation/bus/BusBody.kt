@@ -5,5 +5,5 @@ import com.stop.domain.model.nowlocation.BusCurrentInformation
 
 data class BusBody(
     @Json(name = "itemList")
-    val busCurrentInformation: List<BusCurrentInformation>
+    val busCurrentInformation: List<BusCurrentInformation>?
 )
