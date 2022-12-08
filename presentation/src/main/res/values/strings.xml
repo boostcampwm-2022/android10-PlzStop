@@ -72,4 +72,5 @@
     <string name="image_view_icon_content_description">승차지의 종류를 나타내는 아이콘입니다.</string>
     <string name="loading_text">Loading..</string>
     <string name="recent_search_no_data_tet">장소, 주소를 검색하세요</string>
+    <string name="route_type_image_content_description">대중 교통의 종류를 나타내는 이미지입니다.</string>
 </resources>

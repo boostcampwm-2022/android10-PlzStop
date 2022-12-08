@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/text_view_section_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/time_stick_border"
+        android:gravity="center"
+        android:minWidth="60dp"
+        android:minHeight="20dp"
+        android:paddingVertical="3dp"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/dummy_view"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="15분" />
+
+    <Button
+        android:id="@+id/dummy_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/image_view_icon"
+        app:layout_constraintEnd_toEndOf="@id/image_view_icon"
+        app:layout_constraintStart_toStartOf="@id/image_view_icon"
+        app:layout_constraintTop_toTopOf="@id/image_view_icon"
+        tools:layout_editor_absoluteY="234dp" />
+
+    <View
+        android:id="@+id/view_icon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/time_stick_round_background"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/image_view_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:contentDescription="@string/image_view_icon_content_description"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@id/view_icon"
+        app:layout_constraintStart_toStartOf="@id/view_icon"
+        app:layout_constraintTop_toTopOf="@id/view_icon"
+        app:layout_constraintEnd_toEndOf="@id/view_icon"
+        tools:src="@drawable/time_line_directions_walk_16" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
