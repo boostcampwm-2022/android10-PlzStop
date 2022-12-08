@@ -210,7 +210,7 @@ class MissionFragment : Fragment(), MissionHandler {
         val linePoints = arrayListOf<TMapPoint>()
         val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
         Log.d("MissionWorker", "route 그리기 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
-        drawWalkRoute(walkInfo, linePoints)
+        tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 
         missionViewModel.destination.value = walkInfo.end
@@ -227,17 +227,6 @@ class MissionFragment : Fragment(), MissionHandler {
         )
         tMap.latitudes.add(latitude)
         tMap.longitudes.add(longitude)
-    }
-
-
-    private fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
-        route.steps.forEach { step ->
-            step.lineString.split(" ").forEach { coordinate ->
-                val points = coordinate.split(",")
-
-                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
-            }
-        }
     }
 
     companion object {
