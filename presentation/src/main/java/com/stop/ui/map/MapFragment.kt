@@ -1,7 +1,9 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +19,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
+import com.stop.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -68,6 +71,7 @@ class MapFragment : Fragment(), MapHandler {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
+        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -222,9 +226,15 @@ class MapFragment : Fragment(), MapHandler {
     private fun listenButtonClick(){
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
+            turnOffSoundService()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(context, SoundService::class.java)
+        requireContext().stopService(intent)
     }
 
     override fun onDestroyView() {
@@ -239,6 +249,11 @@ class MapFragment : Fragment(), MapHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
+    }
+
+    fun setMissionStart() {
+        Log.d("MissionWorker","mission 버튼 클릭")
+       findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {

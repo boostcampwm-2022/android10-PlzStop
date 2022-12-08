@@ -1,22 +1,27 @@
 package com.stop.ui.mission
 
+import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
+import com.stop.domain.model.route.tmap.custom.Place
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -26,11 +31,10 @@ class MissionFragment : Fragment(), MissionHandler {
     private val binding: FragmentMissionBinding
         get() = _binding!!
 
-    private val viewModel: MissionViewModel by viewModels()
+    private val missionViewModel: MissionViewModel by viewModels()
+    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
 
     private lateinit var tMap: MissionTMap
-
-    private var beforeLocation = INIT_LOCATION
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,8 +51,9 @@ class MissionFragment : Fragment(), MissionHandler {
         setDataBinding()
         initViewModel()
         initTMap()
-        initView()
         setObserve()
+        drawPersonLine()
+
     }
 
     override fun onDestroyView() {
@@ -59,7 +64,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        binding.viewModel = missionViewModel
+        binding.fragment = this@MissionFragment
     }
 
     private fun initTMap() {
@@ -70,44 +76,42 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun initViewModel() {
-        viewModel.setDestination(DESTINATION)
-        viewModel.countDownWith(LEFT_TIME)
+        missionViewModel.countDownWith(LEFT_TIME)
     }
 
-    private fun initView() {
-        binding.layoutCompass.setOnClickListener {
-            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+    fun setCompassMode() {
+        tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+    }
+
+    fun setPersonCurrent() {
+        tMap.tMapView.setCenterPoint(
+            missionViewModel.personCurrentLocation.latitude,
+            missionViewModel.personCurrentLocation.longitude,
+            true
+        )
+
+        tMap.isTracking = true
+        tMap.tMapView.zoomLevel = 16
+    }
+
+    fun setZoomOut() {
+        with(tMap) {
+            latitudes.clear()
+            longitudes.clear()
+            latitudes.add((missionViewModel.destination.value?.coordinate?.latitude ?: "37.553836").toDouble())
+            longitudes.add((missionViewModel.destination.value?.coordinate?.longitude ?: "126.969652").toDouble())
+            latitudes.add(missionViewModel.personCurrentLocation.latitude)
+            longitudes.add(missionViewModel.personCurrentLocation.longitude)
+            setRouteDetailFocus()
+            isTracking = false
         }
-
-        binding.layoutPersonCurrent.setOnClickListener {
-            tMap.tMapView.setCenterPoint(
-                viewModel.personCurrentLocation.latitude,
-                viewModel.personCurrentLocation.longitude,
-                true
-            )
-
-            tMap.isTracking = true
-            tMap.isTransportTracking = false
-        }
-
-        binding.layoutBusCurrent.setOnClickListener {
-            tMap.tMapView.setCenterPoint(
-                viewModel.busCurrentLocation.latitude,
-                viewModel.busCurrentLocation.longitude,
-                true
-            )
-
-            tMap.isTracking = false
-            tMap.isTransportTracking = true
-        }
-
     }
 
     private fun setObserve() {
         val shortAnimationDuration =
             resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        viewModel.timeIncreased.observe(viewLifecycleOwner) {
+        missionViewModel.timeIncreased.observe(viewLifecycleOwner) {
             val sign = if (it > 0) {
                 PLUS
             } else {
@@ -133,124 +137,127 @@ class MissionFragment : Fragment(), MissionHandler {
                     })
             }
         }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { errorType ->
-                val message = getString(errorType.stringResourcesId)
-
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        }
-        viewModel.transportIsArrived.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { isArrived ->
-                if (isArrived) {
-                    Toast.makeText(requireContext(), "도착했습니다.", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
-    }
-
-    private fun drawBusLocationLine() {
-        viewModel.busNowLocationInfo.observe(viewLifecycleOwner) { nowLocations ->
-            val nowLocation = nowLocations.first()
-
-            if (beforeLocation != INIT_LOCATION) {
-                tMap.drawMoveLine(
-                    TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble()),
-                    TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                    Marker.BUS_LINE +  BUS_LINE_NUM.toString(),
-                    Marker.BUS_LINE_COLOR
-                )
-                BUS_LINE_NUM += 1
-            }
-            beforeLocation = Location(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
-
-            viewModel.busCurrentLocation = beforeLocation
-
-            tMap.addMarker(
-                Marker.BUS_MARKER,
-                Marker.BUS_MARKER_IMG,
-                TMapPoint(nowLocation.latitude.toDouble(), nowLocation.longitude.toDouble())
-            )
-            tMap.trackingTransport(beforeLocation)
-        }
-    }
-
-    private fun drawSubwayLocationLine() {
-        viewModel.subwayRoute.observe(viewLifecycleOwner) { subwayRoute ->
-            viewLifecycleOwner.lifecycleScope.launch {
-                val timeUnit = (subwayRoute.sectionTime * SECOND_UNIT / subwayRoute.line.size).toLong()
-                subwayRoute.line.forEachIndexed { index, nowLocation ->
-                    if (index == 0) {
-                        return@forEachIndexed
-                    }
-
-                    val beforeLocation = subwayRoute.line[index - 1]
-                    tMap.drawMoveLine(
-                        TMapPoint(nowLocation.latitude, nowLocation.longitude),
-                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                        Marker.SUBWAY_LINE + (index - 1).toString(),
-                        Marker.SUBWAY_LINE_COLOR
-                    )
-
-                    viewModel.busCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
-
-                    tMap.addMarker(
-                        Marker.SUBWAY_MARKER,
-                        Marker.SUBWAY_MARKER_IMG,
-                        TMapPoint(nowLocation.latitude, nowLocation.longitude)
-                    )
-
-                    delay(timeUnit)
-                }
-            }
-
-        }
     }
 
     override fun alertTMapReady() {
-        //mimicUserMove()
-        tMap.setTrackingMode()
-        drawBusLocationLine()
-        drawSubwayLocationLine()
-    }
-
-    override fun setOnLocationChangeListener(nowLocation: TMapPoint, beforeLocation: TMapPoint, canMakeLine: Boolean) {
-        if (canMakeLine) {
-            tMap.drawMoveLine(
-                nowLocation,
-                beforeLocation,
-                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
-                Marker.PERSON_LINE_COLOR
-            )
-            PERSON_LINE_NUM += 1
-        }
-        viewModel.personCurrentLocation = Location(nowLocation.latitude, nowLocation.longitude)
+        requestPermissionsLauncher.launch(PERMISSIONS)
+        getAlarmInfo()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
         tMap.apply {
             tMapView.setOnEnableScrollWithZoomLevelListener { _, _ ->
                 isTracking = false
-                isTransportTracking = false
+            }
+        }
+    }
+
+    private val requestPermissionsLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        if (permissions.entries.any { it.value }) {
+            tMap.isTracking = false
+        }
+    }
+
+    private fun drawPersonLine() {
+        var first = 0
+        lateinit var beforeLocation: Location
+        lifecycleScope.launch {
+            missionViewModel.userLocation.collect { userLocation ->
+                when (first) {
+                    0 -> {
+                        first += 1
+                    }
+                    1 -> {
+                        initMarker(userLocation)
+                        beforeLocation = userLocation
+                        first += 1
+                    }
+                    else -> {
+                        drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
+                        missionViewModel.personCurrentLocation = userLocation
+                        if (tMap.isTracking) {
+                            tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                        }
+                        beforeLocation = userLocation
+                    }
+                }
+            }
+        }
+    }
+
+    private fun initMarker(nowLocation: Location) {
+        with(tMap) {
+            addMarker(
+                Marker.PERSON_MARKER,
+                Marker.PERSON_MARKER_IMG,
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+            )
+            missionViewModel.personCurrentLocation = nowLocation
+            latitudes.add(nowLocation.latitude)
+            longitudes.add(nowLocation.longitude)
+            setRouteDetailFocus()
+        }
+    }
+
+    private fun drawNowLocationLine(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
+        tMap.drawMoveLine(
+            nowLocation,
+            beforeLocation,
+            Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+            Marker.PERSON_LINE_COLOR
+        )
+        PERSON_LINE_NUM += 1
+
+        tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
+    }
+
+    private fun getAlarmInfo() {
+        alarmSettingViewModel.getAlarm()
+        val linePoints = arrayListOf<TMapPoint>()
+        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
+        Log.d("MissionWorker", "route 그리기 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
+        drawWalkRoute(walkInfo, linePoints)
+        tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
+
+        missionViewModel.destination.value = walkInfo.end
+        makeDestinationMarker(walkInfo.end)
+    }
+
+    private fun makeDestinationMarker(destination: Place) {
+        val latitude = destination.coordinate.latitude.toDouble()
+        val longitude = destination.coordinate.longitude.toDouble()
+        tMap.addMarker(
+            Marker.DESTINATION_MARKER,
+            Marker.DESTINATION_MARKER_IMG,
+            TMapPoint(latitude, longitude)
+        )
+        tMap.latitudes.add(latitude)
+        tMap.longitudes.add(longitude)
+    }
+
+
+    private fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
+        route.steps.forEach { step ->
+            step.lineString.split(" ").forEach { coordinate ->
+                val points = coordinate.split(",")
+
+                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
             }
         }
     }
 
     companion object {
 
-        private const val DESTINATION = "구로3동현대아파트"
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
 
         private var PERSON_LINE_NUM = 0
 
-        private var BUS_LINE_NUM = 0
-
-        private val INIT_LOCATION = Location(0.0, 0.0)
-
-        private const val SECOND_UNIT = 1_000
+        private val PERMISSIONS =
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     }
 }
