@@ -70,6 +70,7 @@ class MapFragment : Fragment(), MapHandler {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
+        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -131,7 +132,7 @@ class MapFragment : Fragment(), MapHandler {
 
         alarmViewModel.getAlarm()
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
 
@@ -221,7 +222,7 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick(){
+    private fun listenButtonClick() {
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
             turnOffSoundService()
@@ -247,6 +248,10 @@ class MapFragment : Fragment(), MapHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
+    }
+
+    fun setMissionStart() {
+        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {
