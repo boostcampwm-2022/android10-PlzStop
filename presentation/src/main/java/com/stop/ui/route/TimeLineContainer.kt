@@ -3,7 +3,6 @@ package com.stop.ui.route
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -59,7 +58,7 @@ class TimeLineContainer(
                 val timeLineItem2Binding = TimeLineItem2Binding.inflate(
                     LayoutInflater.from(context),
                     this@TimeLineContainer,
-                    false,
+                    true,
                 ).apply {
                     root.id = View.generateViewId()
                     if (index != 0) {
@@ -70,8 +69,6 @@ class TimeLineContainer(
                     }
                 }
 
-
-                addView(timeLineItem2Binding.root)
                 setBindingAttribute(timeLineItem2Binding, route, index)
             }
         }
@@ -122,7 +119,6 @@ class TimeLineContainer(
         setConstraint(binding)
     }
 
-    // viewIcon 위주로 설정하면 됨
     private fun setConstraint(binding: TimeLineItem2Binding) {
         val endId = beforeViewIconId ?: this@TimeLineContainer.id
         val endSide = if (beforeViewIconId == null) {
@@ -130,7 +126,6 @@ class TimeLineContainer(
         } else {
             ConstraintSet.END
         }
-        TransitionManager.beginDelayedTransition(this@TimeLineContainer)
 
         with(ConstraintSet()) {
             clone(this@TimeLineContainer)
