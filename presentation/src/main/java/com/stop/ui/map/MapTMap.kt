@@ -13,11 +13,15 @@ import com.stop.ui.util.TMap
 
 class MapTMap(
     context: Context,
-    private val handler: MapHandler,
+    private var handler: MapHandler,
 ) : TMap(context, handler) {
 
     private val enablePoints = mutableSetOf<Location>()
     private var isLongClick = false
+
+    fun setHandler(handler: MapHandler) {
+        this.handler = handler
+    }
 
     fun initListener() {
         tMapView.setOnClickListenerCallback(onClickListenerCallback)

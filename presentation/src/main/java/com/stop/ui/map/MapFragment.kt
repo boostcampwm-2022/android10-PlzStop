@@ -52,14 +52,14 @@ class MapFragment : Fragment(), MapHandler {
         initNavigateAction()
         initBottomSheetBehavior()
         initBottomSheetView()
+
+        observeClickPlace()
+        observeClickCurrentLocation()
     }
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
-
         tMap.initListener()
-        observeClickPlace()
-        observeClickCurrentLocation()
     }
 
     private fun initBinding() {
@@ -69,8 +69,14 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initTMap() {
-        tMap = MapTMap(requireActivity(), this)
-        tMap.init()
+        placeSearchViewModel.tMap?.let {
+            tMap = it
+            tMap.setHandler(this)
+        } ?: run {
+            tMap = MapTMap(requireActivity(), this)
+            tMap.init()
+            placeSearchViewModel.tMap = tMap
+        }
 
         binding.layoutContainer.addView(tMap.tMapView)
     }
@@ -232,6 +238,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     override fun onDestroyView() {
+        binding.layoutContainer.removeView(tMap.tMapView)
         _binding = null
 
         super.onDestroyView()

@@ -15,6 +15,7 @@ import com.stop.domain.usecase.nearplace.InsertRecentPlaceSearchUseCase
 import com.stop.model.Event
 import com.stop.model.Location
 import com.stop.model.route.Coordinate
+import com.stop.ui.map.MapTMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -36,6 +37,8 @@ class PlaceSearchViewModel @Inject constructor(
     var currentLocation = Location(37.553836, 126.969652)
 
     var panelInfo: com.stop.model.route.Place? = null
+
+    var tMap: MapTMap? = null
 
     private val _nearPlaces = MutableStateFlow<List<PlaceUseCaseItem>>(emptyList())
     val nearPlaces: StateFlow<List<PlaceUseCaseItem>> = _nearPlaces
