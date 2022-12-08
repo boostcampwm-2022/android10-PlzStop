@@ -1,5 +1,6 @@
 package com.stop.ui.alarmsetting
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,7 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +55,7 @@ class AlarmSettingViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getAlarmUseCase.getAlarm().collectLatest {
                 _alarmItem.value = it
-
+                Log.d("MissonWorker","alarm viewModel에서 가져오나? ${_alarmItem.value}  ${_alarmItem.value?.routes}")
                 _isAlarmItemNotNull.value = it != null
             }
         }
@@ -67,7 +68,7 @@ class AlarmSettingViewModel @Inject constructor(
     }
 
     fun callAlarm(time: String) {
-        alarmFunctions.callAlarm(time, alarmTime.value ?: 0, ALARM_CODE)
+        alarmFunctions.callAlarm("01:00:00", alarmTime.value ?: 0, ALARM_CODE)
     }
 
     fun cancelAlarm() {

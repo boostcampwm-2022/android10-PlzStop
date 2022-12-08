@@ -12,6 +12,10 @@
         <variable
             name="alarmViewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
+
+        <variable
+            name="fragment"
+            type="com.stop.ui.map.MapFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -150,6 +154,7 @@
                 <include
                     android:id="@+id/home_bottom_sheet"
                     bind:alarmViewModel="@{alarmViewModel}"
+                    bind:fragment="@{fragment}"
                     layout="@layout/home_bottom_sheet" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.coordinatorlayout.widget.CoordinatorLayout>

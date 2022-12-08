@@ -4,13 +4,12 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
-import com.stop.model.ErrorType
-import com.stop.model.Event
+import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 import kotlin.random.Random
 
@@ -22,9 +21,7 @@ class MissionViewModel @Inject constructor(
 
     private val random = Random(System.currentTimeMillis())
 
-    private val _destination = MutableLiveData<String>()
-    val destination: LiveData<String>
-        get() = _destination
+    val destination= MutableLiveData<Place>()
 
     private val _timeIncreased = MutableLiveData<Int>()
     val timeIncreased: LiveData<Int>
@@ -33,14 +30,6 @@ class MissionViewModel @Inject constructor(
     private val _estimatedTimeRemaining = MutableLiveData<Int>()
     val estimatedTimeRemaining: LiveData<Int>
         get() = _estimatedTimeRemaining
-
-    private val _errorMessage = MutableLiveData<Event<ErrorType>>()
-    val errorMessage: LiveData<Event<ErrorType>>
-        get() = _errorMessage
-
-    private val _transportIsArrived = MutableLiveData<Event<Boolean>>()
-    val transportIsArrived: LiveData<Event<Boolean>>
-        get() = _transportIsArrived
 
     val leftMinute: LiveData<String> = Transformations.switchMap(estimatedTimeRemaining) {
         MutableLiveData<String>().apply {
@@ -62,10 +51,6 @@ class MissionViewModel @Inject constructor(
 
     init {
         makeMissionWorker()
-    }
-
-    fun setDestination(inputDestination: String) {
-        _destination.value = inputDestination
     }
 
     fun countDownWith(startTime: Int) {

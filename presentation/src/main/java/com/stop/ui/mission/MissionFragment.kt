@@ -8,15 +8,18 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
+import com.stop.domain.model.route.tmap.custom.Place
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -28,7 +31,8 @@ class MissionFragment : Fragment(), MissionHandler {
     private val binding: FragmentMissionBinding
         get() = _binding!!
 
-    private val viewModel: MissionViewModel by viewModels()
+    private val missionViewModel: MissionViewModel by viewModels()
+    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
 
     private lateinit var tMap: MissionTMap
 
@@ -60,7 +64,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
+        binding.viewModel = missionViewModel
         binding.fragment = this@MissionFragment
     }
 
@@ -72,8 +76,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun initViewModel() {
-        viewModel.setDestination(DESTINATION)
-        viewModel.countDownWith(LEFT_TIME)
+        missionViewModel.countDownWith(LEFT_TIME)
     }
 
     fun setCompassMode() {
@@ -82,8 +85,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     fun setPersonCurrent() {
         tMap.tMapView.setCenterPoint(
-            viewModel.personCurrentLocation.latitude,
-            viewModel.personCurrentLocation.longitude,
+            missionViewModel.personCurrentLocation.latitude,
+            missionViewModel.personCurrentLocation.longitude,
             true
         )
 
@@ -95,10 +98,10 @@ class MissionFragment : Fragment(), MissionHandler {
         with(tMap) {
             latitudes.clear()
             longitudes.clear()
-            latitudes.add(TEST_DESTINATION.latitude)
-            longitudes.add(TEST_DESTINATION.longitude)
-            latitudes.add(viewModel.personCurrentLocation.latitude)
-            longitudes.add(viewModel.personCurrentLocation.longitude)
+            latitudes.add((missionViewModel.destination.value?.coordinate?.latitude ?: "37.553836").toDouble())
+            longitudes.add((missionViewModel.destination.value?.coordinate?.longitude ?: "126.969652").toDouble())
+            latitudes.add(missionViewModel.personCurrentLocation.latitude)
+            longitudes.add(missionViewModel.personCurrentLocation.longitude)
             setRouteDetailFocus()
             isTracking = false
         }
@@ -108,7 +111,7 @@ class MissionFragment : Fragment(), MissionHandler {
         val shortAnimationDuration =
             resources.getInteger(android.R.integer.config_shortAnimTime)
 
-        viewModel.timeIncreased.observe(viewLifecycleOwner) {
+        missionViewModel.timeIncreased.observe(viewLifecycleOwner) {
             val sign = if (it > 0) {
                 PLUS
             } else {
@@ -134,26 +137,11 @@ class MissionFragment : Fragment(), MissionHandler {
                     })
             }
         }
-
-        viewModel.errorMessage.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { errorType ->
-                val message = getString(errorType.stringResourcesId)
-
-                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-            }
-        }
-        viewModel.transportIsArrived.observe(viewLifecycleOwner) {
-            it.getContentIfNotHandled()?.let { isArrived ->
-                if (isArrived) {
-                    Toast.makeText(requireContext(), "도착했습니다.", Toast.LENGTH_LONG).show()
-                }
-            }
-        }
     }
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
-        makeDestinationMarker()
+        getAlarmInfo()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -176,7 +164,7 @@ class MissionFragment : Fragment(), MissionHandler {
         var first = 0
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
-            viewModel.userLocation.collect { userLocation ->
+            missionViewModel.userLocation.collect { userLocation ->
                 when (first) {
                     0 -> {
                         first += 1
@@ -188,7 +176,7 @@ class MissionFragment : Fragment(), MissionHandler {
                             Marker.PERSON_MARKER_IMG,
                             TMapPoint(userLocation.latitude, userLocation.longitude)
                         )
-                        viewModel.personCurrentLocation = userLocation
+                        missionViewModel.personCurrentLocation = userLocation
                         tMap.latitudes.add(userLocation.latitude)
                         tMap.longitudes.add(userLocation.longitude)
                         tMap.setRouteDetailFocus()
@@ -204,7 +192,7 @@ class MissionFragment : Fragment(), MissionHandler {
                             Marker.PERSON_LINE_COLOR
                         )
                         tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
-                        viewModel.personCurrentLocation = userLocation
+                        missionViewModel.personCurrentLocation = userLocation
                         if (tMap.isTracking) {
                             tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                         }
@@ -217,15 +205,43 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    private fun makeDestinationMarker() {
-        tMap.addMarker(Marker.DESTINATION_MARKER, Marker.DESTINATION_MARKER_IMG, TEST_DESTINATION)
-        tMap.latitudes.add(TEST_DESTINATION.latitude)
-        tMap.longitudes.add(TEST_DESTINATION.longitude)
+    private fun getAlarmInfo() {
+        alarmSettingViewModel.getAlarm()
+        val linePoints = arrayListOf<TMapPoint>()
+        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
+        Log.d("MissionWorker", "route 그리기 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
+        drawWalkRoute(walkInfo, linePoints)
+        tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
+
+        missionViewModel.destination.value = walkInfo.end
+        makeDestinationMarker(walkInfo.end)
+    }
+
+    private fun makeDestinationMarker(destination: Place) {
+        val latitude = destination.coordinate.latitude.toDouble()
+        val longitude = destination.coordinate.longitude.toDouble()
+        tMap.addMarker(
+            Marker.DESTINATION_MARKER,
+            Marker.DESTINATION_MARKER_IMG,
+            TMapPoint(latitude, longitude)
+        )
+        tMap.latitudes.add(latitude)
+        tMap.longitudes.add(longitude)
+    }
+
+
+    private fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
+        route.steps.forEach { step ->
+            step.lineString.split(" ").forEach { coordinate ->
+                val points = coordinate.split(",")
+
+                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
+            }
+        }
     }
 
     companion object {
 
-        private const val DESTINATION = "구로3동현대아파트"
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
@@ -234,8 +250,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
         private val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
-        private val TEST_DESTINATION = TMapPoint(37.553836, 126.969652)
 
     }
 }

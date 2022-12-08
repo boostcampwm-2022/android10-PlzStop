@@ -20,4 +20,7 @@ object Marker {
 
     const val DESTINATION_MARKER = "destination_marker"
     const val DESTINATION_MARKER_IMG = R.drawable.ic_start_marker
+
+    const val WALK_LINE = "walk_line"
+    const val WALK_LINE_COLOR = Color.BLACK
 }

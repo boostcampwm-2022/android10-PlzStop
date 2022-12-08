@@ -20,4 +20,12 @@ class MissionTMap(
         tMapView.addTMapPolyLine(polyLine)
     }
 
+    fun drawWalkLines(points: ArrayList<TMapPoint>, id: String, color: Int) {
+        val polyLine = TMapPolyLine(id, points).apply {
+            lineColor = color
+            outLineColor = color
+        }
+        tMapView.addTMapPolyLine(polyLine)
+    }
+
 }
