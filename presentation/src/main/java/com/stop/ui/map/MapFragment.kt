@@ -3,7 +3,6 @@ package com.stop.ui.map
 import android.Manifest.permission
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,12 +18,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
-import com.stop.SoundService
+import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
+import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
@@ -53,7 +54,6 @@ class MapFragment : Fragment(), MapHandler {
         super.onViewCreated(view, savedInstanceState)
 
         initTMap()
-        initView()
         initNavigateAction()
         initBottomSheetBehavior()
         listenButtonClick()
@@ -68,6 +68,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBinding() {
+        alarmViewModel.getAlarm()
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
@@ -79,6 +80,8 @@ class MapFragment : Fragment(), MapHandler {
         tMap.init()
 
         binding.frameLayoutContainer.addView(tMap.tMapView)
+
+        initView()
     }
 
     private fun initView() {
@@ -129,11 +132,14 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBottomSheetBehavior() {
+        val displaySize = requireContext().getScreenSize()
+        val displayHeight = displaySize.height
+
+        binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
+
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.getAlarm()
-
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
 
@@ -223,7 +229,7 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick(){
+    private fun listenButtonClick() {
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
             turnOffSoundService()
@@ -235,6 +241,21 @@ class MapFragment : Fragment(), MapHandler {
     private fun turnOffSoundService() {
         val intent = Intent(context, SoundService::class.java)
         requireContext().stopService(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
+            if (it == ALARM_MAP_CODE) {
+                showBottomSheet()
+            }
+        }
+    }
+
+    private fun showBottomSheet() {
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     override fun onDestroyView() {
@@ -252,8 +273,12 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        Log.d("MissionWorker","mission 버튼 클릭")
-       findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        alarmViewModel.lastTimeCountDown.value?.let {
+            if (it.isBlank()) {
+                alarmViewModel.startCountDownTimer()
+            }
+        }
+        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {

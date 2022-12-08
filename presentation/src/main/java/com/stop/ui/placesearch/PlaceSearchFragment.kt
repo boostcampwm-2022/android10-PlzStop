@@ -154,7 +154,11 @@ class PlaceSearchFragment : Fragment() {
             editTextFlow
                 .debounce(500)
                 .onEach {
-                    placeSearchViewModel.getNearPlaces(it.toString())
+                    if(it.toString().isBlank()){
+                        placeSearchViewModel.setNearPlacesEmpty()
+                    }else{
+                        placeSearchViewModel.getNearPlaces(it.toString())
+                    }
                 }
                 .launchIn(this)
         }

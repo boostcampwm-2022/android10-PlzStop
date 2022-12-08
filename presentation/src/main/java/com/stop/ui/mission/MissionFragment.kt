@@ -2,9 +2,7 @@ package com.stop.ui.mission
 
 import android.Manifest
 import android.animation.Animator
-import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
@@ -22,6 +21,7 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -32,9 +32,11 @@ class MissionFragment : Fragment(), MissionHandler {
         get() = _binding!!
 
     private val missionViewModel: MissionViewModel by viewModels()
-    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
+    private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap
+
+    var personCurrentLocation = Location(37.553836, 126.969652)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,10 +51,9 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onViewCreated(view, savedInstanceState)
 
         setDataBinding()
-        initViewModel()
         initTMap()
-        setObserve()
-        drawPersonLine()
+        setMissionOver()
+        setMissionFail()
 
     }
 
@@ -64,7 +65,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setDataBinding() {
         binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = missionViewModel
+        binding.missionViewModel = missionViewModel
+        binding.alarmSettingViewModel = alarmSettingViewModel
         binding.fragment = this@MissionFragment
     }
 
@@ -75,18 +77,14 @@ class MissionFragment : Fragment(), MissionHandler {
         binding.constraintLayoutContainer.addView(tMap.tMapView)
     }
 
-    private fun initViewModel() {
-        missionViewModel.countDownWith(LEFT_TIME)
-    }
-
     fun setCompassMode() {
         tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
     }
 
     fun setPersonCurrent() {
         tMap.tMapView.setCenterPoint(
-            missionViewModel.personCurrentLocation.latitude,
-            missionViewModel.personCurrentLocation.longitude,
+            personCurrentLocation.latitude,
+            personCurrentLocation.longitude,
             true
         )
 
@@ -98,50 +96,25 @@ class MissionFragment : Fragment(), MissionHandler {
         with(tMap) {
             latitudes.clear()
             longitudes.clear()
-            latitudes.add((missionViewModel.destination.value?.coordinate?.latitude ?: "37.553836").toDouble())
-            longitudes.add((missionViewModel.destination.value?.coordinate?.longitude ?: "126.969652").toDouble())
-            latitudes.add(missionViewModel.personCurrentLocation.latitude)
-            longitudes.add(missionViewModel.personCurrentLocation.longitude)
+            latitudes.add(missionViewModel.destination.value.coordinate.latitude.toDouble())
+            longitudes.add(missionViewModel.destination.value.coordinate.longitude.toDouble())
+            latitudes.add(personCurrentLocation.latitude)
+            longitudes.add(personCurrentLocation.longitude)
             setRouteDetailFocus()
             isTracking = false
         }
     }
 
-    private fun setObserve() {
-        val shortAnimationDuration =
-            resources.getInteger(android.R.integer.config_shortAnimTime)
-
-        missionViewModel.timeIncreased.observe(viewLifecycleOwner) {
-            val sign = if (it > 0) {
-                PLUS
-            } else {
-                MINUS
-            }
-            binding.textViewChangedTime.text =
-                resources.getString(R.string.number_format).format(sign, it)
-            binding.textViewChangedTime.apply {
-                alpha = 0f
-                visibility = View.VISIBLE
-                animate().alpha(1f)
-                    .setDuration(shortAnimationDuration.toLong())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            animate().alpha(0f)
-                                .setDuration(shortAnimationDuration.toLong())
-                                .setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        binding.textViewChangedTime.visibility = View.GONE
-                                    }
-                                })
-                        }
-                    })
-            }
-        }
+    fun clickMissionOver() {
+        Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
+        missionViewModel.isMissionOver.value = true
+        //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
         getAlarmInfo()
+        drawPersonLine()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -161,27 +134,20 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun drawPersonLine() {
-        var first = 0
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
-            missionViewModel.userLocation.collect { userLocation ->
-                when (first) {
-                    0 -> {
-                        first += 1
+            missionViewModel.userLocation.collectIndexed { index, userLocation ->
+                if (index == 1) {
+                    initMarker(userLocation)
+                    beforeLocation = userLocation
+                } else if (index > 1) {
+                    drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
+                    personCurrentLocation = userLocation
+                    if (tMap.isTracking) {
+                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                     }
-                    1 -> {
-                        initMarker(userLocation)
-                        beforeLocation = userLocation
-                        first += 1
-                    }
-                    else -> {
-                        drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
-                        missionViewModel.personCurrentLocation = userLocation
-                        if (tMap.isTracking) {
-                            tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
-                        }
-                        beforeLocation = userLocation
-                    }
+                    beforeLocation = userLocation
+                    arriveDestination(userLocation.latitude, userLocation.longitude)
                 }
             }
         }
@@ -194,10 +160,11 @@ class MissionFragment : Fragment(), MissionHandler {
                 Marker.PERSON_MARKER_IMG,
                 TMapPoint(nowLocation.latitude, nowLocation.longitude)
             )
-            missionViewModel.personCurrentLocation = nowLocation
+            personCurrentLocation = nowLocation
             latitudes.add(nowLocation.latitude)
             longitudes.add(nowLocation.longitude)
             setRouteDetailFocus()
+            arriveDestination(nowLocation.latitude, nowLocation.longitude)
         }
     }
 
@@ -217,8 +184,7 @@ class MissionFragment : Fragment(), MissionHandler {
         alarmSettingViewModel.getAlarm()
         val linePoints = arrayListOf<TMapPoint>()
         val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
-        Log.d("MissionWorker", "route 그리기 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
-        drawWalkRoute(walkInfo, linePoints)
+        tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 
         missionViewModel.destination.value = walkInfo.end
@@ -237,27 +203,87 @@ class MissionFragment : Fragment(), MissionHandler {
         tMap.longitudes.add(longitude)
     }
 
+    private fun arriveDestination(nowLatitude: Double, nowLongitude: Double) {
+        if (tMap.getDistance(
+                nowLatitude,
+                nowLongitude,
+                missionViewModel.destination.value.coordinate.latitude.toDouble(),
+                missionViewModel.destination.value.coordinate.longitude.toDouble()
+            ) <= 10
+        ) {
+            missionViewModel.isMissionOver.value = true
+            Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
+            setSuccessAnimation()
 
-    private fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
-        route.steps.forEach { step ->
-            step.lineString.split(" ").forEach { coordinate ->
-                val points = coordinate.split(",")
+        }
+    }
 
-                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
+    private fun setSuccessAnimation() {
+        with(binding.lottieSuccess) {
+            visibility = View.VISIBLE
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener{
+                override fun onAnimationStart(animation: Animator) {
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                }
+            })
+        }
+    }
+
+    private fun setMissionFail() {
+        alarmSettingViewModel.isMissionFail.observe(viewLifecycleOwner) { isMissionFail ->
+            if (isMissionFail) {
+                setFailAnimation()
+                missionViewModel.isMissionOver.value = true
+            }
+        }
+    }
+
+    private fun setFailAnimation() {
+        with(binding.lottieFail) {
+            visibility = View.VISIBLE
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener{
+                override fun onAnimationStart(animation: Animator) {
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                }
+            })
+        }
+    }
+
+    private fun setMissionOver() {
+        lifecycleScope.launch {
+            missionViewModel.isMissionOver.collect { isMissionOver ->
+                if (isMissionOver) {
+                    missionViewModel.cancelMission()
+                    alarmSettingViewModel.deleteAlarm()
+                }
             }
         }
     }
 
     companion object {
-
-        private const val PLUS = "+"
-        private const val MINUS = ""
-        private const val LEFT_TIME = 60
-
         private var PERSON_LINE_NUM = 0
 
         private val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
     }
 }

@@ -64,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
-            android:text="@string/last_time"
+            android:text="@string/now_last_time"
             android:textSize="12sp"
             android:textColor="@color/main_light_grey"
             android:visibility="@{routeItem.lastTime != null ? View.VISIBLE : View.INVISIBLE}"

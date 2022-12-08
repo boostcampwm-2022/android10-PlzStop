@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="placeSearchViewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
@@ -90,8 +90,8 @@
 
             <include
                 android:id="@+id/home_panel"
-                bind:placeSearchViewModel="@{placeSearchViewModel}"
-                layout="@layout/home_panel" />
+                layout="@layout/home_panel"
+                bind:placeSearchViewModel="@{placeSearchViewModel}" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -153,10 +153,20 @@
 
                 <include
                     android:id="@+id/home_bottom_sheet"
+                    layout="@layout/home_bottom_sheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     bind:alarmViewModel="@{alarmViewModel}"
-                    bind:fragment="@{fragment}"
-                    layout="@layout/home_bottom_sheet" />
+                    bind:fragment="@{fragment}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

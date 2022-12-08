@@ -58,52 +58,92 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="35dp" />
 
+        <View
+            android:id="@+id/view_top"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:background="@color/main_dark_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_search"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/background_search"
+            app:layout_constraintBottom_toBottomOf="@id/view_top"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start" />
+
         <TextView
             android:id="@+id/text_view_start_position"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_gray_d9_8"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/start_position_text(startPosition)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+            android:text="@{startPosition}"
+            android:textColor="@color/main_light_grey"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toStartOf="@id/image_view_arrow_right"
+            app:layout_constraintStart_toStartOf="@id/view_search"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            tools:text="출발지" />
+
+        <ImageView
+            android:id="@+id/image_view_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toEndOf="@id/view_search"
+            app:layout_constraintStart_toStartOf="@id/view_search"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
             android:id="@+id/text_view_end_position"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/background_gray_d9_8"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/end_position_text(endPosition)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            android:text="@{endPosition}"
+            android:textColor="@color/main_light_grey"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toEndOf="@id/view_search"
+            app:layout_constraintStart_toEndOf="@id/image_view_arrow_right"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            tools:text="도착지" />
+
+        <ImageView
+            android:id="@+id/image_view_transport"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_bus"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_start_position" />
+            app:layout_constraintTop_toBottomOf="@id/view_top" />
 
         <TextView
             android:id="@+id/text_view_last_time"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="21sp"
             android:text="@{@string/last_transport_arrival_time(lastTime)}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_transport"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_end_position" />
-
+            app:layout_constraintStart_toEndOf="@id/image_view_transport"
+            app:layout_constraintTop_toTopOf="@id/image_view_transport"
+            tools:text="막차 도착 예정 시간 23:30:10" />
 
         <ImageView
             android:id="@+id/image_view_walk"
@@ -111,20 +151,33 @@
             android:layout_height="96dp"
             android:layout_marginTop="36dp"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_last_time"
+            app:layout_constraintTop_toBottomOf="@id/image_view_transport"
             app:srcCompat="@drawable/ic_baseline_directions_walk_32" />
 
         <TextView
             android:id="@+id/text_view_walk"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@id/image_view_walk"
             android:text="@{@string/last_transport_walking_time(walkTime)}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_walk"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toEndOf="@id/image_view_walk"
-            app:layout_constraintTop_toTopOf="@id/image_view_walk" />
+            app:layout_constraintTop_toTopOf="@id/image_view_walk"
+            tools:text="정류장까지의 예상 도보 시간 : 10분" />
+
+        <TextView
+            android:id="@+id/text_view_alarm_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/alarm_time_text(alarmViewModel.alarmTime)}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="21sp"
+            app:layout_constraintBottom_toBottomOf="@id/number_picker_alarm_time"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toTopOf="@id/number_picker_alarm_time"
+            tools:text="막차시간 10분전에\n알람이 울리도록\n설정하시겠습니까?" />
 
         <NumberPicker
             android:id="@+id/number_picker_alarm_time"
@@ -137,48 +190,15 @@
             app:layout_constraintStart_toEndOf="@id/text_view_alarm_time"
             app:layout_constraintTop_toBottomOf="@id/image_view_walk" />
 
-        <TextView
-            android:id="@+id/text_view_alarm_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:text="@{@string/alarm_time_text(alarmViewModel.alarmTime)}"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/number_picker_alarm_time"
-            app:layout_constraintEnd_toStartOf="@id/number_picker_alarm_time"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toTopOf="@id/number_picker_alarm_time"
-            tools:text="알람이 막차시간\n10분전에\n울리도록 설정하시겠습니까?" />
-
-        <TextView
-            android:id="@+id/text_view_alarm_method"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="12dp"
-            android:text="@string/alarm_method_text"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/toggle_group_alarm"
-            app:layout_constraintEnd_toStartOf="@id/toggle_group_alarm"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toTopOf="@id/toggle_group_alarm" />
-
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggle_group_alarm"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:layout_marginBottom="9dp"
             app:checkedButton="@id/button_sound"
             app:layout_constraintBottom_toTopOf="@id/text_view_register_alarm"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toEndOf="@id/text_view_alarm_method"
-            app:layout_constraintTop_toBottomOf="@id/number_picker_alarm_time"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
             app:singleSelection="true">
 
             <com.google.android.material.button.MaterialButton
@@ -186,6 +206,7 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/sound_text" />
 
             <com.google.android.material.button.MaterialButton
@@ -193,19 +214,22 @@
                 style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/wave_text" />
 
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/text_view_register_alarm"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@drawable/button_background"
+            android:gravity="center"
             android:onClick="@{() -> fragment.setAlarmRegisterListener()}"
+            android:padding="10dp"
             android:text="@string/register_alarm_text"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

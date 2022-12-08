@@ -1,4 +1,4 @@
-package com.stop
+package com.stop.alarm
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -9,8 +9,10 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
+import com.stop.R
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
-import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.isMoreThanOreo
+import com.stop.makeFullTime
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.assisted.Assisted
@@ -91,8 +93,8 @@ class LastTimeCheckWorker @AssistedInject constructor(
 
             if(lastTime != resultLastTime && resultLastTime != null){
                 lastTime = resultLastTime
-                alarmFunctions.cancelAlarm(ALARM_CODE)
-                alarmFunctions.callAlarm(resultLastTime, alarmTime, ALARM_CODE)
+                alarmFunctions.cancelAlarm()
+                alarmFunctions.callAlarm(resultLastTime, alarmTime)
             }
 
             val delayTime = getDelayTime()
