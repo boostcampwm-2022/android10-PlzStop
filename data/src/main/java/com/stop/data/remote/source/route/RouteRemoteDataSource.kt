@@ -29,10 +29,10 @@ internal interface RouteRemoteDataSource {
 
     suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo>
     suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo>
-    suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>?
+    suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>
 
     suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation>
     suspend fun getGyeonggiBusRoute(stationId: String): List<GyeonggiBusRoute>
-    suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>?
+    suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>
     suspend fun getGyeonggiBusRouteStations(lineId: String): List<GyeonggiBusStation>
 }

@@ -33,6 +33,16 @@ class MainActivity : AppCompatActivity() {
 
             navHostFragment.navController.graph = graph
         }
+
+        intent?.extras?.getInt("MISSION_CODE")?.let {
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val inflater = navHostFragment.navController.navInflater
+            val graph = inflater.inflate(R.navigation.nav_graph)
+            graph.setStartDestination(R.id.missionFragment)
+
+            navHostFragment.navController.graph = graph
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

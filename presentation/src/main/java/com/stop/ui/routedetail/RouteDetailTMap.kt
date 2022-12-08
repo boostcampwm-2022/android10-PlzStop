@@ -12,11 +12,9 @@ import com.stop.ui.util.TMap
 
 class RouteDetailTMap(
     private val context: Context,
-    private val handler: RouteDetailHandler,
+    handler: RouteDetailHandler,
 ) : TMap(context, handler) {
     private val tMapPoints = arrayListOf<TMapPoint>()
-    private val latitudes = arrayListOf<Double>()
-    private val longitudes = arrayListOf<Double>()
 
     private var polyLine = TMapPolyLine()
 
@@ -76,21 +74,10 @@ class RouteDetailTMap(
             convertToTMapPoint(routes.first().start.coordinate)
         )
         addMarker(
-            Marker.DESTINATION_MARKER,
-            Marker.DESTINATION_MARKER_IMG,
+            Marker.END_MARKER,
+            Marker.END_MARKER_IMG,
             convertToTMapPoint(routes.last().end.coordinate)
         )
-    }
-
-    private fun setRouteDetailFocus() {
-        val maxLatitude = latitudes.max()
-        val minLatitude = latitudes.min()
-        val maxLongitude = longitudes.max()
-        val minLongitude = longitudes.min()
-
-        tMapView.setCenterPoint((maxLatitude + minLatitude) / 2, (maxLongitude + minLongitude) / 2)
-        tMapView.zoomToSpan(maxLatitude - minLatitude, maxLongitude - minLongitude)
-        tMapView.zoomLevel -= 1
     }
 
     private fun addTMapPoints(point: TMapPoint) {

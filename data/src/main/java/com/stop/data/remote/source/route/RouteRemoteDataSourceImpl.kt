@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 internal class RouteRemoteDataSourceImpl @Inject constructor(
     private val tMapApiService: TmapApiService,
-//    private val fakeTmapApiService: FakeTmapApiService,
     private val openApiSeoulService: OpenApiSeoulService,
     private val wsBusApiService: WsBusApiService,
     private val apisDataService: ApisDataService,
@@ -33,7 +32,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
             return when (this) {
                 is NetworkResult.Success -> {
                     val itineraries = this.data.metaData?.plan?.itineraries
-                        ?: throw JsonDataException(NO_ROUTE_RESULT)
+                        ?: throw JsonDataException(NO_RESULT)
                     eraseDuplicateLeg(itineraries)
                 }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
@@ -90,7 +89,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
             )
         ) {
             return when (this) {
-                is NetworkResult.Success -> this.data.searchStationNameBySubwayLineInfo.stations
+                is NetworkResult.Success -> this.data.searchStationNameBySubwayLineInfo?.stations
+                    ?: throw JsonDataException(NO_RESULT)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -116,7 +116,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
             )
         ) {
             return when (this) {
-                is NetworkResult.Success -> this.data.searchLastTrainTimeByIDService.stationLastTimes
+                is NetworkResult.Success -> this.data.searchLastTrainTimeByIDService?.stationLastTimes
+                    ?: throw JsonDataException(NO_RESULT)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -128,6 +129,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         with(wsBusApiService.getBusArsId(stationName)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.arsIdMsgBody.busStations
+                    ?: throw JsonDataException(NO_RESULT)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -139,6 +141,7 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         with(wsBusApiService.getBusRoute(stationId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.routeIdMsgBody.busRoutes
+                    ?: throw JsonDataException(NO_RESULT)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -149,10 +152,11 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     override suspend fun getSeoulBusLastTime(
         stationId: String,
         lineId: String
-    ): List<LastTimeInfo>? {
+    ): List<LastTimeInfo> {
         with(wsBusApiService.getBusLastTime(stationId, lineId)) {
             return when (this) {
                 is NetworkResult.Success -> this.data.lastTimeMsgBody.lastTimes
+                    ?: throw JsonDataException(NO_RESULT)
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -182,10 +186,10 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>? {
+    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime> {
         with(apisDataService.getBusLastTime(lineId)) {
             return when (this) {
-                is NetworkResult.Success -> this.data.lastTimes?.map { it.toDomain() }
+                is NetworkResult.Success -> this.data.lastTimes.map { it.toDomain() }
                 is NetworkResult.Failure -> throw IllegalArgumentException(this.message)
                 is NetworkResult.NetworkError -> throw this.exception
                 is NetworkResult.Unexpected -> throw this.exception
@@ -244,13 +248,15 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     }
 
     private fun findStationCd(stationId: String, data: SubwayStationResponse): String {
-        return data.searchInfoBySubwayNameService.row.firstOrNull {
+        val searchInfoBySubwayNameService = data.searchInfoBySubwayNameService
+            ?: throw JsonDataException(NO_RESULT)
+        return searchInfoBySubwayNameService.row.firstOrNull {
             it.frCode == stationId
         }?.stationCd ?: throw IllegalArgumentException(NO_SUBWAY_STATION)
     }
 
     companion object {
         private const val NO_SUBWAY_STATION = "해당하는 지하철역이 없습니다."
-        private const val NO_ROUTE_RESULT = "경로 검색 결과가 없습니다."
+        private const val NO_RESULT = "검색 결과가 없습니다."
     }
 }

@@ -101,11 +101,15 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun getGeoLocationInfo(latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+            try {
+                _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
 
-            readySendValue(latitude, longitude)
-            _panelVisibility.value = View.VISIBLE
-            getDistance(latitude, longitude)
+                readySendValue(latitude, longitude)
+                _panelVisibility.value = View.VISIBLE
+                getDistance(latitude, longitude)
+            } catch (e: IllegalArgumentException) {
+                errorMessageChannel.send(e.message ?: "something is wrong")
+            }
         }
     }
 

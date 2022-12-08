@@ -230,6 +230,11 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
+    private fun turnOffSoundService() {
+        val intent = Intent(context, SoundService::class.java)
+        requireContext().stopService(intent)
+    }
+
     override fun onDestroyView() {
         _binding = null
 
@@ -242,11 +247,6 @@ class MapFragment : Fragment(), MapHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
-    }
-
-    private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
-        requireContext().stopService(intent)
     }
 
     companion object {

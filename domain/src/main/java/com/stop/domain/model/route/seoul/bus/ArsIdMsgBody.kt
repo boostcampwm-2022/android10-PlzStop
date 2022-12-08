@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ArsIdMsgBody(
     @Json(name = "itemList")
-    val busStations: List<BusStationInfo>
+    val busStations: List<BusStationInfo>?
 )
