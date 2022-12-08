@@ -7,4 +7,6 @@ class MissionManager {
 
     var userLocation = MutableStateFlow(Location(0.0, 0.0))
 
+    var isMissionOver = MutableStateFlow(false)
+
 }

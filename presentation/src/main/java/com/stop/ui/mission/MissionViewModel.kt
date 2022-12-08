@@ -6,11 +6,9 @@ import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.custom.Place
-import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -34,8 +32,6 @@ class MissionViewModel @Inject constructor(
     val estimatedTimeRemaining: LiveData<Int>
         get() = _estimatedTimeRemaining
 
-    val isMissionOver = MutableLiveData(false)
-
     val leftMinute: LiveData<String> = Transformations.switchMap(estimatedTimeRemaining) {
         MutableLiveData<String>().apply {
             value = (it / TIME_UNIT).toString().padStart(TIME_DIGIT, '0')
@@ -49,6 +45,7 @@ class MissionViewModel @Inject constructor(
     }
 
     val userLocation = missionManager.userLocation
+    val isMissionOver = missionManager.isMissionOver
 
     lateinit var requestId: UUID
 

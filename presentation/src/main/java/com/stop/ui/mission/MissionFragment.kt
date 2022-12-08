@@ -4,7 +4,6 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,6 +22,7 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -112,7 +112,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     fun clickMissionOver() {
-        Snackbar.make(requireActivity().findViewById(com.airbnb.lottie.R.id.content), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
     }
 
@@ -202,7 +202,8 @@ class MissionFragment : Fragment(), MissionHandler {
             addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                TMapPoint(nowLocation.latitude, nowLocation.longitude),
+                true
             )
             personCurrentLocation = nowLocation
             latitudes.add(nowLocation.latitude)
@@ -256,15 +257,17 @@ class MissionFragment : Fragment(), MissionHandler {
             ) <= 10
         ) {
             missionViewModel.isMissionOver.value = true
-            Snackbar.make(requireActivity().findViewById(com.airbnb.lottie.R.id.content), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
         }
     }
 
     private fun setMissionOver() {
-        missionViewModel.isMissionOver.observe(viewLifecycleOwner) { isMissionOver ->
-            if (isMissionOver) {
-                missionViewModel.cancelMission()
-                alarmSettingViewModel.deleteAlarm()
+        lifecycleScope.launch {
+            missionViewModel.isMissionOver.collectLatest { isMissionOver ->
+                if (isMissionOver) {
+                    missionViewModel.cancelMission()
+                    alarmSettingViewModel.deleteAlarm()
+                }
             }
         }
     }

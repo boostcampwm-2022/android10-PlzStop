@@ -16,7 +16,6 @@ import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.google.android.gms.location.*
 import com.stop.MainActivity
@@ -44,7 +43,9 @@ class MissionWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         setForeground(createForegroundInfo())
         getPersonLocation()
-        test()
+        while (missionManager.isMissionOver.value.not()) {
+            delay(INTERVAL_UNIT)
+        }
         fusedLocationClient.removeLocationUpdates(locationCallback)
         return Result.success()
     }
@@ -71,14 +72,6 @@ class MissionWorker @AssistedInject constructor(
             }
         }
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
-    }
-
-    private suspend fun test() {
-        while (NUM < 60) {
-            Log.d("MissionWorker", "찍히나 테스트 ${NUM}")
-            NUM += 1
-            delay(5000)
-        }
     }
 
     private fun createForegroundInfo(): ForegroundInfo {

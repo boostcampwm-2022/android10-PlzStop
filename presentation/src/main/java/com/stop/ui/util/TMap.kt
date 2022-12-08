@@ -1,6 +1,7 @@
 package com.stop.ui.util
 
 import android.content.Context
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.skt.tmap.TMapGpsManager
@@ -12,7 +13,6 @@ import com.stop.model.Location
 import com.stop.ui.map.MapHandler
 import com.stop.ui.mission.MissionHandler
 import com.stop.ui.routedetail.RouteDetailHandler
-import kotlin.math.round
 
 open class TMap(
     private val context: Context,
@@ -98,6 +98,7 @@ open class TMap(
         if (isFirst.not()) {
             tMapView.removeTMapMarkerItem(id)
         }
+        Log.d("MissionWorker","왜 마커가 null이라고 하는거임 $marker")
         tMapView.addTMapMarkerItem(marker)
     }
 
