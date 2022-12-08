@@ -20,4 +20,5 @@
     <color name="hint_text_color">#808590</color>
     <color name="blue">#2196F3</color>
     <color name="red">#F44336</color>
+    <color name="light_coral">#FFB9B9</color>
 </resources>
