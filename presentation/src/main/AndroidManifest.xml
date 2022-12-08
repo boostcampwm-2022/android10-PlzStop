@@ -43,6 +43,7 @@
             android:exported="true"
             android:launchMode="singleTask"
             android:showOnLockScreen="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.Splash">
 
             <intent-filter>

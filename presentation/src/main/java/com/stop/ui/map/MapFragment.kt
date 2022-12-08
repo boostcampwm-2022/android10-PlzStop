@@ -48,18 +48,22 @@ class MapFragment : Fragment(), MapHandler {
         super.onViewCreated(view, savedInstanceState)
 
         initTMap()
-        initView()
-        initNavigateAction()
         initBottomSheetBehavior()
         initBottomSheetView()
-
-        observeClickPlace()
-        observeClickCurrentLocation()
     }
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
+
         tMap.initListener()
+        initAfterTMapReady()
+    }
+
+    private fun initAfterTMapReady() {
+        initView()
+        initNavigateAction()
+        observeClickPlace()
+        observeClickCurrentLocation()
     }
 
     private fun initBinding() {
@@ -72,6 +76,7 @@ class MapFragment : Fragment(), MapHandler {
         placeSearchViewModel.tMap?.let {
             tMap = it
             tMap.setHandler(this)
+            initAfterTMapReady()
         } ?: run {
             tMap = MapTMap(requireActivity(), this)
             tMap.init()
