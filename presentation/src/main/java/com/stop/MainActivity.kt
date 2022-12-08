@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        setIntent(intent)
 
         intent?.extras?.getInt("ALARM_CODE")?.let {
             if (it == ALARM_CODE) {

@@ -2,7 +2,7 @@ package com.stop.di
 
 import android.content.Context
 import androidx.work.WorkManager
-import com.stop.AlarmFunctions
+import com.stop.alarm.AlarmFunctions
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
