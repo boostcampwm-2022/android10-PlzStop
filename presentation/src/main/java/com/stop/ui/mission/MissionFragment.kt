@@ -4,6 +4,7 @@ import android.Manifest
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
 import com.stop.R
@@ -113,6 +115,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
+        findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     private fun setObserve() {
@@ -257,6 +260,52 @@ class MissionFragment : Fragment(), MissionHandler {
         ) {
             missionViewModel.isMissionOver.value = true
             Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
+            setSuccessAnimation()
+
+        }
+    }
+
+    private fun setSuccessAnimation() {
+        with(binding.lottieSuccess) {
+            visibility = View.VISIBLE
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener{
+                override fun onAnimationStart(animation: Animator) {
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                }
+
+            })
+        }
+    }
+
+    private fun setFailAnimation() {
+        with(binding.lottieFail) {
+            visibility = View.VISIBLE
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener{
+                override fun onAnimationStart(animation: Animator) {
+                }
+
+                override fun onAnimationEnd(animation: Animator) {
+                    findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                }
+
+                override fun onAnimationCancel(animation: Animator) {
+                }
+
+                override fun onAnimationRepeat(animation: Animator) {
+                }
+
+            })
         }
     }
 
@@ -271,8 +320,12 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    companion object {
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("MissionWorker","onDestroy")
+    }
 
+    companion object {
         private const val PLUS = "+"
         private const val MINUS = ""
         private const val LEFT_TIME = 60
@@ -281,6 +334,5 @@ class MissionFragment : Fragment(), MissionHandler {
 
         private val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
-
     }
 }

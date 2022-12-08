@@ -26,27 +26,28 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        val alarmCode = intent?.extras?.getInt("ALARM_CODE")
-        val missionCode = intent?.extras?.getInt("MISSION_CODE")
+        intent?.extras?.getInt("ALARM_CODE")?.let {
+            if (it == ALARM_CODE) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val inflater = navHostFragment.navController.navInflater
+                val graph = inflater.inflate(R.navigation.nav_graph)
+                graph.setStartDestination(R.id.alarmStartFragment)
 
-        if(alarmCode == ALARM_CODE){
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val inflater = navHostFragment.navController.navInflater
-            val graph = inflater.inflate(R.navigation.nav_graph)
-            graph.setStartDestination(R.id.alarmStartFragment)
-
-            navHostFragment.navController.graph = graph
+                navHostFragment.navController.graph = graph
+            }
         }
 
-        if(missionCode == MISSION_CODE){
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val inflater = navHostFragment.navController.navInflater
-            val graph = inflater.inflate(R.navigation.nav_graph)
-            graph.setStartDestination(R.id.missionFragment)
+        intent?.extras?.getInt("MISSION_CODE")?.let {
+            if (it == MISSION_CODE) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val inflater = navHostFragment.navController.navInflater
+                val graph = inflater.inflate(R.navigation.nav_graph)
+                graph.setStartDestination(R.id.missionFragment)
 
-            navHostFragment.navController.graph = graph
+                navHostFragment.navController.graph = graph
+            }
         }
     }
 

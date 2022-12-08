@@ -200,5 +200,31 @@
                 app:srcCompat="@drawable/ic_location" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_success"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:lottie_autoPlay="false"
+            app:lottie_loop="false"
+            android:visibility="gone"
+            app:lottie_fileName="success_animation.json"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_fail"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:lottie_loop="false"
+            app:lottie_autoPlay="false"
+            android:visibility="gone"
+            app:lottie_fileName="fail_animation.json"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
