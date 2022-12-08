@@ -2,6 +2,7 @@ package com.stop.ui.alarmstart
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -54,15 +55,13 @@ class AlarmStartFragment : Fragment() {
             buttonAlarmTurnOff.setOnClickListener {
                 turnOffSoundService()
                 alarmSettingViewModel.deleteAlarm()
-                alarmSettingViewModel.removeAlarmWorker()
                 requireActivity().finish()
             }
 
             textViewMissionStart.setOnClickListener {
+                Log.e("ABC","ABC")
                 turnOffSoundService()
                 root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
-                alarmSettingViewModel.deleteAlarm()
-                alarmSettingViewModel.removeAlarmWorker()
             }
         }
     }

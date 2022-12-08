@@ -12,6 +12,7 @@ import com.stop.model.Location
 import com.stop.ui.map.MapHandler
 import com.stop.ui.mission.MissionHandler
 import com.stop.ui.routedetail.RouteDetailHandler
+import kotlin.math.round
 
 open class TMap(
     private val context: Context,
@@ -86,7 +87,7 @@ open class TMap(
                 && TMapView.MIN_LAT < location.latitude && location.latitude < TMapView.MAX_LAT
     }
 
-    fun addMarker(id: String, icon: Int, location: TMapPoint) {
+    fun addMarker(id: String, icon: Int, location: TMapPoint, isFirst: Boolean = false) {
         val marker = TMapMarkerItem().apply {
             this.id = id
             this.icon = ContextCompat.getDrawable(context, icon)?.toBitmap()
@@ -94,7 +95,9 @@ open class TMap(
             isAnimation = false
         }
 
-        tMapView.removeTMapMarkerItem(id)
+        if (isFirst.not()) {
+            tMapView.removeTMapMarkerItem(id)
+        }
         tMapView.addTMapMarkerItem(marker)
     }
 
@@ -109,4 +112,14 @@ open class TMap(
         tMapView.zoomLevel -= 1
     }
 
+    fun getDistance(startLatitude: Double, startLongitude: Double, endLatitude: Double, endLongitude: Double): Float {
+        val startPoint = android.location.Location("Start")
+        val endPoint = android.location.Location("End")
+
+        startPoint.latitude = startLatitude
+        startPoint.longitude = startLongitude
+        endPoint.latitude = endLatitude
+        endPoint.longitude = endLongitude
+        return startPoint.distanceTo(endPoint)
+    }
 }

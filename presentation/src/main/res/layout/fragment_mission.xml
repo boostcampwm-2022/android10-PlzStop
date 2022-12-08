@@ -118,7 +118,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/background_close_button"
             android:elevation="15dp"
-            android:onClick="@{() -> viewModel.cancelMission()}"
+            android:onClick="@{() -> fragment.clickMissionOver()}"
             app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">

@@ -9,10 +9,6 @@
             name="viewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
-        <variable
-            name="fragment"
-            type="com.stop.ui.map.MapFragment" />
-
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -119,7 +115,6 @@
             android:textColor="@color/black"
             android:textSize="36sp"
             android:textStyle="bold"
-            android:onClick="@{() -> fragment.setMissionStart()}"
             app:layout_constraintBottom_toTopOf="@id/button_alarm_turn_off"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"

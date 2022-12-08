@@ -15,6 +15,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.stop.databinding.ActivityMainBinding
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.ui.mission.MissionWorker.Companion.MISSION_CODE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +26,10 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
 
-        intent?.extras?.getInt("ALARM_CODE")?.let {
+        val alarmCode = intent?.extras?.getInt("ALARM_CODE")
+        val missionCode = intent?.extras?.getInt("MISSION_CODE")
+
+        if(alarmCode == ALARM_CODE){
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val inflater = navHostFragment.navController.navInflater
@@ -34,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             navHostFragment.navController.graph = graph
         }
 
-        intent?.extras?.getInt("MISSION_CODE")?.let {
+        if(missionCode == MISSION_CODE){
             val navHostFragment =
                 supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val inflater = navHostFragment.navController.navInflater

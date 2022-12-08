@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
@@ -36,6 +37,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var tMap: MissionTMap
 
+    var personCurrentLocation = Location(37.553836, 126.969652)
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +56,7 @@ class MissionFragment : Fragment(), MissionHandler {
         initTMap()
         setObserve()
         drawPersonLine()
+        setMissionOver()
 
     }
 
@@ -85,8 +89,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     fun setPersonCurrent() {
         tMap.tMapView.setCenterPoint(
-            missionViewModel.personCurrentLocation.latitude,
-            missionViewModel.personCurrentLocation.longitude,
+            personCurrentLocation.latitude,
+            personCurrentLocation.longitude,
             true
         )
 
@@ -98,13 +102,18 @@ class MissionFragment : Fragment(), MissionHandler {
         with(tMap) {
             latitudes.clear()
             longitudes.clear()
-            latitudes.add((missionViewModel.destination.value?.coordinate?.latitude ?: "37.553836").toDouble())
-            longitudes.add((missionViewModel.destination.value?.coordinate?.longitude ?: "126.969652").toDouble())
-            latitudes.add(missionViewModel.personCurrentLocation.latitude)
-            longitudes.add(missionViewModel.personCurrentLocation.longitude)
+            latitudes.add(missionViewModel.destination.value.coordinate.latitude.toDouble())
+            longitudes.add(missionViewModel.destination.value.coordinate.longitude.toDouble())
+            latitudes.add(personCurrentLocation.latitude)
+            longitudes.add(personCurrentLocation.longitude)
             setRouteDetailFocus()
             isTracking = false
         }
+    }
+
+    fun clickMissionOver() {
+        Snackbar.make(requireActivity().findViewById(com.airbnb.lottie.R.id.content), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
+        missionViewModel.isMissionOver.value = true
     }
 
     private fun setObserve() {
@@ -174,13 +183,15 @@ class MissionFragment : Fragment(), MissionHandler {
                         tMap.addMarker(
                             Marker.PERSON_MARKER,
                             Marker.PERSON_MARKER_IMG,
-                            TMapPoint(userLocation.latitude, userLocation.longitude)
+                            TMapPoint(userLocation.latitude, userLocation.longitude),
+                            true
                         )
-                        missionViewModel.personCurrentLocation = userLocation
+                        personCurrentLocation = userLocation
                         tMap.latitudes.add(userLocation.latitude)
                         tMap.longitudes.add(userLocation.longitude)
                         tMap.setRouteDetailFocus()
                         first += 1
+                        arriveDestination(userLocation.latitude, userLocation.longitude)
                     }
                     else -> {
                         Log.d("MissionWorker", "그리는 중 $userLocation $beforeLocation")
@@ -192,12 +203,13 @@ class MissionFragment : Fragment(), MissionHandler {
                             Marker.PERSON_LINE_COLOR
                         )
                         tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
-                        missionViewModel.personCurrentLocation = userLocation
+                        personCurrentLocation = userLocation
                         if (tMap.isTracking) {
                             tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                         }
                         beforeLocation = userLocation
                         PERSON_LINE_NUM += 1
+                        arriveDestination(userLocation.latitude, userLocation.longitude)
                     }
                 }
 
@@ -227,6 +239,28 @@ class MissionFragment : Fragment(), MissionHandler {
         )
         tMap.latitudes.add(latitude)
         tMap.longitudes.add(longitude)
+    }
+
+    private fun arriveDestination(nowLatitude: Double, nowLongitude: Double) {
+        if (tMap.getDistance(
+                nowLatitude,
+                nowLongitude,
+                missionViewModel.destination.value.coordinate.latitude.toDouble(),
+                missionViewModel.destination.value.coordinate.longitude.toDouble()
+            ) <= 10
+        ) {
+            missionViewModel.isMissionOver.value = true
+            Snackbar.make(requireActivity().findViewById(com.airbnb.lottie.R.id.content), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setMissionOver() {
+        missionViewModel.isMissionOver.observe(viewLifecycleOwner) { isMissionOver ->
+            if (isMissionOver) {
+                missionViewModel.cancelMission()
+                alarmSettingViewModel.deleteAlarm()
+            }
+        }
     }
 
     companion object {

@@ -110,7 +110,7 @@ class AlarmSettingFragment : Fragment() {
 
         alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
         alarmSettingViewModel.callAlarm(transportLastTime.timeToBoard)
-        alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
+        //alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
 
         val navController = findNavController()
         navController.setGraph(R.navigation.nav_graph)

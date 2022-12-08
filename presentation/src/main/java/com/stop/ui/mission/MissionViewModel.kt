@@ -4,10 +4,13 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
+import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -21,7 +24,7 @@ class MissionViewModel @Inject constructor(
 
     private val random = Random(System.currentTimeMillis())
 
-    val destination= MutableLiveData<Place>()
+    val destination = MutableStateFlow(Place("null",Coordinate("37.553836", "126.969652")))
 
     private val _timeIncreased = MutableLiveData<Int>()
     val timeIncreased: LiveData<Int>
@@ -30,6 +33,8 @@ class MissionViewModel @Inject constructor(
     private val _estimatedTimeRemaining = MutableLiveData<Int>()
     val estimatedTimeRemaining: LiveData<Int>
         get() = _estimatedTimeRemaining
+
+    val isMissionOver = MutableLiveData(false)
 
     val leftMinute: LiveData<String> = Transformations.switchMap(estimatedTimeRemaining) {
         MutableLiveData<String>().apply {
@@ -42,8 +47,6 @@ class MissionViewModel @Inject constructor(
             value = (it % TIME_UNIT).toString().padStart(TIME_DIGIT, '0')
         }
     }
-
-    var personCurrentLocation = Location(37.553836, 126.969652)
 
     val userLocation = missionManager.userLocation
 
