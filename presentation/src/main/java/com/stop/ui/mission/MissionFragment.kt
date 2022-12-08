@@ -23,7 +23,7 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -62,6 +62,7 @@ class MissionFragment : Fragment(), MissionHandler {
         _binding = null
 
         super.onDestroyView()
+        Log.d("MissionWorker","onDestroyView")
     }
 
     private fun setDataBinding() {
@@ -135,28 +136,20 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun drawPersonLine() {
-        var first = 0
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
-            missionViewModel.userLocation.collect { userLocation ->
-                when (first) {
-                    0 -> {
-                        first += 1
+            missionViewModel.userLocation.collectIndexed { index, userLocation ->
+                if (index == 1) {
+                    initMarker(userLocation)
+                    beforeLocation = userLocation
+                } else {
+                    drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
+                    personCurrentLocation = userLocation
+                    if (tMap.isTracking) {
+                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                     }
-                    1 -> {
-                        initMarker(userLocation)
-                        beforeLocation = userLocation
-                        first += 1
-                    }
-                    else -> {
-                        drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
-                        personCurrentLocation = userLocation
-                        if (tMap.isTracking) {
-                            tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
-                        }
-                        beforeLocation = userLocation
-                        arriveDestination(userLocation.latitude, userLocation.longitude)
-                    }
+                    beforeLocation = userLocation
+                    arriveDestination(userLocation.latitude, userLocation.longitude)
                 }
             }
         }
@@ -280,7 +273,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setMissionOver() {
         lifecycleScope.launch {
-            missionViewModel.isMissionOver.collectLatest { isMissionOver ->
+            missionViewModel.isMissionOver.collect { isMissionOver ->
                 if (isMissionOver) {
                     missionViewModel.cancelMission()
                     alarmSettingViewModel.deleteAlarm()
