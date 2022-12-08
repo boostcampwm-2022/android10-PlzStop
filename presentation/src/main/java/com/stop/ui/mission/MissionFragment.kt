@@ -185,11 +185,12 @@ class MissionFragment : Fragment(), MissionHandler {
                     }
                     else -> {
                         drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
-                        missionViewModel.personCurrentLocation = userLocation
+                        personCurrentLocation = userLocation
                         if (tMap.isTracking) {
                             tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                         }
                         beforeLocation = userLocation
+                        arriveDestination(userLocation.latitude, userLocation.longitude)
                     }
                 }
             }
@@ -203,10 +204,11 @@ class MissionFragment : Fragment(), MissionHandler {
                 Marker.PERSON_MARKER_IMG,
                 TMapPoint(nowLocation.latitude, nowLocation.longitude)
             )
-            missionViewModel.personCurrentLocation = nowLocation
+            personCurrentLocation = nowLocation
             latitudes.add(nowLocation.latitude)
             longitudes.add(nowLocation.longitude)
             setRouteDetailFocus()
+            arriveDestination(nowLocation.latitude, nowLocation.longitude)
         }
     }
 
@@ -226,7 +228,6 @@ class MissionFragment : Fragment(), MissionHandler {
         alarmSettingViewModel.getAlarm()
         val linePoints = arrayListOf<TMapPoint>()
         val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
-        Log.d("MissionWorker", "route 그리기 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
         tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 
