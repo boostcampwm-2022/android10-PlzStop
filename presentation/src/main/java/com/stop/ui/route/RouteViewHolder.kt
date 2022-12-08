@@ -1,8 +1,6 @@
 package com.stop.ui.route
 
 import android.graphics.Color
-import android.graphics.Rect
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.R
@@ -21,18 +19,6 @@ class RouteViewHolder(
     init {
         binding.recyclerviewTimeLine.adapter = adapter
         binding.recyclerviewTimeLine.setHasFixedSize(true)
-        binding.recyclerviewTimeLine.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                if (parent.getChildAdapterPosition(view) != RecyclerView.NO_POSITION) {
-                    outRect.set(0, 0, 0, 0)
-                }
-            }
-        })
     }
 
     fun bind(itinerary: Itinerary) {
