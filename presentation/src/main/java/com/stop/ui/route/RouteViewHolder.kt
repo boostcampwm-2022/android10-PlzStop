@@ -29,7 +29,7 @@ class RouteViewHolder(
             if (route.mode == MoveType.TRANSFER) {
                 return@forEachIndexed
             }
-            val (typeName, mode) = if (index == itinerary.routes.size - 2){
+            val (typeName, mode) = if (index == itinerary.routes.size - 2) {
                 Pair("하차", R.drawable.ic_star_white)
             } else {
                 Pair(getTypeName(route), getRouteItemMode(route))
