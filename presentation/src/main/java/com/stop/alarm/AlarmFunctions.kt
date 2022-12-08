@@ -5,9 +5,9 @@ import android.app.NotificationManager
 import android.content.Context
 import com.stop.makeFullTime
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID
-import com.stop.util.getAlarmReceiverPendingIntent
 import com.stop.util.getAlarmSettingNotification
 import com.stop.util.getAlarmSettingPendingIntent
+import com.stop.util.getAlarmStartPendingIntent
 
 class AlarmFunctions(
     private val context: Context
@@ -22,7 +22,7 @@ class AlarmFunctions(
         )
         notificationManager.notify(ALARM_NOTIFICATION_ID, alarmSettingNotification)
 
-        val alarmReceiverPendingIntent = context.getAlarmReceiverPendingIntent()
+        val alarmReceiverPendingIntent = context.getAlarmStartPendingIntent()
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExactAndAllowWhileIdle(
@@ -34,7 +34,7 @@ class AlarmFunctions(
 
     fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmReceiverPendingIntent = context.getAlarmReceiverPendingIntent()
+        val alarmReceiverPendingIntent = context.getAlarmStartPendingIntent()
 
         alarmManager.cancel(alarmReceiverPendingIntent)
 

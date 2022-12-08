@@ -69,6 +69,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBinding() {
+        alarmViewModel.getAlarm()
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
@@ -136,8 +137,6 @@ class MapFragment : Fragment(), MapHandler {
         binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-
-        alarmViewModel.getAlarm()
 
         alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it

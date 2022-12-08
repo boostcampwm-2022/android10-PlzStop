@@ -1,9 +1,6 @@
 package com.stop.util
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -48,7 +45,7 @@ fun Context.getAlarmSettingNotification(pendingIntent: PendingIntent, content: S
         .build()
 }
 
-fun Context.getAlarmReceiverPendingIntent(): PendingIntent {
+fun Context.getAlarmStartPendingIntent(): PendingIntent {
     val intent = Intent(this, AlarmReceiver::class.java)
     intent.putExtra("ALARM_CODE", ALARM_CODE)
     return PendingIntent.getBroadcast(
@@ -59,12 +56,47 @@ fun Context.getAlarmReceiverPendingIntent(): PendingIntent {
     )
 }
 
+fun Context.isThisAppRunning() =
+    (getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+        .runningAppProcesses
+        .firstOrNull()
+        ?.processName
+        ?.equals("com.stop")
+        ?: false
+
 fun Context.isScreenOn() =
     (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive
 
-fun Context.getAlarmReceiverNotification(pendingIntent: PendingIntent, content: String): Notification {
+fun Context.getAlarmReceiverPendingIntent(): PendingIntent {
+    val intent = Intent(this, MainActivity::class.java)
+    intent.putExtra("ALARM_CODE", ALARM_CODE)
+    return PendingIntent.getActivity(
+        this,
+        ALARM_CODE,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+}
+
+fun Context.getAlarmScreenOnNotification(pendingIntent: PendingIntent, content : String) : Notification{
     val id = applicationContext.getString(R.string.notification_channel_id)
     val name = applicationContext.getString(R.string.notification_channel_name)
+    val title = applicationContext.getString(R.string.notification_title)
+
+    createDefaultNotificationChannel(applicationContext, id, name)
+
+    return NotificationCompat.Builder(applicationContext, id)
+        .setContentTitle(title)
+        .setContentText(content)
+        .setSmallIcon(R.mipmap.ic_bus)
+        .setAutoCancel(true)
+        .setContentIntent(pendingIntent)
+        .build()
+}
+
+fun Context.getAlarmReceiverNotification(pendingIntent: PendingIntent, content: String): Notification {
+    val id = applicationContext.getString(R.string.notification_channel_high_id)
+    val name = applicationContext.getString(R.string.notification_channel_high_name)
     val title = applicationContext.getString(R.string.notification_title)
 
     createHighNotificationChannel(applicationContext, id, name)
@@ -76,6 +108,7 @@ fun Context.getAlarmReceiverNotification(pendingIntent: PendingIntent, content: 
         .setAutoCancel(true)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_ALARM)
+        .setContentIntent(pendingIntent)
         .setFullScreenIntent(pendingIntent, true)
         .build()
 }
