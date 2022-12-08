@@ -2,7 +2,6 @@ package com.stop.ui.alarmstart
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,34 +35,25 @@ class AlarmStartFragment : Fragment() {
         return binding.root
     }
 
-    private fun initBinding(){
+    private fun initBinding() {
         binding.apply {
             alarmSettingViewModel.getAlarm()
+            alarmSettingViewModel.startCountDownTimer()
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmSettingViewModel
+            fragment = this@AlarmStartFragment
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        listenButton()
+    fun clickAlarmTurnOff() {
+        turnOffSoundService()
+        alarmSettingViewModel.deleteAlarm()
+        requireActivity().finish()
     }
 
-    private fun listenButton() {
-        with(binding) {
-            buttonAlarmTurnOff.setOnClickListener {
-                turnOffSoundService()
-                alarmSettingViewModel.deleteAlarm()
-                requireActivity().finish()
-            }
-
-            textViewMissionStart.setOnClickListener {
-                Log.e("ABC","ABC")
-                turnOffSoundService()
-                root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
-            }
-        }
+    fun clickMissionStart() {
+        turnOffSoundService()
+        binding.root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
     }
 
     private fun turnOffSoundService() {

@@ -21,12 +21,6 @@ internal object ApiModule {
 
     @Provides
     @Singleton
-    fun provideFakeTmapApiService(@Named("Tmap") retrofit: Retrofit): FakeTmapApiService {
-        return retrofit.create(FakeTmapApiService::class.java)
-    }
-
-    @Provides
-    @Singleton
     fun provideOpenApiSeoulService(@Named("OpenApiSeoul") retrofit: Retrofit): OpenApiSeoulService {
         return retrofit.create(OpenApiSeoulService::class.java)
     }

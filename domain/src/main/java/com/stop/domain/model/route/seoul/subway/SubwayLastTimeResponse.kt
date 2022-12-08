@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SubwayLastTimeResponse(
     @Json(name = "SearchLastTrainTimeByIDService")
-    val searchLastTrainTimeByIDService: SearchLastTrainTimeByIDService
+    val searchLastTrainTimeByIDService: SearchLastTrainTimeByIDService?
 )
