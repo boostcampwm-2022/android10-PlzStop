@@ -1,7 +1,6 @@
 package com.stop.ui.util
 
 import android.content.Context
-import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import com.skt.tmap.TMapGpsManager
@@ -87,7 +86,7 @@ open class TMap(
                 && TMapView.MIN_LAT < location.latitude && location.latitude < TMapView.MAX_LAT
     }
 
-    fun addMarker(id: String, icon: Int, location: TMapPoint, isFirst: Boolean = false) {
+    fun addMarker(id: String, icon: Int, location: TMapPoint) {
         val marker = TMapMarkerItem().apply {
             this.id = id
             this.icon = ContextCompat.getDrawable(context, icon)?.toBitmap()
@@ -95,10 +94,7 @@ open class TMap(
             isAnimation = false
         }
 
-        if (isFirst.not()) {
-            tMapView.removeTMapMarkerItem(id)
-        }
-        Log.d("MissionWorker","왜 마커가 null이라고 하는거임 $marker")
+        tMapView.removeTMapMarkerItem(id)
         tMapView.addTMapMarkerItem(marker)
     }
 

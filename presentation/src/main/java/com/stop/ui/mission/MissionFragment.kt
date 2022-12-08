@@ -55,7 +55,6 @@ class MissionFragment : Fragment(), MissionHandler {
         initViewModel()
         initTMap()
         setObserve()
-        drawPersonLine()
         setMissionOver()
 
     }
@@ -151,6 +150,7 @@ class MissionFragment : Fragment(), MissionHandler {
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
         getAlarmInfo()
+        drawPersonLine()
     }
 
     override fun setOnEnableScrollWithZoomLevelListener() {
@@ -202,8 +202,7 @@ class MissionFragment : Fragment(), MissionHandler {
             addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude),
-                true
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
             )
             personCurrentLocation = nowLocation
             latitudes.add(nowLocation.latitude)
