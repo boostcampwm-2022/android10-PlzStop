@@ -9,6 +9,10 @@
             name="viewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
+        <variable
+            name="fragment"
+            type="com.stop.ui.alarmstart.AlarmStartFragment" />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -38,96 +42,113 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="35dp" />
 
+        <View
+            android:id="@+id/view_top"
+            android:layout_width="0dp"
+            android:layout_height="120dp"
+            android:background="@color/main_dark_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view_search"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/background_search"
+            app:layout_constraintBottom_toBottomOf="@id/view_top"
+            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
+            app:layout_constraintStart_toStartOf="@id/guide_line_start" />
+
         <TextView
             android:id="@+id/text_view_start_position"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_gray_d9_8"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/start_position_text(viewModel.alarmItem.startPosition)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toTopOf="@id/guideline_top" />
+            android:text="@{viewModel.alarmItem.startPosition}"
+            android:textColor="@color/main_light_grey"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toStartOf="@id/image_view_arrow_right"
+            app:layout_constraintStart_toStartOf="@id/view_search"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            tools:text="출발지" />
+
+        <ImageView
+            android:id="@+id/image_view_arrow_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toEndOf="@id/view_search"
+            app:layout_constraintStart_toStartOf="@id/view_search"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            app:srcCompat="@drawable/ic_arrow_right" />
 
         <TextView
             android:id="@+id/text_view_end_position"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/background_gray_d9_8"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="10dp"
             android:ellipsize="end"
+            android:gravity="center"
             android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/end_position_text(viewModel.alarmItem.endPosition)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_start_position" />
+            android:text="@{viewModel.alarmItem.endPosition}"
+            android:textColor="@color/main_light_grey"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="@id/view_search"
+            app:layout_constraintEnd_toEndOf="@id/view_search"
+            app:layout_constraintStart_toEndOf="@id/image_view_arrow_right"
+            app:layout_constraintTop_toTopOf="@id/view_search"
+            tools:text="도착지" />
 
         <TextView
-            android:id="@+id/text_view_last_time"
-            android:layout_width="0dp"
+            android:id="@+id/text_view_left_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/background_gray_d9_8"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/last_time_text(viewModel.alarmItem.lastTime)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
+            android:text="@{viewModel.lastTimeCountDown}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="60sp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/text_view_mission_start"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_end_position" />
-
-        <TextView
-            android:id="@+id/text_view_walk_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/background_gray_d9_8"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:padding="8dp"
-            android:text="@{@string/walk_time_text(viewModel.alarmItem.walkTime)}"
-            android:textColor="@color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_last_time" />
+            app:layout_constraintTop_toBottomOf="@id/view_top"
+            tools:text="23:23:23" />
 
         <TextView
             android:id="@+id/text_view_mission_start"
-            android:layout_width="180dp"
-            android:layout_height="180dp"
-            android:background="@drawable/selector_mission_start_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@color/main_dark_grey"
             android:gravity="center"
+            android:onClick="@{() -> fragment.clickMissionStart()}"
+            android:padding="10dp"
             android:text="@string/mission_start"
-            android:textColor="@color/black"
-            android:textSize="36sp"
+            android:textColor="@color/white"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/button_alarm_turn_off"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/text_view_walk_time" />
+            app:layout_constraintStart_toStartOf="@id/guide_line_start" />
 
-        <com.google.android.material.button.MaterialButton
+        <TextView
             android:id="@+id/button_alarm_turn_off"
-            style="@style/Widget.Material3.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@color/red"
+            android:gravity="center"
+            android:onClick="@{()->fragment.clickAlarmTurnOff()}"
+            android:padding="10dp"
             android:text="@string/alarm_turn_off_text"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -35,36 +35,25 @@ class AlarmStartFragment : Fragment() {
         return binding.root
     }
 
-    private fun initBinding(){
+    private fun initBinding() {
         binding.apply {
             alarmSettingViewModel.getAlarm()
+            alarmSettingViewModel.startCountDownTimer()
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmSettingViewModel
+            fragment = this@AlarmStartFragment
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        listenButton()
+    fun clickAlarmTurnOff() {
+        turnOffSoundService()
+        alarmSettingViewModel.deleteAlarm()
+        requireActivity().finish()
     }
 
-    private fun listenButton() {
-        with(binding) {
-            buttonAlarmTurnOff.setOnClickListener {
-                turnOffSoundService()
-                alarmSettingViewModel.deleteAlarm()
-                //alarmSettingViewModel.removeAlarmWorker()
-                requireActivity().finish()
-            }
-
-            textViewMissionStart.setOnClickListener {
-                turnOffSoundService()
-                root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
-                alarmSettingViewModel.deleteAlarm()
-                //alarmSettingViewModel.removeAlarmWorker()
-            }
-        }
+    fun clickMissionStart() {
+        turnOffSoundService()
+        binding.root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
     }
 
     private fun turnOffSoundService() {

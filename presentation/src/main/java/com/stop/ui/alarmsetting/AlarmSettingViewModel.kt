@@ -1,5 +1,6 @@
 package com.stop.ui.alarmsetting
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,10 +9,12 @@ import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.stop.AlarmFunctions
 import com.stop.LastTimeCheckWorker
+import com.stop.convertTimeMillisToString
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
+import com.stop.makeFullTime
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
@@ -21,7 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,6 +46,9 @@ class AlarmSettingViewModel @Inject constructor(
     val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
 
     private lateinit var workerId: UUID
+
+    private val _lastTimeCountDown = MutableLiveData("")
+    val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -68,7 +74,6 @@ class AlarmSettingViewModel @Inject constructor(
     }
 
     fun callAlarm(time: String) {
-        val time = "00:30:30"
         alarmFunctions.callAlarm(time, alarmTime.value ?: 0, ALARM_CODE)
     }
 
@@ -92,6 +97,24 @@ class AlarmSettingViewModel @Inject constructor(
 
     fun removeAlarmWorker() {
         workManager.cancelWorkById(workerId)
+    }
+
+    fun startCountDownTimer() {
+        val lastTimeMillis = makeFullTime(_alarmItem.value?.lastTime ?: "").timeInMillis
+        val nowTimeMillis = System.currentTimeMillis()
+        var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
+
+        viewModelScope.launch(Dispatchers.IO) {
+            var oldTimeMillis = System.currentTimeMillis()
+            while (diffTimeMillis > 0L) {
+                val delayMillis = System.currentTimeMillis() - oldTimeMillis
+                if (delayMillis == 1000L) {
+                    diffTimeMillis -= delayMillis
+                    _lastTimeCountDown.postValue(convertTimeMillisToString(diffTimeMillis))
+                    oldTimeMillis = System.currentTimeMillis()
+                }
+            }
+        }
     }
 
 }
