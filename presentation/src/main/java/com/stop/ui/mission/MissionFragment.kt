@@ -56,6 +56,8 @@ class MissionFragment : Fragment(), MissionHandler {
         initTMap()
         setMissionOver()
         setMissionFail()
+
+        Log.d("MissionWorker","onViewCreated")
     }
 
     override fun onDestroyView() {
@@ -110,7 +112,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
-        findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+        //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     override fun alertTMapReady() {
@@ -142,7 +144,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 if (index == 1) {
                     initMarker(userLocation)
                     beforeLocation = userLocation
-                } else {
+                } else if (index > 1) {
                     drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
                     personCurrentLocation = userLocation
                     if (tMap.isTracking) {
@@ -185,6 +187,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun getAlarmInfo() {
         alarmSettingViewModel.getAlarm()
         val linePoints = arrayListOf<TMapPoint>()
+        Log.d("MissionWorker","alarm으로 부터의 데이터 ${alarmSettingViewModel.alarmItem.value?.routes?.first()}")
         val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
         tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
@@ -229,7 +232,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                    //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
@@ -259,7 +262,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+                    //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
