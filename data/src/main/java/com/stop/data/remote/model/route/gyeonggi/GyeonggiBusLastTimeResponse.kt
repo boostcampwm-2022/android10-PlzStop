@@ -8,5 +8,5 @@ import com.tickaroo.tikxml.annotation.Xml
 internal data class GyeonggiBusLastTimeResponse(
     @Path("msgBody")
     @Element(name = "busRouteInfoItem")
-    val lastTimes: List<GyeonggiBusLastTime>?
+    val lastTimes: List<GyeonggiBusLastTime>
 )
