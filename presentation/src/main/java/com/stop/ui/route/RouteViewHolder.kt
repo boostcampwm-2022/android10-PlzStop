@@ -21,7 +21,7 @@ class RouteViewHolder(
     init {
         binding.recyclerviewTimeLine.adapter = adapter
         binding.recyclerviewTimeLine.setHasFixedSize(true)
-        binding.recyclerviewTimeLine.addItemDecoration(object: RecyclerView.ItemDecoration() {
+        binding.recyclerviewTimeLine.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
                 outRect: Rect,
                 view: View,
@@ -29,7 +29,7 @@ class RouteViewHolder(
                 state: RecyclerView.State
             ) {
                 if (parent.getChildAdapterPosition(view) != RecyclerView.NO_POSITION) {
-                    outRect.set(0, 0, -10, 0)
+                    outRect.set(0, 0, 0, 0)
                 }
             }
         })
@@ -56,11 +56,13 @@ class RouteViewHolder(
             )
         }
         adapter.submitList(routeItems)
-        binding.timeLineContainer.submitList(itinerary.routes)
+        binding.timeLineContainer.post {
+            binding.timeLineContainer.submitList(itinerary.routes)
+        }
     }
 
     private fun getTypeName(route: Route): String {
-        return when(route) {
+        return when (route) {
             is WalkRoute -> "도보"
             is TransportRoute -> getSubwayTypeName(route)
             else -> ""
@@ -68,7 +70,7 @@ class RouteViewHolder(
     }
 
     private fun getSubwayTypeName(route: TransportRoute): String {
-        return when(route.mode) {
+        return when (route.mode) {
             MoveType.SUBWAY -> route.routeInfo.replace("수도권", "")
             MoveType.BUS -> route.routeInfo.split(":")[1]
             else -> route.routeInfo

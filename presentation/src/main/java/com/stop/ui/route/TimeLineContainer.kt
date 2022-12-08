@@ -10,12 +10,12 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
+import androidx.core.view.doOnLayout
 import com.stop.R
 import com.stop.databinding.TimeLineItem2Binding
 import com.stop.domain.model.route.tmap.custom.MoveType
 import com.stop.domain.model.route.tmap.custom.Route
 import com.stop.domain.model.route.tmap.custom.TransportRoute
-import kotlinx.coroutines.CoroutineScope
 
 class TimeLineContainer(
     context: Context,
@@ -26,21 +26,50 @@ class TimeLineContainer(
         ContextCompat.getColor(context, R.color.grey_for_route_walk)
     private var beforeViewIconId: Int? = null
 
-    fun submitList(routes: List<Route>) {
-        routes.forEachIndexed { index, route ->
+    private var iconWidth: Int? = null
+    private var iconCount: Int? = null
+    private var textWidth: Int? = null
+    private var routeCount: Int? = null
 
-            val timeLineItem2Binding = TimeLineItem2Binding.inflate(
-                LayoutInflater.from(context),
-                this,
-                false,
-            ).apply {
-                root.id = View.generateViewId()
+    private val density = context.resources.displayMetrics.density
+
+    fun submitList(routes: List<Route>) {
+        var count = 0
+        routes.forEachIndexed { index, route ->
+            if (index == 0) {
+                return@forEachIndexed
             }
-//            this.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
-            addView(timeLineItem2Binding.root)
-            setBindingAttribute(timeLineItem2Binding, route, index)
-            TransitionManager.beginDelayedTransition(this@TimeLineContainer)
+            if (route.mode in listOf(MoveType.WALK, MoveType.TRANSFER)) {
+                return@forEachIndexed
+            }
+            count += 1
         }
+
+        iconWidth = convertDpToPixel(9f)
+//        iconWidth = convertDpToPixel(size) * routes.size
+        iconCount = count + 1
+
+        textWidth = convertDpToPixel(30f)
+        routeCount = routes.size
+
+        doOnLayout {
+            routes.forEachIndexed { index, route ->
+                val timeLineItem2Binding = TimeLineItem2Binding.inflate(
+                    LayoutInflater.from(context),
+                    this@TimeLineContainer,
+                    false,
+                ).apply {
+                    root.id = View.generateViewId()
+                }
+
+                addView(timeLineItem2Binding.root)
+                setBindingAttribute(timeLineItem2Binding, route, index)
+            }
+        }
+    }
+
+    private fun convertDpToPixel(size: Float): Int {
+        return (size * density + 0.5f).toInt()
     }
 
     private fun setBindingAttribute(binding: TimeLineItem2Binding, route: Route, index: Int) {
@@ -59,6 +88,8 @@ class TimeLineContainer(
                     setDefaultColor(binding)
                     binding.viewIcon.visibility = View.GONE
                     binding.imageViewIcon.visibility = View.GONE
+                    setWidth(binding, route.proportionOfSectionTime)
+                    setConstraint(binding)
                     return
                 }
                 R.drawable.time_line_directions_walk_16
@@ -95,8 +126,18 @@ class TimeLineContainer(
         with(ConstraintSet()) {
             clone(this@TimeLineContainer)
             connect(binding.root.id, ConstraintSet.START, endId, endSide)
-            connect(binding.root.id, ConstraintSet.TOP, this@TimeLineContainer.id, ConstraintSet.TOP)
-            connect(binding.root.id, ConstraintSet.BOTTOM, this@TimeLineContainer.id, ConstraintSet.BOTTOM)
+            connect(
+                binding.root.id,
+                ConstraintSet.TOP,
+                this@TimeLineContainer.id,
+                ConstraintSet.TOP
+            )
+            connect(
+                binding.root.id,
+                ConstraintSet.BOTTOM,
+                this@TimeLineContainer.id,
+                ConstraintSet.BOTTOM
+            )
             applyTo(this@TimeLineContainer)
         }
         beforeViewIconId = binding.root.id
@@ -106,10 +147,16 @@ class TimeLineContainer(
         binding: TimeLineItem2Binding,
         proportionOfSectionTime: Float
     ) {
-        this.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED)
+        val iconWidth = iconWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
+        val iconCount = iconCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
+        val textWidth = textWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
+        val routeCount = routeCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
 
-        val layoutParams = binding.root.layoutParams
-        layoutParams.width = (this.measuredWidth * proportionOfSectionTime).toInt()
+        val extraWidth =
+            this@TimeLineContainer.width - iconWidth * iconCount - textWidth * routeCount
+        binding.root.layoutParams.width =
+            (extraWidth * proportionOfSectionTime).toInt() + iconWidth + textWidth
+
     }
 
     private fun setIdentityColor(binding: TimeLineItem2Binding, route: TransportRoute) {
