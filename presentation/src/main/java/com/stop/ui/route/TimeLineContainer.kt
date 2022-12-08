@@ -30,6 +30,7 @@ class TimeLineContainer(
     private var iconCount: Int? = null
     private var textWidth: Int? = null
     private var routeCount: Int? = null
+    private var overlappingWidth: Int? = null
 
     private val density = context.resources.displayMetrics.density
 
@@ -46,11 +47,12 @@ class TimeLineContainer(
         }
 
         iconWidth = convertDpToPixel(9f)
-//        iconWidth = convertDpToPixel(size) * routes.size
         iconCount = count + 1
 
         textWidth = convertDpToPixel(30f)
         routeCount = routes.size
+
+        overlappingWidth = OVERLAPPING_MARGIN * (routes.size - 1)
 
         doOnLayout {
             routes.forEachIndexed { index, route ->
@@ -60,7 +62,14 @@ class TimeLineContainer(
                     false,
                 ).apply {
                     root.id = View.generateViewId()
+                    if (index != 0) {
+                        val layoutParams = root.layoutParams as MarginLayoutParams
+                        layoutParams.marginStart = -OVERLAPPING_MARGIN
+                        root.requestLayout()
+                        root.layoutParams = layoutParams
+                    }
                 }
+
 
                 addView(timeLineItem2Binding.root)
                 setBindingAttribute(timeLineItem2Binding, route, index)
@@ -151,12 +160,11 @@ class TimeLineContainer(
         val iconCount = iconCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
         val textWidth = textWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
         val routeCount = routeCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-
+        val overlappingWidth = overlappingWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
         val extraWidth =
-            this@TimeLineContainer.width - iconWidth * iconCount - textWidth * routeCount
+            this@TimeLineContainer.width - iconWidth * iconCount - textWidth * routeCount + overlappingWidth
         binding.root.layoutParams.width =
             (extraWidth * proportionOfSectionTime).toInt() + iconWidth + textWidth
-
     }
 
     private fun setIdentityColor(binding: TimeLineItem2Binding, route: TransportRoute) {
@@ -176,5 +184,9 @@ class TimeLineContainer(
                 ?: throw IllegalArgumentException()
         binding.viewIcon.background = drawable
         binding.viewIcon.background.setTintList(null)
+    }
+
+    companion object {
+        private const val OVERLAPPING_MARGIN = 10
     }
 }
