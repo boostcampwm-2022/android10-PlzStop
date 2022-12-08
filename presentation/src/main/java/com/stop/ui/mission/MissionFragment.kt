@@ -3,7 +3,6 @@ package com.stop.ui.mission
 import android.Manifest
 import android.animation.Animator
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
 import com.stop.R
@@ -57,14 +55,12 @@ class MissionFragment : Fragment(), MissionHandler {
         setMissionOver()
         setMissionFail()
 
-        Log.d("MissionWorker","onViewCreated")
     }
 
     override fun onDestroyView() {
         _binding = null
 
         super.onDestroyView()
-        Log.d("MissionWorker","onDestroyView")
     }
 
     private fun setDataBinding() {
@@ -112,8 +108,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
-        findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
-        Log.d("MissionWorker","clickMissionOver")
+        //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     override fun alertTMapReady() {
@@ -233,7 +228,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
                 override fun onAnimationEnd(animation: Animator) {
                     //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
-                    Log.d("MissionWorker","setSuccessAnimation onAnimationEnd")
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
@@ -264,7 +258,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
                 override fun onAnimationEnd(animation: Animator) {
                     //findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
-                    Log.d("MissionWorker","setFailAnimation onAnimationEnd")
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
@@ -285,11 +278,6 @@ class MissionFragment : Fragment(), MissionHandler {
                 }
             }
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("MissionWorker","onDestroy")
     }
 
     companion object {
