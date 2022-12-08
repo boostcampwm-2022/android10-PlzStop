@@ -1,5 +1,6 @@
 package com.stop.ui.util
 
+import com.stop.domain.model.route.seoul.subway.StationLastTime
 import com.stop.domain.model.route.tmap.custom.Itinerary
 import com.stop.model.route.RouteItem
 import java.text.DecimalFormat
