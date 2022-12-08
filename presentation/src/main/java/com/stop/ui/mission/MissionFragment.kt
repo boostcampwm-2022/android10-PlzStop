@@ -170,39 +170,47 @@ class MissionFragment : Fragment(), MissionHandler {
                         first += 1
                     }
                     1 -> {
+                        initMarker(userLocation)
                         beforeLocation = userLocation
-                        tMap.addMarker(
-                            Marker.PERSON_MARKER,
-                            Marker.PERSON_MARKER_IMG,
-                            TMapPoint(userLocation.latitude, userLocation.longitude)
-                        )
-                        missionViewModel.personCurrentLocation = userLocation
-                        tMap.latitudes.add(userLocation.latitude)
-                        tMap.longitudes.add(userLocation.longitude)
-                        tMap.setRouteDetailFocus()
                         first += 1
                     }
                     else -> {
-                        Log.d("MissionWorker", "그리는 중 $userLocation $beforeLocation")
-                        val nowLocation = TMapPoint(userLocation.latitude, userLocation.longitude)
-                        tMap.drawMoveLine(
-                            nowLocation,
-                            TMapPoint(beforeLocation.latitude, beforeLocation.longitude),
-                            Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
-                            Marker.PERSON_LINE_COLOR
-                        )
-                        tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
+                        drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
                         missionViewModel.personCurrentLocation = userLocation
                         if (tMap.isTracking) {
                             tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
                         }
                         beforeLocation = userLocation
-                        PERSON_LINE_NUM += 1
                     }
                 }
-
             }
         }
+    }
+
+    private fun initMarker(nowLocation: Location) {
+        with(tMap) {
+            addMarker(
+                Marker.PERSON_MARKER,
+                Marker.PERSON_MARKER_IMG,
+                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+            )
+            missionViewModel.personCurrentLocation = nowLocation
+            latitudes.add(nowLocation.latitude)
+            longitudes.add(nowLocation.longitude)
+            setRouteDetailFocus()
+        }
+    }
+
+    private fun drawNowLocationLine(nowLocation: TMapPoint, beforeLocation: TMapPoint) {
+        tMap.drawMoveLine(
+            nowLocation,
+            beforeLocation,
+            Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+            Marker.PERSON_LINE_COLOR
+        )
+        PERSON_LINE_NUM += 1
+
+        tMap.addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, nowLocation)
     }
 
     private fun getAlarmInfo() {
