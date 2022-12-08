@@ -16,3 +16,6 @@ fun isMoreThanOreoUnderRedVelVet(): Boolean =
 
 fun isMoreThanSnow(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+fun isMOreThanRedVelVet(): Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.R

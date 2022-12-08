@@ -1,50 +1,45 @@
 package com.stop.alarm
 
 import android.app.AlarmManager
-import android.app.PendingIntent
+import android.app.NotificationManager
 import android.content.Context
-import android.content.Intent
-import com.stop.isMoreThanSnow
 import com.stop.makeFullTime
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID
+import com.stop.util.getAlarmReceiverPendingIntent
+import com.stop.util.getAlarmSettingNotification
+import com.stop.util.getAlarmSettingPendingIntent
 
 class AlarmFunctions(
     private val context: Context
 ) {
+    fun callAlarm(lastTime: String, alarmTime: Int) {
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    private lateinit var pendingIntent: PendingIntent
+        val alarmSettingPendingIntent = context.getAlarmSettingPendingIntent()
+        val alarmSettingNotification = context.getAlarmSettingNotification(
+            alarmSettingPendingIntent,
+            "알람이 막차시간 ${lastTime}에서 ${alarmTime}전에 울릴예정입니다."
+        )
+        notificationManager.notify(ALARM_NOTIFICATION_ID, alarmSettingNotification)
 
-    fun callAlarm(lastTime: String, alarmTime: Int, alarmCode: Int) {
+        val alarmReceiverPendingIntent = context.getAlarmReceiverPendingIntent()
+
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        val receiverIntent = Intent(context, AlarmReceiver::class.java)
-        receiverIntent.apply {
-            putExtra("ALARM_CODE", alarmCode)
-        }
-
-        val pendingIntent = if (isMoreThanSnow()) {
-            PendingIntent.getBroadcast(context, alarmCode, receiverIntent, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getBroadcast(context, alarmCode, receiverIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
-
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             makeFullTime(lastTime).timeInMillis - (alarmTime * 60 * 1000),
-            pendingIntent
+            alarmReceiverPendingIntent
         )
     }
 
-    fun cancelAlarm(alarmCode: Int) {
+    fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(context, AlarmReceiver::class.java)
+        val alarmReceiverPendingIntent = context.getAlarmReceiverPendingIntent()
 
-        pendingIntent = if (isMoreThanSnow()) {
-            PendingIntent.getBroadcast(context, alarmCode, intent, PendingIntent.FLAG_IMMUTABLE)
-        } else {
-            PendingIntent.getBroadcast(context, alarmCode, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        }
+        alarmManager.cancel(alarmReceiverPendingIntent)
 
-        alarmManager.cancel(pendingIntent)
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(ALARM_NOTIFICATION_ID)
     }
 
 }
