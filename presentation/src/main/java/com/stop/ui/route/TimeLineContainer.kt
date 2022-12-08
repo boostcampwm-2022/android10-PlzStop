@@ -93,11 +93,11 @@ class TimeLineContainer(
         TransitionManager.beginDelayedTransition(this@TimeLineContainer)
 
         with(ConstraintSet()) {
-            clone(binding.root)
+            clone(this@TimeLineContainer)
             connect(binding.root.id, ConstraintSet.START, endId, endSide)
             connect(binding.root.id, ConstraintSet.TOP, this@TimeLineContainer.id, ConstraintSet.TOP)
             connect(binding.root.id, ConstraintSet.BOTTOM, this@TimeLineContainer.id, ConstraintSet.BOTTOM)
-            applyTo(binding.root)
+            applyTo(this@TimeLineContainer)
         }
         beforeViewIconId = binding.root.id
     }
