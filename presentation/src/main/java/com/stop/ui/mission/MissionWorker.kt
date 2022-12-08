@@ -28,7 +28,7 @@ import kotlinx.coroutines.delay
 
 @HiltWorker
 class MissionWorker @AssistedInject constructor(
-    @Assisted context: Context,
+    @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val missionManager: MissionManager
 ) : CoroutineWorker(context, workerParameters) {
@@ -80,7 +80,7 @@ class MissionWorker @AssistedInject constructor(
 
         createChannel(id)
 
-        val pendingIntent = PendingIntent.getActivity(applicationContext, MISSION_CODE, Intent(applicationContext, MainActivity::class.java).apply {
+        val pendingIntent = PendingIntent.getActivity(context, 0, Intent(applicationContext, MainActivity::class.java).apply {
             putExtra("MISSION_CODE", MISSION_CODE)
         }, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
