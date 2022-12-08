@@ -3,7 +3,6 @@ package com.stop.ui.map
 import android.Manifest.permission
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -133,7 +132,7 @@ class MapFragment : Fragment(), MapHandler {
 
         alarmViewModel.getAlarm()
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner){
+        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
 
@@ -223,7 +222,7 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick(){
+    private fun listenButtonClick() {
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
             turnOffSoundService()
@@ -252,8 +251,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        Log.d("MissionWorker","mission 버튼 클릭")
-       findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {

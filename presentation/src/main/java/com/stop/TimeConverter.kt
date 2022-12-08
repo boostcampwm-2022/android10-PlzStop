@@ -24,3 +24,11 @@ fun makeFullTime(time: String): Calendar {
 
     return calendar
 }
+
+fun convertTimeMillisToString(time: Long): String {
+    val hours = (time / 1000) / 60 / 60 % 24
+    val minutes = (time / 1000) / 60 % 60
+    val seconds = (time / 1000) % 60
+
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+}

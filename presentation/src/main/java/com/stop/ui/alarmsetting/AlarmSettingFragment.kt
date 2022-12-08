@@ -40,8 +40,6 @@ class AlarmSettingFragment : Fragment() {
 
         initView()
         setToggleListener()
-
-        // TODO 뷰모델 가져와서 경로 막차시간 등 연결 작업해야함
     }
 
     private fun initBinding() {
@@ -57,8 +55,8 @@ class AlarmSettingFragment : Fragment() {
         binding.apply {
             lifecycleOwner = viewLifecycleOwner
             alarmViewModel = alarmSettingViewModel
-            startPosition = itinerary.routes.first().start.name
-            endPosition = itinerary.routes.last().end.name
+            startPosition = routeResultViewModel.origin.value?.name
+            endPosition = routeResultViewModel.destination.value?.name
             lastTime = transportLastTime.timeToBoard
             walkTime = (itinerary.routes.first().sectionTime.div(60)).roundToInt()
             fragment = this@AlarmSettingFragment
@@ -98,8 +96,8 @@ class AlarmSettingFragment : Fragment() {
         }.first()
 
         val alarmUseCaseItem = AlarmUseCaseItem(
-            startPosition = itinerary.routes.first().start.name,
-            endPosition = itinerary.routes.last().end.name,
+            startPosition = routeResultViewModel.origin.value?.name ?: "",
+            endPosition = routeResultViewModel.destination.value?.name ?: "",
             routes = itinerary.routes,
             lastTime = transportLastTime.timeToBoard,
             walkTime = (itinerary.routes.first().sectionTime.div(60)).roundToInt(),
@@ -110,7 +108,7 @@ class AlarmSettingFragment : Fragment() {
 
         alarmSettingViewModel.saveAlarm(alarmUseCaseItem)
         alarmSettingViewModel.callAlarm(transportLastTime.timeToBoard)
-        alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
+        //alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
 
         val navController = findNavController()
         navController.setGraph(R.navigation.nav_graph)
