@@ -1,6 +1,5 @@
 package com.stop.ui.util
 
-import android.graphics.Color
 import com.stop.R
 
 object Marker {
@@ -16,11 +15,11 @@ object Marker {
     const val PERSON_MARKER = "person_marker"
     const val PERSON_MARKER_IMG = R.drawable.ic_person_marker
     const val PERSON_LINE = "person_line"
-    const val PERSON_LINE_COLOR = Color.MAGENTA
+    const val PERSON_LINE_COLOR = R.color.mint
 
     const val DESTINATION_MARKER = "destination_marker"
     const val DESTINATION_MARKER_IMG = R.drawable.ic_start_marker
 
     const val WALK_LINE = "walk_line"
-    const val WALK_LINE_COLOR = Color.BLACK
+    const val WALK_LINE_COLOR = R.color.main_dark_grey
 }
