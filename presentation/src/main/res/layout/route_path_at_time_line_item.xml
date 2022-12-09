@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.stop.ui.util.DrawerStringUtils" />
+
+        <import type="android.view.View" />
+
+        <variable
+            name="routeItem"
+            type="com.stop.model.route.RouteItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="5dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="30dp" />
+
+        <TextView
+            android:id="@+id/text_view_type_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="2dp"
+            android:gravity="center_vertical"
+            android:minEms="4"
+            android:text="@{routeItem.typeName}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="에버라인" />
+
+        <TextView
+            android:id="@+id/text_view_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="2dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:lines="1"
+            android:maxEms="12"
+            android:text="@{routeItem.name}"
+            android:textColor="@color/main_dark_grey"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/text_view_type_name"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="미금역.청솔마을.2001.아울렛123123" />
+
+        <View
+            android:id="@+id/view_before_line"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="-3dp"
+            android:background="@{routeItem.beforeColor}"
+            app:layout_constraintBottom_toTopOf="@id/view_image_icon_center"
+            app:layout_constraintStart_toStartOf="@id/view_image_icon_center"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:background="@color/main_yellow" />
+
+        <View
+            android:id="@+id/view_current_line"
+            android:layout_width="6dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="-3dp"
+            android:background="@{routeItem.currentColor}"
+            android:visibility="@{routeItem.typeName == `하차` ? View.GONE : View.VISIBLE}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/view_image_icon_center"
+            app:layout_constraintTop_toBottomOf="@id/view_image_icon_center"
+            tools:background="@color/main_light_grey" />
+
+        <View
+            android:id="@+id/view_image_icon_center"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/image_view_current_line"
+            app:layout_constraintEnd_toEndOf="@id/image_view_current_line"
+            app:layout_constraintStart_toStartOf="@id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="@id/image_view_current_line" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_view_current_line"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:tint="@{routeItem.currentColor}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_circle"
+            tools:tint="@color/main_light_grey" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:contentDescription="@string/route_type_image_content_description"
+            app:imageResource="@{routeItem.mode}"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_current_line"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_current_line"
+            app:layout_constraintStart_toStartOf="@+id/image_view_current_line"
+            app:layout_constraintTop_toTopOf="@+id/image_view_current_line"
+            tools:src="@drawable/ic_walk_white" />
+
+        <View
+            android:id="@+id/view_line"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:background="@color/main_lighter_grey"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/view_before_line"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
