@@ -123,6 +123,9 @@ class AlarmSettingFragment : Fragment() {
 
     companion object {
         const val ALARM_CODE = 123
+        const val ALARM_MAP_CODE = 122
+        const val ALARM_NOTIFICATION_ID = 121
+        const val ALARM_NOTIFICATION_HIGH_ID = 120
         const val LAST_TIME = "lastTime"
         const val ALARM_TIME = "alarmTime"
     }

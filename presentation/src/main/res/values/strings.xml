@@ -41,6 +41,8 @@
     <string name="delete_recent_search_text">최근기록 삭제</string>
     <string name="notification_channel_id">notification_channel_id</string>
     <string name="notification_channel_name">notification_channel_name</string>
+    <string name="notification_channel_high_id">notification_channel_high_id</string>
+    <string name="notification_channel_high_name">notification_channel_high_name</string>
     <string name="notification_title">막차 알림</string>
     <string name="alarm_cancel_text">취소하기</string>
     <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
@@ -72,5 +74,9 @@
     <string name="end_position">도착지</string>
     <string name="last_time">막차시간</string>
     <string name="expect_walk_time">예상 도보 시간</string>
+    <string name="route_type_image_content_description">대중 교통의 종류를 나타내는 이미지입니다.</string>
+    <string name="start_position_text">출발지 : %1$s</string>
+    <string name="end_position_text">도착지 : %1$s</string>
+    <string name="last_time_text">막차시간 : %1$s</string>
     <string name="walk_time_text">%1$d분</string>
 </resources>

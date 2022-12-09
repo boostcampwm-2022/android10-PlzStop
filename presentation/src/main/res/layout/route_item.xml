@@ -27,18 +27,26 @@
             app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
             tools:text="1시간 10분" />
 
+        <com.stop.ui.route.TimeLineContainer
+            android:id="@+id/time_line_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_time_line"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:listitem="@layout/time_line_item"
             android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/text_view_required_time_text"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
-            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical" />
+            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintTop_toBottomOf="@id/time_line_container"
+            tools:listitem="@layout/route_path_at_time_line_item" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_vertical"

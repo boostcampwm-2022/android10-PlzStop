@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stop.domain.model.geoLocation.GeoLocationInfo
+import com.stop.domain.model.geoLocation.toClickedGeoLocationInfo
 import com.stop.domain.model.nearplace.PlaceUseCaseItem
 import com.stop.domain.usecase.geoLocation.GeoLocationUseCase
 import com.stop.domain.usecase.nearplace.DeleteRecentPlaceSearchUseCase
@@ -15,6 +16,7 @@ import com.stop.domain.usecase.nearplace.InsertRecentPlaceSearchUseCase
 import com.stop.model.Event
 import com.stop.model.Location
 import com.stop.model.route.Coordinate
+import com.stop.ui.map.MapTMap
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -33,8 +35,9 @@ class PlaceSearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     // 기본 주소로 서울역 주소 지정
+    var tMap: MapTMap? = null
     var currentLocation = Location(37.553836, 126.969652)
-
+    var clickedPlaceName = ""
     var panelInfo: com.stop.model.route.Place? = null
 
     private val _nearPlaces = MutableStateFlow<List<PlaceUseCaseItem>>(emptyList())
@@ -91,6 +94,7 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun setClickPlace(placeUseCaseItem: PlaceUseCaseItem) {
         _clickPlaceUseCaseItem.value = Event(placeUseCaseItem)
+        clickedPlaceName = placeUseCaseItem.name
     }
 
     fun setClickCurrentLocation() {
@@ -99,13 +103,19 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
-    fun getGeoLocationInfo(latitude: Double, longitude: Double) {
+    fun getGeoLocationInfo(latitude: Double, longitude: Double, isClickedFromPlaceSearch: Boolean) {
         viewModelScope.launch {
             try {
-                _geoLocation.value = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+                val geoLocationInfo = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+
+                _geoLocation.value = if (isClickedFromPlaceSearch) {
+                    geoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName)
+                } else {
+                    geoLocationInfo
+                }
+                _panelVisibility.value = View.VISIBLE
 
                 readySendValue(latitude, longitude)
-                _panelVisibility.value = View.VISIBLE
                 getDistance(latitude, longitude)
             } catch (e: IllegalArgumentException) {
                 errorMessageChannel.send(e.message ?: "something is wrong")
@@ -146,4 +156,7 @@ class PlaceSearchViewModel @Inject constructor(
         }
     }
 
+    fun setPanelVisibility(panelVisibility: Int) {
+        _panelVisibility.value = panelVisibility
+    }
 }

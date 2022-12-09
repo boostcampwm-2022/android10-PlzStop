@@ -7,15 +7,14 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.stop.AlarmFunctions
-import com.stop.LastTimeCheckWorker
+import com.stop.alarm.AlarmFunctions
+import com.stop.alarm.LastTimeCheckWorker
 import com.stop.convertTimeMillisToString
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
 import com.stop.makeFullTime
-import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,11 +76,11 @@ class AlarmSettingViewModel @Inject constructor(
     }
 
     fun callAlarm(time: String) {
-        alarmFunctions.callAlarm("01:00:00", alarmTime.value ?: 0, ALARM_CODE)
+        alarmFunctions.callAlarm(time, alarmTime.value ?: 0)
     }
 
     private fun cancelAlarm() {
-        alarmFunctions.cancelAlarm(ALARM_CODE)
+        alarmFunctions.cancelAlarm()
     }
 
     fun makeAlarmWorker(time : String) {

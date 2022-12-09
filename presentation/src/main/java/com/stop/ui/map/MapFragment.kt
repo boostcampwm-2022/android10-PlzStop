@@ -12,18 +12,19 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
-import com.stop.SoundService
+import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
+import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
@@ -42,7 +43,6 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-
         initBinding()
 
         return binding.root
@@ -52,20 +52,27 @@ class MapFragment : Fragment(), MapHandler {
         super.onViewCreated(view, savedInstanceState)
 
         initTMap()
-        initNavigateAction()
         initBottomSheetBehavior()
-        listenButtonClick()
+        initBottomSheetView()
     }
 
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
 
         tMap.initListener()
+        initAfterTMapReady()
+    }
+
+    private fun initAfterTMapReady() {
+        initView()
+        initNavigateAction()
         observeClickPlace()
         observeClickCurrentLocation()
     }
 
     private fun initBinding() {
+        alarmViewModel.getAlarm()
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
@@ -73,12 +80,17 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initTMap() {
-        tMap = MapTMap(requireActivity(), this)
-        tMap.init()
+        placeSearchViewModel.tMap?.let {
+            tMap = it
+            tMap.setHandler(this)
+            initAfterTMapReady()
+        } ?: run {
+            tMap = MapTMap(requireActivity(), this)
+            tMap.init()
+            placeSearchViewModel.tMap = tMap
+        }
 
-        binding.frameLayoutContainer.addView(tMap.tMapView)
-
-        initView()
+        binding.layoutContainer.addView(tMap.tMapView)
     }
 
     private fun initView() {
@@ -109,29 +121,37 @@ class MapFragment : Fragment(), MapHandler {
 
     private fun initNavigateAction() {
         binding.textViewSearch.setOnClickListener {
-            binding.root.findNavController()
-                .navigate(R.id.action_mapFragment_to_placeSearchFragment)
+            findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
         }
 
-        binding.layoutPanel.findViewById<View>(R.id.view_panel_start).setOnClickListener {
-            val navController = findNavController()
-            navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setStart(placeSearchViewModel.panelInfo)
-            navController.navigate(action)
+        binding.homePanel.viewPanelStart.setOnClickListener {
+            findNavController().apply {
+                setGraph(R.navigation.route_nav_graph)
+                navigate(
+                    RouteNavGraphDirections.actionGlobalRouteFragment()
+                        .setStart(placeSearchViewModel.panelInfo)
+                )
+            }
         }
 
-        binding.layoutPanel.findViewById<View>(R.id.view_panel_end).setOnClickListener {
-            val navController = findNavController()
-            navController.setGraph(R.navigation.route_nav_graph)
-            val action = RouteNavGraphDirections.actionGlobalRouteFragment().setEnd(placeSearchViewModel.panelInfo)
-            navController.navigate(action)
+        binding.homePanel.viewPanelEnd.setOnClickListener {
+            findNavController().apply {
+                setGraph(R.navigation.route_nav_graph)
+                navigate(
+                    RouteNavGraphDirections.actionGlobalRouteFragment()
+                        .setEnd(placeSearchViewModel.panelInfo)
+                )
+            }
         }
     }
 
     private fun initBottomSheetBehavior() {
-        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+        val displaySize = requireContext().getScreenSize()
+        val displayHeight = displaySize.height
 
-        alarmViewModel.getAlarm()
+        binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
+
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
         alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
@@ -158,8 +178,16 @@ class MapFragment : Fragment(), MapHandler {
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
-
         })
+    }
+
+    private fun initBottomSheetView() {
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            alarmViewModel.deleteAlarm()
+        }
     }
 
     private fun observeClickPlace() {
@@ -167,13 +195,14 @@ class MapFragment : Fragment(), MapHandler {
             event.getContentIfNotHandled()?.let { clickPlace ->
                 val clickTMapPoint = TMapPoint(clickPlace.centerLat, clickPlace.centerLon)
 
+                tMap.isTracking = false
                 tMap.tMapView.setCenterPoint(
                     clickTMapPoint.latitude,
                     clickTMapPoint.longitude,
                     true
                 )
                 tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, clickTMapPoint)
-                setPanel(clickTMapPoint)
+                setPanel(clickTMapPoint, true)
             }
         }
     }
@@ -187,18 +216,23 @@ class MapFragment : Fragment(), MapHandler {
                     val currentTMapPoint =
                         TMapPoint(currentLocation.latitude, currentLocation.longitude)
 
+                    tMap.isTracking = false
                     tMap.tMapView.setCenterPoint(
                         currentTMapPoint.latitude,
                         currentTMapPoint.longitude
                     )
                     tMap.addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, currentTMapPoint)
-                    setPanel(currentTMapPoint)
+                    setPanel(currentTMapPoint, false)
                 }
         }
     }
 
-    override fun setPanel(tMapPoint: TMapPoint) {
-        placeSearchViewModel.getGeoLocationInfo(tMapPoint.latitude, tMapPoint.longitude)
+    override fun setPanel(tMapPoint: TMapPoint, isClickedFromPlaceSearch: Boolean) {
+        placeSearchViewModel.getGeoLocationInfo(
+            tMapPoint.latitude,
+            tMapPoint.longitude,
+            isClickedFromPlaceSearch
+        )
     }
 
     override fun setOnLocationChangeListener(location: android.location.Location) {
@@ -206,8 +240,8 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     override fun setOnDisableScrollWIthZoomLevelListener() {
-        if (binding.layoutPanel.visibility == View.VISIBLE) {
-            binding.layoutPanel.visibility = View.GONE
+        if (binding.homePanel.layoutPanel.visibility == View.VISIBLE) {
+            binding.homePanel.layoutPanel.visibility = View.GONE
             tMap.tMapView.removeTMapMarkerItem(Marker.PLACE_MARKER)
         } else {
             setViewVisibility()
@@ -237,7 +271,24 @@ class MapFragment : Fragment(), MapHandler {
         requireContext().stopService(intent)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
+            if (it == ALARM_MAP_CODE) {
+                showBottomSheet()
+            }
+        }
+    }
+
+    private fun showBottomSheet() {
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
     override fun onDestroyView() {
+        placeSearchViewModel.setPanelVisibility(binding.homePanel.layoutPanel.visibility)
+        binding.layoutContainer.removeView(tMap.tMapView)
         _binding = null
 
         super.onDestroyView()
@@ -252,6 +303,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
+        alarmViewModel.lastTimeCountDown.value?.let {
+            if (it.isBlank()) {
+                alarmViewModel.startCountDownTimer()
+            }
+        }
         findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
