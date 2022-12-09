@@ -46,7 +46,7 @@
             android:id="@+id/layout_alarm_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_button"
+            android:background="@drawable/background_panel_button"
             android:elevation="15dp"
             android:padding="15dp"
             android:layout_marginTop="10dp"
