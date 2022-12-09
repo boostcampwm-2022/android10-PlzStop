@@ -75,4 +75,8 @@
     <string name="last_time">막차시간</string>
     <string name="expect_walk_time">예상 도보 시간</string>
     <string name="route_type_image_content_description">대중 교통의 종류를 나타내는 이미지입니다.</string>
+    <string name="start_position_text">출발지 : %1$s</string>
+    <string name="end_position_text">도착지 : %1$s</string>
+    <string name="last_time_text">막차시간 : %1$s</string>
+    <string name="walk_time_text">도보시간 : %1$d분</string>
 </resources>
