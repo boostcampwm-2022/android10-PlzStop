@@ -250,7 +250,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun setViewVisibility() {
-        with (binding) {
+        with(binding) {
             textViewSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
