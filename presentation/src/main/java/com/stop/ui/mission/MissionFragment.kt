@@ -141,6 +141,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 if (index == 1) {
                     initMarker(userLocation)
                     beforeLocation = userLocation
+                    personCurrentLocation = userLocation
                 } else if (index > 1) {
                     drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
                     personCurrentLocation = userLocation
