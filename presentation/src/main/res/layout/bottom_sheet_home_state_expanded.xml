@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.walkTime}"
+                android:text="@{@string/walk_time_text(viewModel.alarmItem.walkTime)}"
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -51,6 +51,17 @@ class MissionWorker @AssistedInject constructor(
     }
 
     private fun getPersonLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    missionManager.userLocation.value = Location(location.latitude, location.longitude)
+                    Log.d("MissionWorker", "initLocation(last) ${location.latitude} , ${location.longitude}")
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+
         if (ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -115,7 +126,6 @@ class MissionWorker @AssistedInject constructor(
     companion object {
         const val NOTIFICATION_ID = 82
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
-        private var NUM = 0
         private const val INTERVAL_UNIT = 1000L
         const val MISSION_CODE = 88
     }
