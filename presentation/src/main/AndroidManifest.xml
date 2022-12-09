@@ -50,6 +50,7 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/Theme.Splash">
 
             <intent-filter>

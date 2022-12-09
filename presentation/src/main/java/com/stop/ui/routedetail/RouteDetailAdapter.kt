@@ -20,6 +20,7 @@ class RouteDetailAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
+            binding.executePendingBindings()
         }
     }
 
@@ -28,6 +29,7 @@ class RouteDetailAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
+            binding.executePendingBindings()
         }
     }
 
@@ -36,6 +38,7 @@ class RouteDetailAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
+            binding.executePendingBindings()
         }
     }
 

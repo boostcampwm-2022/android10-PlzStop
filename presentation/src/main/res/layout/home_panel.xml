@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="placeSearchViewModel"
             type="com.stop.ui.placesearch.PlaceSearchViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="@{placeSearchViewModel.panelVisibility}"
         android:background="@drawable/background_panel">
 
         <ImageView

@@ -13,11 +13,15 @@ import com.stop.ui.util.TMap
 
 class MapTMap(
     context: Context,
-    private val handler: MapHandler,
+    private var handler: MapHandler,
 ) : TMap(context, handler) {
 
     private val enablePoints = mutableSetOf<Location>()
     private var isLongClick = false
+
+    fun setHandler(handler: MapHandler) {
+        this.handler = handler
+    }
 
     fun initListener() {
         tMapView.setOnClickListenerCallback(onClickListenerCallback)
@@ -54,7 +58,7 @@ class MapTMap(
             isLongClick = true
             tMapView.setCenterPoint(tMapPoint.latitude, tMapPoint.longitude, true)
             addMarker(Marker.PLACE_MARKER, Marker.PLACE_MARKER_IMG, tMapPoint)
-            handler.setPanel(tMapPoint)
+            handler.setPanel(tMapPoint, false)
         }
 
     private val onEnableScrollWithZoomLevelCallback =
