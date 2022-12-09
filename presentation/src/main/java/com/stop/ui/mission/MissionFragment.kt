@@ -138,10 +138,10 @@ class MissionFragment : Fragment(), MissionHandler {
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
             missionViewModel.userLocation.collectIndexed { index, userLocation ->
-                if (index == 1) {
+                if (index == 0) {
                     initMarker(userLocation)
                     beforeLocation = userLocation
-                } else if (index > 1) {
+                } else if (index > 0) {
                     drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
                     personCurrentLocation = userLocation
                     if (tMap.isTracking) {

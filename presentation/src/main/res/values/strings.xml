@@ -78,5 +78,5 @@
     <string name="start_position_text">출발지 : %1$s</string>
     <string name="end_position_text">도착지 : %1$s</string>
     <string name="last_time_text">막차시간 : %1$s</string>
-    <string name="walk_time_text">도보시간 : %1$d분</string>
+    <string name="walk_time_text">%1$d분</string>
 </resources>

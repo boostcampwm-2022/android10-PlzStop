@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -51,6 +50,16 @@ class MissionWorker @AssistedInject constructor(
     }
 
     private fun getPersonLocation() {
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    missionManager.userLocation.value = Location(location.latitude, location.longitude)
+                }
+            }
+            .addOnFailureListener {
+                it.printStackTrace()
+            }
+
         if (ActivityCompat.checkSelfPermission(
                 applicationContext,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -102,7 +111,6 @@ class MissionWorker @AssistedInject constructor(
 
     private fun createChannel(id: String) {
         if (isMoreThanOreo()) {
-            Log.d("MissionWorker", "createChannel ${notificationManager.getNotificationChannel(id)}")
             if (notificationManager.getNotificationChannel(id) == null) {
                 val name = applicationContext.getString(R.string.mission_notification_channel_name)
                 NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
@@ -115,7 +123,6 @@ class MissionWorker @AssistedInject constructor(
     companion object {
         const val NOTIFICATION_ID = 82
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
-        private var NUM = 0
         private const val INTERVAL_UNIT = 1000L
         const val MISSION_CODE = 88
     }
