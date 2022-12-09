@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 import android.os.Build
 import android.os.Looper
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
@@ -55,7 +54,6 @@ class MissionWorker @AssistedInject constructor(
             .addOnSuccessListener { location ->
                 if (location != null) {
                     missionManager.userLocation.value = Location(location.latitude, location.longitude)
-                    Log.d("MissionWorker", "initLocation(last) ${location.latitude} , ${location.longitude}")
                 }
             }
             .addOnFailureListener {
@@ -113,7 +111,6 @@ class MissionWorker @AssistedInject constructor(
 
     private fun createChannel(id: String) {
         if (isMoreThanOreo()) {
-            Log.d("MissionWorker", "createChannel ${notificationManager.getNotificationChannel(id)}")
             if (notificationManager.getNotificationChannel(id) == null) {
                 val name = applicationContext.getString(R.string.mission_notification_channel_name)
                 NotificationChannel(id, name, NotificationManager.IMPORTANCE_DEFAULT).apply {
