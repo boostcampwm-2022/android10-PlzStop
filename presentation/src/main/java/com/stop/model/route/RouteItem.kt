@@ -11,7 +11,8 @@ data class RouteItem(
     val lastTime: String?,
     val beforeColor: Int,
     val currentColor: Int,
-    val type: RouteItemType
+    val type: RouteItemType,
+    val typeName: String = "",
 )
 
 fun RouteItem.toFirstRouteItem(): RouteItem {
@@ -20,7 +21,10 @@ fun RouteItem.toFirstRouteItem(): RouteItem {
     )
 }
 
-fun RouteItem.toLastRouteItem(name: String, coordinate: com.stop.model.route.Coordinate): RouteItem {
+fun RouteItem.toLastRouteItem(
+    name: String,
+    coordinate: com.stop.model.route.Coordinate
+): RouteItem {
     return this.copy(
         name = name,
         coordinate = Coordinate(coordinate.latitude, coordinate.longitude),

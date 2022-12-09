@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
@@ -12,6 +13,10 @@
         <variable
             name="alarmViewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
+
+        <variable
+            name="fragment"
+            type="com.stop.ui.map.MapFragment" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -145,9 +150,20 @@
 
                 <include
                     android:id="@+id/home_bottom_sheet"
+                    layout="@layout/home_bottom_sheet"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     bind:alarmViewModel="@{alarmViewModel}"
-                    layout="@layout/home_bottom_sheet" />
+                    bind:fragment="@{fragment}" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
+
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </layout>

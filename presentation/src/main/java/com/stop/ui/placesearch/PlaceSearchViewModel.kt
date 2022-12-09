@@ -105,17 +105,21 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun getGeoLocationInfo(latitude: Double, longitude: Double, isClickedFromPlaceSearch: Boolean) {
         viewModelScope.launch {
-            val geoLocationInfo = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+            try {
+                val geoLocationInfo = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
 
-            _geoLocation.value = if (isClickedFromPlaceSearch) {
-                geoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName)
-            } else {
-                geoLocationInfo
+                _geoLocation.value = if (isClickedFromPlaceSearch) {
+                    geoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName)
+                } else {
+                    geoLocationInfo
+                }
+                _panelVisibility.value = View.VISIBLE
+
+                readySendValue(latitude, longitude)
+                getDistance(latitude, longitude)
+            } catch (e: IllegalArgumentException) {
+                errorMessageChannel.send(e.message ?: "something is wrong")
             }
-            _panelVisibility.value = View.VISIBLE
-
-            readySendValue(latitude, longitude)
-            getDistance(latitude, longitude)
         }
     }
 

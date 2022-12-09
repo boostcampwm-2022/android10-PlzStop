@@ -51,7 +51,12 @@
     <fragment
         android:id="@+id/missionFragment"
         android:name="com.stop.ui.mission.MissionFragment"
-        android:label="MissionFragment" />
+        tools:layout="@layout/fragment_mission"
+        android:label="MissionFragment" >
+        <action
+            android:id="@+id/action_missionFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+    </fragment>
 
     <action
         android:id="@+id/action_global_mapFragment"
@@ -60,4 +65,5 @@
     <action
         android:id="@+id/action_global_placeSearchFragment"
         app:destination="@id/placeSearchFragment" />
+
 </navigation>

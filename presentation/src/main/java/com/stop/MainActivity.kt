@@ -15,6 +15,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.stop.databinding.ActivityMainBinding
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.ui.mission.MissionWorker.Companion.MISSION_CODE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,15 +25,30 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
+        setIntent(intent)
 
         intent?.extras?.getInt("ALARM_CODE")?.let {
-            val navHostFragment =
-                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-            val inflater = navHostFragment.navController.navInflater
-            val graph = inflater.inflate(R.navigation.nav_graph)
-            graph.setStartDestination(R.id.alarmStartFragment)
+            if (it == ALARM_CODE) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val inflater = navHostFragment.navController.navInflater
+                val graph = inflater.inflate(R.navigation.nav_graph)
+                graph.setStartDestination(R.id.alarmStartFragment)
 
-            navHostFragment.navController.graph = graph
+                navHostFragment.navController.graph = graph
+            }
+        }
+
+        intent?.extras?.getInt("MISSION_CODE")?.let {
+            if (it == MISSION_CODE) {
+                val navHostFragment =
+                    supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val inflater = navHostFragment.navController.navInflater
+                val graph = inflater.inflate(R.navigation.nav_graph)
+                graph.setStartDestination(R.id.missionFragment)
+
+                navHostFragment.navController.graph = graph
+            }
         }
     }
 

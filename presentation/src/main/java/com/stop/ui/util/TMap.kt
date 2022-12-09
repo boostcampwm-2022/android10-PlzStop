@@ -20,8 +20,10 @@ open class TMap(
     lateinit var tMapView: TMapView
     lateinit var initLocation: Location
 
+    val latitudes = arrayListOf<Double>()
+    val longitudes = arrayListOf<Double>()
+
     var isTracking = true
-    var isTransportTracking = false
 
     fun init() {
         tMapView = TMapView(context).apply {
@@ -61,38 +63,17 @@ open class TMap(
         manager.setOnLocationChangeListener(onLocationChangeListener)
     }
 
-    fun trackingTransport(location: Location) {
-        if (isTransportTracking.not()) {
-            return
-        }
-        tMapView.setCenterPoint(
-            location.latitude,
-            location.longitude,
-            true
-        )
-    }
-
     private val onLocationChangeListener = TMapGpsManager.OnLocationChangedListener { location ->
         if (location != null && checkLocationInTMapLocation(location)) {
-            val beforeLocation = tMapView.locationPoint
             val nowLocation = TMapPoint(location.latitude, location.longitude)
-            if (handler is MissionHandler) {
-                if (Location(beforeLocation.latitude, beforeLocation.longitude) != initLocation) {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, true)
-                } else {
-                    handler.setOnLocationChangeListener(nowLocation, beforeLocation, false)
-                }
-            } else if (handler is MapHandler) {
-                handler.setOnLocationChangeListener(location)
-            }
 
-            tMapView.setLocationPoint(location.latitude, location.longitude)
-
+            (handler as MapHandler).setOnLocationChangeListener(location)
             addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
                 nowLocation
             )
+            tMapView.setLocationPoint(location.latitude, location.longitude)
 
             if (isTracking) {
                 tMapView.setCenterPoint(location.latitude, location.longitude, true)
@@ -110,9 +91,32 @@ open class TMap(
             this.id = id
             this.icon = ContextCompat.getDrawable(context, icon)?.toBitmap()
             tMapPoint = location
+            isAnimation = false
         }
 
         tMapView.removeTMapMarkerItem(id)
         tMapView.addTMapMarkerItem(marker)
+    }
+
+    fun setRouteDetailFocus() {
+        val maxLatitude = latitudes.max()
+        val minLatitude = latitudes.min()
+        val maxLongitude = longitudes.max()
+        val minLongitude = longitudes.min()
+
+        tMapView.setCenterPoint((maxLatitude + minLatitude) / 2, (maxLongitude + minLongitude) / 2)
+        tMapView.zoomToSpan(maxLatitude - minLatitude, maxLongitude - minLongitude)
+        tMapView.zoomLevel -= 1
+    }
+
+    fun getDistance(startLatitude: Double, startLongitude: Double, endLatitude: Double, endLongitude: Double): Float {
+        val startPoint = android.location.Location("Start")
+        val endPoint = android.location.Location("End")
+
+        startPoint.latitude = startLatitude
+        startPoint.longitude = startLongitude
+        endPoint.latitude = endLatitude
+        endPoint.longitude = endLongitude
+        return startPoint.distanceTo(endPoint)
     }
 }

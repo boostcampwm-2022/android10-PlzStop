@@ -10,6 +10,8 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GetRouteUseCase {
 
+    private val nameParsingRegex = """\(+[^)]+\)""".toRegex()
+
     override suspend operator fun invoke(routeRequest: RouteRequest): List<Itinerary> {
         val originItineraries = routeRepository.getRoute(routeRequest)
 
@@ -49,7 +51,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             distance = leg.distance,
             end = with(leg.end) {
                 Place(
-                    name = name.replace("(중)", ""),
+                    name = parsingName(name),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -61,7 +63,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             proportionOfSectionTime = calculateProportionOfSectionTime(leg.sectionTime, totalTime),
             start = with(leg.start) {
                 Place(
-                    name = name.replace("(중)", ""),
+                    name = parsingName(name),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -78,7 +80,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                             longitude = lon
                         ),
                         stationId = stationID,
-                        stationName = stationName.replace("(중)", ""),
+                        stationName = parsingName(stationName),
                     )
                 }
             } ?: listOf(),
@@ -86,6 +88,10 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             routeColor = leg.routeColor ?: "",
             routeType = leg.type ?: -1,
         )
+    }
+
+    private fun parsingName(originName: String): String {
+        return originName.replace(nameParsingRegex, "")
     }
 
     private fun calculateProportionOfSectionTime(sectionTime: Double, totalTime: Int): Float {
@@ -104,7 +110,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             distance = leg.distance,
             end = with(leg.end) {
                 Place(
-                    name = name,
+                    name = parsingName(name),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()
@@ -116,7 +122,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
             proportionOfSectionTime = calculateProportionOfSectionTime(leg.sectionTime, totalTime),
             start = with(leg.start) {
                 Place(
-                    name = name,
+                    name = parsingName(name),
                     coordinate = Coordinate(
                         latitude = lat.toString(),
                         longitude = lon.toString()

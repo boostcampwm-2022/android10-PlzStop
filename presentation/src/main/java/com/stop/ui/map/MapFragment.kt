@@ -1,6 +1,7 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,11 +17,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
 import com.stop.RouteNavGraphDirections
+import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
+import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
@@ -67,9 +71,12 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBinding() {
+        alarmViewModel.getAlarm()
+
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
+        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -139,9 +146,13 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBottomSheetBehavior() {
+        val displaySize = requireContext().getScreenSize()
+        val displayHeight = displaySize.height
+
+        binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
+
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.getAlarm()
         alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
             behavior.isDraggable = it
         }
@@ -239,11 +250,40 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun setViewVisibility() {
-        with(binding) {
+        with (binding) {
             textViewSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
         }
+    }
+
+    private fun listenButtonClick() {
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            alarmViewModel.deleteAlarm()
+            turnOffSoundService()
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(context, SoundService::class.java)
+        requireContext().stopService(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
+            if (it == ALARM_MAP_CODE) {
+                showBottomSheet()
+            }
+        }
+    }
+
+    private fun showBottomSheet() {
+        val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     override fun onDestroyView() {
@@ -260,6 +300,15 @@ class MapFragment : Fragment(), MapHandler {
         if (permissions.entries.any { it.value }) {
             tMap.setTrackingMode()
         }
+    }
+
+    fun setMissionStart() {
+        alarmViewModel.lastTimeCountDown.value?.let {
+            if (it.isBlank()) {
+                alarmViewModel.startCountDownTimer()
+            }
+        }
+        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
     }
 
     companion object {

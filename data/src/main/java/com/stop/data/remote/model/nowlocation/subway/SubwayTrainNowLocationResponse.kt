@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SubwayTrainNowLocationResponse(
     @Json(name = "realtimePositionList")
-    val realtimePositions: List<TrainLocationInfo>
+    val realtimePositions: List<TrainLocationInfo>?
 )

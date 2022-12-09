@@ -37,11 +37,19 @@ internal class RouteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSubwayStationCd(stationId: String, stationName: String): String {
-        return remoteDataSource.getSubwayStationCd(stationId, stationName)
+        return try {
+            remoteDataSource.getSubwayStationCd(stationId, stationName)
+        } catch (exception: JsonDataException) {
+            ""
+        }
     }
 
     override suspend fun getSubwayStations(lineName: String): List<Station> {
-        return remoteDataSource.getSubwayStations(lineName)
+        return try {
+            remoteDataSource.getSubwayStations(lineName)
+        } catch (exception: JsonDataException) {
+            listOf()
+        }
     }
 
     override suspend fun getSubwayStationLastTime(
@@ -49,7 +57,11 @@ internal class RouteRepositoryImpl @Inject constructor(
         transportDirectionType: TransportDirectionType,
         weekType: WeekType,
     ): List<StationLastTime> {
-        return remoteDataSource.getSubwayStationLastTime(stationId, transportDirectionType, weekType)
+        return try {
+            remoteDataSource.getSubwayStationLastTime(stationId, transportDirectionType, weekType)
+        } catch (exception: JsonDataException) {
+            listOf()
+        }
     }
 
     override suspend fun getSubwayRoute(
@@ -78,30 +90,58 @@ internal class RouteRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getSeoulBusStationArsId(stationName: String): List<BusStationInfo> {
-        return remoteDataSource.getSeoulBusStationArsId(stationName)
+        return  try {
+            remoteDataSource.getSeoulBusStationArsId(stationName)
+        } catch (exception: JsonDataException) {
+            listOf()
+        }
     }
 
     override suspend fun getSeoulBusRoute(stationId: String): List<BusRouteInfo> {
-        return remoteDataSource.getSeoulBusRoute(stationId)
+        return try {
+            remoteDataSource.getSeoulBusRoute(stationId)
+        } catch (exception: JsonDataException) {
+            listOf()
+        }
     }
 
-    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo>? {
-        return remoteDataSource.getSeoulBusLastTime(stationId, lineId)
+    override suspend fun getSeoulBusLastTime(stationId: String, lineId: String): List<LastTimeInfo> {
+        return try{
+            remoteDataSource.getSeoulBusLastTime(stationId, lineId)
+        } catch (exception: JsonDataException) {
+            listOf()
+        }
     }
 
     override suspend fun getGyeonggiBusStationId(stationName: String): List<GyeonggiBusStation> {
-        return remoteDataSource.getGyeonggiBusStationId(stationName)
+        return try {
+            remoteDataSource.getGyeonggiBusStationId(stationName)
+        } catch (exception: NullPointerException) {
+            listOf()
+        }
     }
 
     override suspend fun getGyeonggiBusRoute(stationId: String): List<GyeonggiBusRoute> {
-        return remoteDataSource.getGyeonggiBusRoute(stationId)
+        return try {
+            remoteDataSource.getGyeonggiBusRoute(stationId)
+        } catch (exception: NullPointerException) {
+            listOf()
+        }
     }
 
-    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime>? {
-        return remoteDataSource.getGyeonggiBusLastTime(lineId)
+    override suspend fun getGyeonggiBusLastTime(lineId: String): List<GyeonggiBusLastTime> {
+        return try {
+            remoteDataSource.getGyeonggiBusLastTime(lineId)
+        } catch (exception: NullPointerException) {
+            listOf()
+        }
     }
 
     override suspend fun getGyeonggiBusRouteStations(lineId: String): List<GyeonggiBusStation> {
-        return remoteDataSource.getGyeonggiBusRouteStations(lineId)
+        return try {
+            remoteDataSource.getGyeonggiBusRouteStations(lineId)
+        } catch (exception: NullPointerException) {
+            listOf()
+        }
     }
 }

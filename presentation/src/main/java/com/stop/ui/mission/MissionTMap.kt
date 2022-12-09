@@ -3,7 +3,7 @@ package com.stop.ui.mission
 import android.content.Context
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
-import com.stop.ui.util.Marker
+import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.ui.util.TMap
 
 class MissionTMap(
@@ -21,23 +21,21 @@ class MissionTMap(
         tMapView.addTMapPolyLine(polyLine)
     }
 
-    fun moveLocation(longitude: String, latitude: String) {
-        val mockLocation = TMapPoint(latitude.toDouble(), longitude.toDouble())
-
-        drawMoveLine(
-            mockLocation,
-            tMapView.locationPoint,
-            Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
-            Marker.PERSON_LINE_COLOR
-        )
-        PERSON_LINE_NUM += 1
-
-        addMarker(Marker.PERSON_MARKER, Marker.PERSON_MARKER_IMG, mockLocation)
-        tMapView.setLocationPoint(mockLocation.latitude, mockLocation.longitude)
+    fun drawWalkLines(points: ArrayList<TMapPoint>, id: String, color: Int) {
+        val polyLine = TMapPolyLine(id, points).apply {
+            lineColor = color
+            outLineColor = color
+        }
+        tMapView.addTMapPolyLine(polyLine)
     }
 
-    companion object {
-        private var PERSON_LINE_NUM = 0
-    }
+    fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
+        route.steps.forEach { step ->
+            step.lineString.split(" ").forEach { coordinate ->
+                val points = coordinate.split(",")
 
+                linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
+            }
+        }
+    }
 }

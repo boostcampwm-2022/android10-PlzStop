@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AlertDialog
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.fragment.app.activityViewModels
@@ -32,6 +33,7 @@ class RouteFragment : Fragment() {
 
     private lateinit var adapter: RouteAdapter
     private lateinit var backPressedCallback: OnBackPressedCallback
+    private var progressDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +64,7 @@ class RouteFragment : Fragment() {
         setRecyclerView()
         setStartAndDestinationText()
         setObserve()
+        initDialog()
     }
 
     private fun setBinding() {
@@ -89,6 +92,7 @@ class RouteFragment : Fragment() {
                  * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
                  * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
                  */
+                progressDialog?.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
                 routeResultViewModel.setItineraries(itinerary)
             }
@@ -117,6 +121,8 @@ class RouteFragment : Fragment() {
                 routeResultViewModel.setLastTimes(response)
                 routeResultViewModel.setOrigin(routeViewModel.origin.value)
                 routeResultViewModel.setDestination(routeViewModel.destination.value)
+                progressDialog?.dismiss()
+
                 binding.root.findNavController()
                     .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
@@ -131,6 +137,15 @@ class RouteFragment : Fragment() {
             routeViewModel.setDestination(it)
         }
         routeViewModel.getRoute()
+    }
+
+    private fun initDialog() {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
+        progressDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        progressDialog?.window?.setBackgroundDrawableResource(R.color.transparent)
     }
 
     override fun onDestroyView() {
