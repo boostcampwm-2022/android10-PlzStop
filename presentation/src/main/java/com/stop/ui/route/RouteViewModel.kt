@@ -66,6 +66,7 @@ class RouteViewModel @Inject constructor(
             val itineraries = getRouteUseCase(routeRequest)
             if (itineraries.isEmpty()) {
                 _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
+                _routeResponse.value = listOf()
                 return@launch
             }
             this@RouteViewModel._routeResponse.value = itineraries
