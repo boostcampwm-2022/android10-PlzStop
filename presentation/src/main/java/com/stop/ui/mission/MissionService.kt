@@ -34,6 +34,7 @@ class MissionService : LifecycleService() {
 
     private var userLocation = arrayListOf<Location>()
     private var lastTime = ""
+    private var isMissionOver = false
 
     override fun onCreate() {
         super.onCreate()
@@ -46,6 +47,12 @@ class MissionService : LifecycleService() {
         getStatus(intent)
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        isMissionOver = true
     }
 
     private fun setForeground() {
@@ -135,6 +142,7 @@ class MissionService : LifecycleService() {
         lifecycleScope.launch(Dispatchers.IO) {
             var oldTimeMillis = System.currentTimeMillis()
             while (diffTimeMillis > 0L) {
+                if (isMissionOver) break
                 val delayMillis = System.currentTimeMillis() - oldTimeMillis
                 if (delayMillis == 1000L) {
                     diffTimeMillis -= delayMillis

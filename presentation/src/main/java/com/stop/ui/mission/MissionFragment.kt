@@ -2,10 +2,7 @@ package com.stop.ui.mission
 
 import android.Manifest
 import android.animation.Animator
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +10,6 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -25,22 +21,18 @@ import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
-import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
 import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
-import com.stop.ui.mission.MissionService.Companion.MISSION_USER_INFO
 import com.stop.ui.util.Marker
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class MissionFragment : Fragment(), MissionHandler {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
         get() = _binding!!
 
-    private val missionViewModel: MissionViewModel by viewModels()
+    private val missionViewModel: MissionViewModel by activityViewModels()
     private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap
@@ -68,12 +60,16 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onViewCreated(view, savedInstanceState)
 
         setTimer()
-        setBroadcastReceiver()
         setDataBinding()
         initTMap()
         setMissionOver()
         setMissionFail()
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().startService(missionServiceIntent)
     }
 
     override fun onDestroyView() {
@@ -90,24 +86,6 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun setTimer() {
         missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
         requireActivity().startService(missionServiceIntent)
-    }
-
-    private fun setBroadcastReceiver() {
-        val intentFilter = IntentFilter().apply {
-            addAction(MISSION_USER_INFO)
-        }
-
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.let {
-                    missionViewModel.lastTime.value = intent.getStringExtra(MISSION_LAST_TIME)
-                    missionViewModel.userLocations.value =
-                        intent.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
-                }
-            }
-        }
-
-        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     private fun setDataBinding() {
@@ -341,6 +319,7 @@ class MissionFragment : Fragment(), MissionHandler {
                     alarmSettingViewModel.deleteAlarm()
                     missionServiceIntent.putExtra(MISSION_OVER, true)
                     requireActivity().startService(missionServiceIntent)
+                    requireActivity().stopService(missionServiceIntent)
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
             }

@@ -1,8 +1,10 @@
 package com.stop
 
 import android.app.KeyguardManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
@@ -10,18 +12,24 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.navigation.fragment.NavHostFragment
 import com.stop.databinding.ActivityMainBinding
+import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.ui.mission.MissionService
+import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.mission.MissionWorker.Companion.MISSION_CODE
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+
+    private val missionViewModel: MissionViewModel by viewModels()
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
@@ -62,6 +70,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.navHostFragment.setPadding(0, 0, 0, this.navigationHeight())
         showOverLockScreen()
+
+        setBroadcastReceiver()
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
@@ -103,6 +113,24 @@ class MainActivity : AppCompatActivity() {
                 null
             )
         }
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MissionService.MISSION_USER_INFO)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    missionViewModel.lastTime.value = intent.getStringExtra(MissionService.MISSION_LAST_TIME)
+                    missionViewModel.userLocations.value =
+                        intent.getParcelableArrayListExtra<Location>(MissionService.MISSION_LOCATIONS) as ArrayList<Location>
+                }
+            }
+        }
+
+        this.registerReceiver(receiver, intentFilter)
     }
 
 }
