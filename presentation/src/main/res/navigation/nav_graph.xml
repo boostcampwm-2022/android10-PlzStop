@@ -5,6 +5,8 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mapFragment">
 
+    <include app:graph="@navigation/route_nav_graph" />
+
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.stop.ui.map.MapFragment"
