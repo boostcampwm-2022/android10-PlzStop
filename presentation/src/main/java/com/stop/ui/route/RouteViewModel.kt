@@ -1,5 +1,6 @@
 package com.stop.ui.route
 
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,7 @@ class RouteViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var clickedItineraryIndex: Int = -1
+    var alertDialog: AlertDialog? = null
 
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>

@@ -33,7 +33,7 @@ class RouteFragment : Fragment() {
 
     private lateinit var adapter: RouteAdapter
     private lateinit var backPressedCallback: OnBackPressedCallback
-    private var progressDialog: AlertDialog? = null
+    private lateinit var alertDialog: AlertDialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +46,7 @@ class RouteFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        backPressedCallback = object: OnBackPressedCallback(true) {
+        backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
                 navController.setGraph(R.navigation.nav_graph)
@@ -63,8 +63,8 @@ class RouteFragment : Fragment() {
         setListener()
         setRecyclerView()
         setStartAndDestinationText()
-        setObserve()
         initDialog()
+        setObserve()
     }
 
     private fun setBinding() {
@@ -96,7 +96,7 @@ class RouteFragment : Fragment() {
     private fun setRecyclerView() {
         adapter = RouteAdapter(object : OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
-                progressDialog?.show()
+                alertDialog.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
                 routeResultViewModel.setItineraries(itinerary)
             }
@@ -125,7 +125,7 @@ class RouteFragment : Fragment() {
                 routeResultViewModel.setLastTimes(response)
                 routeResultViewModel.setOrigin(routeViewModel.origin.value)
                 routeResultViewModel.setDestination(routeViewModel.destination.value)
-                progressDialog?.dismiss()
+                alertDialog.dismiss()
 
                 binding.root.findNavController()
                     .navigate(R.id.action_routeFragment_to_routeDetailFragment)
@@ -144,12 +144,19 @@ class RouteFragment : Fragment() {
     }
 
     private fun initDialog() {
+        val viewModelDialog = routeViewModel.alertDialog
+        if (viewModelDialog != null) {
+            alertDialog = viewModelDialog
+            return
+        }
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
-        progressDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-        progressDialog?.window?.setBackgroundDrawableResource(R.color.transparent)
+        alertDialog = AlertDialog.Builder(requireContext())
+                        .setView(dialogView)
+                        .setCancelable(false)
+                        .create()
+        alertDialog.window?.setBackgroundDrawableResource(R.color.transparent)
+        routeViewModel.alertDialog = alertDialog
     }
 
     override fun onDestroyView() {
