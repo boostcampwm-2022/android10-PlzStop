@@ -1,6 +1,7 @@
 package com.stop.ui.route
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -14,8 +15,15 @@ class RouteDetailAdapter : ListAdapter<RouteItem, RouteDetailAdapter.PathViewHol
         private val binding: RoutePathAtTimeLineItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(routeItem: RouteItem) {
+        fun bind(routeItem: RouteItem, position: Int) {
             binding.routeItem = routeItem
+            binding.executePendingBindings()
+
+            if (position == 0) {
+                binding.viewBeforeLine.visibility = View.INVISIBLE
+                return
+            }
+            binding.viewBeforeLine.visibility = View.VISIBLE
         }
     }
 
@@ -27,7 +35,7 @@ class RouteDetailAdapter : ListAdapter<RouteItem, RouteDetailAdapter.PathViewHol
     }
 
     override fun onBindViewHolder(holder: PathViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), position)
     }
 
     companion object {

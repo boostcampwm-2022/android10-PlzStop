@@ -79,7 +79,6 @@ class TimeLineContainer(
     }
 
     private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
-
         val text = binding.root.resources.getString(
             R.string.section_time,
             (route.sectionTime / 60).toInt().toString()

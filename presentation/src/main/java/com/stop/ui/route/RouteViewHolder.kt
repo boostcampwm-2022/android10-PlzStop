@@ -19,7 +19,7 @@ class RouteViewHolder(
     private val adapter = RouteDetailAdapter()
     private val density = binding.root.context.resources.displayMetrics.density
 
-    var routeItemColor = 0
+    private var routeItemColor = 0
 
     init {
         binding.recyclerviewTimeLine.adapter = adapter
