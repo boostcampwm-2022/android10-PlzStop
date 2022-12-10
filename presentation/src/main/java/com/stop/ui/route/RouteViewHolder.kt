@@ -1,7 +1,10 @@
 package com.stop.ui.route
 
 import android.graphics.Color
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.R
 import com.stop.databinding.RouteItemBinding
@@ -14,6 +17,8 @@ class RouteViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private val adapter = RouteDetailAdapter()
+    private val density = binding.root.context.resources.displayMetrics.density
+
     var routeItemColor = 0
 
     init {
@@ -22,7 +27,7 @@ class RouteViewHolder(
     }
 
     fun bind(itinerary: Itinerary) {
-        binding.textViewExpectedRequiredTime.text = secondToHourAndMinute(itinerary.totalTime)
+        setRequireTime(itinerary.totalTime)
         val routeItems = mutableListOf<RouteItem>()
 
         itinerary.routes.drop(1).forEachIndexed { index, route ->
@@ -112,7 +117,23 @@ class RouteViewHolder(
         }
     }
 
-    private fun secondToHourAndMinute(second: Int): String {
-        return "${second / 60 / 60}시간 ${second / 60 % 60}분"
+    private fun setRequireTime(second: Int) {
+        val hour = second / 60 / 60
+        val minute = second / 60 % 60
+        if (hour != 0) {
+            binding.textViewRequiredHour.text = hour.toString()
+            binding.textViewRequiredMinute.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                setMargins(convertDpToPixel(5f), 0, 0, 0)
+            }
+        } else {
+            binding.textViewRequiredHour.visibility = View.GONE
+            binding.textViewRequiredHourText.visibility = View.GONE
+        }
+
+        binding.textViewRequiredMinute.text = minute.toString()
+    }
+
+    private fun convertDpToPixel(size: Float): Int {
+        return (size * density + 0.5f).toInt()
     }
 }
