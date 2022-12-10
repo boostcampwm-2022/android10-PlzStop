@@ -82,16 +82,16 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onDestroyView()
     }
 
-    private fun setTimer() {
-        missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
-        requireActivity().startService(missionServiceIntent)
-    }
-
     private fun setMissionService() {
         missionServiceIntent = Intent(requireContext(), MissionService::class.java)
         missionServiceIntent.putExtra(MISSION_SERVICE, true)
         requireActivity().startService(missionServiceIntent)
         missionServiceIntent.removeExtra(MISSION_SERVICE)
+    }
+
+    private fun setTimer() {
+        missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
+        requireActivity().startService(missionServiceIntent)
     }
 
     private fun setBroadcastReceiver() {

@@ -19,6 +19,7 @@ import com.google.android.gms.location.*
 import com.stop.*
 import com.stop.R
 import com.stop.model.Location
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MissionService : LifecycleService() {
@@ -133,7 +134,7 @@ class MissionService : LifecycleService() {
         val nowTimeMillis = System.currentTimeMillis()
         var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             var oldTimeMillis = System.currentTimeMillis()
             while (diffTimeMillis > 0L) {
                 val delayMillis = System.currentTimeMillis() - oldTimeMillis
@@ -164,7 +165,7 @@ class MissionService : LifecycleService() {
 
         const val MISSION_SERVICE = "mission_service"
         const val MISSION_LAST_TIME = "last_time"
-        const val MISSION_LOCATIONS = "mission_loactions"
+        const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
     }
 
