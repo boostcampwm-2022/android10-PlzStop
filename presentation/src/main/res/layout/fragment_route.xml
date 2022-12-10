@@ -56,17 +56,17 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/sqaure_border"
             android:padding="10dp"
-            app:layout_constraintEnd_toStartOf="@id/image_view_reset"
+            app:layout_constraintEnd_toStartOf="@id/image_view_research"
             app:layout_constraintStart_toStartOf="@id/text_view_origin"
             app:layout_constraintTop_toBottomOf="@id/text_view_origin"
             app:set_place_name="@{viewModel.destination}"
             tools:text="Naver1784" />
 
         <ImageView
-            android:id="@+id/image_view_reset"
+            android:id="@+id/image_view_research"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/image_view_reset_content_description"
+            android:contentDescription="@string/image_view_research_content_description"
             app:layout_constraintBottom_toBottomOf="@id/text_view_destination"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintTop_toTopOf="@id/text_view_destination"

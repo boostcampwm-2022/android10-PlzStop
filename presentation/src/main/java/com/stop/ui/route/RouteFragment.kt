@@ -91,6 +91,9 @@ class RouteFragment : Fragment() {
             navController.setGraph(R.navigation.nav_graph)
             navController.popBackStack(R.id.mapFragment, false)
         }
+        binding.imageViewResearch.setOnClickListener {
+            routeViewModel.getRoute()
+        }
     }
 
     private fun setRecyclerView() {
