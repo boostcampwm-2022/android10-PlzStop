@@ -26,6 +26,7 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
+import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
 import com.stop.ui.mission.MissionService.Companion.MISSION_SERVICE
 import com.stop.ui.mission.MissionService.Companion.MISSION_USER_INFO
 import com.stop.ui.util.Marker
@@ -332,8 +333,9 @@ class MissionFragment : Fragment(), MissionHandler {
         lifecycleScope.launch {
             missionViewModel.isMissionOver.collect { isMissionOver ->
                 if (isMissionOver) {
-                    //missionViewModel.cancelMission()
                     alarmSettingViewModel.deleteAlarm()
+                    missionServiceIntent.putExtra(MISSION_OVER, true)
+                    requireActivity().startService(missionServiceIntent)
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
             }

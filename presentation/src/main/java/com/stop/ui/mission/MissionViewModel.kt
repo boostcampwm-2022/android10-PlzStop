@@ -7,9 +7,10 @@ import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.model.Location
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import javax.inject.Inject
 
 @HiltViewModel
-class MissionViewModel : ViewModel() {
+class MissionViewModel @Inject constructor() : ViewModel() {
 
     val destination = MutableStateFlow(Place("null",Coordinate("37.553836", "126.969652")))
 

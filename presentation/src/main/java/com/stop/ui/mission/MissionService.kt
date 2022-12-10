@@ -38,6 +38,7 @@ class MissionService : LifecycleService() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         setForeground(intent)
         getTimer(intent)
+        getStatus(intent)
 
         return super.onStartCommand(intent, flags, startId)
     }
@@ -151,6 +152,12 @@ class MissionService : LifecycleService() {
         sendBroadcast(statusIntent)
     }
 
+    private fun getStatus(intent: Intent?) {
+        if (intent?.getBooleanExtra(MISSION_OVER, false) == true) {
+            stopForeground(true)
+        }
+    }
+
     companion object {
         const val NOTIFICATION_ID = 82
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
@@ -161,6 +168,7 @@ class MissionService : LifecycleService() {
         const val MISSION_LAST_TIME = "last_time"
         const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
+        const val MISSION_OVER = "mission_over"
     }
 
 }
