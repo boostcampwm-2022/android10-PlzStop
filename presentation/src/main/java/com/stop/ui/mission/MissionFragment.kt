@@ -27,7 +27,6 @@ import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
 import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
-import com.stop.ui.mission.MissionService.Companion.MISSION_SERVICE
 import com.stop.ui.mission.MissionService.Companion.MISSION_USER_INFO
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,9 +84,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setMissionService() {
         missionServiceIntent = Intent(requireContext(), MissionService::class.java)
-        missionServiceIntent.putExtra(MISSION_SERVICE, true)
         requireActivity().startService(missionServiceIntent)
-        missionServiceIntent.removeExtra(MISSION_SERVICE)
     }
 
     private fun setTimer() {

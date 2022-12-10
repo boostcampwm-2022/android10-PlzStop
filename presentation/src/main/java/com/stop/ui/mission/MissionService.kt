@@ -35,19 +35,22 @@ class MissionService : LifecycleService() {
     private var userLocation = arrayListOf<Location>()
     private var lastTime = ""
 
+    override fun onCreate() {
+        super.onCreate()
+
+        setForeground()
+    }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        setForeground(intent)
         getTimer(intent)
         getStatus(intent)
 
         return super.onStartCommand(intent, flags, startId)
     }
 
-    private fun setForeground(intent: Intent?) {
-        if (intent?.getBooleanExtra(MISSION_SERVICE, false) == true) {
-            createNotification()
-            getPersonLocation()
-        }
+    private fun setForeground() {
+        createNotification()
+        getPersonLocation()
     }
 
     private fun createNotification() {
@@ -164,7 +167,6 @@ class MissionService : LifecycleService() {
         private const val INTERVAL_UNIT = 1000L
         const val MISSION_CODE = 88
 
-        const val MISSION_SERVICE = "mission_service"
         const val MISSION_LAST_TIME = "last_time"
         const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
