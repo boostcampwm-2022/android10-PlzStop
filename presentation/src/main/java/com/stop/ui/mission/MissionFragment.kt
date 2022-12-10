@@ -2,6 +2,10 @@ package com.stop.ui.mission
 
 import android.Manifest
 import android.animation.Animator
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +24,10 @@ import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
+import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
+import com.stop.ui.mission.MissionService.Companion.MISSION_SERVICE
+import com.stop.ui.mission.MissionService.Companion.MISSION_USER_INFO
 import com.stop.ui.util.Marker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectIndexed
@@ -37,7 +45,15 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var tMap: MissionTMap
 
+    private lateinit var missionServiceIntent: Intent
+
     var personCurrentLocation = Location(37.553836, 126.969652)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setMissionService()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,6 +67,8 @@ class MissionFragment : Fragment(), MissionHandler {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setTimer()
+        setBroadcastReceiver()
         setDataBinding()
         initTMap()
         setMissionOver()
@@ -62,6 +80,36 @@ class MissionFragment : Fragment(), MissionHandler {
         _binding = null
 
         super.onDestroyView()
+    }
+
+    private fun setTimer() {
+        missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
+        requireActivity().startService(missionServiceIntent)
+    }
+
+    private fun setMissionService() {
+        missionServiceIntent = Intent(requireContext(), MissionService::class.java)
+        missionServiceIntent.putExtra(MISSION_SERVICE, true)
+        requireActivity().startService(missionServiceIntent)
+        missionServiceIntent.removeExtra(MISSION_SERVICE)
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MISSION_USER_INFO)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                intent?.let {
+                    missionViewModel.lastTime.value = intent.getStringExtra(MISSION_LAST_TIME)
+                    missionViewModel.userLocations.value =
+                        intent.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
+                }
+            }
+        }
+
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     private fun setDataBinding() {
@@ -107,7 +155,11 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     fun clickMissionOver() {
-        Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소합니다", Snackbar.LENGTH_SHORT).show()
+        Snackbar.make(
+            requireActivity().findViewById(R.id.constraint_layout_container),
+            "미션을 취소합니다",
+            Snackbar.LENGTH_SHORT
+        ).show()
         missionViewModel.isMissionOver.value = true
     }
 
@@ -136,18 +188,21 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun drawPersonLine() {
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
-            missionViewModel.userLocation.collectIndexed { index, userLocation ->
+            missionViewModel.userLocations.collectIndexed { index, userLocation ->
                 if (index == 0) {
-                    initMarker(userLocation)
-                    beforeLocation = userLocation
+                    initMarker(userLocation.last())
+                    beforeLocation = userLocation.last()
                 } else if (index > 0) {
-                    drawNowLocationLine(TMapPoint(userLocation.latitude, userLocation.longitude), TMapPoint(beforeLocation.latitude, beforeLocation.longitude))
-                    personCurrentLocation = userLocation
+                    drawNowLocationLine(
+                        TMapPoint(userLocation.last().latitude, userLocation.last().longitude),
+                        TMapPoint(beforeLocation.latitude, beforeLocation.longitude)
+                    )
+                    personCurrentLocation = userLocation.last()
                     if (tMap.isTracking) {
-                        tMap.tMapView.setCenterPoint(userLocation.latitude, userLocation.longitude)
+                        tMap.tMapView.setCenterPoint(userLocation.last().latitude, userLocation.last().longitude)
                     }
-                    beforeLocation = userLocation
-                    arriveDestination(userLocation.latitude, userLocation.longitude)
+                    beforeLocation = userLocation.last()
+                    arriveDestination(userLocation.last().latitude, userLocation.last().longitude)
                 }
             }
         }
@@ -212,7 +267,11 @@ class MissionFragment : Fragment(), MissionHandler {
             ) <= 10
         ) {
             missionViewModel.isMissionOver.value = true
-            Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "정류장에 도착했습니다!", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(
+                requireActivity().findViewById(R.id.constraint_layout_container),
+                "정류장에 도착했습니다!",
+                Snackbar.LENGTH_SHORT
+            ).show()
             setSuccessAnimation()
 
         }
@@ -222,7 +281,7 @@ class MissionFragment : Fragment(), MissionHandler {
         with(binding.lottieSuccess) {
             visibility = View.VISIBLE
             playAnimation()
-            addAnimatorListener(object : Animator.AnimatorListener{
+            addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
                 }
 
@@ -252,7 +311,7 @@ class MissionFragment : Fragment(), MissionHandler {
         with(binding.lottieFail) {
             visibility = View.VISIBLE
             playAnimation()
-            addAnimatorListener(object : Animator.AnimatorListener{
+            addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
                 }
 
@@ -273,7 +332,7 @@ class MissionFragment : Fragment(), MissionHandler {
         lifecycleScope.launch {
             missionViewModel.isMissionOver.collect { isMissionOver ->
                 if (isMissionOver) {
-                    missionViewModel.cancelMission()
+                    //missionViewModel.cancelMission()
                     alarmSettingViewModel.deleteAlarm()
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }

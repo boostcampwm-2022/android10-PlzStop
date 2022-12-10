@@ -33,6 +33,8 @@
 
         <service android:name=".alarm.SoundService" />
 
+        <service android:name=".ui.mission.MissionService"/>
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"

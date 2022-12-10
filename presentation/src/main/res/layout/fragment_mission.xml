@@ -90,7 +90,7 @@
             android:shadowDx="7.0"
             android:shadowDy="7.0"
             android:shadowRadius="15.0"
-            android:text="@{alarmSettingViewModel.lastTimeCountDown}"
+            android:text="@{missionViewModel.lastTime}"
             android:textColor="@color/main_dark_grey"
             android:textSize="48sp"
             app:layout_constraintEnd_toEndOf="parent"
