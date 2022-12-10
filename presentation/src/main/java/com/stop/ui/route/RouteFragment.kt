@@ -29,11 +29,18 @@ class RouteFragment : Fragment() {
     private val routeViewModel: RouteViewModel by activityViewModels()
     private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
-    private val args: RouteFragmentArgs by navArgs()
+    private var args: RouteFragmentArgs? = null
 
     private lateinit var adapter: RouteAdapter
     private lateinit var backPressedCallback: OnBackPressedCallback
     private lateinit var alertDialog: AlertDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val currentArgs: RouteFragmentArgs by navArgs()
+        args = currentArgs
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -146,13 +153,18 @@ class RouteFragment : Fragment() {
     }
 
     private fun setStartAndDestinationText() {
-        args.start?.let {
+        args?.start?.let {
             routeViewModel.setOrigin(it)
         }
-        args.end?.let {
+        args?.end?.let {
             routeViewModel.setDestination(it)
         }
-        routeViewModel.getRoute()
+
+        requireArguments().clear()
+
+        if (args?.start != null || args?.end != null) {
+            routeViewModel.getRoute()
+        }
     }
 
     private fun initDialog() {
@@ -173,6 +185,7 @@ class RouteFragment : Fragment() {
 
     override fun onDestroyView() {
         _binding = null
+        args = null
 
         super.onDestroyView()
     }
