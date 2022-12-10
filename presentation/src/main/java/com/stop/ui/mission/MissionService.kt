@@ -7,14 +7,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.pm.ServiceInfo
-import android.os.Build
 import android.os.Looper
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import androidx.work.ForegroundInfo
 import com.google.android.gms.location.*
 import com.stop.*
 import com.stop.R
@@ -52,7 +49,7 @@ class MissionService : LifecycleService() {
         }
     }
 
-    private fun createNotification(): ForegroundInfo {
+    private fun createNotification() {
         val id = applicationContext.getString(R.string.mission_notification_channel_id)
         val title = applicationContext.getString(R.string.mission_notification_title)
 
@@ -74,13 +71,10 @@ class MissionService : LifecycleService() {
             .setSmallIcon(R.mipmap.ic_bus)
             .setOngoing(true) // 사용자가 지우지 못하도록 막음
             .setContentIntent(pendingIntent)
+            .setForegroundServiceBehavior(NotificationCompat.FOREGROUND_SERVICE_IMMEDIATE)
             .build()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return ForegroundInfo(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION)
-        }
-
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        startForeground(NOTIFICATION_ID, notification)
     }
 
     private fun createChannel(id: String) {
