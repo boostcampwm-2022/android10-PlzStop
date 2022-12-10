@@ -11,7 +11,7 @@ import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import com.stop.R
-import com.stop.databinding.TimeLineItem2Binding
+import com.stop.databinding.TimeLineItemBinding
 import com.stop.domain.model.route.tmap.custom.MoveType
 import com.stop.domain.model.route.tmap.custom.Route
 import com.stop.domain.model.route.tmap.custom.TransportRoute
@@ -55,7 +55,7 @@ class TimeLineContainer(
 
         doOnLayout {
             routes.forEachIndexed { index, route ->
-                val timeLineItem2Binding = TimeLineItem2Binding.inflate(
+                val timeLineItem2Binding = TimeLineItemBinding.inflate(
                     LayoutInflater.from(context),
                     this@TimeLineContainer,
                     true,
@@ -78,7 +78,7 @@ class TimeLineContainer(
         return (size * density + 0.5f).toInt()
     }
 
-    private fun setBindingAttribute(binding: TimeLineItem2Binding, route: Route, index: Int) {
+    private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
 
         val text = binding.root.resources.getString(
             R.string.section_time,
@@ -119,7 +119,7 @@ class TimeLineContainer(
         setConstraint(binding)
     }
 
-    private fun setConstraint(binding: TimeLineItem2Binding) {
+    private fun setConstraint(binding: TimeLineItemBinding) {
         val endId = beforeViewIconId ?: this@TimeLineContainer.id
         val endSide = if (beforeViewIconId == null) {
             ConstraintSet.START
@@ -148,7 +148,7 @@ class TimeLineContainer(
     }
 
     private fun setWidth(
-        binding: TimeLineItem2Binding,
+        binding: TimeLineItemBinding,
         proportionOfSectionTime: Float
     ) {
         val iconWidth = iconWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
@@ -162,7 +162,7 @@ class TimeLineContainer(
             (extraWidth * proportionOfSectionTime).toInt() + iconWidth + textWidth
     }
 
-    private fun setIdentityColor(binding: TimeLineItem2Binding, route: TransportRoute) {
+    private fun setIdentityColor(binding: TimeLineItemBinding, route: TransportRoute) {
         val identityColor = Color.parseColor("#${route.routeColor}")
         binding.textViewSectionTime.setBackgroundColor(identityColor)
         binding.textViewSectionTime.setTextColor(Color.WHITE)
@@ -170,7 +170,7 @@ class TimeLineContainer(
         binding.imageViewIcon.imageTintList = ColorStateList.valueOf(Color.WHITE)
     }
 
-    private fun setDefaultColor(binding: TimeLineItem2Binding) {
+    private fun setDefaultColor(binding: TimeLineItemBinding) {
         binding.textViewSectionTime.setTextColor(Color.WHITE)
         binding.textViewSectionTime.setBackgroundColor(greyColor)
 
