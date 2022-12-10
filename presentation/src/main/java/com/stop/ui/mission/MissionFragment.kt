@@ -187,10 +187,10 @@ class MissionFragment : Fragment(), MissionHandler {
         lateinit var beforeLocation: Location
         lifecycleScope.launch {
             missionViewModel.userLocations.collectIndexed { index, userLocation ->
-                if (index == 0) {
-                    initMarker(userLocation.last())
+                if (index == 1) {
+                    initMarker(userLocation)
                     beforeLocation = userLocation.last()
-                } else if (index > 0) {
+                } else if (index > 1) {
                     drawNowLocationLine(
                         TMapPoint(userLocation.last().latitude, userLocation.last().longitude),
                         TMapPoint(beforeLocation.latitude, beforeLocation.longitude)
@@ -206,18 +206,26 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    private fun initMarker(nowLocation: Location) {
+    private fun initMarker(nowLocation: ArrayList<Location>) {
         with(tMap) {
             addMarker(
                 Marker.PERSON_MARKER,
                 Marker.PERSON_MARKER_IMG,
-                TMapPoint(nowLocation.latitude, nowLocation.longitude)
+                TMapPoint(nowLocation.last().latitude, nowLocation.last().longitude)
             )
-            personCurrentLocation = nowLocation
-            latitudes.add(nowLocation.latitude)
-            longitudes.add(nowLocation.longitude)
+            personCurrentLocation = nowLocation.last()
+            latitudes.add(nowLocation.last().latitude)
+            longitudes.add(nowLocation.last().longitude)
             setRouteDetailFocus()
-            arriveDestination(nowLocation.latitude, nowLocation.longitude)
+            arriveDestination(nowLocation.last().latitude, nowLocation.last().longitude)
+
+            drawWalkLines(
+                nowLocation.map { TMapPoint(it.latitude, it.longitude) } as ArrayList<TMapPoint>,
+                Marker.PERSON_LINE + PERSON_LINE_NUM.toString(),
+                Marker.PERSON_LINE_COLOR
+            )
+            PERSON_LINE_NUM += 1
+
         }
     }
 
