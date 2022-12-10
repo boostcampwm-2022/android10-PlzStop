@@ -39,7 +39,7 @@
             app:set_place_name="@{viewModel.origin}"
             tools:text="이앤씨벤쳐드림타워3차" />
 
-        <ImageView
+            <ImageView
             android:id="@+id/image_view_swap_origin_with_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

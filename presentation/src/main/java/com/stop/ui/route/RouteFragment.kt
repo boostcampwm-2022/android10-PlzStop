@@ -83,15 +83,15 @@ class RouteFragment : Fragment() {
             navController.setGraph(R.navigation.nav_graph)
             navController.navigate(R.id.action_global_placeSearchFragment)
         }
+
+        binding.imageViewSwapOriginWithDestination.setOnClickListener {
+            routeViewModel.changeOriginAndDestination()
+        }
     }
 
     private fun setRecyclerView() {
         adapter = RouteAdapter(object : OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
-                /**
-                 * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
-                 * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
-                 */
                 progressDialog?.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
                 routeResultViewModel.setItineraries(itinerary)

@@ -44,13 +44,19 @@ class RouteViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage
 
-    fun getRoute() {
+    fun getRoute(isShowError: Boolean = true) {
         val originValue = _origin.value ?: let {
+            if (!isShowError) {
+                return
+            }
             _errorMessage.value = Event(ErrorType.NO_START)
             return
         }
 
         val destinationValue = _destination.value ?: let {
+            if (!isShowError) {
+                return
+            }
             _errorMessage.value = Event(ErrorType.NO_END)
             return
         }
@@ -71,6 +77,13 @@ class RouteViewModel @Inject constructor(
             }
             this@RouteViewModel._routeResponse.value = itineraries
         }
+    }
+
+    fun changeOriginAndDestination() {
+        _origin.value = _destination.value.also {
+            _destination.value = _origin.value
+        }
+        getRoute(false)
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
