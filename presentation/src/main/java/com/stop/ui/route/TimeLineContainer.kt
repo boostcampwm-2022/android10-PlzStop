@@ -24,6 +24,7 @@ class TimeLineContainer(
     private val greyColor =
         ContextCompat.getColor(context, R.color.grey_for_route_walk)
     private var beforeViewIconId: Int? = null
+    private var beforeView: View? = null
 
     private var iconWidth: Int? = null
     private var iconCount: Int? = null
@@ -68,8 +69,8 @@ class TimeLineContainer(
                         root.layoutParams = layoutParams
                     }
                 }
-
                 setBindingAttribute(timeLineItem2Binding, route, index)
+                beforeView = timeLineItem2Binding.root
             }
         }
     }
@@ -95,6 +96,10 @@ class TimeLineContainer(
                     binding.imageViewIcon.visibility = View.GONE
                     setWidth(binding, route.proportionOfSectionTime)
                     setConstraint(binding)
+
+                    beforeView?.bringToFront()
+                    requestLayout()
+                    invalidate()
                     return
                 }
                 R.drawable.time_line_directions_walk_16
@@ -163,24 +168,21 @@ class TimeLineContainer(
 
     private fun setIdentityColor(binding: TimeLineItemBinding, route: TransportRoute) {
         val identityColor = Color.parseColor("#${route.routeColor}")
-        binding.textViewSectionTime.setBackgroundColor(identityColor)
+        binding.textViewSectionTime.background.setTint(identityColor)
         binding.textViewSectionTime.setTextColor(Color.WHITE)
+
         binding.viewIcon.background.setTint(identityColor)
         binding.imageViewIcon.imageTintList = ColorStateList.valueOf(Color.WHITE)
     }
 
     private fun setDefaultColor(binding: TimeLineItemBinding) {
         binding.textViewSectionTime.setTextColor(Color.WHITE)
-        binding.textViewSectionTime.setBackgroundColor(greyColor)
+        binding.textViewSectionTime.background.setTint(greyColor)
 
-        val drawable =
-            ContextCompat.getDrawable(binding.root.context, R.drawable.time_stick_round_background)
-                ?: throw IllegalArgumentException()
-        binding.viewIcon.background = drawable
         binding.viewIcon.background.setTintList(null)
     }
 
     companion object {
-        private const val OVERLAPPING_MARGIN = 10
+        private const val OVERLAPPING_MARGIN = 30
     }
 }
