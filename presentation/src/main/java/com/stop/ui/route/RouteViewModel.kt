@@ -46,6 +46,10 @@ class RouteViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage
 
+    private val _isLoading = MutableLiveData<Event<Boolean>>()
+    val isLoading: LiveData<Event<Boolean>>
+        get() = _isLoading
+
     fun getRoute(isShowError: Boolean = true) {
         val originValue = _origin.value ?: let {
             if (!isShowError) {
@@ -62,6 +66,7 @@ class RouteViewModel @Inject constructor(
             _errorMessage.value = Event(ErrorType.NO_END)
             return
         }
+        _isLoading.value = Event(true)
 
         val routeRequest = RouteRequest(
             startX = originValue.coordinate.longitude,
@@ -75,9 +80,11 @@ class RouteViewModel @Inject constructor(
             if (itineraries.isEmpty()) {
                 _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
                 _routeResponse.value = listOf()
+                _isLoading.value = Event(false)
                 return@launch
             }
             this@RouteViewModel._routeResponse.value = itineraries
+            _isLoading.value = Event(false)
         }
     }
 

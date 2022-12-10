@@ -131,6 +131,15 @@ class RouteFragment : Fragment() {
                     .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
+        routeViewModel.isLoading.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isLoading ->
+                if (isLoading) {
+                    alertDialog.show()
+                    return@let
+                }
+                alertDialog.dismiss()
+            }
+        }
     }
 
     private fun setStartAndDestinationText() {
