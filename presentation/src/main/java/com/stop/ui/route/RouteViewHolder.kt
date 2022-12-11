@@ -16,15 +16,8 @@ class RouteViewHolder(
     private val binding: RouteItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val adapter = RouteDetailAdapter()
     private val density = binding.root.context.resources.displayMetrics.density
-
     private var routeItemColor = 0
-
-    init {
-        binding.recyclerviewTimeLine.adapter = adapter
-        binding.recyclerviewTimeLine.setHasFixedSize(true)
-    }
 
     fun bind(itinerary: Itinerary) {
         setRequireTime(itinerary.totalTime)
@@ -55,7 +48,7 @@ class RouteViewHolder(
                 )
             )
         }
-        adapter.submitList(routeItems)
+        binding.stationContainer.submitList(routeItems.toList())
         binding.timeLineContainer.post {
             binding.timeLineContainer.submitList(itinerary.routes)
         }
@@ -94,11 +87,12 @@ class RouteViewHolder(
 
     private fun getRouteItemColor(route: Route, isCurrent: Boolean): Int {
         return if (isCurrent) {
-            when (route) {
+            routeItemColor = when (route) {
                 is TransportRoute -> Color.parseColor("#${route.routeColor}")
                 is WalkRoute -> ContextCompat.getColor(binding.root.context, R.color.main_yellow)
                 else -> ContextCompat.getColor(binding.root.context, R.color.main_lighter_grey)
             }
+            routeItemColor
         } else {
             if (routeItemColor != 0) {
                 routeItemColor

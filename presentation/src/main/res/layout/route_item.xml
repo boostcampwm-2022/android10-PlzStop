@@ -55,18 +55,15 @@
             app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
             app:layout_constraintTop_toBottomOf="@id/text_view_required_minute" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_time_line"
+        <com.stop.ui.route.StationContainer
+            android:id="@+id/station_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/time_line_container"
-            tools:listitem="@layout/route_path_at_time_line_item" />
+            app:layout_constraintTop_toBottomOf="@id/time_line_container" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_start_vertical"
