@@ -1,5 +1,7 @@
 package com.stop.ui.alarmstart
 
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_HIGH_ID
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import kotlinx.coroutines.launch
 
@@ -71,11 +74,13 @@ class AlarmStartFragment : Fragment() {
     fun clickAlarmTurnOff() {
         turnOffSoundService()
         alarmSettingViewModel.deleteAlarm()
+        cancelNotification()
         requireActivity().finish()
     }
 
     fun clickMissionStart() {
         turnOffSoundService()
+        cancelNotification()
         binding.root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
     }
 
@@ -83,6 +88,11 @@ class AlarmStartFragment : Fragment() {
         val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
         SoundService.normalExit = true
+    }
+
+    private fun cancelNotification() {
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(ALARM_NOTIFICATION_HIGH_ID)
     }
 
     override fun onDestroyView() {
