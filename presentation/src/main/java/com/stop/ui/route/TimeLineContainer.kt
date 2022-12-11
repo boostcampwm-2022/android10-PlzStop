@@ -23,7 +23,7 @@ class TimeLineContainer(
 
     private val greyColor =
         ContextCompat.getColor(context, R.color.grey_for_route_walk)
-    private var beforeViewIconId: Int? = null
+    private var beforeViewId: Int? = null
     private var beforeView: View? = null
 
     private var iconWidth: Int? = null
@@ -124,8 +124,8 @@ class TimeLineContainer(
     }
 
     private fun setConstraint(binding: TimeLineItemBinding) {
-        val endId = beforeViewIconId ?: this@TimeLineContainer.id
-        val endSide = if (beforeViewIconId == null) {
+        val endId = beforeViewId ?: this@TimeLineContainer.id
+        val endSide = if (beforeViewId == null) {
             ConstraintSet.START
         } else {
             ConstraintSet.END
@@ -148,7 +148,7 @@ class TimeLineContainer(
             )
             applyTo(this@TimeLineContainer)
         }
-        beforeViewIconId = binding.root.id
+        beforeViewId = binding.root.id
     }
 
     private fun setWidth(
