@@ -72,8 +72,6 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBinding() {
-        alarmViewModel.getAlarm()
-
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
@@ -284,8 +282,12 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun showBottomSheet() {
+        alarmViewModel.getAlarm()
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
+        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
+        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
     }
 
     override fun onDestroyView() {
