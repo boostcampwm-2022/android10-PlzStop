@@ -146,11 +146,8 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBottomSheetBehavior() {
-        val displaySize = requireContext().getScreenSize()
-        val displayHeight = displaySize.height
-
         binding.layoutHomeBottomSheet.maxHeight = (630 * resources.displayMetrics.density).toInt()
-        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.INVISIBLE
+        binding.homeBottomSheet.layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = 0F
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
@@ -159,24 +156,12 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
-                        binding.homeBottomSheet.textViewAlarmState.visibility = View.INVISIBLE
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.INVISIBLE
-                        binding.homeBottomSheet.textViewAlarmState.visibility = View.VISIBLE
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> Unit
-                    BottomSheetBehavior.STATE_DRAGGING -> Unit
-                    BottomSheetBehavior.STATE_SETTLING -> Unit
-                    BottomSheetBehavior.STATE_HIDDEN -> Unit
-                }
-            }
+            override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
 
-            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                binding.homeBottomSheet.layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = slideOffset
+                binding.homeBottomSheet.textViewAlarmState.alpha = 1 - slideOffset
+            }
         })
     }
 

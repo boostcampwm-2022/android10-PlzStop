@@ -16,6 +16,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_bottom_sheet_home_state_expanded"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:context=".ui.alarmstart.AlarmStartFragment"
