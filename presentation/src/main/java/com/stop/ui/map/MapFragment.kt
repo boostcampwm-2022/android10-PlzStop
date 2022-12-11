@@ -1,12 +1,20 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.app.AlertDialog
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
@@ -303,12 +311,43 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        alarmViewModel.lastTimeCountDown.value?.let {
-            if (it.isBlank()) {
-                alarmViewModel.startCountDownTimer()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    permission.ACCESS_BACKGROUND_LOCATION
+                )
+            ) {
+                setPermissionDialog(requireActivity())
             }
         }
         findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setPermissionDialog(context: Context) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.")
+
+        val listener = DialogInterface.OnClickListener { _, p1 ->
+            when (p1) {
+                DialogInterface.BUTTON_POSITIVE ->
+                    setBackgroundPermission()
+            }
+        }
+        builder.setPositiveButton("네", listener)
+        builder.setNegativeButton("아니오", null)
+
+        builder.show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun setBackgroundPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(
+                permission.ACCESS_BACKGROUND_LOCATION,
+            ), 2
+        )
     }
 
     companion object {

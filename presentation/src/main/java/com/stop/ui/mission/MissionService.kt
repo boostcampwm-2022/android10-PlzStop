@@ -1,7 +1,6 @@
 package com.stop.ui.mission
 
 import android.Manifest
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -169,7 +168,7 @@ class MissionService : LifecycleService() {
     companion object {
         const val NOTIFICATION_ID = 82
         private const val NOTIFICATION_CONTENT = "사용자의 위치를 추적중입니다."
-        private const val INTERVAL_UNIT = 1000L
+        private const val INTERVAL_UNIT = 1_000L
         const val MISSION_CODE = 88
 
         const val MISSION_LAST_TIME = "last_time"
