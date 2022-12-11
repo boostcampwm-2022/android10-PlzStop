@@ -34,7 +34,7 @@
     <string name="no_end_input">도착지가 입력되지 않았습니다.</string>
     <string name="km">km</string>
     <string name="non_exist_alarm">현재 등록된 막차 알림이 없습니다.</string>
-    <string name="exist_alarm">현재 등록된 막차 알림이 있습니다.</string>
+    <string name="exist_alarm">드래그하여 등록된 막차 알림을 확인할 수 있습니다.</string>
     <string name="alarm_turn_off_text">알람 해제</string>
     <string name="alarm_delete_text">알람 삭제</string>
     <string name="recent_search_text">최근기록</string>
@@ -72,7 +72,7 @@
     <string name="recent_search_no_data_tet">장소, 주소를 검색하세요</string>
     <string name="start_position">출발지</string>
     <string name="end_position">도착지</string>
-    <string name="last_time">막차시간</string>
+    <string name="last_time">막차 시간</string>
     <string name="expect_walk_time">예상 도보 시간</string>
     <string name="route_type_image_content_description">대중 교통의 종류를 나타내는 이미지입니다.</string>
     <string name="start_position_text">출발지 : %1$s</string>

@@ -90,6 +90,7 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/alarm_setting"
                 android:textSize="13sp"
+                android:textColor="@color/main_dark_grey"
                 android:gravity="center"
                 app:layout_constraintStart_toEndOf="@id/image_view_alarm"
                 app:layout_constraintTop_toTopOf="parent"

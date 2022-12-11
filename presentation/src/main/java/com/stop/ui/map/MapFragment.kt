@@ -149,7 +149,8 @@ class MapFragment : Fragment(), MapHandler {
         val displaySize = requireContext().getScreenSize()
         val displayHeight = displaySize.height
 
-        binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
+        binding.layoutHomeBottomSheet.maxHeight = (630 * resources.displayMetrics.density).toInt()
+        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.INVISIBLE
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
@@ -162,13 +163,11 @@ class MapFragment : Fragment(), MapHandler {
                 when (newState) {
                     BottomSheetBehavior.STATE_EXPANDED -> {
                         binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
-                        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
-                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
+                        binding.homeBottomSheet.textViewAlarmState.visibility = View.INVISIBLE
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.GONE
+                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.INVISIBLE
                         binding.homeBottomSheet.textViewAlarmState.visibility = View.VISIBLE
-                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.VISIBLE
                     }
                     BottomSheetBehavior.STATE_HALF_EXPANDED -> Unit
                     BottomSheetBehavior.STATE_DRAGGING -> Unit
@@ -182,7 +181,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBottomSheetView() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+        binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
@@ -258,7 +257,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun listenButtonClick() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+        binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
             alarmViewModel.deleteAlarm()
             turnOffSoundService()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
