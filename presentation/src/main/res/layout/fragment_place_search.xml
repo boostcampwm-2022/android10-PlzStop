@@ -23,21 +23,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="15dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
+            app:layout_constraintGuide_end="15dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="35dp" />
+            app:layout_constraintGuide_begin="50dp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/text_input_layout_place_search"
@@ -49,7 +49,10 @@
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
             app:layout_constraintTop_toTopOf="@id/guideline_top"
-            app:startIconDrawable="@drawable/ic_search">
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusBottomStart="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:boxCornerRadiusTopStart="15dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/text_input_edit_text_place_search"
@@ -58,9 +61,20 @@
                 android:hint="@string/search_hint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:textSize="17sp" />
-
+                android:textSize="17sp"
+                android:paddingStart="50dp"
+                android:paddingEnd="0dp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <ImageView
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:src="@drawable/ic_search"
+            android:layout_marginStart="17dp"
+            android:layout_marginTop="5dp"
+            app:layout_constraintBottom_toBottomOf="@id/text_input_layout_place_search"
+            app:layout_constraintStart_toStartOf="@id/text_input_layout_place_search"
+            app:layout_constraintTop_toTopOf="@id/text_input_layout_place_search" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_place"

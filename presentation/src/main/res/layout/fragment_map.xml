@@ -62,7 +62,7 @@
         <TextView
             android:id="@+id/text_view_search"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:background="@drawable/background_search"
             android:drawablePadding="13dp"
             android:elevation="15dp"
@@ -72,7 +72,7 @@
             android:paddingEnd="0dp"
             android:text="@string/search_hint"
             android:textColor="@color/hint_text_color"
-            android:textSize="16sp"
+            android:textSize="17sp"
             app:drawableStartCompat="@drawable/ic_search"
             app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"

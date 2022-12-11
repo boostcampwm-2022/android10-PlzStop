@@ -70,7 +70,6 @@
             android:text="@{placeSearchViewModel.distance.toString()}"
             android:textColor="@color/white"
             android:textSize="32sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1.6" />
