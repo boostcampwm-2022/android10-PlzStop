@@ -17,6 +17,7 @@ import com.stop.*
 import com.stop.R
 import com.stop.model.Location
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -32,6 +33,7 @@ class MissionService : LifecycleService() {
         LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_UNIT).build()
     }
     private lateinit var locationCallback: LocationCallback
+    private var timer: Job = lifecycleScope.launch(Dispatchers.IO) { }
 
     private var userLocation = arrayListOf<Location>()
     private var lastTime = ""
@@ -140,7 +142,8 @@ class MissionService : LifecycleService() {
         val nowTimeMillis = System.currentTimeMillis()
         var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
 
-        lifecycleScope.launch(Dispatchers.IO) {
+        timer.cancel()
+        timer = lifecycleScope.launch(Dispatchers.IO) {
             while (diffTimeMillis > 0L) {
                 lastTime = convertTimeMillisToString(diffTimeMillis)
                 sendUserInfo()

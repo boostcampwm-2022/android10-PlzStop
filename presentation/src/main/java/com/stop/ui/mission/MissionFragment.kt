@@ -76,7 +76,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setMissionService() {
-        missionServiceIntent = Intent(requireContext(), MissionService::class.java)
+        missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
         if (isMoreThanOreo()) {
             requireActivity().startForegroundService(missionServiceIntent)
         } else {
