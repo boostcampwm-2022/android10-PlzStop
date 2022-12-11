@@ -67,8 +67,6 @@ class AlarmStartFragment : Fragment() {
                     }
                 }
         }
-
-        binding.executePendingBindings()
     }
 
     fun clickAlarmTurnOff() {
