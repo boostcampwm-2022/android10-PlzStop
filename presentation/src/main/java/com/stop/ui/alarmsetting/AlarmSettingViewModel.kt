@@ -49,9 +49,6 @@ class AlarmSettingViewModel @Inject constructor(
     private val _lastTimeCountDown = MutableLiveData("")
     val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
 
-    private val _isMissionFail = MutableLiveData(false)
-    val isMissionFail: LiveData<Boolean> = _isMissionFail
-
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
             saveAlarmUseCase.saveAlarm(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
@@ -118,7 +115,6 @@ class AlarmSettingViewModel @Inject constructor(
                     oldTimeMillis = System.currentTimeMillis()
                 }
             }
-            _isMissionFail.postValue(true)
         }
     }
 

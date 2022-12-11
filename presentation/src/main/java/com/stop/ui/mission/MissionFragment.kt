@@ -71,7 +71,6 @@ class MissionFragment : Fragment(), MissionHandler {
         setDataBinding()
         initTMap()
         setMissionOver()
-        setMissionFail()
     }
 
     override fun onDestroyView() {
@@ -105,6 +104,10 @@ class MissionFragment : Fragment(), MissionHandler {
                 missionViewModel.lastTime.value = intent?.getStringExtra(MISSION_LAST_TIME)
                 missionViewModel.userLocations.value =
                     intent?.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
+
+                if (intent.getBooleanExtra(MISSION_OVER, false)) {
+                    setFailAnimation()
+                }
 
             }
         }
@@ -312,15 +315,6 @@ class MissionFragment : Fragment(), MissionHandler {
                 override fun onAnimationRepeat(animation: Animator) {
                 }
             })
-        }
-    }
-
-    private fun setMissionFail() {
-        alarmSettingViewModel.isMissionFail.observe(viewLifecycleOwner) { isMissionFail ->
-            if (isMissionFail) {
-                setFailAnimation()
-                missionViewModel.missionStatus.value = MissionStatus.OVER
-            }
         }
     }
 

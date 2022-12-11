@@ -150,6 +150,9 @@ class MissionService : LifecycleService() {
                 diffTimeMillis -= 1_000L
                 delay(1_000L)
             }
+            if (diffTimeMillis == 0L) {
+                sendMissionOver()
+            }
         }
     }
 
@@ -171,6 +174,14 @@ class MissionService : LifecycleService() {
         sendBroadcast(statusIntent)
     }
 
+    private fun sendMissionOver() {
+        val statusIntent = Intent().apply {
+            action = MISSION_OVER
+            putExtra(MISSION_OVER, true)
+        }
+        sendBroadcast(statusIntent)
+    }
+
     private fun getStatus(intent: Intent?) {
         if (intent?.getBooleanExtra(MISSION_OVER, false) == true) {
             stopForeground(true)
@@ -187,7 +198,7 @@ class MissionService : LifecycleService() {
         const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
         const val MISSION_OVER = "mission_over"
-        const val MISSION_STATUS = "missoin_status"
+        const val MISSION_STATUS = "mission_status"
     }
 
 }
