@@ -15,6 +15,7 @@ import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
 import com.stop.makeFullTime
+import com.stop.model.AlarmStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,8 +42,7 @@ class AlarmSettingViewModel @Inject constructor(
     private val _alarmItem = MutableStateFlow<AlarmUseCaseItem?>(null)
     val alarmItem: StateFlow<AlarmUseCaseItem?> = _alarmItem
 
-    private val _isAlarmItemNotNull = MutableStateFlow(false)
-    val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
+    var alarmStatus = MutableStateFlow(AlarmStatus.NON_EXIST)
 
     private lateinit var workerId : UUID
 
@@ -63,7 +63,9 @@ class AlarmSettingViewModel @Inject constructor(
             getAlarmUseCase.getAlarm().collectLatest {
                 _alarmItem.value = it
 
-                _isAlarmItemNotNull.value = it != null
+                if (it != null) {
+                    alarmStatus.value = AlarmStatus.EXIST
+                }
             }
         }
     }

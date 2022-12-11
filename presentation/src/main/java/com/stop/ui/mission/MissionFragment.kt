@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
@@ -30,18 +29,16 @@ import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
 import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
 import com.stop.ui.util.Marker
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
 class MissionFragment : Fragment(), MissionHandler {
 
     private var _binding: FragmentMissionBinding? = null
     private val binding: FragmentMissionBinding
         get() = _binding!!
 
-    private val missionViewModel: MissionViewModel by viewModels()
+    private val missionViewModel: MissionViewModel by activityViewModels()
     private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap
@@ -105,11 +102,10 @@ class MissionFragment : Fragment(), MissionHandler {
 
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                intent?.let {
-                    missionViewModel.lastTime.value = intent.getStringExtra(MISSION_LAST_TIME)
-                    missionViewModel.userLocations.value =
-                        intent.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
-                }
+                missionViewModel.lastTime.value = intent?.getStringExtra(MISSION_LAST_TIME)
+                missionViewModel.userLocations.value =
+                    intent?.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
+
             }
         }
 

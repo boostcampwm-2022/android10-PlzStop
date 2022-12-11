@@ -2,9 +2,7 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -27,9 +25,12 @@ import com.stop.R
 import com.stop.RouteNavGraphDirections
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
+import com.stop.model.AlarmStatus
 import com.stop.model.Location
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionService
 import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
@@ -64,6 +65,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        setBroadcastReceiver()
     }
 
     override fun alertTMapReady() {
@@ -164,8 +166,18 @@ class MapFragment : Fragment(), MapHandler {
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
-            behavior.isDraggable = it
+        alarmViewModel.alarmStatus.asLiveData().observe(viewLifecycleOwner) { alarmStatus ->
+            when (alarmStatus) {
+                AlarmStatus.NON_EXIST -> {
+                    behavior.isDraggable = false
+                }
+                AlarmStatus.EXIST -> {
+                    behavior.isDraggable = true
+                }
+                AlarmStatus.MISSION -> {
+                    behavior.isDraggable = true
+                }
+            }
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -351,6 +363,23 @@ class MapFragment : Fragment(), MapHandler {
                 permission.ACCESS_BACKGROUND_LOCATION,
             ), 2
         )
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MissionService.MISSION_STATUS)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if(intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
+                    missionViewModel.missionStatus.value = MissionStatus.ONGOING
+                    alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
+                }
+            }
+        }
+
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     companion object {
