@@ -54,6 +54,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -267,8 +268,9 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
+        val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
+        SoundService.normalExit = true
     }
 
     override fun onResume() {
@@ -303,12 +305,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        alarmViewModel.lastTimeCountDown.value?.let {
-            if (it.isBlank()) {
-                alarmViewModel.startCountDownTimer()
-            }
-        }
-        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        //TODO 미션으로 보내는 작업해야함
     }
 
     companion object {

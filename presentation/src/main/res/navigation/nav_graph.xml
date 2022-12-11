@@ -21,9 +21,6 @@
             app:argType="string"
             app:nullable="true" />
 
-        <action
-            android:id="@+id/action_mapFragment_to_missionFragment"
-            app:destination="@id/missionFragment" />
     </fragment>
 
     <fragment
@@ -34,27 +31,6 @@
 
         <action
             android:id="@+id/action_placeSearchFragment_to_mapFragment"
-            app:destination="@id/mapFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/alarmStartFragment"
-        android:name="com.stop.ui.alarmstart.AlarmStartFragment"
-        android:label="fragment_alarm_start"
-        tools:layout="@layout/fragment_alarm_start">
-
-        <action
-            android:id="@+id/action_alarmStartFragment_to_missionFragment"
-            app:destination="@id/missionFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/missionFragment"
-        android:name="com.stop.ui.mission.MissionFragment"
-        tools:layout="@layout/fragment_mission"
-        android:label="MissionFragment" >
-        <action
-            android:id="@+id/action_missionFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
     </fragment>
 

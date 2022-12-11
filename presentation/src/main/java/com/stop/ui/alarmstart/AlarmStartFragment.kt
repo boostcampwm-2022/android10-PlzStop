@@ -7,11 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.stop.R
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import kotlinx.coroutines.launch
 
 class AlarmStartFragment : Fragment() {
 
@@ -37,12 +40,32 @@ class AlarmStartFragment : Fragment() {
 
     private fun initBinding() {
         binding.apply {
-            alarmSettingViewModel.getAlarm()
-            alarmSettingViewModel.startCountDownTimer()
             lifecycleOwner = viewLifecycleOwner
             viewModel = alarmSettingViewModel
             fragment = this@AlarmStartFragment
         }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initView()
+    }
+
+    private fun initView() {
+        alarmSettingViewModel.getAlarm()
+
+        lifecycleScope.launch {
+            alarmSettingViewModel.alarmItem
+                .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+                .collect {
+                    it?.let {
+                        alarmSettingViewModel.startCountDownTimer(it.lastTime)
+                    }
+                }
+        }
+
+        binding.executePendingBindings()
     }
 
     fun clickAlarmTurnOff() {
@@ -57,8 +80,9 @@ class AlarmStartFragment : Fragment() {
     }
 
     private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
+        val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
+        SoundService.normalExit = true
     }
 
     override fun onDestroyView() {

@@ -1,18 +1,18 @@
 package com.stop.alarm
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.*
-import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
-import com.stop.*
-import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
+import com.stop.isMoreThanOreoUnderRedVelVet
+import com.stop.isMoreThanSnow
+import com.stop.isUnderOreo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -23,8 +23,6 @@ class SoundService : LifecycleService() {
 
     @Inject
     lateinit var getAlarmUseCase: GetAlarmUseCase
-    @Inject
-    lateinit var deleteAlarmUseCase: DeleteAlarmUseCase
 
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
@@ -32,6 +30,7 @@ class SoundService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
+        normalExit = false
 
         lifecycleScope.launch {
             getAlarmUseCase.getAlarm().collectLatest { alarmData ->
@@ -63,34 +62,14 @@ class SoundService : LifecycleService() {
                 }
             }
         }
+
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        createNotification()
-        stopForeground(true)
-
-
         return START_STICKY
-    }
-
-    private fun createNotification() {
-        val notificationManager = this.getSystemService(NotificationManager::class.java)
-        if (isMoreThanOreo()) {
-            if (notificationManager.getNotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID) == null) {
-                NotificationChannel(DEFAULT_NOTIFICATION_CHANNEL_ID, DEFAULT_NOTIFICATION_CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT).apply {
-                    notificationManager.createNotificationChannel(this)
-                }
-            }
-        }
-
-        val builder = NotificationCompat.Builder(this, DEFAULT_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_baseline_alarm_on_24)
-            .setContentTitle(null)
-            .setContentText(null)
-
-        startForeground(DEFAULT_NOTIFICATION_ID, builder.build())
     }
 
     override fun onDestroy() {
@@ -105,13 +84,22 @@ class SoundService : LifecycleService() {
         }
         vibratorManager = null
 
+        if (!normalExit) {
+            setAlarmTimer()
+        }
+
         super.onDestroy()
     }
 
+    private fun setAlarmTimer() {
+        val intent = Intent(this, AlarmReceiver::class.java)
+        val sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), sender)
+    }
+
     companion object {
-        private const val DEFAULT_NOTIFICATION_CHANNEL_ID = "DEFAULT_NOTIFICATION_CHANNEL_ID"
-        private const val DEFAULT_NOTIFICATION_CHANNEL_NAME = "DEFAULT_NOTIFICATION_CHANNEL_NAME"
-        private const val DEFAULT_NOTIFICATION_ID = 124
+        var normalExit: Boolean = false
     }
 
 }
