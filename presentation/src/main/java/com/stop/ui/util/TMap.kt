@@ -119,4 +119,8 @@ open class TMap(
         endPoint.longitude = endLongitude
         return startPoint.distanceTo(endPoint)
     }
+
+    fun onDestroy() {
+        tMapView.onDestroy()
+    }
 }

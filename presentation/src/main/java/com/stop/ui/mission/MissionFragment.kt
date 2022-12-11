@@ -75,6 +75,12 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onDestroyView()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        tMap.onDestroy()
+    }
+
     private fun setMissionService() {
         missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
         if (isMoreThanOreo()) {
