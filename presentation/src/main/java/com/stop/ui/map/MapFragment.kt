@@ -30,6 +30,7 @@ import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
 import com.stop.util.getScreenSize
@@ -41,6 +42,7 @@ class MapFragment : Fragment(), MapHandler {
 
     private val alarmViewModel: AlarmSettingViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+    private val missionViewModel: MissionViewModel by activityViewModels()
 
     private lateinit var tMap: MapTMap
     private var mapUIVisibility = View.GONE
@@ -84,6 +86,7 @@ class MapFragment : Fragment(), MapHandler {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
+        binding.missionViewModel = missionViewModel
         binding.fragment = this@MapFragment
     }
 

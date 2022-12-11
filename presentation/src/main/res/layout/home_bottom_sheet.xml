@@ -10,6 +10,10 @@
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
         <variable
+            name="missionViewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
+
+        <variable
             name="fragment"
             type="com.stop.ui.map.MapFragment" />
     </data>
@@ -47,7 +51,8 @@
             android:id="@+id/layout_state_expanded"
             layout="@layout/bottom_sheet_home_state_expanded"
             android:visibility="gone"
-            bind:viewModel="@{alarmViewModel}"
+            bind:alarmViewModel="@{alarmViewModel}"
+            bind:missionViewModel="@{missionViewModel}"
             bind:fragment="@{fragment}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

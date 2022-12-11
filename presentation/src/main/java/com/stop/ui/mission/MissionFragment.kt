@@ -20,6 +20,7 @@ import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.isMoreThanOreo
 import com.stop.model.Location
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
@@ -46,6 +47,7 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onCreate(savedInstanceState)
 
         setMissionService()
+        missionViewModel.missionStatus.value = MissionStatus.ONGOING
     }
 
     override fun onCreateView(
@@ -139,7 +141,7 @@ class MissionFragment : Fragment(), MissionHandler {
             "미션을 취소합니다",
             Snackbar.LENGTH_SHORT
         ).show()
-        missionViewModel.isMissionOver.value = true
+        missionViewModel.missionStatus.value = MissionStatus.OVER
     }
 
     override fun alertTMapReady() {
@@ -253,7 +255,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 missionViewModel.destination.value.coordinate.longitude.toDouble()
             ) <= 10
         ) {
-            missionViewModel.isMissionOver.value = true
+            missionViewModel.missionStatus.value = MissionStatus.OVER
             Snackbar.make(
                 requireActivity().findViewById(R.id.constraint_layout_container),
                 "정류장에 도착했습니다!",
@@ -273,7 +275,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    missionViewModel.isMissionOver.value = true
+                    missionViewModel.missionStatus.value = MissionStatus.OVER
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
@@ -289,7 +291,7 @@ class MissionFragment : Fragment(), MissionHandler {
         alarmSettingViewModel.isMissionFail.observe(viewLifecycleOwner) { isMissionFail ->
             if (isMissionFail) {
                 setFailAnimation()
-                missionViewModel.isMissionOver.value = true
+                missionViewModel.missionStatus.value = MissionStatus.OVER
             }
         }
     }
@@ -303,7 +305,7 @@ class MissionFragment : Fragment(), MissionHandler {
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    missionViewModel.isMissionOver.value = true
+                    missionViewModel.missionStatus.value = MissionStatus.OVER
                 }
 
                 override fun onAnimationCancel(animation: Animator) {
@@ -317,8 +319,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setMissionOver() {
         lifecycleScope.launch {
-            missionViewModel.isMissionOver.collect { isMissionOver ->
-                if (isMissionOver) {
+            missionViewModel.missionStatus.collect { missionStatus ->
+                if (missionStatus == MissionStatus.OVER) {
                     alarmSettingViewModel.deleteAlarm()
                     missionServiceIntent.putExtra(MISSION_OVER, true)
                     if (isMoreThanOreo()) {
@@ -327,6 +329,7 @@ class MissionFragment : Fragment(), MissionHandler {
                         requireActivity().startService(missionServiceIntent)
                     }
                     requireActivity().stopService(missionServiceIntent)
+                    missionViewModel.missionStatus.value = MissionStatus.BEFORE
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
             }

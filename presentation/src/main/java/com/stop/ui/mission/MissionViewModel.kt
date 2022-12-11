@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.model.Location
+import com.stop.model.MissionStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
@@ -14,7 +15,7 @@ class MissionViewModel @Inject constructor() : ViewModel() {
 
     val destination = MutableStateFlow(Place("null",Coordinate("37.553836", "126.969652")))
 
-    val isMissionOver = MutableStateFlow(false)
+    var missionStatus = MutableStateFlow<MissionStatus>(MissionStatus.BEFORE)
 
     val lastTime = MutableLiveData<String>()
     var userLocations = MutableStateFlow(arrayListOf(Location(37.553836, 126.969652)))
