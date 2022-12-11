@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.stop.databinding.RoutePathAtTimeLineItemBinding
+import com.stop.databinding.StationContainerItemBinding
 import com.stop.model.route.RouteItem
 
 class StationContainer(
@@ -20,7 +20,7 @@ class StationContainer(
         removeAllViews()
 
         routeItems.forEachIndexed { index, routeItem ->
-            val routePathAtTimeLineItemBinding = RoutePathAtTimeLineItemBinding.inflate(
+            val stationContainerItemBinding = StationContainerItemBinding.inflate(
                 LayoutInflater.from(context),
                 this,
                 true,
@@ -28,13 +28,13 @@ class StationContainer(
                 root.id = View.generateViewId()
             }
 
-            setBindingAttribute(routePathAtTimeLineItemBinding, routeItem, index)
-            setConstraint(routePathAtTimeLineItemBinding)
+            setBindingAttribute(stationContainerItemBinding, routeItem, index)
+            setConstraint(stationContainerItemBinding)
         }
     }
 
     private fun setBindingAttribute(
-        binding: RoutePathAtTimeLineItemBinding,
+        binding: StationContainerItemBinding,
         routeItem: RouteItem,
         index: Int
     ) {
@@ -46,7 +46,7 @@ class StationContainer(
         }
     }
 
-    private fun setConstraint(binding: RoutePathAtTimeLineItemBinding) {
+    private fun setConstraint(binding: StationContainerItemBinding) {
         val endId = beforeViewId ?: this.id
         val endSide = if (beforeViewId == null) {
             ConstraintSet.TOP
