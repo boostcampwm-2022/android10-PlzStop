@@ -183,7 +183,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun getAlarmInfo() {
         alarmSettingViewModel.getAlarm()
         val linePoints = arrayListOf<TMapPoint>()
-        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
+        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes as WalkRoute
         tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 
