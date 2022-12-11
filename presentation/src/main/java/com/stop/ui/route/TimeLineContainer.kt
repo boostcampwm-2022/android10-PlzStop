@@ -35,8 +35,6 @@ class TimeLineContainer(
     private val density = context.resources.displayMetrics.density
 
     fun submitList(routes: List<Route>) {
-        removeAllViews()
-
         var count = 0
         routes.forEachIndexed { index, route ->
             if (index == 0) {
