@@ -18,6 +18,7 @@ import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.domain.model.route.tmap.custom.WalkRoute
+import com.stop.isMoreThanOreo
 import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
@@ -66,12 +67,6 @@ class MissionFragment : Fragment(), MissionHandler {
         setMissionFail()
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        requireActivity().startService(missionServiceIntent)
-    }
-
     override fun onDestroyView() {
         _binding = null
 
@@ -80,12 +75,20 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun setMissionService() {
         missionServiceIntent = Intent(requireContext(), MissionService::class.java)
-        requireActivity().startService(missionServiceIntent)
+        if (isMoreThanOreo()) {
+            requireActivity().startForegroundService(missionServiceIntent)
+        } else {
+            requireActivity().startService(missionServiceIntent)
+        }
     }
 
     private fun setTimer() {
         missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
-        requireActivity().startService(missionServiceIntent)
+        if (isMoreThanOreo()) {
+            requireActivity().startForegroundService(missionServiceIntent)
+        } else {
+            requireActivity().startService(missionServiceIntent)
+        }
     }
 
     private fun setDataBinding() {
@@ -318,7 +321,11 @@ class MissionFragment : Fragment(), MissionHandler {
                 if (isMissionOver) {
                     alarmSettingViewModel.deleteAlarm()
                     missionServiceIntent.putExtra(MISSION_OVER, true)
-                    requireActivity().startService(missionServiceIntent)
+                    if (isMoreThanOreo()) {
+                        requireActivity().startForegroundService(missionServiceIntent)
+                    } else {
+                        requireActivity().startService(missionServiceIntent)
+                    }
                     requireActivity().stopService(missionServiceIntent)
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }

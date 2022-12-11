@@ -1,6 +1,7 @@
 package com.stop.ui.mission
 
 import android.Manifest
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -17,6 +18,7 @@ import com.stop.*
 import com.stop.R
 import com.stop.model.Location
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MissionService : LifecycleService() {
@@ -140,16 +142,11 @@ class MissionService : LifecycleService() {
         var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
 
         lifecycleScope.launch(Dispatchers.IO) {
-            var oldTimeMillis = System.currentTimeMillis()
             while (diffTimeMillis > 0L) {
-                if (isMissionOver) break
-                val delayMillis = System.currentTimeMillis() - oldTimeMillis
-                if (delayMillis == 1000L) {
-                    diffTimeMillis -= delayMillis
-                    lastTime = convertTimeMillisToString(diffTimeMillis)
-                    sendUserInfo()
-                    oldTimeMillis = System.currentTimeMillis()
-                }
+                lastTime = convertTimeMillisToString(diffTimeMillis)
+                sendUserInfo()
+                diffTimeMillis -= 1_000L
+                delay(1_000L)
             }
         }
     }
