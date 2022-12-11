@@ -30,8 +30,8 @@
     <string name="quit">종료</string>
     <string name="minus">-</string>
     <string name="plus">+</string>
-    <string name="no_start_input">출발지가 입력되지 않았습니다</string>
-    <string name="no_end_input">도착지가 입력되지 않았습니다</string>
+    <string name="no_start_input">출발지를 입력해 주세요</string>
+    <string name="no_end_input">도착지를 입력해 주세요</string>
     <string name="km">km</string>
     <string name="non_exist_alarm">현재 등록된 막차 알림이 없습니다</string>
     <string name="exist_alarm">드래그하여 등록된 막차 알림을 확인할 수 있습니다</string>
@@ -57,7 +57,7 @@
     <string name="start">출발지</string>
     <string name="end">도착지</string>
     <string name="section_time">%1$s분</string>
-    <string name="route_result_not_exist">경로 검색 결과가 존재하지 않습니다.</string>
+    <string name="route_result_not_exist">경로 검색 결과가 존재하지 않습니다</string>
     <string name="transport_last_time_is_not_received_yet">막차 시간 데이터가 입력되지 않았습니다.</string>
     <string name="available_train_no_exist_yet">탑승할 수 있는 지하철이 아직 없습니다.</string>
     <string name="api_changed">개발 당시의 API 명세와 다른 값이 들어왔습니다.</string>
