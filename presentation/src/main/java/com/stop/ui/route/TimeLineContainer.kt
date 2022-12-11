@@ -15,44 +15,25 @@ import com.stop.databinding.TimeLineItemBinding
 import com.stop.domain.model.route.tmap.custom.MoveType
 import com.stop.domain.model.route.tmap.custom.Route
 import com.stop.domain.model.route.tmap.custom.TransportRoute
+import kotlin.properties.Delegates
 
 class TimeLineContainer(
     context: Context,
     attrs: AttributeSet? = null,
 ) : ConstraintLayout(context, attrs) {
 
-    private val greyColor =
-        ContextCompat.getColor(context, R.color.grey_for_route_walk)
-    private var beforeViewId: Int? = null
-    private var beforeView: View? = null
-
-    private var iconWidth: Int? = null
-    private var iconCount: Int? = null
-    private var textWidth: Int? = null
-    private var routeCount: Int? = null
-    private var overlappingWidth: Int? = null
-
+    private val greyColor = ContextCompat.getColor(context, R.color.grey_for_route_walk)
     private val density = context.resources.displayMetrics.density
 
+    private var beforeViewId: Int? = null
+    private var beforeView: View? = null
+    private var routeCount by Delegates.notNull<Int>()
+    private var overlappingWidth by Delegates.notNull<Int>()
+
     fun submitList(routes: List<Route>) {
-        var count = 0
-        routes.forEachIndexed { index, route ->
-            if (index == 0) {
-                return@forEachIndexed
-            }
-            if (route.mode in listOf(MoveType.WALK, MoveType.TRANSFER)) {
-                return@forEachIndexed
-            }
-            count += 1
-        }
-
-        iconWidth = convertDpToPixel(9f)
-        iconCount = count + 1
-
-        textWidth = convertDpToPixel(30f)
         routeCount = routes.size
-
-        overlappingWidth = OVERLAPPING_MARGIN * (routes.size - 1)
+        val overlappingMarginPixel = (OVERLAPPING_MARGIN * density + 0.5f).toInt()
+        overlappingWidth = overlappingMarginPixel * (routes.size - 1)
 
         doOnLayout {
             routes.forEachIndexed { index, route ->
@@ -64,7 +45,7 @@ class TimeLineContainer(
                     root.id = View.generateViewId()
                     if (index != 0) {
                         val layoutParams = root.layoutParams as MarginLayoutParams
-                        layoutParams.marginStart = -OVERLAPPING_MARGIN
+                        layoutParams.marginStart = -overlappingMarginPixel
                         root.requestLayout()
                         root.layoutParams = layoutParams
                     }
@@ -73,10 +54,6 @@ class TimeLineContainer(
                 beforeView = timeLineItem2Binding.root
             }
         }
-    }
-
-    private fun convertDpToPixel(size: Float): Int {
-        return (size * density + 0.5f).toInt()
     }
 
     private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
@@ -94,8 +71,7 @@ class TimeLineContainer(
                     setDefaultColor(binding)
                     binding.viewIcon.visibility = View.GONE
                     binding.imageViewIcon.visibility = View.GONE
-                    setWidth(binding, route.proportionOfSectionTime)
-                    setConstraint(binding)
+                    setConstraint(binding, index, route.proportionOfSectionTime)
 
                     beforeView?.bringToFront()
                     requestLayout()
@@ -119,11 +95,14 @@ class TimeLineContainer(
             else -> setDefaultColor(binding)
         }
 
-        setWidth(binding, route.proportionOfSectionTime)
-        setConstraint(binding)
+        setConstraint(binding, index, route.proportionOfSectionTime)
     }
 
-    private fun setConstraint(binding: TimeLineItemBinding) {
+    private fun setConstraint(
+        binding: TimeLineItemBinding,
+        index: Int,
+        proportionOfSectionTime: Float,
+    ) {
         val endId = beforeViewId ?: this@TimeLineContainer.id
         val endSide = if (beforeViewId == null) {
             ConstraintSet.START
@@ -134,6 +113,25 @@ class TimeLineContainer(
         with(ConstraintSet()) {
             clone(this@TimeLineContainer)
             connect(binding.root.id, ConstraintSet.START, endId, endSide)
+            if (index != 0) {
+                connect(
+                    endId,
+                    ConstraintSet.END,
+                    binding.root.id,
+                    ConstraintSet.START
+                )
+            }
+            setHorizontalWeight(binding.root.id, proportionOfSectionTime + 0.2f)
+
+            if (index == routeCount - 1) {
+                connect(
+                    binding.root.id,
+                    ConstraintSet.END,
+                    this@TimeLineContainer.id,
+                    ConstraintSet.END
+                )
+                setHorizontalChainStyle(binding.root.id, ConstraintSet.CHAIN_SPREAD_INSIDE)
+            }
             connect(
                 binding.root.id,
                 ConstraintSet.TOP,
@@ -149,21 +147,6 @@ class TimeLineContainer(
             applyTo(this@TimeLineContainer)
         }
         beforeViewId = binding.root.id
-    }
-
-    private fun setWidth(
-        binding: TimeLineItemBinding,
-        proportionOfSectionTime: Float
-    ) {
-        val iconWidth = iconWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-        val iconCount = iconCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-        val textWidth = textWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-        val routeCount = routeCount ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-        val overlappingWidth = overlappingWidth ?: throw IllegalArgumentException("로직이 잘못 되었습니다.")
-        val extraWidth =
-            this@TimeLineContainer.width - iconWidth * iconCount - textWidth * routeCount + overlappingWidth
-        binding.root.layoutParams.width =
-            (extraWidth * proportionOfSectionTime).toInt() + iconWidth + textWidth
     }
 
     private fun setIdentityColor(binding: TimeLineItemBinding, route: TransportRoute) {
@@ -183,6 +166,6 @@ class TimeLineContainer(
     }
 
     companion object {
-        private const val OVERLAPPING_MARGIN = 30
+        private const val OVERLAPPING_MARGIN = 10f
     }
 }
