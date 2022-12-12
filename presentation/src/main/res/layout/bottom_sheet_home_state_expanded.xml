@@ -43,7 +43,6 @@
             android:background="@drawable/background_alarm_panel"
             android:padding="12dp"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
             app:layout_constraintTop_toTopOf="parent">
 

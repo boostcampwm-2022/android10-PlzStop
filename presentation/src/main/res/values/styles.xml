@@ -19,4 +19,11 @@
         <item name="android:minHeight">48dp</item>
     </style>
 
+    <style name="Widget.Material3.Button.MaterialButtonToggleGroup" parent="Widget.Material3.Button.TextButton">
+        <item name="android:paddingLeft">@dimen/m3_btn_padding_left</item>
+        <item name="android:paddingRight">@dimen/m3_btn_padding_right</item>
+        <item name="strokeColor">@color/main_dark_grey</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
 </resources>
