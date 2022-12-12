@@ -92,13 +92,13 @@ class RouteViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             val itineraries = getRouteUseCase(routeRequest)
             if (itineraries.isEmpty()) {
-                _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
-                _routeResponse.value = listOf()
-                _isLoading.value = Event(false)
+                _errorMessage.postValue(Event(ErrorType.NO_ROUTE_RESULT))
+                _routeResponse.postValue(listOf())
+                _isLoading.postValue(Event(false))
                 return@launch
             }
-            this@RouteViewModel._routeResponse.value = itineraries
-            _isLoading.value = Event(false)
+            this@RouteViewModel._routeResponse.postValue(itineraries)
+            _isLoading.postValue(Event(false))
         }
     }
 
@@ -112,8 +112,7 @@ class RouteViewModel @Inject constructor(
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
         viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
-            this@RouteViewModel._lastTimeResponse.value =
-                Event(getLastTransportTimeUseCase(itinerary))
+            this@RouteViewModel._lastTimeResponse.postValue(Event(getLastTransportTimeUseCase(itinerary)))
         }
     }
 
