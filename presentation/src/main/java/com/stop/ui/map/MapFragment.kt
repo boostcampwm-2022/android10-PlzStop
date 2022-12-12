@@ -3,13 +3,11 @@ package com.stop.ui.map
 import android.Manifest.permission
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.app.NotificationManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.app.NotificationManager
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -28,6 +26,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
+import com.stop.AlarmActivity
 import com.stop.R
 import com.stop.RouteNavGraphDirections
 import com.stop.alarm.SoundService
@@ -37,11 +36,13 @@ import com.stop.model.Location
 import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionService
 import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
 import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
+
 
 class MapFragment : Fragment(), MapHandler {
     private var _binding: FragmentMapBinding? = null
@@ -352,7 +353,11 @@ class MapFragment : Fragment(), MapHandler {
                 setPermissionDialog(requireActivity())
             }
         }
-        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        Intent(requireContext(), AlarmActivity::class.java).apply {
+            putExtra("MISSION_CODE", MissionService.MISSION_CODE)
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(this)
+        }
     }
 
     @SuppressLint("BatteryLife")

@@ -10,13 +10,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
+import com.stop.MainActivity
 import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.domain.model.route.tmap.custom.Place
@@ -46,6 +47,8 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var missionServiceIntent: Intent
 
+    private lateinit var backPressedCallback: OnBackPressedCallback
+
     var personCurrentLocation = Location(37.553836, 126.969652)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +66,17 @@ class MissionFragment : Fragment(), MissionHandler {
         _binding = FragmentMissionBinding.inflate(layoutInflater)
 
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                requireActivity().finish()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -260,8 +274,8 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun getAlarmInfo() {
         alarmSettingViewModel.getAlarm(missionViewModel.missionStatus.value)
         val linePoints = arrayListOf<TMapPoint>()
-        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
-        tMap.drawWalkRoute(walkInfo, linePoints)
+        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes as WalkRoute
+        tMap.makeWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 
         missionViewModel.destination.value = walkInfo.end
@@ -355,7 +369,12 @@ class MissionFragment : Fragment(), MissionHandler {
                     requireActivity().stopService(missionServiceIntent)
                     missionViewModel.missionStatus.value = MissionStatus.BEFORE
                     alarmSettingViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
-                    findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+
+                    Intent(requireActivity(), MainActivity::class.java).apply {
+                        flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(this)
+                    }
                 }
             }
         }
