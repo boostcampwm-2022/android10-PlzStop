@@ -171,6 +171,7 @@ class TimeLineContainer(
 
     private fun setIdentityColor(binding: TimeLineItemBinding, route: TransportRoute) {
         val identityColor = Color.parseColor("#${route.routeColor}")
+
         binding.textViewSectionTime.background.setTint(identityColor)
         binding.textViewSectionTime.setTextColor(Color.WHITE)
 
@@ -179,10 +180,11 @@ class TimeLineContainer(
     }
 
     private fun setDefaultColor(binding: TimeLineItemBinding) {
-        binding.textViewSectionTime.setTextColor(Color.WHITE)
         binding.textViewSectionTime.background.setTint(greyColor)
+        binding.textViewSectionTime.setTextColor(Color.WHITE)
 
-        binding.viewIcon.background.setTintList(null)
+        binding.viewIcon.background.setTint(greyColor)
+        binding.imageViewIcon.imageTintList = ColorStateList.valueOf(Color.WHITE)
     }
 
     companion object {
