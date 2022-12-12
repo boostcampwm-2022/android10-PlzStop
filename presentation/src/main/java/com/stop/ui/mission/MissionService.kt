@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -128,6 +129,7 @@ class MissionService : LifecycleService() {
             override fun onLocationResult(locationResult: LocationResult) {
                 for (location in locationResult.locations) {
                     if (location != null) {
+                        Log.d("MissionWorker","service location $location")
                         userLocation.add(Location(location.latitude, location.longitude))
                     }
                 }

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -27,7 +28,9 @@ class MainActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         setIntent(intent)
 
-        intent?.extras?.getInt("ALARM_CODE")?.let {
+        val missionIntent = intent?.extras?.getInt("ALARM_CODE")
+        Log.d("MissionWorker","noti intent $missionIntent")
+        missionIntent?.let {
             if (it == ALARM_CODE) {
                 val navHostFragment =
                     supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
