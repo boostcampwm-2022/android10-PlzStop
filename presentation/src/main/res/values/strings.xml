@@ -48,7 +48,7 @@
     <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
     <string name="mission_notification_channel_id">mission_notification_channel_id</string>
     <string name="mission_notification_channel_name">mission_notification_channel_name</string>
-    <string name="mission_notification_title">실시간 위치 추적중</string>
+    <string name="mission_notification_title">실시간 위치 트래킹 중</string>
     <string name="mission_cancel_text">취소하기</string>
     <string name="mission_content_text">정류장까지 달려~!</string>
     <string name="no_alarm">현재 등록된 막차 알림이 없습니다.</string>
@@ -79,4 +79,5 @@
     <string name="end_position_text">도착지 : %1$s</string>
     <string name="last_time_text">막차시간 : %1$s</string>
     <string name="walk_time_text">%1$d분</string>
+    <string name="last_time_not_found">알람을 설정할 수 없습니다</string>
 </resources>

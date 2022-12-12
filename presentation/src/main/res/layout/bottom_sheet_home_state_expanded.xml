@@ -292,7 +292,7 @@
                 android:layout_marginStart="10dp"
                 android:text="@string/alarm_delete_text"
                 android:textSize="17sp"
-                android:textColor="@color/main_dark_grey"
+                android:textColor="@color/red"
                 android:gravity="center"
                 app:layout_constraintStart_toEndOf="@id/image_view_alarm"
                 app:layout_constraintTop_toTopOf="parent"
