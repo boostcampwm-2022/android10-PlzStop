@@ -24,7 +24,6 @@ import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
-import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
@@ -125,6 +124,7 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.homePanel.viewPanelStart.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
             findNavController().apply {
                 setGraph(R.navigation.route_nav_graph)
                 navigate(
@@ -135,6 +135,7 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.homePanel.viewPanelEnd.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
             findNavController().apply {
                 setGraph(R.navigation.route_nav_graph)
                 navigate(
@@ -234,25 +235,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun setViewVisibility() {
-        with(binding) {
+        with (binding) {
             textViewSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
         }
-    }
-
-    private fun listenButtonClick() {
-        binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
-            alarmViewModel.deleteAlarm()
-            turnOffSoundService()
-            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-    }
-
-    private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
-        requireContext().stopService(intent)
     }
 
     override fun onResume() {
