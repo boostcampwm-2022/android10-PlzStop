@@ -98,7 +98,7 @@ class AlarmSettingFragment : Fragment() {
         val alarmUseCaseItem = AlarmUseCaseItem(
             startPosition = routeResultViewModel.origin.value?.name ?: "",
             endPosition = routeResultViewModel.destination.value?.name ?: "",
-            routes = itinerary.routes,
+            routes = itinerary.routes.first(),
             lastTime = transportLastTime.timeToBoard,
             walkTime = (itinerary.routes.first().sectionTime.div(60)).roundToInt(),
             0,
