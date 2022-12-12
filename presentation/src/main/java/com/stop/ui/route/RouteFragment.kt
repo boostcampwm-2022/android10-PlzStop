@@ -99,7 +99,7 @@ class RouteFragment : Fragment() {
             navController.popBackStack(R.id.mapFragment, false)
         }
         binding.imageViewResearch.setOnClickListener {
-            routeViewModel.getRoute()
+            routeViewModel.patchRoute()
         }
     }
 
@@ -163,7 +163,7 @@ class RouteFragment : Fragment() {
         requireArguments().clear()
 
         if (args?.start != null || args?.end != null) {
-            routeViewModel.getRoute()
+            routeViewModel.patchRoute()
         }
     }
 

@@ -50,7 +50,7 @@ class RouteViewModel @Inject constructor(
     val isLoading: LiveData<Event<Boolean>>
         get() = _isLoading
 
-    fun getRoute(isShowError: Boolean = true) {
+    fun patchRoute(isShowError: Boolean = true) {
         val originValue = _origin.value ?: let {
             if (!isShowError) {
                 return
@@ -92,7 +92,7 @@ class RouteViewModel @Inject constructor(
         _origin.value = _destination.value.also {
             _destination.value = _origin.value
         }
-        getRoute(false)
+        patchRoute(false)
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
