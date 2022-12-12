@@ -292,11 +292,15 @@ class MapFragment : Fragment(), MapHandler {
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
 
-            missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
-            requireActivity().stopService(missionServiceIntent)
-            missionViewModel.missionStatus.value = MissionStatus.BEFORE
-            alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
+            setMissionOver()
         }
+    }
+
+    private fun setMissionOver() {
+        missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
+        requireActivity().stopService(missionServiceIntent)
+        missionViewModel.missionStatus.value = MissionStatus.BEFORE
+        alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
     }
 
     private fun cancelNotification() {

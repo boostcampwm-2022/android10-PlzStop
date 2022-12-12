@@ -210,7 +210,6 @@
             android:layout_height="0dp"
             app:lottie_autoPlay="false"
             app:lottie_loop="false"
-            android:visibility="gone"
             app:lottie_fileName="success_animation.json"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

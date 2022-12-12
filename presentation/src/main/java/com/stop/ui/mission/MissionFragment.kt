@@ -53,6 +53,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private lateinit var backPressedCallback: OnBackPressedCallback
 
     var personCurrentLocation = Location(37.553836, 126.969652)
+    var firstTime = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,6 +126,11 @@ class MissionFragment : Fragment(), MissionHandler {
                     intent?.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
 
                 if (intent.getBooleanExtra(MISSION_OVER, false)) {
+                    Snackbar.make(
+                        requireActivity().findViewById(R.id.constraint_layout_container),
+                        "시간이 만료되어 미션에 실패하셨습니다.",
+                        Snackbar.LENGTH_SHORT
+                    ).show()
                     setFailAnimation()
                 }
 
@@ -305,21 +311,20 @@ class MissionFragment : Fragment(), MissionHandler {
                 missionViewModel.destination.value.coordinate.latitude.toDouble(),
                 missionViewModel.destination.value.coordinate.longitude.toDouble()
             ) <= 10
+            && firstTime == 0
         ) {
-            missionViewModel.missionStatus.value = MissionStatus.OVER
+            firstTime += 1
             Snackbar.make(
                 requireActivity().findViewById(R.id.constraint_layout_container),
                 "정류장에 도착했습니다!",
                 Snackbar.LENGTH_SHORT
             ).show()
             setSuccessAnimation()
-
         }
     }
 
     private fun setSuccessAnimation() {
         with(binding.lottieSuccess) {
-            visibility = View.VISIBLE
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
