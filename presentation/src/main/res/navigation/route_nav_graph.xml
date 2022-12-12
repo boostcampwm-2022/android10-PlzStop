@@ -43,6 +43,5 @@
     </fragment>
     <action
         android:id="@+id/action_global_routeFragment"
-        app:popUpTo="@id/routeFragment"
         app:destination="@id/routeFragment" />
 </navigation>

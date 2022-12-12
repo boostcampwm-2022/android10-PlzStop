@@ -53,6 +53,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -242,6 +243,23 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
+    private fun listenButtonClick() {
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            alarmViewModel.deleteAlarm()
+            turnOffSoundService()
+        }
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(requireContext(), SoundService::class.java)
+
+        requireContext().stopService(intent)
+        SoundService.normalExit = true
+    }
+
     override fun onResume() {
         super.onResume()
 
@@ -254,7 +272,11 @@ class MapFragment : Fragment(), MapHandler {
 
     private fun showBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
+        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
+        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -274,12 +296,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        alarmViewModel.lastTimeCountDown.value?.let {
-            if (it.isBlank()) {
-                alarmViewModel.startCountDownTimer()
-            }
-        }
-        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        // TODO 미션으로 보내는 작업해야함
     }
 
     companion object {

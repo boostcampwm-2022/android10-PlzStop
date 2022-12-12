@@ -11,7 +11,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
 import com.stop.R
@@ -109,7 +108,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소했습니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
-        findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+       // findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     override fun alertTMapReady() {
@@ -184,7 +183,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private fun getAlarmInfo() {
         alarmSettingViewModel.getAlarm()
         val linePoints = arrayListOf<TMapPoint>()
-        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
+        val walkInfo = alarmSettingViewModel.alarmItem.value?.routes as WalkRoute
         tMap.drawWalkRoute(walkInfo, linePoints)
         tMap.drawWalkLines(linePoints, Marker.WALK_LINE, Marker.WALK_LINE_COLOR)
 

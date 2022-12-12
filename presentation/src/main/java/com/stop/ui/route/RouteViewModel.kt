@@ -1,5 +1,6 @@
 package com.stop.ui.route
 
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,6 +24,7 @@ class RouteViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var clickedItineraryIndex: Int = -1
+    var alertDialog: AlertDialog? = null
 
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>
@@ -44,16 +46,27 @@ class RouteViewModel @Inject constructor(
     val errorMessage: LiveData<Event<ErrorType>>
         get() = _errorMessage
 
-    fun getRoute() {
+    private val _isLoading = MutableLiveData<Event<Boolean>>()
+    val isLoading: LiveData<Event<Boolean>>
+        get() = _isLoading
+
+    fun getRoute(isShowError: Boolean = true) {
         val originValue = _origin.value ?: let {
+            if (!isShowError) {
+                return
+            }
             _errorMessage.value = Event(ErrorType.NO_START)
             return
         }
 
         val destinationValue = _destination.value ?: let {
+            if (!isShowError) {
+                return
+            }
             _errorMessage.value = Event(ErrorType.NO_END)
             return
         }
+        _isLoading.value = Event(true)
 
         val routeRequest = RouteRequest(
             startX = originValue.coordinate.longitude,
@@ -66,10 +79,20 @@ class RouteViewModel @Inject constructor(
             val itineraries = getRouteUseCase(routeRequest)
             if (itineraries.isEmpty()) {
                 _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
+                _routeResponse.value = listOf()
+                _isLoading.value = Event(false)
                 return@launch
             }
             this@RouteViewModel._routeResponse.value = itineraries
+            _isLoading.value = Event(false)
         }
+    }
+
+    fun changeOriginAndDestination() {
+        _origin.value = _destination.value.also {
+            _destination.value = _origin.value
+        }
+        getRoute(false)
     }
 
     fun calculateLastTransportTime(itinerary: Itinerary) {

@@ -41,6 +41,9 @@ internal class RouteRepositoryImpl @Inject constructor(
             remoteDataSource.getSubwayStationCd(stationId, stationName)
         } catch (exception: JsonDataException) {
             ""
+        } catch (exception: IllegalArgumentException) {
+            exception.printStackTrace()
+            ""
         }
     }
 
