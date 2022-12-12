@@ -9,7 +9,6 @@ import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
-import androidx.core.view.doOnLayout
 import com.stop.R
 import com.stop.databinding.TimeLineItemBinding
 import com.stop.domain.model.route.tmap.custom.MoveType
@@ -37,24 +36,22 @@ class TimeLineContainer(
         val overlappingMarginPixel = (OVERLAPPING_MARGIN * density + 0.5f).toInt()
         overlappingWidth = overlappingMarginPixel * (routes.size - 1)
 
-        doOnLayout {
-            routes.forEachIndexed { index, route ->
-                val timeLineItem2Binding = TimeLineItemBinding.inflate(
-                    LayoutInflater.from(context),
-                    this@TimeLineContainer,
-                    true,
-                ).apply {
-                    root.id = View.generateViewId()
-                    if (index != 0) {
-                        val layoutParams = root.layoutParams as MarginLayoutParams
-                        layoutParams.marginStart = -overlappingMarginPixel
-                        root.requestLayout()
-                        root.layoutParams = layoutParams
-                    }
+        routes.forEachIndexed { index, route ->
+            val timeLineItem2Binding = TimeLineItemBinding.inflate(
+                LayoutInflater.from(context),
+                this@TimeLineContainer,
+                true,
+            ).apply {
+                root.id = View.generateViewId()
+                if (index != 0) {
+                    val layoutParams = root.layoutParams as MarginLayoutParams
+                    layoutParams.marginStart = -overlappingMarginPixel
+                    root.requestLayout()
+                    root.layoutParams = layoutParams
                 }
-                setBindingAttribute(timeLineItem2Binding, route, index)
-                beforeView = timeLineItem2Binding.root
             }
+            setBindingAttribute(timeLineItem2Binding, route, index)
+            beforeView = timeLineItem2Binding.root
         }
     }
 

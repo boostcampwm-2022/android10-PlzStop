@@ -48,18 +48,12 @@ class RouteViewHolder(
                 )
             )
         }
-        binding.stationContainer.post {
-            binding.stationContainer.removeAllViews()
-        }
-        binding.timeLineContainer.post {
-            binding.timeLineContainer.removeAllViews()
-        }
-        binding.stationContainer.post {
-            binding.stationContainer.submitList(routeItems.toList())
-        }
-        binding.timeLineContainer.post {
-            binding.timeLineContainer.submitList(itinerary.routes.toList())
-        }
+        binding.stationContainer.removeAllViewsInLayout()
+
+        binding.timeLineContainer.removeAllViewsInLayout()
+
+        binding.stationContainer.submitList(routeItems.toList())
+        binding.timeLineContainer.submitList(itinerary.routes)
     }
 
     private fun getRouteItemDistance(route: Route): Double {
