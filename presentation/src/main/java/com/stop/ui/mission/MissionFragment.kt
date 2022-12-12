@@ -61,7 +61,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
         setMissionService()
         setBroadcastReceiver()
-        setTimeOverBroadcastReceiver()
+        //setTimeOverBroadcastReceiver()
         missionViewModel.missionStatus.value = MissionStatus.ONGOING
     }
 
