@@ -223,7 +223,7 @@
             app:lottie_loop="false"
             app:lottie_autoPlay="false"
             android:visibility="gone"
-            app:lottie_fileName="fail_animation.json"
+            app:lottie_fileName="fail_animation2.json"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

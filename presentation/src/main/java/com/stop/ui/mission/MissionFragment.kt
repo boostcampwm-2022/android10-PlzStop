@@ -33,6 +33,7 @@ import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
 import com.stop.ui.mission.MissionService.Companion.MISSION_OVER
+import com.stop.ui.mission.MissionService.Companion.MISSION_TIME_OVER
 import com.stop.ui.util.Marker
 import kotlinx.coroutines.flow.collectIndexed
 import kotlinx.coroutines.launch
@@ -60,6 +61,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
         setMissionService()
         setBroadcastReceiver()
+        setTimeOverBroadcastReceiver()
         missionViewModel.missionStatus.value = MissionStatus.ONGOING
     }
 
@@ -124,8 +126,20 @@ class MissionFragment : Fragment(), MissionHandler {
                 missionViewModel.lastTime.value = intent?.getStringExtra(MISSION_LAST_TIME)
                 missionViewModel.userLocations.value =
                     intent?.getParcelableArrayListExtra<Location>(MISSION_LOCATIONS) as ArrayList<Location>
+            }
+        }
 
-                if (intent.getBooleanExtra(MISSION_OVER, false)) {
+        requireActivity().registerReceiver(receiver, intentFilter)
+    }
+
+    private fun setTimeOverBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MISSION_TIME_OVER)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.getBooleanExtra(MISSION_TIME_OVER, false) == true) {
                     Snackbar.make(
                         requireActivity().findViewById(R.id.constraint_layout_container),
                         "시간이 만료되어 미션에 실패하셨습니다.",
@@ -136,7 +150,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
             }
         }
-
         requireActivity().registerReceiver(receiver, intentFilter)
     }
 

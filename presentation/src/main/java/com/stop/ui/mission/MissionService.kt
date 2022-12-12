@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
@@ -177,8 +178,8 @@ class MissionService : LifecycleService() {
 
     private fun sendMissionOver() {
         val statusIntent = Intent().apply {
-            action = MISSION_OVER
-            putExtra(MISSION_OVER, true)
+            action = MISSION_TIME_OVER
+            putExtra(MISSION_TIME_OVER, true)
         }
         sendBroadcast(statusIntent)
     }
@@ -199,6 +200,7 @@ class MissionService : LifecycleService() {
         const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
         const val MISSION_OVER = "mission_over"
+        const val MISSION_TIME_OVER = "mission_time_over"
         const val MISSION_STATUS = "mission_status"
     }
 
