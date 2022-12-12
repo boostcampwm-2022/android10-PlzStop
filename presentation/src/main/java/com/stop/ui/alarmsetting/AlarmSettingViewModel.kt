@@ -16,6 +16,7 @@ import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
 import com.stop.makeFullTime
 import com.stop.model.AlarmStatus
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,13 +56,24 @@ class AlarmSettingViewModel @Inject constructor(
         }
     }
 
-    fun getAlarm() {
+    fun getAlarm(missionStatus: MissionStatus = MissionStatus.BEFORE) {
         viewModelScope.launch(Dispatchers.IO) {
             getAlarmUseCase.getAlarm().collectLatest {
                 _alarmItem.value = it
 
                 if (it != null) {
-                    alarmStatus.value = AlarmStatus.EXIST
+                    when(missionStatus){
+                        MissionStatus.BEFORE -> {
+                            alarmStatus.value = AlarmStatus.EXIST
+                        }
+                        MissionStatus.ONGOING -> {
+                            alarmStatus.value = AlarmStatus.MISSION
+                        }
+                        MissionStatus.OVER -> {
+                            alarmStatus.value = AlarmStatus.EXIST
+                        }
+                    }
+
                 }
             }
         }

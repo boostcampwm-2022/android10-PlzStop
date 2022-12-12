@@ -22,6 +22,7 @@ import com.stop.databinding.FragmentMissionBinding
 import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.domain.model.route.tmap.custom.WalkRoute
 import com.stop.isMoreThanOreo
+import com.stop.model.AlarmStatus
 import com.stop.model.Location
 import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -178,6 +179,7 @@ class MissionFragment : Fragment(), MissionHandler {
     override fun alertTMapReady() {
         requestPermissionsLauncher.launch(PERMISSIONS)
         getAlarmInfo()
+        alarmSettingViewModel.alarmStatus.value = AlarmStatus.MISSION
         drawPersonLine()
     }
 
@@ -256,7 +258,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun getAlarmInfo() {
-        alarmSettingViewModel.getAlarm()
+        alarmSettingViewModel.getAlarm(missionViewModel.missionStatus.value)
         val linePoints = arrayListOf<TMapPoint>()
         val walkInfo = alarmSettingViewModel.alarmItem.value?.routes?.first() as WalkRoute
         tMap.drawWalkRoute(walkInfo, linePoints)
@@ -352,6 +354,7 @@ class MissionFragment : Fragment(), MissionHandler {
                     }
                     requireActivity().stopService(missionServiceIntent)
                     missionViewModel.missionStatus.value = MissionStatus.BEFORE
+                    alarmSettingViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
                     findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
                 }
             }

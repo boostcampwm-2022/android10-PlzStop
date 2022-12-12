@@ -163,15 +163,6 @@ class MissionService : LifecycleService() {
             putParcelableArrayListExtra(MISSION_LOCATIONS, userLocation)
         }
         sendBroadcast(statusIntent)
-        sendMissionStatus()
-    }
-
-    private fun sendMissionStatus() {
-        val statusIntent = Intent().apply {
-            action = MISSION_STATUS
-            putExtra(MISSION_STATUS, true)
-        }
-        sendBroadcast(statusIntent)
     }
 
     private fun sendMissionOver() {
@@ -198,7 +189,6 @@ class MissionService : LifecycleService() {
         const val MISSION_LOCATIONS = "mission_locations"
         const val MISSION_USER_INFO = "mission_user_info"
         const val MISSION_OVER = "mission_over"
-        const val MISSION_STATUS = "mission_status"
     }
 
 }
