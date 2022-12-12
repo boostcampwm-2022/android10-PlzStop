@@ -40,7 +40,7 @@ class RouteAdapter(
                 oldItinerary: Itinerary,
                 newItinerary: Itinerary
             ): Boolean {
-                return oldItinerary.totalTime == newItinerary.totalTime
+                return oldItinerary.totalDistance == newItinerary.totalDistance
             }
 
             override fun areContentsTheSame(

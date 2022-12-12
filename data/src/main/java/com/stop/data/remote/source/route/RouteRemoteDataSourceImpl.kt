@@ -211,8 +211,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
     private fun eraseDuplicateLeg(itineraries: List<Itinerary>): List<Itinerary> {
         return itineraries.map { itinerary ->
             var beforeInfo: Pair<String, Coordinate>? = null
-            var subtractTime = 0.0
-            var subtractDistance = 0.0
+            var calculatedTotalTime = 0.0
+            var calculatedTotalDistance = 0.0
 
             val newLegs = itinerary.legs.fold(listOf<Leg>()) { legs, leg ->
                 val current =
@@ -220,15 +220,16 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
 
                 if (legs.isEmpty()) {
                     beforeInfo = current
+                    calculatedTotalTime += leg.sectionTime
+                    calculatedTotalDistance += leg.distance
                     return@fold legs + leg
                 }
-
                 if (beforeInfo == current) {
-                    subtractDistance += leg.distance
-                    subtractTime += leg.sectionTime
                     return@fold legs
                 }
                 beforeInfo = current
+                calculatedTotalTime += leg.sectionTime
+                calculatedTotalDistance += leg.distance
                 legs + leg
             }
 
@@ -237,8 +238,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                     fare = fare,
                     legs = newLegs,
                     pathType = pathType,
-                    totalDistance = totalDistance - subtractDistance,
-                    totalTime = totalTime - subtractTime.toInt(),
+                    totalDistance = calculatedTotalDistance,
+                    totalTime = calculatedTotalTime.toInt(),
                     transferCount = transferCount,
                     walkDistance = walkDistance,
                     walkTime = walkTime,

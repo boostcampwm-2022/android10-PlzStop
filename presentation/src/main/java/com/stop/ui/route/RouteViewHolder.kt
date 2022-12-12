@@ -1,7 +1,10 @@
 package com.stop.ui.route
 
 import android.graphics.Color
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.R
 import com.stop.databinding.RouteItemBinding
@@ -13,16 +16,11 @@ class RouteViewHolder(
     private val binding: RouteItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val adapter = RouteDetailAdapter()
-    var routeItemColor = 0
-
-    init {
-        binding.recyclerviewTimeLine.adapter = adapter
-        binding.recyclerviewTimeLine.setHasFixedSize(true)
-    }
+    private val density = binding.root.context.resources.displayMetrics.density
+    private var routeItemColor = 0
 
     fun bind(itinerary: Itinerary) {
-        binding.textViewExpectedRequiredTime.text = secondToHourAndMinute(itinerary.totalTime)
+        setRequireTime(itinerary.totalTime)
         val routeItems = mutableListOf<RouteItem>()
 
         itinerary.routes.drop(1).forEachIndexed { index, route ->
@@ -50,10 +48,12 @@ class RouteViewHolder(
                 )
             )
         }
-        adapter.submitList(routeItems)
-        binding.timeLineContainer.post {
-            binding.timeLineContainer.submitList(itinerary.routes)
-        }
+        binding.stationContainer.removeAllViewsInLayout()
+
+        binding.timeLineContainer.removeAllViewsInLayout()
+
+        binding.stationContainer.submitList(routeItems.toList())
+        binding.timeLineContainer.submitList(itinerary.routes)
     }
 
     private fun getRouteItemDistance(route: Route): Double {
@@ -89,11 +89,12 @@ class RouteViewHolder(
 
     private fun getRouteItemColor(route: Route, isCurrent: Boolean): Int {
         return if (isCurrent) {
-            when (route) {
+            routeItemColor = when (route) {
                 is TransportRoute -> Color.parseColor("#${route.routeColor}")
                 is WalkRoute -> ContextCompat.getColor(binding.root.context, R.color.main_yellow)
                 else -> ContextCompat.getColor(binding.root.context, R.color.main_lighter_grey)
             }
+            routeItemColor
         } else {
             if (routeItemColor != 0) {
                 routeItemColor
@@ -112,7 +113,26 @@ class RouteViewHolder(
         }
     }
 
-    private fun secondToHourAndMinute(second: Int): String {
-        return "${second / 60 / 60}시간 ${second / 60 % 60}분"
+    private fun setRequireTime(second: Int) {
+        val hour = second / 60 / 60
+        val minute = second / 60 % 60
+        if (hour != 0) {
+            binding.textViewRequiredHour.visibility = View.VISIBLE
+            binding.textViewRequiredHourText.visibility = View.VISIBLE
+
+            binding.textViewRequiredHour.text = hour.toString()
+            binding.textViewRequiredMinute.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                setMargins(convertDpToPixel(5f), 0, 0, 0)
+            }
+        } else {
+            binding.textViewRequiredHour.visibility = View.GONE
+            binding.textViewRequiredHourText.visibility = View.GONE
+        }
+
+        binding.textViewRequiredMinute.text = minute.toString()
+    }
+
+    private fun convertDpToPixel(size: Float): Int {
+        return (size * density + 0.5f).toInt()
     }
 }
