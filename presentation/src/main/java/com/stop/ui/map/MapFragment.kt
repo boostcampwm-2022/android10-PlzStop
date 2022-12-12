@@ -33,6 +33,7 @@ import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.AlarmStatus
 import com.stop.model.Location
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -83,6 +84,7 @@ class MapFragment : Fragment(), MapHandler {
         initBottomSheetBehavior()
         initBottomSheetView()
         listenButtonClick()
+        setBroadcastReceiver()
     }
 
     override fun alertTMapReady() {
@@ -306,6 +308,23 @@ class MapFragment : Fragment(), MapHandler {
         val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
         SoundService.normalExit = true
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MissionService.MISSION_STATUS)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if(intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
+                    missionViewModel.missionStatus.value = MissionStatus.ONGOING
+                    alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
+                }
+            }
+        }
+
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     override fun onResume() {
