@@ -76,7 +76,7 @@ class AlarmSettingViewModel @Inject constructor(
     }
 
     fun callAlarm(time: String) {
-        alarmFunctions.callAlarm(time, alarmTime.value ?: 0)
+        alarmFunctions.callAlarm("00:30:00", alarmTime.value ?: 0)
     }
 
     private fun cancelAlarm() {

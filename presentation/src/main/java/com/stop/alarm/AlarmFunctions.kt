@@ -18,7 +18,7 @@ class AlarmFunctions(
         val alarmSettingPendingIntent = context.getAlarmSettingPendingIntent()
         val alarmSettingNotification = context.getAlarmSettingNotification(
             alarmSettingPendingIntent,
-            "알람이 막차시간 ${lastTime}에서 ${alarmTime}전에 울릴예정입니다."
+            "알람이 ${lastTime}의 ${alarmTime}분 전에 울릴 예정입니다"
         )
         notificationManager.notify(ALARM_NOTIFICATION_ID, alarmSettingNotification)
 

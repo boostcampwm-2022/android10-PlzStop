@@ -43,9 +43,9 @@
     <string name="notification_channel_name">notification_channel_name</string>
     <string name="notification_channel_high_id">notification_channel_high_id</string>
     <string name="notification_channel_high_name">notification_channel_high_name</string>
-    <string name="notification_title">막차 알림</string>
+    <string name="notification_title">막차 알람</string>
     <string name="alarm_cancel_text">취소하기</string>
-    <string name="alarm_content_text">막차를 타러 이제 나가야해요~!!</string>
+    <string name="alarm_content_text">막차 왔어요~!!</string>
     <string name="mission_notification_channel_id">mission_notification_channel_id</string>
     <string name="mission_notification_channel_name">mission_notification_channel_name</string>
     <string name="mission_notification_title">실시간 위치 트래킹 중</string>
