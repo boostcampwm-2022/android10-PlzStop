@@ -163,18 +163,23 @@ class MapFragment : Fragment(), MapHandler {
             override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.homeBottomSheet.layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = slideOffset
-                binding.homeBottomSheet.textViewAlarmState.alpha = 1 - slideOffset
+                with (binding.homeBottomSheet) {
+                    layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = slideOffset
+                    textViewAlarmState.alpha = 1 - slideOffset
+                }
             }
         })
     }
 
     private fun initBottomSheetView() {
         binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
+            val notificationManager =
+                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             val intent = Intent(requireContext(), SoundService::class.java)
 
             alarmViewModel.deleteAlarm()
+            notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             requireContext().stopService(intent)
             SoundService.normalExit = true
@@ -241,32 +246,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun setViewVisibility() {
-        with (binding) {
+        with(binding) {
             textViewSearch.visibility = mapUIVisibility
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
         }
-    }
-
-    private fun listenButtonClick() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
-            alarmViewModel.deleteAlarm()
-            cancelNotification()
-            turnOffSoundService()
-            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-        }
-    }
-
-    private fun cancelNotification() {
-        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
-    }
-
-    private fun turnOffSoundService() {
-        val intent = Intent(requireContext(), SoundService::class.java)
-        requireContext().stopService(intent)
-        SoundService.normalExit = true
     }
 
     override fun onResume() {
