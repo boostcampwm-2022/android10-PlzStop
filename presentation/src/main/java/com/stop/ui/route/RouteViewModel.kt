@@ -14,7 +14,11 @@ import com.stop.model.ErrorType
 import com.stop.model.Event
 import com.stop.model.route.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -50,6 +54,16 @@ class RouteViewModel @Inject constructor(
     val isLoading: LiveData<Event<Boolean>>
         get() = _isLoading
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        val errorMessage = when (throwable) {
+            is SocketTimeoutException -> Event(ErrorType.SOCKET_TIMEOUT_EXCEPTION)
+            is UnknownHostException -> Event(ErrorType.UNKNOWN_HOST_EXCEPTION)
+            else -> Event(ErrorType.UNKNOWN_EXCEPTION)
+        }
+        _errorMessage.postValue(errorMessage)
+        _isLoading.postValue(Event(false))
+    }
+
     fun patchRoute(isShowError: Boolean = true) {
         val originValue = _origin.value ?: let {
             if (!isShowError) {
@@ -75,7 +89,7 @@ class RouteViewModel @Inject constructor(
             endY = destinationValue.coordinate.latitude,
         )
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
             val itineraries = getRouteUseCase(routeRequest)
             if (itineraries.isEmpty()) {
                 _errorMessage.value = Event(ErrorType.NO_ROUTE_RESULT)
@@ -97,8 +111,9 @@ class RouteViewModel @Inject constructor(
 
     fun calculateLastTransportTime(itinerary: Itinerary) {
         checkClickedItinerary(itinerary)
-        viewModelScope.launch {
-            this@RouteViewModel._lastTimeResponse.value = Event(getLastTransportTimeUseCase(itinerary) )
+        viewModelScope.launch(Dispatchers.Default + coroutineExceptionHandler) {
+            this@RouteViewModel._lastTimeResponse.value =
+                Event(getLastTransportTimeUseCase(itinerary))
         }
     }
 

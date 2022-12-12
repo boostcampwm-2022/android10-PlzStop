@@ -12,4 +12,7 @@ enum class ErrorType(val stringResourcesId: Int) {
     AVAILABLE_BUS_NO_EXIST_YET(R.string.available_bus_no_exist_yet),
     BUS_DISAPPEAR_SUDDENLY(R.string.bus_disappear_suddenly),
     MISSION_SOMETHING_WRONG(R.string.mission_something_wrong),
+    SOCKET_TIMEOUT_EXCEPTION(R.string.socket_timeout_exception_please_retry),
+    UNKNOWN_EXCEPTION(R.string.unknown_exception_occur),
+    UNKNOWN_HOST_EXCEPTION(R.string.unknown_host_exception_occur),
 }
