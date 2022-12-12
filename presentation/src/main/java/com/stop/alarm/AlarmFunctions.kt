@@ -3,11 +3,16 @@ package com.stop.alarm
 import android.app.AlarmManager
 import android.app.NotificationManager
 import android.content.Context
+import android.content.Intent
+import com.stop.MainActivity
+import com.stop.R
 import com.stop.makeFullTime
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID
-import com.stop.util.getAlarmSettingNotification
-import com.stop.util.getAlarmSettingPendingIntent
-import com.stop.util.getAlarmStartPendingIntent
+import com.stop.util.getActivityPendingIntent
+import com.stop.util.getAlarmDefaultNotification
+import com.stop.util.getBroadcastPendingIntent
 
 class AlarmFunctions(
     private val context: Context
@@ -15,14 +20,24 @@ class AlarmFunctions(
     fun callAlarm(lastTime: String, alarmTime: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        val alarmSettingPendingIntent = context.getAlarmSettingPendingIntent()
-        val alarmSettingNotification = context.getAlarmSettingNotification(
+        val alarmSettingPendingIntent = context.getActivityPendingIntent(
+            Intent(context, MainActivity::class.java).apply {
+                putExtra("ALARM_MAP_CODE", ALARM_MAP_CODE)
+            },
+            ALARM_MAP_CODE
+        )
+
+        val content = context.getString(R.string.alarm_last_notification_text, lastTime, alarmTime.toString())
+        val alarmSettingNotification = context.getAlarmDefaultNotification(
             alarmSettingPendingIntent,
-            "알람이 막차시간 ${lastTime}에서 ${alarmTime}전에 울릴예정입니다."
+            content
         )
         notificationManager.notify(ALARM_NOTIFICATION_ID, alarmSettingNotification)
 
-        val alarmReceiverPendingIntent = context.getAlarmStartPendingIntent()
+        val alarmReceiverPendingIntent = context.getBroadcastPendingIntent(
+            Intent(context, AlarmReceiver::class.java),
+            ALARM_CODE
+        )
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.setExactAndAllowWhileIdle(
@@ -34,7 +49,10 @@ class AlarmFunctions(
 
     fun cancelAlarm() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val alarmReceiverPendingIntent = context.getAlarmStartPendingIntent()
+        val alarmReceiverPendingIntent = context.getBroadcastPendingIntent(
+            Intent(context, AlarmReceiver::class.java),
+            ALARM_CODE
+        )
 
         alarmManager.cancel(alarmReceiverPendingIntent)
 
