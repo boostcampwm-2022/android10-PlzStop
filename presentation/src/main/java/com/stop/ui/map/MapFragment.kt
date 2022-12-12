@@ -1,11 +1,15 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -326,6 +330,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
+        setNonDozeMode()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
                     requireActivity(),
@@ -336,6 +341,19 @@ class MapFragment : Fragment(), MapHandler {
             }
         }
         findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+    }
+
+    @SuppressLint("BatteryLife")
+    fun setNonDozeMode() {
+        val pm = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
+        val packageName = requireActivity().packageName
+
+        if (pm.isIgnoringBatteryOptimizations(packageName).not()) {
+            val intent = Intent()
+            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intent.data = Uri.parse("package:$packageName")
+            startActivity(intent)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
