@@ -17,6 +17,7 @@ class StationContainer(
     private var beforeViewId: Int? = null
 
     fun submitList(routeItems: List<RouteItem>) {
+        clearBeforeData()
         routeItems.forEachIndexed { index, routeItem ->
             val stationContainerItemBinding = StationContainerItemBinding.inflate(
                 LayoutInflater.from(context),
@@ -29,6 +30,10 @@ class StationContainer(
             setBindingAttribute(stationContainerItemBinding, routeItem, index)
             setConstraint(stationContainerItemBinding)
         }
+    }
+
+    private fun clearBeforeData() {
+        beforeViewId = null
     }
 
     private fun setBindingAttribute(

@@ -31,6 +31,8 @@ class TimeLineContainer(
     private var overlappingWidth by Delegates.notNull<Int>()
 
     fun submitList(routes: List<Route>) {
+        clearBeforeData()
+
         routeCount = routes.size
         val overlappingMarginPixel = (OVERLAPPING_MARGIN * density + 0.5f).toInt()
         overlappingWidth = overlappingMarginPixel * (routes.size - 1)
@@ -54,6 +56,11 @@ class TimeLineContainer(
                 beforeView = timeLineItem2Binding.root
             }
         }
+    }
+
+    private fun clearBeforeData() {
+        beforeViewId = null
+        beforeView = null
     }
 
     private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
