@@ -1,23 +1,16 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
-import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.NotificationManager
-import android.content.*
-import android.content.pm.PackageManager
-import android.net.Uri
-import android.os.Build
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
-import android.os.PowerManager
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
@@ -362,61 +355,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        setNonDozeMode()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                    requireActivity(),
-                    permission.ACCESS_BACKGROUND_LOCATION
-                )
-            ) {
-                setPermissionDialog(requireActivity())
-            }
-        }
         Intent(requireContext(), AlarmActivity::class.java).apply {
             putExtra("MISSION_CODE", MissionService.MISSION_CODE)
             flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
             startActivity(this)
         }
-    }
-
-    @SuppressLint("BatteryLife")
-    fun setNonDozeMode() {
-        val pm = requireActivity().getSystemService(Context.POWER_SERVICE) as PowerManager
-        val packageName = requireActivity().packageName
-
-        if (pm.isIgnoringBatteryOptimizations(packageName).not()) {
-            val intent = Intent()
-            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intent.data = Uri.parse("package:$packageName")
-            startActivity(intent)
-        }
-    }
-
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun setPermissionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.")
-
-        val listener = DialogInterface.OnClickListener { _, p1 ->
-            when (p1) {
-                DialogInterface.BUTTON_POSITIVE ->
-                    setBackgroundPermission()
-            }
-        }
-        builder.setPositiveButton("네", listener)
-        builder.setNegativeButton("아니오", null)
-
-        builder.show()
-    }
-
-    @RequiresApi(Build.VERSION_CODES.Q)
-    private fun setBackgroundPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                permission.ACCESS_BACKGROUND_LOCATION,
-            ), 2
-        )
     }
 
     companion object {
