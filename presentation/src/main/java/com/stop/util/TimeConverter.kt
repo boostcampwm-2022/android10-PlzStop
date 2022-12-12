@@ -10,7 +10,6 @@ fun makeFullTime(time: String): Calendar {
     val currentDateTime = currentFormat.format(currentTime)
     val fullTime = "$currentDateTime:$time"
 
-
     val dateFormat = SimpleDateFormat("yyyy:MM:dd:HH:mm:ss", Locale.getDefault())
     val dateTime = try {
         dateFormat.parse(fullTime) as Date
