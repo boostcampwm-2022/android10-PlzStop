@@ -7,6 +7,9 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.app.NotificationManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
@@ -31,6 +34,7 @@ import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.AlarmStatus
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionViewModel
@@ -56,9 +60,19 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+
         initBinding()
 
         return binding.root
+    }
+
+    private fun initBinding() {
+        alarmViewModel.getAlarm()
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.alarmViewModel = alarmViewModel
+        binding.placeSearchViewModel = placeSearchViewModel
+        binding.missionViewModel = missionViewModel
+        binding.fragment = this@MapFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,6 +81,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -81,16 +96,6 @@ class MapFragment : Fragment(), MapHandler {
         initNavigateAction()
         observeClickPlace()
         observeClickCurrentLocation()
-    }
-
-    private fun initBinding() {
-        alarmViewModel.getAlarm(missionViewModel.missionStatus.value)
-
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.alarmViewModel = alarmViewModel
-        binding.placeSearchViewModel = placeSearchViewModel
-        binding.missionViewModel = missionViewModel
-        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -284,15 +289,22 @@ class MapFragment : Fragment(), MapHandler {
     private fun listenButtonClick() {
         binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
             alarmViewModel.deleteAlarm()
+            cancelNotification()
             turnOffSoundService()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
         }
     }
 
+    private fun cancelNotification() {
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
+    }
+
     private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
+        val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
+        SoundService.normalExit = true
     }
 
     override fun onResume() {
@@ -308,6 +320,9 @@ class MapFragment : Fragment(), MapHandler {
     private fun showBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
+        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
+        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
     }
 
     override fun onDestroyView() {

@@ -8,7 +8,7 @@ import com.stop.domain.model.route.tmap.custom.Route
 data class Alarm(
     val startPosition: String,
     val endPosition: String,
-    val routes: List<Route>,
+    val routes: Route,
     val lastTime: String, // 막차 시간 -> 23:30:15 시분초
     val walkTime : Int, // 도보시간 -> 분단위
     val alarmTime: Int, // 10분 전 알람 설정 -> 10

@@ -4,7 +4,8 @@
     <string name="move_to_route">경로 검색 화면으로 이동</string>
     <string name="expected_depart_time">예상 출발 시간: </string>
     <string name="expected_arrival_time">예상 도착 시간: </string>
-    <string name="expected_required_time">예상 소요 시간</string>
+    <string name="required_hour">시간</string>
+    <string name="required_minute">분</string>
     <string name="not_yet_implemented">미구현</string>
     <string name="bookmark">즐겨찾기 추가</string>
     <string name="start_location">출발지</string>
@@ -64,7 +65,7 @@
     <string name="available_bus_no_exist_yet">탑승할 수 있는 버스가 아직 없습니다.</string>
     <string name="bus_disappear_suddenly">버스가 갑자기 사라졌습니다.</string>
     <string name="mission_something_wrong">미션 진행 중 무언가 잘못되었습니다.</string>
-    <string name="image_view_reset_content_description">출발지, 도착지를 모두 비웁니다.</string>
+    <string name="image_view_research_content_description">경로를 재검색합니다.</string>
     <string name="image_view_swap_origin_with_destination_content_description">출발지와 도착지를 바꿉니다.</string>
     <string name="image_view_exit_content_description">경로 검색 화면을 종료합니다.</string>
     <string name="image_view_icon_content_description">승차지의 종류를 나타내는 아이콘입니다.</string>
@@ -79,5 +80,6 @@
     <string name="end_position_text">도착지 : %1$s</string>
     <string name="last_time_text">막차시간 : %1$s</string>
     <string name="walk_time_text">%1$d분</string>
+    <string name="alarm_last_notification_text">막차시간 %1$s에서 %2$s분 전에 알람이 울릴예정입니다.</string>
     <string name="ongoing_mission">진행중인 미션이 있습니다</string>
 </resources>

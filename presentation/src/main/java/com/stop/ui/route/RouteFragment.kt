@@ -29,11 +29,18 @@ class RouteFragment : Fragment() {
     private val routeViewModel: RouteViewModel by activityViewModels()
     private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
-    private val args: RouteFragmentArgs by navArgs()
+    private var args: RouteFragmentArgs? = null
 
     private lateinit var adapter: RouteAdapter
     private lateinit var backPressedCallback: OnBackPressedCallback
-    private var progressDialog: AlertDialog? = null
+    private lateinit var alertDialog: AlertDialog
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val currentArgs: RouteFragmentArgs by navArgs()
+        args = currentArgs
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,7 +53,7 @@ class RouteFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        backPressedCallback = object: OnBackPressedCallback(true) {
+        backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
                 navController.setGraph(R.navigation.nav_graph)
@@ -63,8 +70,8 @@ class RouteFragment : Fragment() {
         setListener()
         setRecyclerView()
         setStartAndDestinationText()
-        setObserve()
         initDialog()
+        setObserve()
     }
 
     private fun setBinding() {
@@ -83,16 +90,23 @@ class RouteFragment : Fragment() {
             navController.setGraph(R.navigation.nav_graph)
             navController.navigate(R.id.action_global_placeSearchFragment)
         }
+        binding.imageViewSwapOriginWithDestination.setOnClickListener {
+            routeViewModel.changeOriginAndDestination()
+        }
+        binding.imageViewExit.setOnClickListener {
+            val navController = findNavController()
+            navController.setGraph(R.navigation.nav_graph)
+            navController.popBackStack(R.id.mapFragment, false)
+        }
+        binding.imageViewResearch.setOnClickListener {
+            routeViewModel.getRoute()
+        }
     }
 
     private fun setRecyclerView() {
         adapter = RouteAdapter(object : OnItineraryClickListener {
             override fun onItineraryClick(itinerary: Itinerary) {
-                /**
-                 * UI가 ViewModel을 직접 호출하면 안 되지만, 테스트를 위해 막차 조회 함수를 호출했습니다.
-                 * 여기서 UI가 ViewModel을 직접 호출하지 않으면서 막차 조회 함수를 호출할 수 있을까요?
-                 */
-                progressDialog?.show()
+                alertDialog.show()
                 routeViewModel.calculateLastTransportTime(itinerary)
                 routeResultViewModel.setItineraries(itinerary)
             }
@@ -121,35 +135,57 @@ class RouteFragment : Fragment() {
                 routeResultViewModel.setLastTimes(response)
                 routeResultViewModel.setOrigin(routeViewModel.origin.value)
                 routeResultViewModel.setDestination(routeViewModel.destination.value)
-                progressDialog?.dismiss()
+                alertDialog.dismiss()
 
                 binding.root.findNavController()
                     .navigate(R.id.action_routeFragment_to_routeDetailFragment)
             }
         }
+        routeViewModel.isLoading.observe(viewLifecycleOwner) {
+            it.getContentIfNotHandled()?.let { isLoading ->
+                if (isLoading) {
+                    alertDialog.show()
+                    return@let
+                }
+                alertDialog.dismiss()
+            }
+        }
     }
 
     private fun setStartAndDestinationText() {
-        args.start?.let {
+        args?.start?.let {
             routeViewModel.setOrigin(it)
         }
-        args.end?.let {
+        args?.end?.let {
             routeViewModel.setDestination(it)
         }
-        routeViewModel.getRoute()
+
+        requireArguments().clear()
+
+        if (args?.start != null || args?.end != null) {
+            routeViewModel.getRoute()
+        }
     }
 
     private fun initDialog() {
+        val viewModelDialog = routeViewModel.alertDialog
+        if (viewModelDialog != null) {
+            alertDialog = viewModelDialog
+            return
+        }
+
         val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
-        progressDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-        progressDialog?.window?.setBackgroundDrawableResource(R.color.transparent)
+        alertDialog = AlertDialog.Builder(requireContext())
+                        .setView(dialogView)
+                        .setCancelable(false)
+                        .create()
+        alertDialog.window?.setBackgroundDrawableResource(R.color.transparent)
+        routeViewModel.alertDialog = alertDialog
     }
 
     override fun onDestroyView() {
         _binding = null
+        args = null
 
         super.onDestroyView()
     }

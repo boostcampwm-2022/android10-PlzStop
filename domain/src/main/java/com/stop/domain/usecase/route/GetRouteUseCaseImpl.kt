@@ -95,7 +95,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
     }
 
     private fun calculateProportionOfSectionTime(sectionTime: Double, totalTime: Int): Float {
-        return (sectionTime / totalTime * 100).toInt().toFloat() / 100
+        return (sectionTime / totalTime * 10_000).toInt().toFloat() / 10000
     }
 
     private fun createCoordinates(linesString: String): List<Coordinate> {

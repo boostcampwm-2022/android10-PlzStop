@@ -37,6 +37,8 @@
 
         <service android:name=".ui.mission.MissionService"/>
 
+        <service android:name=".alarm.SoundRestartService" />
+
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
@@ -48,13 +50,17 @@
             tools:node="merge" />
 
         <activity
-            android:name=".MainActivity"
-            android:excludeFromRecents="true"
+            android:name=".AlarmActivity"
             android:exported="true"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:showOnLockScreen="true"
+            android:theme="@style/Theme.PlzStop" />
+
+        <activity
+            android:name=".MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.Splash">
 
             <intent-filter>
