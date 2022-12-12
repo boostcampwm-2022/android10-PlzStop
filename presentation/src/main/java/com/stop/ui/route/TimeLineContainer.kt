@@ -64,11 +64,26 @@ class TimeLineContainer(
     }
 
     private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
-        val text = binding.root.resources.getString(
-            R.string.section_time,
-            (route.sectionTime / 60).toInt().toString()
-        )
-        binding.textViewSectionTime.text = text
+        val filterTime = if (routeCount < 7) {
+            60.0
+        } else {
+            180.0
+        }
+        val correctionValue =
+            if (route.sectionTime <= filterTime) {
+                if (route.mode == MoveType.TRANSFER) {
+                    0.05f
+                } else {
+                    0.25f
+                }
+            } else {
+                val text = binding.root.resources.getString(
+                    R.string.section_time,
+                    (route.sectionTime / 60).toInt().toString()
+                )
+                binding.textViewSectionTime.text = text
+                0.25f
+            }
 
         val imageSrc = when (route.mode) {
             MoveType.BUS -> R.drawable.time_line_bus_16
@@ -78,7 +93,7 @@ class TimeLineContainer(
                     setDefaultColor(binding)
                     binding.viewIcon.visibility = View.GONE
                     binding.imageViewIcon.visibility = View.GONE
-                    setConstraint(binding, index, route.proportionOfSectionTime)
+                    setConstraint(binding, index, route.proportionOfSectionTime, correctionValue)
 
                     beforeView?.bringToFront()
                     requestLayout()
@@ -102,13 +117,14 @@ class TimeLineContainer(
             else -> setDefaultColor(binding)
         }
 
-        setConstraint(binding, index, route.proportionOfSectionTime)
+        setConstraint(binding, index, route.proportionOfSectionTime, correctionValue)
     }
 
     private fun setConstraint(
         binding: TimeLineItemBinding,
         index: Int,
         proportionOfSectionTime: Float,
+        correctionValue: Float,
     ) {
         val endId = beforeViewId ?: this@TimeLineContainer.id
         val endSide = if (beforeViewId == null) {
@@ -128,7 +144,7 @@ class TimeLineContainer(
                     ConstraintSet.START
                 )
             }
-            setHorizontalWeight(binding.root.id, proportionOfSectionTime + 0.2f)
+            setHorizontalWeight(binding.root.id, proportionOfSectionTime + correctionValue)
 
             if (index == routeCount - 1) {
                 connect(
