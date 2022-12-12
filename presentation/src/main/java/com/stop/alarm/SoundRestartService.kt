@@ -12,11 +12,11 @@ import com.stop.util.getAlarmDefaultNotification
 class SoundRestartService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val notImportantPendingIntent = applicationContext.getActivityPendingIntent(
+        val notImportantPendingIntent = this.getActivityPendingIntent(
             Intent(this, AlarmActivity::class.java),
             ALARM_CODE
         )
-        val notImportantNotification = applicationContext.getAlarmDefaultNotification(
+        val notImportantNotification = this.getAlarmDefaultNotification(
             notImportantPendingIntent,
             ""
         )
