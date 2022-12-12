@@ -59,6 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"
+                android:textColorHint="@color/main_light_grey"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:textSize="17sp"

@@ -6,42 +6,52 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/square_border">
+        tools:theme="@style/Theme.Material3.Light.NoActionBar">
 
         <TextView
             android:id="@+id/text_view_required_hour"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
-            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
-            tools:text="1" />
+            android:layout_marginTop="5dp"
+            android:textSize="25sp"
+            android:textColor="@color/main_dark_grey"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="2" />
 
         <TextView
             android:id="@+id/text_view_required_hour_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            app:layout_goneMarginStart="0dp"
+            android:layout_marginBottom="3dp"
             android:text="@string/required_hour"
+            android:textSize="17sp"
+            android:textColor="@color/main_dark_grey"
             app:layout_constraintBottom_toBottomOf="@id/text_view_required_hour"
-            app:layout_constraintEnd_toStartOf="@id/text_view_required_minute"
             app:layout_constraintStart_toEndOf="@id/text_view_required_hour" />
 
         <TextView
             android:id="@+id/text_view_required_minute"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
+            android:layout_marginTop="5dp"
+            android:textSize="25sp"
+            android:textColor="@color/main_dark_grey"
             app:layout_constraintStart_toEndOf="@id/text_view_required_hour_text"
-            app:layout_constraintTop_toTopOf="@id/guideline_start_horizontal"
-            tools:text="30" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="31" />
 
         <TextView
             android:id="@+id/text_view_required_minute_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginBottom="3dp"
             android:text="@string/required_minute"
+            android:textSize="17sp"
+            android:textColor="@color/main_dark_grey"
             app:layout_constraintBottom_toBottomOf="@id/text_view_required_minute"
             app:layout_constraintStart_toEndOf="@id/text_view_required_minute" />
 
@@ -49,39 +59,25 @@
             android:id="@+id/time_line_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end_vertical"
-            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            android:layout_marginTop="3dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/text_view_required_minute" />
 
         <com.stop.ui.route.StationContainer
             android:id="@+id/station_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/time_line_container" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_start_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="5dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_start_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="8dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_end_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="5dp" />
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/main_lighter_grey"
+            app:layout_constraintTop_toBottomOf="@id/station_container"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

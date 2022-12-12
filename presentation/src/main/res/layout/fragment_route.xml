@@ -15,65 +15,85 @@
         android:layout_height="match_parent"
         tools:context=".ui.route.RouteFragment">
 
-        <ImageView
-            android:id="@+id/image_view_exit"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/image_view_exit_content_description"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_origin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/text_view_origin"
-            app:srcCompat="@drawable/ic_baseline_close_24" />
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="15dp" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="15dp" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="50dp" />
 
         <TextView
             android:id="@+id/text_view_origin"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:background="@drawable/square_border"
-            android:padding="10dp"
+            android:layout_height="47dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/background_alarm_panel"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textSize="15sp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:gravity="center_vertical"
             app:layout_constraintEnd_toStartOf="@id/image_view_exit"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/image_view_swap_origin_with_destination"
-            app:layout_constraintTop_toBottomOf="@id/guideline_start_horizontal"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintTop_toBottomOf="@id/guideline_top"
             app:set_place_name="@{viewModel.origin}"
+            app:set_text="@{@string/start}"
             tools:text="이앤씨벤쳐드림타워3차" />
-
-        <ImageView
-            android:id="@+id/image_view_swap_origin_with_destination"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="50dp"
-            android:contentDescription="@string/image_view_swap_origin_with_destination_content_description"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_destination"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/text_view_origin"
-            app:srcCompat="@drawable/ic_baseline_swap_vert_24" />
 
         <TextView
             android:id="@+id/text_view_destination"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="47dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/square_border"
-            android:padding="10dp"
-            app:layout_constraintEnd_toStartOf="@id/image_view_research"
-            app:layout_constraintStart_toStartOf="@id/text_view_origin"
+            android:background="@drawable/background_alarm_panel"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
+            app:layout_constraintEnd_toStartOf="@id/image_view_swap_origin_with_destination"
             app:layout_constraintTop_toBottomOf="@id/text_view_origin"
             app:set_place_name="@{viewModel.destination}"
+            app:set_text="@{@string/end}"
             tools:text="Naver1784" />
 
         <ImageView
-            android:id="@+id/image_view_research"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/image_view_research_content_description"
+            android:id="@+id/image_view_exit"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:contentDescription="@string/image_view_exit_content_description"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_origin"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
+            app:layout_constraintTop_toTopOf="@id/text_view_origin"
+            app:srcCompat="@drawable/ic_baseline_close_24" />
+
+        <ImageView
+            android:id="@+id/image_view_swap_origin_with_destination"
+            android:layout_width="33dp"
+            android:layout_height="33dp"
+            android:contentDescription="@string/image_view_swap_origin_with_destination_content_description"
             app:layout_constraintBottom_toBottomOf="@id/text_view_destination"
-            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
+            app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintTop_toTopOf="@id/text_view_destination"
-            app:srcCompat="@drawable/ic_baseline_replay_24" />
+            app:srcCompat="@drawable/ic_baseline_swap_vert_24" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_route"
@@ -82,30 +102,10 @@
             android:layout_marginTop="16dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/guideline_end_vertical"
-            app:layout_constraintStart_toStartOf="@id/guideline_start_vertical"
+            app:layout_constraintEnd_toStartOf="@id/guideline_end"
+            app:layout_constraintStart_toStartOf="@id/guideline_start"
             app:layout_constraintTop_toBottomOf="@id/text_view_destination"
             tools:listitem="@layout/route_item" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_start_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="0dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_start_horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="32dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_end_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="0dp" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

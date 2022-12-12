@@ -85,21 +85,21 @@ class RouteFragment : Fragment() {
             navController.setGraph(R.navigation.nav_graph)
             navController.navigate(R.id.action_global_placeSearchFragment)
         }
+
         binding.textViewDestination.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.nav_graph)
             navController.navigate(R.id.action_global_placeSearchFragment)
         }
+
         binding.imageViewSwapOriginWithDestination.setOnClickListener {
             routeViewModel.changeOriginAndDestination()
         }
+
         binding.imageViewExit.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.nav_graph)
             navController.popBackStack(R.id.mapFragment, false)
-        }
-        binding.imageViewResearch.setOnClickListener {
-            routeViewModel.getRoute()
         }
     }
 

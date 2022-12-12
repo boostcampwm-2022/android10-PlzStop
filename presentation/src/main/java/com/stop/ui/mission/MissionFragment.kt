@@ -108,7 +108,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(requireActivity().findViewById(R.id.constraint_layout_container), "미션을 취소했습니다", Snackbar.LENGTH_SHORT).show()
         missionViewModel.isMissionOver.value = true
-        findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
+        // findNavController().navigate(R.id.action_missionFragment_to_mapFragment)
     }
 
     override fun alertTMapReady() {
