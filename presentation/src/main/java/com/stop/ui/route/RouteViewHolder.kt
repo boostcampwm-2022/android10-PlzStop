@@ -48,12 +48,17 @@ class RouteViewHolder(
                 )
             )
         }
-        binding.stationContainer.removeAllViews()
-        binding.timeLineContainer.removeAllViews()
-
-        binding.stationContainer.submitList(routeItems.toList())
+        binding.stationContainer.post {
+            binding.stationContainer.removeAllViews()
+        }
         binding.timeLineContainer.post {
-            binding.timeLineContainer.submitList(itinerary.routes)
+            binding.timeLineContainer.removeAllViews()
+        }
+        binding.stationContainer.post {
+            binding.stationContainer.submitList(routeItems.toList())
+        }
+        binding.timeLineContainer.post {
+            binding.timeLineContainer.submitList(itinerary.routes.toList())
         }
     }
 
