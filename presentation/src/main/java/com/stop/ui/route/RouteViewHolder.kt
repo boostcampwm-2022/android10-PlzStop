@@ -118,6 +118,9 @@ class RouteViewHolder(
         val hour = second / 60 / 60
         val minute = second / 60 % 60
         if (hour != 0) {
+            binding.textViewRequiredHour.visibility = View.VISIBLE
+            binding.textViewRequiredHourText.visibility = View.VISIBLE
+
             binding.textViewRequiredHour.text = hour.toString()
             binding.textViewRequiredMinute.updateLayoutParams<ViewGroup.MarginLayoutParams> {
                 setMargins(convertDpToPixel(5f), 0, 0, 0)
