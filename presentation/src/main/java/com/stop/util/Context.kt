@@ -10,11 +10,8 @@ import android.util.Size
 import android.view.WindowManager
 import android.view.WindowMetrics
 import androidx.core.app.NotificationCompat
-import com.stop.MainActivity
-import com.stop.R
+import com.stop.*
 import com.stop.alarm.AlarmReceiver
-import com.stop.isMOreThanRedVelVet
-import com.stop.isMoreThanOreo
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 
@@ -68,8 +65,9 @@ fun Context.isScreenOn() =
     (getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive
 
 fun Context.getAlarmReceiverPendingIntent(): PendingIntent {
-    val intent = Intent(this, MainActivity::class.java)
+    val intent = Intent(this, AlarmActivity::class.java)
     intent.putExtra("ALARM_CODE", ALARM_CODE)
+    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     return PendingIntent.getActivity(
         this,
         ALARM_CODE,

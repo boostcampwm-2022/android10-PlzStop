@@ -43,9 +43,18 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+
         initBinding()
 
         return binding.root
+    }
+
+    private fun initBinding() {
+        alarmViewModel.getAlarm()
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.alarmViewModel = alarmViewModel
+        binding.placeSearchViewModel = placeSearchViewModel
+        binding.fragment = this@MapFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +63,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -68,15 +78,6 @@ class MapFragment : Fragment(), MapHandler {
         initNavigateAction()
         observeClickPlace()
         observeClickCurrentLocation()
-    }
-
-    private fun initBinding() {
-        alarmViewModel.getAlarm()
-
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.alarmViewModel = alarmViewModel
-        binding.placeSearchViewModel = placeSearchViewModel
-        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -267,8 +268,9 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun turnOffSoundService() {
-        val intent = Intent(context, SoundService::class.java)
+        val intent = Intent(requireContext(), SoundService::class.java)
         requireContext().stopService(intent)
+        SoundService.normalExit = true
     }
 
     override fun onResume() {
@@ -284,6 +286,9 @@ class MapFragment : Fragment(), MapHandler {
     private fun showBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
+        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
+        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
     }
 
     override fun onDestroyView() {
@@ -303,12 +308,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        alarmViewModel.lastTimeCountDown.value?.let {
-            if (it.isBlank()) {
-                alarmViewModel.startCountDownTimer()
-            }
-        }
-        findNavController().navigate(R.id.action_mapFragment_to_missionFragment)
+        //TODO 미션으로 보내는 작업해야함
     }
 
     companion object {
