@@ -232,7 +232,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun observeClickCurrentLocation() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             placeSearchViewModel.clickCurrentLocation
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collect {

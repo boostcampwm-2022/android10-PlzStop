@@ -201,7 +201,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun drawPersonLine() {
         lateinit var beforeLocation: Location
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             missionViewModel.userLocations.collectIndexed { index, userLocation ->
                 if (index == 1) {
                     initMarker(userLocation)
@@ -342,7 +342,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setMissionOver() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             missionViewModel.missionStatus.collect { missionStatus ->
                 if (missionStatus == MissionStatus.OVER) {
                     alarmSettingViewModel.deleteAlarm()
