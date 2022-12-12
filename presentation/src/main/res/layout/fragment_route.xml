@@ -20,9 +20,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/image_view_exit_content_description"
+            app:layout_constraintBottom_toBottomOf="@id/text_view_origin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_view_origin"
-            app:layout_constraintBottom_toBottomOf="@id/text_view_origin"
             app:srcCompat="@drawable/ic_baseline_close_24" />
 
 
@@ -30,6 +30,7 @@
             android:id="@+id/text_view_origin"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:background="@drawable/square_border"
             android:padding="10dp"
             app:layout_constraintEnd_toStartOf="@id/image_view_exit"
@@ -39,13 +40,15 @@
             app:set_place_name="@{viewModel.origin}"
             tools:text="이앤씨벤쳐드림타워3차" />
 
-            <ImageView
+        <ImageView
             android:id="@+id/image_view_swap_origin_with_destination"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="50dp"
             android:contentDescription="@string/image_view_swap_origin_with_destination_content_description"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/text_view_destination"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_view_origin"
             app:srcCompat="@drawable/ic_baseline_swap_vert_24" />
 
