@@ -1,6 +1,8 @@
 package com.stop.ui.map
 
 import android.Manifest.permission
+import android.app.NotificationManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +22,7 @@ import com.stop.RouteNavGraphDirections
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
+import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
@@ -115,6 +118,7 @@ class MapFragment : Fragment(), MapHandler {
                 )
             )
         }
+
     }
 
     private fun initNavigateAction() {
@@ -242,6 +246,27 @@ class MapFragment : Fragment(), MapHandler {
             layoutCompass.visibility = mapUIVisibility
             layoutCurrent.visibility = mapUIVisibility
         }
+    }
+
+    private fun listenButtonClick() {
+        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+            alarmViewModel.deleteAlarm()
+            cancelNotification()
+            turnOffSoundService()
+            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+        }
+    }
+
+    private fun cancelNotification() {
+        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
+    }
+
+    private fun turnOffSoundService() {
+        val intent = Intent(requireContext(), SoundService::class.java)
+        requireContext().stopService(intent)
+        SoundService.normalExit = true
     }
 
     override fun onResume() {
