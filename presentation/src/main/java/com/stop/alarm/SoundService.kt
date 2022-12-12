@@ -1,7 +1,6 @@
 package com.stop.alarm
 
 import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
@@ -13,6 +12,8 @@ import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.isMoreThanOreoUnderRedVelVet
 import com.stop.isMoreThanSnow
 import com.stop.isUnderOreo
+import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
+import com.stop.util.getBroadcastPendingIntent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -92,10 +93,16 @@ class SoundService : LifecycleService() {
     }
 
     private fun setAlarmTimer() {
-        val intent = Intent(this, AlarmReceiver::class.java)
-        val sender = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        val restartPendingIntent = this.getBroadcastPendingIntent(
+            Intent(this, AlarmReceiver::class.java),
+            ALARM_CODE
+        )
         val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), sender)
+        alarmManager.setExactAndAllowWhileIdle(
+            AlarmManager.RTC_WAKEUP,
+            System.currentTimeMillis(),
+            restartPendingIntent
+        )
     }
 
     companion object {
