@@ -53,7 +53,6 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
-        listenButtonClick()
     }
 
     override fun alertTMapReady() {
@@ -116,7 +115,6 @@ class MapFragment : Fragment(), MapHandler {
                 )
             )
         }
-
     }
 
     private fun initNavigateAction() {
@@ -170,9 +168,12 @@ class MapFragment : Fragment(), MapHandler {
     private fun initBottomSheetView() {
         binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+            val intent = Intent(requireContext(), SoundService::class.java)
 
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             alarmViewModel.deleteAlarm()
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            requireContext().stopService(intent)
+            SoundService.normalExit = true
         }
     }
 
@@ -243,40 +244,25 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
-            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            alarmViewModel.deleteAlarm()
-            turnOffSoundService()
-        }
-    }
-
-    private fun turnOffSoundService() {
-        val intent = Intent(requireContext(), SoundService::class.java)
-
-        requireContext().stopService(intent)
-        SoundService.normalExit = true
-    }
-
     override fun onResume() {
         super.onResume()
 
         requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
             if (it == ALARM_MAP_CODE) {
-                showBottomSheet()
+                openBottomSheet()
             }
         }
     }
 
-    private fun showBottomSheet() {
+    private fun openBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        /*
         binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
         binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
         binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
+        */
     }
 
     override fun onDestroyView() {
