@@ -46,6 +46,8 @@ class MapFragment : Fragment(), MapHandler {
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
     private val missionViewModel: MissionViewModel by activityViewModels()
 
+    private lateinit var missionServiceIntent: Intent
+
     private lateinit var tMap: MapTMap
     private var mapUIVisibility = View.GONE
 
@@ -289,6 +291,11 @@ class MapFragment : Fragment(), MapHandler {
             turnOffSoundService()
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+
+            missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
+            requireActivity().stopService(missionServiceIntent)
+            missionViewModel.missionStatus.value = MissionStatus.BEFORE
+            alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
         }
     }
 
@@ -310,7 +317,7 @@ class MapFragment : Fragment(), MapHandler {
 
         val receiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if(intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
+                if (intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
                     missionViewModel.missionStatus.value = MissionStatus.ONGOING
                     alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
                 }

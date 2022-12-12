@@ -15,9 +15,9 @@ class MissionViewModel @Inject constructor() : ViewModel() {
 
     val destination = MutableStateFlow(Place("null",Coordinate("37.553836", "126.969652")))
 
-    var missionStatus = MutableStateFlow(MissionStatus.BEFORE)
+    val missionStatus = MutableStateFlow(MissionStatus.BEFORE)
 
     val lastTime = MutableLiveData<String>()
-    var userLocations = MutableStateFlow(arrayListOf(Location(37.553836, 126.969652)))
+    val userLocations = MutableStateFlow(arrayListOf(Location(37.553836, 126.969652)))
 
 }
