@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.asLiveData
@@ -16,7 +17,6 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.R
-import com.stop.RouteNavGraphDirections
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.Location
@@ -126,23 +126,13 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.homePanel.viewPanelStart.setOnClickListener {
-            findNavController().apply {
-                setGraph(R.navigation.route_nav_graph)
-                navigate(
-                    RouteNavGraphDirections.actionGlobalRouteFragment()
-                        .setStart(placeSearchViewModel.panelInfo)
-                )
-            }
+            val bundle = bundleOf("start" to placeSearchViewModel.panelInfo)
+            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
         }
 
         binding.homePanel.viewPanelEnd.setOnClickListener {
-            findNavController().apply {
-                setGraph(R.navigation.route_nav_graph)
-                navigate(
-                    RouteNavGraphDirections.actionGlobalRouteFragment()
-                        .setEnd(placeSearchViewModel.panelInfo)
-                )
-            }
+            val bundle = bundleOf("end" to placeSearchViewModel.panelInfo)
+            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
         }
     }
 

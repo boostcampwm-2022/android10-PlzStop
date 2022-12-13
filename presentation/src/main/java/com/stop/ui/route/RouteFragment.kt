@@ -56,8 +56,7 @@ class RouteFragment : Fragment() {
         backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 val navController = findNavController()
-                navController.setGraph(R.navigation.nav_graph)
-                navController.popBackStack(R.id.action_global_mapFragment, false)
+                navController.popBackStack(R.id.mapFragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
