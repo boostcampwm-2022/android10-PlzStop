@@ -35,9 +35,7 @@ import com.stop.ui.mission.MissionService
 import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
-import com.stop.util.getScreenSize
 import kotlinx.coroutines.launch
-
 
 class MapFragment : Fragment(), MapHandler {
     private var _binding: FragmentMapBinding? = null
@@ -58,19 +56,9 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
-
         initBinding()
 
         return binding.root
-    }
-
-    private fun initBinding() {
-        alarmViewModel.getAlarm()
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.alarmViewModel = alarmViewModel
-        binding.placeSearchViewModel = placeSearchViewModel
-        binding.missionViewModel = missionViewModel
-        binding.fragment = this@MapFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -79,7 +67,6 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
-        listenButtonClick()
         setBroadcastReceiver()
     }
 
@@ -95,6 +82,16 @@ class MapFragment : Fragment(), MapHandler {
         initNavigateAction()
         observeClickPlace()
         observeClickCurrentLocation()
+    }
+
+    private fun initBinding() {
+        alarmViewModel.getAlarm()
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.alarmViewModel = alarmViewModel
+        binding.placeSearchViewModel = placeSearchViewModel
+        binding.missionViewModel = missionViewModel
+        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -143,6 +140,7 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.homePanel.viewPanelStart.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
             findNavController().apply {
                 setGraph(R.navigation.route_nav_graph)
                 navigate(
@@ -153,6 +151,7 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.homePanel.viewPanelEnd.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
             findNavController().apply {
                 setGraph(R.navigation.route_nav_graph)
                 navigate(
@@ -164,10 +163,8 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBottomSheetBehavior() {
-        val displaySize = requireContext().getScreenSize()
-        val displayHeight = displaySize.height
-
-        binding.layoutHomeBottomSheet.maxHeight = (displayHeight * 0.8).toInt()
+        binding.layoutHomeBottomSheet.maxHeight = (630 * resources.displayMetrics.density).toInt()
+        binding.homeBottomSheet.layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = 0F
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
@@ -186,36 +183,56 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-            override fun onStateChanged(bottomSheet: View, newState: Int) {
-                when (newState) {
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
-                        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
-                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
-                    }
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.GONE
-                        binding.homeBottomSheet.textViewAlarmState.visibility = View.VISIBLE
-                        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.VISIBLE
-                    }
-                    BottomSheetBehavior.STATE_HALF_EXPANDED -> Unit
-                    BottomSheetBehavior.STATE_DRAGGING -> Unit
-                    BottomSheetBehavior.STATE_SETTLING -> Unit
-                    BottomSheetBehavior.STATE_HIDDEN -> Unit
+            override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                with (binding.homeBottomSheet) {
+                    layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = slideOffset
+                    textViewAlarmState.alpha = 1 - slideOffset
                 }
             }
-
-            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
         })
     }
 
     private fun initBottomSheetView() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
+        binding.homeBottomSheet.layoutStateExpanded.viewAlarm.setOnClickListener {
+            val notificationManager =
+                requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+            val intent = Intent(requireContext(), SoundService::class.java)
 
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             alarmViewModel.deleteAlarm()
+            notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
+            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            requireContext().stopService(intent)
+            SoundService.normalExit = true
+
+            setMissionOver()
         }
+    }
+
+    private fun setMissionOver() {
+        missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
+        requireActivity().stopService(missionServiceIntent)
+        missionViewModel.missionStatus.value = MissionStatus.BEFORE
+        alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MissionService.MISSION_STATUS)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
+                    missionViewModel.missionStatus.value = MissionStatus.ONGOING
+                    alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
+                }
+            }
+        }
+
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     private fun observeClickPlace() {
@@ -285,69 +302,25 @@ class MapFragment : Fragment(), MapHandler {
         }
     }
 
-    private fun listenButtonClick() {
-        binding.homeBottomSheet.layoutStateExpanded.buttonAlarmTurnOff.setOnClickListener {
-            alarmViewModel.deleteAlarm()
-            cancelNotification()
-            turnOffSoundService()
-            val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
-            behavior.state = BottomSheetBehavior.STATE_COLLAPSED
-
-            setMissionOver()
-        }
-    }
-
-    private fun setMissionOver() {
-        missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
-        requireActivity().stopService(missionServiceIntent)
-        missionViewModel.missionStatus.value = MissionStatus.BEFORE
-        alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
-    }
-
-    private fun cancelNotification() {
-        val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.cancel(AlarmSettingFragment.ALARM_NOTIFICATION_HIGH_ID)
-    }
-
-    private fun turnOffSoundService() {
-        val intent = Intent(requireContext(), SoundService::class.java)
-        requireContext().stopService(intent)
-        SoundService.normalExit = true
-    }
-
-    private fun setBroadcastReceiver() {
-        val intentFilter = IntentFilter().apply {
-            addAction(MissionService.MISSION_STATUS)
-        }
-
-        val receiver = object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
-                    missionViewModel.missionStatus.value = MissionStatus.ONGOING
-                    alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
-                }
-            }
-        }
-
-        requireActivity().registerReceiver(receiver, intentFilter)
-    }
-
     override fun onResume() {
         super.onResume()
 
         requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
             if (it == ALARM_MAP_CODE) {
-                showBottomSheet()
+                openBottomSheet()
             }
         }
     }
 
-    private fun showBottomSheet() {
+    private fun openBottomSheet() {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
+
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        /*
         binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
         binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
         binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
+        */
     }
 
     override fun onDestroyView() {

@@ -30,12 +30,12 @@
             android:id="@+id/text_view_panel_title"
             android:layout_width="0dp"
             android:layout_height="30dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="19dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginEnd="20dp"
             android:ellipsize="end"
-            android:gravity="center_vertical"
             android:maxLines="1"
+            android:gravity="center_vertical"
             android:text="@{placeSearchViewModel.geoLocation.title}"
             android:textColor="@color/white"
             android:textSize="22sp"
@@ -70,7 +70,6 @@
             android:text="@{placeSearchViewModel.distance.toString()}"
             android:textColor="@color/white"
             android:textSize="32sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="1.6" />
@@ -96,8 +95,10 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/background_button"
+            app:layout_constraintStart_toEndOf="@id/text_view_panel_distance_km"
+            app:layout_constraintEnd_toStartOf="@id/view_panel_end"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/view_panel_end" />
+            app:layout_constraintHorizontal_bias="1" />
 
         <ImageView
             android:id="@+id/image_view_panel_start"

@@ -208,7 +208,7 @@ class MissionFragment : Fragment(), MissionHandler {
     fun clickMissionOver() {
         Snackbar.make(
             requireActivity().findViewById(R.id.constraint_layout_container),
-            "미션을 취소합니다",
+            "미션을 취소했습니다",
             Snackbar.LENGTH_SHORT
         ).show()
         missionViewModel.missionStatus.value = MissionStatus.OVER
@@ -338,7 +338,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setSuccessAnimation() {
-        with(binding.lottieSuccess) {
+        with (binding.lottieSuccess) {
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
@@ -358,7 +358,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setFailAnimation() {
-        with(binding.lottieFail) {
+        with (binding.lottieFail) {
             visibility = View.VISIBLE
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {

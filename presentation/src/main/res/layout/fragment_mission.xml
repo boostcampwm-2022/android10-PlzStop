@@ -42,84 +42,89 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="55dp" />
+            app:layout_constraintGuide_begin="50dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_bottom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_end="55dp" />
+            app:layout_constraintGuide_end="50dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/text_view_destination"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_timer"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="center_vertical"
-            android:text="@{missionViewModel.destination.name}"
-            android:textColor="@color/main_dark_grey"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:background="@drawable/background_button"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="3dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_panel"
+            android:alpha="0.95"
             android:elevation="15dp"
-            app:layout_constraintEnd_toEndOf="@id/guideline_end"
             app:layout_constraintStart_toStartOf="@id/guideline_start"
-            app:layout_constraintTop_toBottomOf="@id/guideline_top"
-            tools:text="1호선 용산역" />
+            app:layout_constraintTop_toTopOf="@id/guideline_top">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/lottie_timer"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="3dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:lottie_autoPlay="true"
+                app:lottie_fileName="timer.json"
+                app:lottie_loop="true" />
+
+            <TextView
+                android:id="@+id/text_view_time_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginEnd="37dp"
+                android:letterSpacing="0.05"
+                android:text="@{missionViewModel.lastTime}"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/lottie_timer"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/lottie_timer"
+                app:layout_constraintBottom_toBottomOf="@id/lottie_timer"
+                tools:text="11:04:30" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/background_panel"
+        android:alpha="0.95"
+        android:elevation="15dp"
+        app:layout_constraintStart_toStartOf="@id/guideline_start"
+        app:layout_constraintTop_toBottomOf="@id/layout_timer">
 
         <TextView
-            android:id="@+id/text_view_time_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:letterSpacing="0.05"
-            android:paddingHorizontal="5dp"
-            android:shadowColor="@color/main_light_grey"
-            android:shadowDx="7.0"
-            android:shadowDy="7.0"
-            android:shadowRadius="15.0"
-            android:text="@{missionViewModel.lastTime}"
-            android:textColor="@color/main_dark_grey"
-            android:textSize="48sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@{missionViewModel.destination.name}"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:padding="15dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_destination"
-            tools:text="04:30" />
-
-        <TextView
-            android:id="@+id/text_view_changed_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:letterSpacing="0.05"
-            android:shadowColor="@color/main_light_grey"
-            android:shadowDx="7.0"
-            android:shadowDy="7.0"
-            android:shadowRadius="15.0"
-            android:textColor="@color/main_dark_grey"
-            android:textSize="32sp"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@id/text_view_time_left"
-            app:layout_constraintTop_toTopOf="@id/text_view_time_left"
-            tools:text="+1" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="성복역2번출구" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_mission_close"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/background_close_button"
             android:elevation="15dp"
             android:onClick="@{() -> fragment.clickMissionOver()}"
@@ -147,7 +152,7 @@
             android:background="@drawable/background_button"
             android:elevation="15dp"
             android:onClick="@{() -> fragment.setCompassMode()}"
-            app:layout_constraintBottom_toTopOf="@id/layout_zoom_out"
+            app:layout_constraintBottom_toTopOf="@id/layout_person_current"
             app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
             <ImageView
@@ -165,11 +170,10 @@
             android:id="@+id/layout_zoom_out"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/background_button"
             android:elevation="15dp"
             android:onClick="@{() -> fragment.setZoomOut()}"
-            app:layout_constraintBottom_toTopOf="@id/layout_person_current"
+            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
             app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
             <ImageView
@@ -187,9 +191,10 @@
             android:id="@+id/layout_person_current"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/background_button"
             android:elevation="15dp"
-            app:layout_constraintBottom_toBottomOf="@id/guideline_bottom"
+            app:layout_constraintBottom_toTopOf="@id/layout_zoom_out"
             app:layout_constraintEnd_toEndOf="@id/guideline_end">
 
             <ImageView
