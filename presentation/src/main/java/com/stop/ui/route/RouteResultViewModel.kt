@@ -21,6 +21,10 @@ class RouteResultViewModel : ViewModel() {
     val lastTimes: LiveData<List<TransportLastTime?>>
         get() = _lastTimes
 
+    private val _isLastTimeAvailable = MutableLiveData<Boolean>()
+    val isLastTimeAvailable: LiveData<Boolean>
+        get() = _isLastTimeAvailable
+
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>
         get() = _origin
@@ -29,6 +33,7 @@ class RouteResultViewModel : ViewModel() {
     val destination: LiveData<Place>
         get() = _destination
 
+    private var isLastTimeChecked = false
     private var routeItemColor = 0
 
     fun setItineraries(itinerary: Itinerary) {
@@ -51,6 +56,7 @@ class RouteResultViewModel : ViewModel() {
         val routeItems = mutableListOf<RouteItem>()
 
         itinerary.value?.routes?.forEachIndexed { index, route ->
+            checkLastTime(index, route)
             routeItems.add(
                 RouteItem(
                     name = getRouteItemName(index, route),
@@ -65,12 +71,23 @@ class RouteResultViewModel : ViewModel() {
                 )
             )
         }
+        isLastTimeChecked = false
         routeItems.add(0, routeItems.first().toFirstRouteItem())
         destination.value?.let {
             routeItems.add(routeItems.last().toLastRouteItem(it.name, it.coordinate))
         }
 
         return routeItems.toList()
+    }
+
+    private fun checkLastTime(index: Int, route: Route) {
+        if (route is TransportRoute) {
+            if (isLastTimeChecked.not()) {
+                _isLastTimeAvailable.value = lastTimes.value?.get(index) != null
+            }
+
+            isLastTimeChecked = true
+        }
     }
 
     private fun getRouteItemName(index: Int, route: Route): String {

@@ -69,7 +69,9 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         }
 
         binding.routeDetailDrawer.viewAlarm.setOnClickListener {
-            findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
+            if (routeResultViewModel.isLastTimeAvailable.value == true) {
+                findNavController().navigate(R.id.action_routeDetailFragment_to_alarmSetting)
+            }
         }
 
         binding.imageViewClose.setOnClickListener {

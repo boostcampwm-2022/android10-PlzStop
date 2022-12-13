@@ -64,7 +64,7 @@ class AlarmSettingFragment : Fragment() {
     }
 
     private fun initView() {
-        with(binding) {
+        with (binding) {
             numberPickerAlarmTime.minValue = 0
             numberPickerAlarmTime.maxValue = 60
 
