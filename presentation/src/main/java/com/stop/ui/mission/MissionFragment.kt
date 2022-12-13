@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.skt.tmap.TMapPoint
@@ -44,7 +45,7 @@ class MissionFragment : Fragment(), MissionHandler {
     private val binding: FragmentMissionBinding
         get() = _binding!!
 
-    private val missionViewModel: MissionViewModel by activityViewModels()
+    private val missionViewModel: MissionViewModel by viewModels()
     private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap

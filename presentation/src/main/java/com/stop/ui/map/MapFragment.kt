@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -44,7 +45,7 @@ class MapFragment : Fragment(), MapHandler {
 
     private val alarmViewModel: AlarmSettingViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
-    private val missionViewModel: MissionViewModel by activityViewModels()
+    private val missionViewModel: MissionViewModel by viewModels()
 
     private lateinit var missionServiceIntent: Intent
 
