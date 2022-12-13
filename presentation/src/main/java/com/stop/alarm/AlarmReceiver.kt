@@ -10,8 +10,8 @@ import com.stop.isMoreThanOreo
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_HIGH_ID
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID
-import com.stop.util.getAlarmReceiverNotification
-import com.stop.util.getAlarmReceiverPendingIntent
+import com.stop.util.getActivityPendingIntent
+import com.stop.util.getAlarmHighNotification
 
 class AlarmReceiver : BroadcastReceiver() {
 
@@ -25,8 +25,14 @@ class AlarmReceiver : BroadcastReceiver() {
             val soundRestartServiceIntent = Intent(context, SoundRestartService::class.java)
             context.startForegroundService(soundRestartServiceIntent)
 
-            val alarmStartPendingIntent = context.getAlarmReceiverPendingIntent()
-            val alarmStartNotification = context.getAlarmReceiverNotification(
+            val alarmStartPendingIntent = context.getActivityPendingIntent(
+                Intent(context, AlarmActivity::class.java).apply {
+                    putExtra("ALARM_CODE", ALARM_CODE)
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                },
+                ALARM_CODE
+            )
+            val alarmStartNotification = context.getAlarmHighNotification(
                 alarmStartPendingIntent,
                 content
             )
@@ -38,7 +44,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             Intent(context, AlarmActivity::class.java).apply {
                 putExtra("ALARM_CODE", ALARM_CODE)
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 context.startActivity(this)
             }
         }

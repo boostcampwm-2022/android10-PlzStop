@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="alarmViewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
+
+        <variable
+            name="missionViewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
 
         <variable
             name="fragment"
@@ -16,8 +20,9 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_bottom_sheet_home_state_expanded"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         tools:context=".ui.alarmstart.AlarmStartFragment"
         tools:theme="@style/Theme.Material3.Light.NoActionBar">
 
@@ -26,54 +31,44 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_begin="16dp" />
+            app:layout_constraintGuide_begin="15dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guide_line_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_end="16dp" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_begin="35dp" />
+            app:layout_constraintGuide_end="15dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_alarm_info"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_panel_button"
-            android:elevation="15dp"
-            android:padding="15dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            android:background="@drawable/background_alarm_panel"
+            android:padding="12dp"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintTop_toTopOf="@id/guideline_top">
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/image_view_start_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_start_marker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_start"
+                app:layout_constraintBottom_toBottomOf="@id/text_view_start_position_info"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/text_view_start_position"
-                app:layout_constraintBottom_toBottomOf="@id/text_view_start_position_info"/>
+                app:layout_constraintTop_toTopOf="@id/text_view_start_position" />
 
             <TextView
                 android:id="@+id/text_view_start_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
                 android:text="@string/start_position"
-                android:textColor="@color/main_dark_grey"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:layout_marginStart="10dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/image_view_start_position"/>
+                android:textColor="@color/main_light_grey"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/image_view_start_position"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/text_view_start_position_info"
@@ -81,9 +76,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.startPosition}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:text="@{alarmViewModel.alarmItem.startPosition}"
+                android:textColor="@color/main_dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/text_view_start_position"
                 app:layout_constraintTop_toBottomOf="@id/text_view_start_position"
@@ -91,25 +86,34 @@
 
             <ImageView
                 android:id="@+id/image_view_end_position"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_place_marker"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_end"
+                app:layout_constraintBottom_toBottomOf="@id/text_view_end_position_info"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@id/text_view_end_position"
-                app:layout_constraintBottom_toBottomOf="@id/text_view_end_position_info"/>
+                app:layout_constraintTop_toTopOf="@id/text_view_end_position" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/main_lighter_grey"
+                app:layout_constraintStart_toStartOf="@id/text_view_start_position_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_start_position_info" />
 
             <TextView
                 android:id="@+id/text_view_end_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/end_position"
-                android:textColor="@color/main_dark_grey"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/text_view_start_position_info"
-                app:layout_constraintStart_toEndOf="@id/image_view_end_position"/>
+                android:textColor="@color/main_light_grey"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/image_view_end_position"
+                app:layout_constraintTop_toBottomOf="@id/text_view_start_position_info" />
 
             <TextView
                 android:id="@+id/text_view_end_position_info"
@@ -117,35 +121,44 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.endPosition}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:text="@{alarmViewModel.alarmItem.endPosition}"
+                android:textColor="@color/main_dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/text_view_end_position"
                 app:layout_constraintTop_toBottomOf="@id/text_view_end_position"
                 tools:text="아남타워빌딩" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/main_lighter_grey"
+                app:layout_constraintStart_toStartOf="@id/text_view_end_position_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_end_position_info" />
+
             <ImageView
                 android:id="@+id/image_view_last_time"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/ic_alarm"
-                app:layout_constraintTop_toTopOf="@id/text_view_last_time"
                 app:layout_constraintBottom_toBottomOf="@id/text_view_last_time_info"
-                app:layout_constraintStart_toStartOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_last_time" />
 
             <TextView
                 android:id="@+id/text_view_last_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/last_time"
-                android:textColor="@color/main_dark_grey"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/text_view_end_position_info"
-                app:layout_constraintStart_toEndOf="@id/image_view_end_position"/>
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/now_last_time"
+                android:textColor="@color/main_light_grey"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/image_view_end_position"
+                app:layout_constraintTop_toBottomOf="@id/text_view_end_position_info" />
 
             <TextView
                 android:id="@+id/text_view_last_time_info"
@@ -153,37 +166,45 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.lastTime}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:text="@{alarmViewModel.alarmItem.lastTime}"
+                android:textColor="@color/main_dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/text_view_last_time"
                 app:layout_constraintTop_toBottomOf="@id/text_view_last_time"
                 tools:text="24:09:09" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="-5dp"
+                android:layout_marginTop="7dp"
+                android:background="@color/main_lighter_grey"
+                app:layout_constraintStart_toStartOf="@id/text_view_last_time_info"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/text_view_last_time_info" />
+
             <ImageView
                 android:id="@+id/image_view_walk_time"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:background="@drawable/ic_baseline_directions_walk_32"
                 android:elevation="15dp"
-                app:layout_constraintTop_toTopOf="@id/text_view_walk_time"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/text_view_walk_time_info"
-               />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/text_view_walk_time" />
 
             <TextView
                 android:id="@+id/text_view_walk_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="11dp"
+                android:layout_marginTop="15dp"
                 android:text="@string/expect_walk_time"
-                android:textColor="@color/main_dark_grey"
-                android:textStyle="bold"
-                android:textSize="15sp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@id/text_view_last_time_info"
-                app:layout_constraintStart_toEndOf="@id/image_view_walk_time"/>
+                android:textColor="@color/main_light_grey"
+                android:textSize="12sp"
+                app:layout_constraintStart_toEndOf="@id/image_view_walk_time"
+                app:layout_constraintTop_toBottomOf="@id/text_view_last_time_info" />
 
             <TextView
                 android:id="@+id/text_view_walk_time_info"
@@ -191,9 +212,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{@string/walk_time_text(viewModel.alarmItem.walkTime)}"
-                android:textColor="@color/black"
-                android:textSize="20sp"
+                android:text="@{@string/walk_time_text(alarmViewModel.alarmItem.walkTime)}"
+                android:textColor="@color/main_dark_grey"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/text_view_walk_time"
                 app:layout_constraintTop_toBottomOf="@id/text_view_walk_time"
@@ -201,31 +222,28 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_mission_start"
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:background="@drawable/selector_mission_start_button"
-            android:elevation="15dp"
             android:gravity="center"
             android:onClick="@{() -> fragment.setMissionStart()}"
             android:textColor="@color/white"
             android:textSize="30sp"
-            app:layout_constraintBottom_toTopOf="@id/button_alarm_turn_off"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
             app:layout_constraintStart_toStartOf="@id/guide_line_start"
-            app:layout_constraintTop_toBottomOf="@id/layout_alarm_info">
+            app:layout_constraintTop_toBottomOf="@id/layout_alarm_info"
+            app:layout_constraintBottom_toTopOf="@id/view_alarm">
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/lottie_mission_start"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                app:layout_constraintBottom_toTopOf="@id/text_view_mission_start"
+                android:layout_marginTop="40dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_chainStyle="packed"
                 app:lottie_autoPlay="true"
                 app:lottie_fileName="bus_animation.json"
                 app:lottie_loop="true" />
@@ -234,30 +252,56 @@
                 android:id="@+id/text_view_mission_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/mission_start"
+                android:text="@{missionViewModel.missionStatus.text}"
+                android:layout_marginBottom="45dp"
                 android:textSize="22sp"
-                android:textStyle="bold"
+                android:textColor="@color/white"
+                tools:text="미션 시작"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/lottie_mission_start"
-                app:layout_constraintStart_toStartOf="@id/lottie_mission_start"
-                app:layout_constraintTop_toBottomOf="@id/lottie_mission_start" />
+                app:layout_constraintStart_toStartOf="@id/lottie_mission_start" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/button_alarm_turn_off"
+        <View
+            android:id="@+id/view_alarm"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:text="@string/alarm_delete_text"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:padding="10dp"
-            android:gravity="center"
-            android:background="@drawable/button_background"
+            android:layout_height="50dp"
+            android:background="@drawable/background_route_detail_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@id/guide_line_end"
-            app:layout_constraintStart_toStartOf="@id/guide_line_start" />
+            app:layout_constraintStart_toStartOf="@id/guide_line_start"
+            app:layout_constraintTop_toBottomOf="@id/layout_mission_start" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/view_alarm"
+            app:layout_constraintEnd_toEndOf="@id/view_alarm"
+            app:layout_constraintTop_toTopOf="@id/view_alarm"
+            app:layout_constraintBottom_toBottomOf="@id/view_alarm">
+
+            <ImageView
+                android:id="@+id/image_view_alarm"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:srcCompat="@drawable/ic_alarm_off" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="@string/alarm_delete_text"
+                android:textSize="17sp"
+                android:textColor="@color/red"
+                android:gravity="center"
+                app:layout_constraintStart_toEndOf="@id/image_view_alarm"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

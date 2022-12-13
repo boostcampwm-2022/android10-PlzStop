@@ -6,7 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
@@ -32,6 +33,8 @@
             android:enabled="true" />
 
         <service android:name=".alarm.SoundService" />
+
+        <service android:name=".ui.mission.MissionService"/>
 
         <service android:name=".alarm.SoundRestartService" />
 

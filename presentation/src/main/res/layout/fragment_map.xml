@@ -14,6 +14,10 @@
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
         <variable
+            name="missionViewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
+
+        <variable
             name="fragment"
             type="com.stop.ui.map.MapFragment" />
     </data>
@@ -27,21 +31,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.05" />
+            app:layout_constraintGuide_begin="15dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_end"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.95" />
+            app:layout_constraintGuide_end="15dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.06" />
+            app:layout_constraintGuide_begin="50dp" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_bottom"
@@ -62,13 +66,13 @@
         <TextView
             android:id="@+id/text_view_search"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             android:background="@drawable/background_search"
-            android:drawablePadding="15dp"
+            android:drawablePadding="13dp"
             android:elevation="15dp"
             android:gravity="center_vertical"
             android:padding="8dp"
-            android:paddingStart="20dp"
+            android:paddingStart="18dp"
             android:paddingEnd="0dp"
             android:text="@string/search_hint"
             android:textColor="@color/hint_text_color"
@@ -157,7 +161,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:alarmViewModel="@{alarmViewModel}"
-                    bind:fragment="@{fragment}" />
+                    bind:fragment="@{fragment}"
+                    bind:missionViewModel="@{missionViewModel}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

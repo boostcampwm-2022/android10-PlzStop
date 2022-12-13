@@ -15,6 +15,8 @@ import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
 import com.stop.makeFullTime
+import com.stop.model.AlarmStatus
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,16 +43,12 @@ class AlarmSettingViewModel @Inject constructor(
     private val _alarmItem = MutableStateFlow<AlarmUseCaseItem?>(null)
     val alarmItem: StateFlow<AlarmUseCaseItem?> = _alarmItem
 
-    private val _isAlarmItemNotNull = MutableStateFlow(false)
-    val isAlarmItemNotNull: StateFlow<Boolean> = _isAlarmItemNotNull
+    var alarmStatus = MutableStateFlow(AlarmStatus.NON_EXIST)
 
     private lateinit var workerId: UUID
 
     private val _lastTimeCountDown = MutableLiveData("")
     val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
-
-    private val _isMissionFail = MutableLiveData(false)
-    val isMissionFail: LiveData<Boolean> = _isMissionFail
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -58,12 +56,25 @@ class AlarmSettingViewModel @Inject constructor(
         }
     }
 
-    fun getAlarm() {
+    fun getAlarm(missionStatus: MissionStatus = MissionStatus.BEFORE) {
         viewModelScope.launch(Dispatchers.IO) {
             getAlarmUseCase.getAlarm().collectLatest {
                 _alarmItem.value = it
 
-                _isAlarmItemNotNull.value = it != null
+                if (it != null) {
+                    when(missionStatus){
+                        MissionStatus.BEFORE -> {
+                            alarmStatus.value = AlarmStatus.EXIST
+                        }
+                        MissionStatus.ONGOING -> {
+                            alarmStatus.value = AlarmStatus.MISSION
+                        }
+                        MissionStatus.OVER -> {
+                            alarmStatus.value = AlarmStatus.EXIST
+                        }
+                    }
+
+                }
             }
         }
     }
@@ -116,7 +127,6 @@ class AlarmSettingViewModel @Inject constructor(
                     oldTimeMillis = System.currentTimeMillis()
                 }
             }
-            _isMissionFail.postValue(true)
         }
     }
 

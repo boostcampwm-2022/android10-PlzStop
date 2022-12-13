@@ -17,6 +17,7 @@ import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_HIGH_ID
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionService.Companion.MISSION_CODE
 import kotlinx.coroutines.launch
 
 class AlarmStartFragment : Fragment() {
@@ -91,6 +92,16 @@ class AlarmStartFragment : Fragment() {
     private fun cancelNotification() {
         val notificationManager = requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.cancel(ALARM_NOTIFICATION_HIGH_ID)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        requireActivity().intent.extras?.getInt("MISSION_CODE")?.let {
+            if (it == MISSION_CODE) {
+                binding.root.findNavController().navigate(R.id.action_alarmStartFragment_to_missionFragment)
+            }
+        }
     }
 
     override fun onDestroyView() {
