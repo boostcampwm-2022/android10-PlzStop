@@ -55,8 +55,7 @@ class RouteFragment : Fragment() {
 
         backPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                val navController = findNavController()
-                navController.popBackStack(R.id.mapFragment, false)
+                findNavController().popBackStack(R.id.mapFragment, false)
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
@@ -99,9 +98,6 @@ class RouteFragment : Fragment() {
             val navController = findNavController()
             navController.setGraph(R.navigation.nav_graph)
             navController.popBackStack(R.id.mapFragment, false)
-        }
-        binding.imageViewResearch.setOnClickListener {
-            routeViewModel.patchRoute()
         }
     }
 
@@ -178,9 +174,9 @@ class RouteFragment : Fragment() {
 
         val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
         alertDialog = AlertDialog.Builder(requireContext())
-                        .setView(dialogView)
-                        .setCancelable(false)
-                        .create()
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
         alertDialog.window?.setBackgroundDrawableResource(R.color.transparent)
         routeViewModel.alertDialog = alertDialog
     }
