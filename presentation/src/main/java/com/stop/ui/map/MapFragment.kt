@@ -2,8 +2,10 @@ package com.stop.ui.map
 
 import android.Manifest.permission
 import android.app.NotificationManager
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,20 +13,26 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
+import com.stop.AlarmActivity
 import com.stop.R
 import com.stop.RouteNavGraphDirections
 import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
+import com.stop.model.AlarmStatus
 import com.stop.model.Location
+import com.stop.model.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.mission.MissionService
+import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
 import com.stop.ui.util.Marker
 import kotlinx.coroutines.launch
@@ -35,6 +43,9 @@ class MapFragment : Fragment(), MapHandler {
 
     private val alarmViewModel: AlarmSettingViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
+    private val missionViewModel: MissionViewModel by viewModels()
+
+    private lateinit var missionServiceIntent: Intent
 
     private lateinit var tMap: MapTMap
     private var mapUIVisibility = View.GONE
@@ -56,6 +67,7 @@ class MapFragment : Fragment(), MapHandler {
         initTMap()
         initBottomSheetBehavior()
         initBottomSheetView()
+        setBroadcastReceiver()
     }
 
     override fun alertTMapReady() {
@@ -78,6 +90,7 @@ class MapFragment : Fragment(), MapHandler {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
+        binding.missionViewModel = missionViewModel
         binding.fragment = this@MapFragment
     }
 
@@ -155,8 +168,18 @@ class MapFragment : Fragment(), MapHandler {
 
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
-        alarmViewModel.isAlarmItemNotNull.asLiveData().observe(viewLifecycleOwner) {
-            behavior.isDraggable = it
+        alarmViewModel.alarmStatus.asLiveData().observe(viewLifecycleOwner) { alarmStatus ->
+            when (alarmStatus) {
+                AlarmStatus.NON_EXIST -> {
+                    behavior.isDraggable = false
+                }
+                AlarmStatus.EXIST -> {
+                    behavior.isDraggable = true
+                }
+                AlarmStatus.MISSION -> {
+                    behavior.isDraggable = true
+                }
+            }
         }
 
         behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
@@ -183,7 +206,33 @@ class MapFragment : Fragment(), MapHandler {
             behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             requireContext().stopService(intent)
             SoundService.normalExit = true
+
+            setMissionOver()
         }
+    }
+
+    private fun setMissionOver() {
+        missionServiceIntent = Intent(requireActivity(), MissionService::class.java)
+        requireActivity().stopService(missionServiceIntent)
+        missionViewModel.missionStatus.value = MissionStatus.BEFORE
+        alarmViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
+    }
+
+    private fun setBroadcastReceiver() {
+        val intentFilter = IntentFilter().apply {
+            addAction(MissionService.MISSION_STATUS)
+        }
+
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                if (intent?.getBooleanExtra(MissionService.MISSION_STATUS, false) == true) {
+                    missionViewModel.missionStatus.value = MissionStatus.ONGOING
+                    alarmViewModel.alarmStatus.value = AlarmStatus.MISSION
+                }
+            }
+        }
+
+        requireActivity().registerReceiver(receiver, intentFilter)
     }
 
     private fun observeClickPlace() {
@@ -204,7 +253,7 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun observeClickCurrentLocation() {
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             placeSearchViewModel.clickCurrentLocation
                 .flowWithLifecycle(viewLifecycleOwner.lifecycle)
                 .collect {
@@ -291,7 +340,11 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     fun setMissionStart() {
-        // TODO 미션으로 보내는 작업해야함
+        Intent(requireContext(), AlarmActivity::class.java).apply {
+            putExtra("MISSION_CODE", MissionService.MISSION_CODE)
+            flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+            startActivity(this)
+        }
     }
 
     companion object {

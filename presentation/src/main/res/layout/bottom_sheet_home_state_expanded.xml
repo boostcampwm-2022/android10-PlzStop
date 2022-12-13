@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="viewModel"
+            name="alarmViewModel"
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
+
+        <variable
+            name="missionViewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
 
         <variable
             name="fragment"
@@ -72,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.startPosition}"
+                android:text="@{alarmViewModel.alarmItem.startPosition}"
                 android:textColor="@color/main_dark_grey"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -117,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.endPosition}"
+                android:text="@{alarmViewModel.alarmItem.endPosition}"
                 android:textColor="@color/main_dark_grey"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -162,7 +166,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{viewModel.alarmItem.lastTime}"
+                android:text="@{alarmViewModel.alarmItem.lastTime}"
                 android:textColor="@color/main_dark_grey"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -208,7 +212,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@{@string/walk_time_text(viewModel.alarmItem.walkTime)}"
+                android:text="@{@string/walk_time_text(alarmViewModel.alarmItem.walkTime)}"
                 android:textColor="@color/main_dark_grey"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -248,10 +252,11 @@
                 android:id="@+id/text_view_mission_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{missionViewModel.missionStatus.text}"
                 android:layout_marginBottom="45dp"
-                android:text="@string/mission_start"
                 android:textSize="22sp"
                 android:textColor="@color/white"
+                tools:text="미션 시작"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/lottie_mission_start"
                 app:layout_constraintStart_toStartOf="@id/lottie_mission_start" />

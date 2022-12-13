@@ -14,6 +14,10 @@
             type="com.stop.ui.alarmsetting.AlarmSettingViewModel" />
 
         <variable
+            name="missionViewModel"
+            type="com.stop.ui.mission.MissionViewModel" />
+
+        <variable
             name="fragment"
             type="com.stop.ui.map.MapFragment" />
     </data>
@@ -157,7 +161,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     bind:alarmViewModel="@{alarmViewModel}"
-                    bind:fragment="@{fragment}" />
+                    bind:fragment="@{fragment}"
+                    bind:missionViewModel="@{missionViewModel}"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -33,7 +33,7 @@ class MissionTMap(
         tMapView.addTMapPolyLine(polyLine)
     }
 
-    fun drawWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
+    fun makeWalkRoute(route: WalkRoute, linePoints: ArrayList<TMapPoint>) {
         route.steps.forEach { step ->
             step.lineString.split(" ").forEach { coordinate ->
                 val points = coordinate.split(",")

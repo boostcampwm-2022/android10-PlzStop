@@ -28,7 +28,7 @@ class AlarmReceiver : BroadcastReceiver() {
             val alarmStartPendingIntent = context.getActivityPendingIntent(
                 Intent(context, AlarmActivity::class.java).apply {
                     putExtra("ALARM_CODE", ALARM_CODE)
-                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                    flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 },
                 ALARM_CODE
             )
@@ -44,7 +44,7 @@ class AlarmReceiver : BroadcastReceiver() {
 
             Intent(context, AlarmActivity::class.java).apply {
                 putExtra("ALARM_CODE", ALARM_CODE)
-                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
                 context.startActivity(this)
             }
         }

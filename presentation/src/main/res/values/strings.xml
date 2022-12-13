@@ -84,4 +84,5 @@
     <string name="last_time_not_found">알람을 설정할 수 없습니다</string>
     <string name="minute_before">분 전</string>
     <string name="option_setting">옵션 설정</string>
+    <string name="ongoing_mission">진행중인 미션이 있습니다</string>
 </resources>

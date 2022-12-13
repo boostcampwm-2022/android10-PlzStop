@@ -12,4 +12,8 @@
         <item name="android:windowBackground">@android:color/white</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
+    <style name="AppTheme.AlertDialogTheme" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/main_dark_grey</item>
+    </style>
 </resources>
