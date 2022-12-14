@@ -72,7 +72,6 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private fun initViewModel() {
         viewModel.setDestination(DESTINATION)
-        viewModel.countDownWith(LEFT_TIME)
     }
 
     private fun initView() {
@@ -109,30 +108,7 @@ class MissionFragment : Fragment(), MissionHandler {
             resources.getInteger(android.R.integer.config_shortAnimTime)
 
         viewModel.timeIncreased.observe(viewLifecycleOwner) {
-            val sign = if (it > 0) {
-                PLUS
-            } else {
-                MINUS
-            }
-            binding.textViewChangedTime.text =
-                resources.getString(R.string.number_format).format(sign, it)
-            binding.textViewChangedTime.apply {
-                alpha = 0f
-                visibility = View.VISIBLE
-                animate().alpha(1f)
-                    .setDuration(shortAnimationDuration.toLong())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator?) {
-                            animate().alpha(0f)
-                                .setDuration(shortAnimationDuration.toLong())
-                                .setListener(object : AnimatorListenerAdapter() {
-                                    override fun onAnimationEnd(animation: Animator?) {
-                                        binding.textViewChangedTime.visibility = View.GONE
-                                    }
-                                })
-                        }
-                    })
-            }
+
         }
 
         viewModel.errorMessage.observe(viewLifecycleOwner) {

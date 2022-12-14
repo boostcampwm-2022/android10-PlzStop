@@ -65,41 +65,6 @@
                 app:layout_constraintTop_toBottomOf="@id/guideline_top"
                 tools:text="1호선 용산역"/>
 
-        <TextView
-            android:id="@+id/text_view_time_left"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@{@string/minute_and_second(viewModel.leftMinute, viewModel.leftSecond)}"
-            android:textSize="48sp"
-            android:textColor="@color/main_dark_grey"
-            android:letterSpacing="0.05"
-            android:shadowRadius="15.0"
-            android:shadowDx="7.0"
-            android:shadowDy="7.0"
-            android:shadowColor="@color/main_light_grey"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_view_destination"
-            tools:text="04:30" />
-
-        <TextView
-            android:id="@+id/text_view_changed_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:textSize="32sp"
-            android:textColor="@color/main_dark_grey"
-            android:letterSpacing="0.05"
-            android:shadowRadius="15.0"
-            android:shadowDx="7.0"
-            android:shadowDy="7.0"
-            android:shadowColor="@color/main_light_grey"
-            android:visibility="invisible"
-            app:layout_constraintStart_toEndOf="@id/text_view_time_left"
-            app:layout_constraintTop_toTopOf="@id/text_view_time_left"
-            tools:text="+1" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layout_mission_close"
             android:layout_width="60dp"

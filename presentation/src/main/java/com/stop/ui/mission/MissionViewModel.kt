@@ -1,5 +1,6 @@
 package com.stop.ui.mission
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.stop.domain.model.ApiChangedException
 import com.stop.domain.model.AvailableTrainNoExistException
@@ -88,28 +89,48 @@ class MissionViewModel @Inject constructor(
     lateinit var startSubwayStation: String
 
     init {
-        // 영등포04 버스
+        // 구로09 버스
         _transportLastTime.value = TransportLastTime(
             transportMoveType = TransportMoveType.BUS,
             area = Area.SEOUL,
             lastTime = "23:50:50",
-            destinationStationName = "대림요양병원",
+            destinationStationName = "에이스테크노타워",
             stationsUntilStart = listOf(
-                TransportStation(stationName = "대림역", stationId = "118900002"),
-                TransportStation(stationName = "대림역", stationId = "116000200"),
-                TransportStation(stationName = "대림역7호선", stationId = "118900008"),
-                TransportStation(stationName = "우성2차아파트", stationId = "118900012"),
-                TransportStation(stationName = "대림3동주민센터", stationId = "118900187"),
-                TransportStation(stationName = "정현부페", stationId = "118900021"),
-                TransportStation(stationName = "국민은행", stationId = "118900188"),
-//                TransportStation(stationName = "대림요양병원", stationId = "118900028"),
-//                TransportStation(stationName = "대림요양병원", stationId = "118900028"),
-//                TransportStation(stationName = "신길건영아파트", stationId = "118000531"),
-//                TransportStation(stationName = "성락교회", stationId = "118900036"),
+                TransportStation(stationName = "동아1차APT105동", stationId = "116900095"),
+                TransportStation(stationName = "신도림중학교", stationId = "116900091"),
+                TransportStation(stationName = "우성아파트", stationId = "116000358"),
+                TransportStation(stationName = "신도림역.아이파크아파트", stationId = "116900285"),
+                TransportStation(stationName = "동아2차아파트상가", stationId = "116900286"),
+                TransportStation(stationName = "대림6차태영프라자", stationId = "116900088"),
+                TransportStation(stationName = "대림5차아파트.신도림주민센터", stationId = "116900215"),
+                TransportStation(stationName = "대림5차아파트702동", stationId = "116900213"),
+                TransportStation(stationName = "대림3차아파트", stationId = "116900067"),
+                TransportStation(stationName = "신도림미성아파트", stationId = "116900216"),
+                TransportStation(stationName = "월드아파트", stationId = "116900052"),
+                TransportStation(stationName = "구로역.구로기계공구상가", stationId = "116000061"),
+                TransportStation(stationName = "구로역·NC신구로점", stationId = "116000058"),
+                TransportStation(stationName = "항아리", stationId = "116900220"),
+                TransportStation(stationName = "구로보건소", stationId = "116000149"),
+                TransportStation(stationName = "구로고.구로도서관", stationId = "116900012"),
+                TransportStation(stationName = "영림중학교", stationId = "116900007"),
+                TransportStation(stationName = "구로구민회관", stationId = "116900001"),
+                TransportStation(stationName = "구로구청", stationId = "116900210"),
+                TransportStation(stationName = "구로중학교", stationId = "116900222"),
+                TransportStation(stationName = "동구로새마을금고", stationId = "116900223"),
+                TransportStation(stationName = "구로시장.남구로시장", stationId = "116900191"),
+                TransportStation(stationName = "구로3동주민센터.삼성래미안아파트", stationId = "116900182"),
+                TransportStation(stationName = "구로3파출소", stationId = "116900175"),
+                TransportStation(stationName = "에이스테크노타워", stationId = "116900169"),
+                TransportStation(stationName = "KEB하나은행", stationId = "116900116"),
+                TransportStation(stationName = "구로3동현대아파트", stationId = "116900159"),
+                TransportStation(stationName = "구로디지털단지역", stationId = "116900093"),
+                TransportStation(stationName = "구.사조참치", stationId = "116900098"),
+                TransportStation(stationName = "한국산업단지공단.이마트구로점", stationId = "116000036"),
+                TransportStation(stationName = "에이스테크노타워", stationId = "116900147"),
             ),
             enableDestinationStation = listOf(),
             transportDirectionType = TransportDirectionType.TO_END,
-            routeId = "118900001"
+            routeId = "116900007",
         )
         startMission()
     }
@@ -124,39 +145,6 @@ class MissionViewModel @Inject constructor(
 
     fun setDestination(inputDestination: String) {
         _destination.value = inputDestination
-    }
-
-    fun countDownWith(startTime: Int) {
-        _estimatedTimeRemaining.value = startTime
-        var leftTime = startTime
-        viewModelScope.launch {
-            while (leftTime > TIME_ZERO) {
-                delay(DELAY_TIME)
-                leftTime -= ONE_SECOND
-                if (leftTime <= TIME_ZERO) {
-                    break
-                }
-                _estimatedTimeRemaining.value = leftTime
-            }
-        }
-
-        viewModelScope.launch {
-            while (leftTime > TIME_ZERO) {
-                delay(DELAY_TIME)
-                if (random.nextInt(ZERO, RANDOM_LIMIT) == ZERO) {
-                    val increasedTime = random.nextInt(-RANDOM_LIMIT, RANDOM_LIMIT)
-                    if (increasedTime == ZERO) {
-                        continue
-                    }
-                    leftTime += increasedTime
-                    _timeIncreased.value = increasedTime
-                }
-                if (leftTime < TIME_ZERO) {
-                    leftTime = 0
-                }
-                _estimatedTimeRemaining.value = leftTime
-            }
-        }
     }
 
     private fun getBusNowLocation(transportLastTime: TransportLastTime) {
@@ -175,9 +163,11 @@ class MissionViewModel @Inject constructor(
             val temporalIndex = busVehicleIds.size / 2
             busVehicleIds = listOf(busVehicleIds[temporalIndex])
 
+
             while (busVehicleIds.isNotEmpty()) {
                 val busCurrentInformation = getBusNowLocationUseCase(transportLastTime, busVehicleIds)
                 this@MissionViewModel._busNowLocationInfo.value = busCurrentInformation
+                Log.d("CHECK", busCurrentInformation.first().licensePlateNumber)
 
                 busVehicleIds = busVehicleIds.foldIndexed(listOf()) { index, ids, id ->
                     when(busCurrentInformation[index].transportState) {
