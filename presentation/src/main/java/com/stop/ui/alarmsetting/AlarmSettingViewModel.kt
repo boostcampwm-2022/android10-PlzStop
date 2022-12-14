@@ -62,7 +62,7 @@ class AlarmSettingViewModel @Inject constructor(
                 _alarmItem.value = it
 
                 if (it != null) {
-                    when(missionStatus){
+                    when (missionStatus) {
                         MissionStatus.BEFORE -> {
                             alarmStatus.value = AlarmStatus.EXIST
                         }
@@ -87,6 +87,7 @@ class AlarmSettingViewModel @Inject constructor(
     }
 
     fun callAlarm(time: String) {
+        deleteAlarm()
         alarmFunctions.callAlarm(time, alarmTime.value ?: 0)
     }
 
