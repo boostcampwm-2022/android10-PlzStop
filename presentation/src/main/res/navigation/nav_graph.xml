@@ -5,13 +5,25 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mapFragment">
 
-    <include app:graph="@navigation/route_nav_graph" />
-
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.stop.ui.map.MapFragment"
         android:label="MapFragment"
         tools:layout="@layout/fragment_map">
+
+        <action
+            android:id="@+id/action_mapFragment_to_route_nav_graph"
+            app:destination="@id/route_nav_graph" />
+        <argument
+            android:name="start"
+            android:defaultValue="@null"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true" />
+        <argument
+            android:name="end"
+            android:defaultValue="@null"
+            app:argType="com.stop.model.route.Place"
+            app:nullable="true" />
 
         <action
             android:id="@+id/action_mapFragment_to_placeSearchFragment"
@@ -35,9 +47,49 @@
             app:destination="@id/mapFragment" />
     </fragment>
 
-    <action
-        android:id="@+id/action_global_mapFragment"
-        app:destination="@id/mapFragment" />
+    <navigation
+        android:id="@+id/route_nav_graph"
+        app:startDestination="@id/routeFragment">
+
+        <fragment
+            android:id="@+id/routeFragment"
+            android:name="com.stop.ui.route.RouteFragment"
+            android:label="RouteFragment"
+            tools:layout="@layout/fragment_route">
+            <action
+                android:id="@+id/action_routeFragment_to_routeDetailFragment"
+                app:destination="@id/routeDetailFragment" />
+            <argument
+                android:name="start"
+                android:defaultValue="@null"
+                app:argType="com.stop.model.route.Place"
+                app:nullable="true" />
+            <argument
+                android:name="end"
+                android:defaultValue="@null"
+                app:argType="com.stop.model.route.Place"
+                app:nullable="true" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/routeDetailFragment"
+            android:name="com.stop.ui.routedetail.RouteDetailFragment"
+            android:label="RouteDetailFragment"
+            tools:layout="@layout/fragment_route_detail">
+            <action
+                android:id="@+id/action_routeDetailFragment_to_alarmSetting"
+                app:destination="@id/alarmSetting" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/alarmSetting"
+            android:name="com.stop.ui.alarmsetting.AlarmSettingFragment"
+            android:label="fragment_alarm_setting"
+            tools:layout="@layout/fragment_alarm_setting" />
+        <action
+            android:id="@+id/action_global_routeFragment"
+            app:destination="@id/routeFragment" />
+    </navigation>
 
     <action
         android:id="@+id/action_global_placeSearchFragment"

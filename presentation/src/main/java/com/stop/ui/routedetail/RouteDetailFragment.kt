@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.stop.R
 import androidx.navigation.navGraphViewModels
@@ -76,8 +75,7 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
 
         binding.imageViewClose.setOnClickListener {
             findNavController().apply {
-                setGraph(R.navigation.nav_graph)
-                popBackStack(R.id.action_global_mapFragment, false)
+                popBackStack(R.id.mapFragment, false)
                 requireActivity().viewModelStore.clear()
             }
         }

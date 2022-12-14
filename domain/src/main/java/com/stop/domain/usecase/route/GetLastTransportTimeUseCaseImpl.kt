@@ -378,7 +378,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             lastTime += TIME_CORRECTION_VALUE
         }
 
-        val lastTimeString = lastTime.toString().chunked(2).joinToString(":")
+        val lastTimeString = lastTime.toString().padStart(6, '0').chunked(2).joinToString(":")
 
         return TransportLastTime(
             transportMoveType = TransportMoveType.BUS,
@@ -521,7 +521,7 @@ internal class GetLastTransportTimeUseCaseImpl @Inject constructor(
             lastTime += TIME_CORRECTION_VALUE
         }
 
-        val lastTimeString = lastTime.toString().chunked(2).joinToString(":")
+        val lastTimeString = lastTime.toString().padStart(6, '0').chunked(2).joinToString(":")
 
         return TransportLastTime(
             transportMoveType = TransportMoveType.BUS,

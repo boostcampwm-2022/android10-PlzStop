@@ -80,6 +80,9 @@
     <string name="end_position_text">도착지 : %1$s</string>
     <string name="last_time_text">막차시간 : %1$s</string>
     <string name="walk_time_text">%1$d분</string>
+    <string name="socket_timeout_exception_please_retry">API 서버가 응답하지 않습니다. 다시 시도해주세요.</string>
+    <string name="unknown_exception_occur">알 수 없는 에러가 발생했습니다.</string>
+    <string name="unknown_host_exception_occur">인터넷이 연결되어 있지 않거나, 페쇄망 호스트에 연결을 시도했습니다.</string>
     <string name="alarm_last_notification_text">알람이 %1$s의 %2$s분 전에 울릴 예정입니다.</string>
     <string name="last_time_not_found">알람을 설정할 수 없습니다</string>
     <string name="minute_before">분 전</string>
