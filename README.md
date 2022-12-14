@@ -22,6 +22,12 @@
 
 ### [앱 실행해보러 가기](https://github.com/boostcampwm-2022/android10-PlzStop/releases/tag/v1.0.0)
 
+## 팀 소개 🧑‍🤝‍🧑 
+| K008 김시진 | K037 이종성 | K039 이지민| K048 조경현|
+|:-----------:|:----------:|:----------:|:----------:|
+|<img src="https://user-images.githubusercontent.com/74500793/200560529-5c77f1a6-bcdc-4517-a13f-1f274683f530.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560658-e61ebec8-5e5d-42cf-9a65-a9f34bbebde7.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560030-6b96b399-e1c0-40d9-8901-2a959d437ab5.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560802-28af2528-a1e9-48cb-9e5e-889793bb53bb.png" width="150" height="150">|
+|[@koreatlwls](https://github.com/koreatlwls)| [@DoTheBestMayB](https://github.com/DoTheBestMayB) |[@jeeminimini](https://github.com/jeeminimini)|[@khcho226](https://github.com/khcho226)|
+
 </br>
 
 # 주요 기능
@@ -70,8 +76,54 @@
 
 </br>
 
-# 팀 소개 🧑‍🤝‍🧑 
-| K008 김시진 | K037 이종성 | K039 이지민| K048 조경현|
-|:-----------:|:----------:|:----------:|:----------:|
-|<img src="https://user-images.githubusercontent.com/74500793/200560529-5c77f1a6-bcdc-4517-a13f-1f274683f530.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560658-e61ebec8-5e5d-42cf-9a65-a9f34bbebde7.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560030-6b96b399-e1c0-40d9-8901-2a959d437ab5.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560802-28af2528-a1e9-48cb-9e5e-889793bb53bb.png" width="150" height="150">|
-|[@koreatlwls](https://github.com/koreatlwls)| [@DoTheBestMayB](https://github.com/DoTheBestMayB) |[@jeeminimini](https://github.com/jeeminimini)|[@khcho226](https://github.com/khcho226)|
+# 기술 스택
+
+---
+
+> Clean Architecture
+> 
+- UseCase를 이용해 기능 직관적 판단 가능
+- 새로운 기능이 추가되거나 내부 로직이 변경되어야 할 때 유연하게 대처 가능
+
+> Multi Module
+> 
+- 수정된 모듈만 빌드 → 빌드 시간 단축
+- 의존성이 낮아질 수 있다.
+
+> Hilt
+> 
+- @AndroidEntryPoint를 사용하여 Service, BroadCastReceiver에도 의존성 주입 가능
+- 프로젝트 설정의 간소화
+- 쉬운 모듈 탐색과 통합
+
+> Navigation
+> 
+- Safe Args
+- Activity보다 가벼운 Fragment
+- 쉬운 화면 전환 Animation 추가
+
+> `Moshi` vs Gson
+> 
+- 직렬화 실패 메시지 제공
+- 다형성 데이터 직렬화 제공
+- Codegen 방식
+
+> `T Map` vs 타 Map SDK
+> 
+- T Map 대중교통 API와의 원활한 데이터 연동을 위해 사용
+- 벡터 맵(Vector Map) 지원
+- 다른 지도 어플에 비해 깔끔한 UI
+- 타 Map SDK에 비해 용량이 적음
+
+> `DataStore` vs Sharedpreference
+> 
+- DataStore는 코루틴과 Flow를 통해 읽고 쓰기에 대한 비동기 API를 제공
+- DataStore는 UI 쓰레드를 호출해도 안전
+- Runtime Exception으로부터 안전
+
+> `Foreground Service` vs WorkManger
+> 
+- 둘 다 즉시 실행해야하는 작업에 사용
+- WorkManager의 경우 상황에 따라 지연 가능
+- 사용자의 경로를 지속적으로 보여주며 UI를 변경해야하기 때문에 Foreground Service 사용
+
