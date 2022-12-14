@@ -78,8 +78,6 @@
 
 # 기술 스택
 
----
-
 > Clean Architecture
 > 
 - UseCase를 이용해 기능 직관적 판단 가능
