@@ -2,10 +2,7 @@
 
 ![cover2](https://user-images.githubusercontent.com/48354989/205480662-4a958899-33a4-406b-87c1-2c16723a43e5.png)
 
-# 프로젝트 소개
-
-![plzstop_icon](https://user-images.githubusercontent.com/48354989/205480621-38dd340e-fbbb-4644-a673-386b241076bc.png) 버스 🚌, 지하철 🚋 멈춰! ⛔ - 대중교통 막차 알람 서비스 **Plz Stop**
-
+## 버스 🚌, 지하철 🚋 멈춰! ⛔ 
 
 > 혹시 **막차 시간** 확인을 위해<br/>
 계속 핸드폰만 붙잡고 계시진 않으신가요? <br/>
@@ -23,20 +20,55 @@
 
 사용자의 현재 위치와 막차시간을 실시간으로 보여주며 사용자가 이동해야할 경로를 안내합니다
 
-
-
+</br>
 
 # 주요 기능
 
-|**화면 이미지**|**기능**|**설명**|
-|:---:|:---:|:--|
-|<img width=200 src="https://user-images.githubusercontent.com/48354989/205481015-7fdbfa1b-9dbe-4c3a-ba46-4e155e4f4178.png">|지도|- 사용자의 현재 위치를 **실시간으로 트래킹**하여 보여줍니다.<br/>- 지도상의 임의의 지점을 클릭하면 **현 위치로부터의 거리를 포함한 상세 정보**를 보여줍니다.<br/>- 막차 알람이 설정되어 있으면 화면 하단에 **알람 정보**를 보여줍니다.|
-|<img width=200 src="https://user-images.githubusercontent.com/48354989/205481015-7fdbfa1b-9dbe-4c3a-ba46-4e155e4f4178.png">|검색|- 원하는 장소를 검색할 수 있습니다.<br/>- 목적지에 갈 수 있는 대중교통 경로를 알려줍니다.<br/>|
-|<img width=200 src="https://user-images.githubusercontent.com/48354989/205481015-7fdbfa1b-9dbe-4c3a-ba46-4e155e4f4178.png">|막차|- 경로상에 있는 승차지의 **막차 시간**을 알려줍니다.<br/>- 승차지 사이의 이동 거리와 막차 시간을 고려하여, **첫 승차지에 탑승하러 출발해야 하는 찐-막차 시간**을 알려줍니다.<br/>|
-|<img width=200 src="https://user-images.githubusercontent.com/48354989/205481015-7fdbfa1b-9dbe-4c3a-ba46-4e155e4f4178.png">|알람|- 사용자가 원하는 경로의 막차 시간 00분 전에 알람을 설정할 수 있습니다.<br/>- 알람을 소리 또는 진동으로 선택할 수 있습니다.<br/>- 실시간으로 변동되는 막차 시간을 계산해서 알람을 알려줍니다.<br/>|
-|<img width=200 src="https://user-images.githubusercontent.com/48354989/205480897-3bb391fa-174e-4622-b16c-1a4817c74f78.png">|미션|- 사용자의 현재 **실시간 위치**를 보여줍니다.<br/>- **목적지까지의 경로**를 표시해줍니다.<br/>- 막차 시간보다 먼저 도착할지 **시합**할 수 있습니다.<br/>|
+## 🗺️ 지도
+- 사용자의 현재 위치를 **실시간으로 트래킹**하여 보여줍니다.
+- 지도상의 임의의 지점을 클릭하면 **현 위치로부터의 거리를 포함한 상세 정보**를 보여줍니다.
+- 막차 알람이 설정되어 있으면 화면 하단에 **알람 정보**를 보여줍니다.
 
-## 팀 소개 🧑‍🤝‍🧑 
+|지도|지도|
+|:------:|:-----:|
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207513688-f2beffbc-046c-4005-affe-69fe2f6120f0.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207513754-5e50e63a-1b1d-49f6-9f4a-b94c784f2699.gif"> |
+
+## 🔍 검색
+- 원하는 장소를 검색할 수 있습니다.
+- 목적지에 갈 수 있는 대중교통 경로를 알려줍니다.
+
+|검색|검색|검색|
+|:------:|:-----:|:-----:|
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207515368-9e24608f-31f7-426b-80e0-7867f9da2e30.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207515372-c589c3e5-538d-4090-a578-887ca149537e.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207515376-35af8019-c240-46a9-b9a4-680fb83a6d37.gif"> |
+
+## 🚌 막차
+- 경로상에 있는 승차지의 막차 시간을 알려줍니다.
+- 승차지 사이의 이동 거리와 막차 시간을 고려하여, 첫 승차지에 탑승하러 출발해야 하는 찐-막차 시간을 알려줍니다.
+
+|막차|막차|
+|:------:|:-----:|
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207516539-b8f4fe17-f119-4bee-a3f4-266baaebbd13.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207520444-4bbe104b-74da-474d-bb15-4326de3edc04.gif"> |
+
+## ⏰ 알람
+- 사용자가 원하는 경로의 막차 시간 00분 전에 알람을 설정할 수 있습니다.
+- 알람을 소리 또는 진동으로 선택할 수 있습니다.
+
+|알람|알람|
+|:------:|:-----:|
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207517640-86b73e4a-3b2e-4c2c-9b79-966e09264fc1.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207517641-f73be4a2-db02-46ff-a1cb-0518388ce27e.gif"> |
+
+## 🏃🏻 미션
+- 사용자의 현재 실시간 위치를 보여줍니다.
+- 목적지까지의 경로를 표시해줍니다.
+- 막차시간보다 먼저 도착할지 시합할 수 있습니다.
+
+|미션|미션|
+|:------:|:-----:|
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207521798-682d24d8-197c-4e9a-ab02-bad3ec67f26c.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207518265-273d3893-f0c9-424e-9b8e-0aaec3174b65.gif"> |
+
+</br>
+
+# 팀 소개 🧑‍🤝‍🧑 
 | K008 김시진 | K037 이종성 | K039 이지민| K048 조경현|
 |:-----------:|:----------:|:----------:|:----------:|
 |<img src="https://user-images.githubusercontent.com/74500793/200560529-5c77f1a6-bcdc-4517-a13f-1f274683f530.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560658-e61ebec8-5e5d-42cf-9a65-a9f34bbebde7.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560030-6b96b399-e1c0-40d9-8901-2a959d437ab5.png" width="150" height="150">|<img src="https://user-images.githubusercontent.com/74500793/200560802-28af2528-a1e9-48cb-9e5e-889793bb53bb.png" width="150" height="150">|
