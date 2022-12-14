@@ -20,6 +20,8 @@
 
 사용자의 현재 위치와 막차시간을 실시간으로 보여주며 사용자가 이동해야할 경로를 안내합니다
 
+### [시연 영상](https://www.youtube.com/watch?v=U1i6KJxiKF0)
+
 ### [앱 실행해보러 가기](https://github.com/boostcampwm-2022/android10-PlzStop/releases/tag/v1.0.0)
 
 ## 팀 소개 🧑‍🤝‍🧑 
