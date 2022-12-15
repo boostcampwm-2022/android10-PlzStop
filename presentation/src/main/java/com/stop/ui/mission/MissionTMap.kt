@@ -1,7 +1,6 @@
 package com.stop.ui.mission
 
 import android.content.Context
-import android.graphics.Color
 import androidx.core.content.ContextCompat
 import com.skt.tmap.TMapPoint
 import com.skt.tmap.overlay.TMapPolyLine
@@ -17,9 +16,7 @@ class MissionTMap(
         val points = arrayListOf(nowLocation, beforeLocation)
         val polyLine = TMapPolyLine(id, points).apply {
             lineColor = ContextCompat.getColor(context, color)
-            lineWidth = LINE_WIDTH
-            outLineColor = Color.WHITE
-            outLineWidth = OUT_LINE_WIDTH
+            outLineColor = ContextCompat.getColor(context, color)
         }
         
         tMapView.addTMapPolyLine(polyLine)
@@ -41,10 +38,5 @@ class MissionTMap(
                 linePoints.add(TMapPoint(points.last().toDouble(), points.first().toDouble()))
             }
         }
-    }
-
-    companion object {
-        private const val LINE_WIDTH = 7F
-        private const val OUT_LINE_WIDTH = 10F
     }
 }
