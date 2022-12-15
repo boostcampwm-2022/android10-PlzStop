@@ -111,8 +111,7 @@ class AlarmSettingFragment : Fragment() {
         //alarmSettingViewModel.makeAlarmWorker(transportLastTime.timeToBoard)
 
         val navController = findNavController()
-        navController.setGraph(R.navigation.nav_graph)
-        navController.popBackStack(R.id.action_global_mapFragment, false)
+        navController.popBackStack(R.id.mapFragment, false)
         requireActivity().viewModelStore.clear()
     }
 
