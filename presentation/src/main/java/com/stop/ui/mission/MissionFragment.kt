@@ -54,6 +54,9 @@ class MissionFragment : Fragment(), MissionHandler {
 
     private lateinit var backPressedCallback: OnBackPressedCallback
 
+    private lateinit var userInfoReceiver: BroadcastReceiver
+    private lateinit var timeReceiver: BroadcastReceiver
+
     var personCurrentLocation = Location(37.553836, 126.969652)
     var firstTime = 0
 
@@ -61,8 +64,8 @@ class MissionFragment : Fragment(), MissionHandler {
         super.onCreate(savedInstanceState)
 
         setMissionService()
-        setBroadcastReceiver()
-        //setTimeOverBroadcastReceiver()
+        setUserInfoBroadcastReceiver()
+        setTimeOverBroadcastReceiver()
         missionViewModel.missionStatus.value = MissionStatus.ONGOING
     }
 
@@ -103,9 +106,12 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
-
         tMap.onDestroy()
+
+        requireActivity().unregisterReceiver(userInfoReceiver)
+        requireActivity().unregisterReceiver(timeReceiver)
+
+        super.onDestroy()
     }
 
     private fun setMissionService() {
@@ -117,12 +123,12 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    private fun setBroadcastReceiver() {
+    private fun setUserInfoBroadcastReceiver() {
         val intentFilter = IntentFilter().apply {
             addAction(MissionService.MISSION_USER_INFO)
         }
 
-        val receiver = object : BroadcastReceiver() {
+        userInfoReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 missionViewModel.lastTime.value = intent?.getStringExtra(MISSION_LAST_TIME)
                 missionViewModel.userLocations.value =
@@ -130,7 +136,7 @@ class MissionFragment : Fragment(), MissionHandler {
             }
         }
 
-        requireActivity().registerReceiver(receiver, intentFilter)
+        requireActivity().registerReceiver(userInfoReceiver, intentFilter)
     }
 
     private fun setTimeOverBroadcastReceiver() {
@@ -138,7 +144,7 @@ class MissionFragment : Fragment(), MissionHandler {
             addAction(MISSION_TIME_OVER)
         }
 
-        val receiver = object : BroadcastReceiver() {
+        timeReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.getBooleanExtra(MISSION_TIME_OVER, false) == true) {
                     Snackbar.make(
@@ -151,7 +157,7 @@ class MissionFragment : Fragment(), MissionHandler {
 
             }
         }
-        requireActivity().registerReceiver(receiver, intentFilter)
+        requireActivity().registerReceiver(timeReceiver, intentFilter)
     }
 
     private fun setTimer() {
@@ -161,6 +167,8 @@ class MissionFragment : Fragment(), MissionHandler {
         } else {
             requireActivity().startService(missionServiceIntent)
         }
+
+        missionServiceIntent.removeExtra(MISSION_LAST_TIME)
     }
 
     private fun setDataBinding() {
@@ -338,7 +346,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setSuccessAnimation() {
-        with (binding.lottieSuccess) {
+        with(binding.lottieSuccess) {
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
@@ -358,7 +366,7 @@ class MissionFragment : Fragment(), MissionHandler {
     }
 
     private fun setFailAnimation() {
-        with (binding.lottieFail) {
+        with(binding.lottieFail) {
             visibility = View.VISIBLE
             playAnimation()
             addAnimatorListener(object : Animator.AnimatorListener {

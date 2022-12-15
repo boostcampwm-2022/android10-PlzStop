@@ -140,19 +140,19 @@ class MissionService : LifecycleService() {
 
     private fun getTimer(intent: Intent?) {
         val lastTimeString = intent?.getStringExtra(MISSION_LAST_TIME)
-        val lastTimeMillis = makeFullTime(lastTimeString ?: "").timeInMillis
-        val nowTimeMillis = System.currentTimeMillis()
-        var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
+        if (lastTimeString != null) {
+            val lastTimeMillis = makeFullTime(lastTimeString).timeInMillis
+            val nowTimeMillis = System.currentTimeMillis()
+            var diffTimeMillis = if (lastTimeMillis > nowTimeMillis) lastTimeMillis - nowTimeMillis else 0L
 
-        timer.cancel()
-        timer = lifecycleScope.launch(Dispatchers.IO) {
-            while (diffTimeMillis > 0L) {
-                lastTime = convertTimeMillisToString(diffTimeMillis)
-                sendUserInfo()
-                diffTimeMillis -= 1_000L
-                delay(1_000L)
-            }
-            if (diffTimeMillis == 0L) {
+            timer.cancel()
+            timer = lifecycleScope.launch(Dispatchers.IO) {
+                while (diffTimeMillis > 0L) {
+                    lastTime = convertTimeMillisToString(diffTimeMillis)
+                    sendUserInfo()
+                    diffTimeMillis -= 1_000L
+                    delay(1_000L)
+                }
                 sendMissionOver()
             }
         }
