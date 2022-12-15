@@ -147,7 +147,7 @@ class MissionService : LifecycleService() {
 
             timer.cancel()
             timer = lifecycleScope.launch(Dispatchers.IO) {
-                while (diffTimeMillis > 0L) {
+                while (diffTimeMillis > -1_000L) {
                     lastTime = convertTimeMillisToString(diffTimeMillis)
                     sendUserInfo()
                     diffTimeMillis -= 1_000L
