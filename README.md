@@ -49,7 +49,7 @@
 
 |검색|검색|검색|
 |:------:|:-----:|:-----:|
-| <img width="200" src="https://user-images.githubusercontent.com/61337202/207515368-9e24608f-31f7-426b-80e0-7867f9da2e30.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207515372-c589c3e5-538d-4090-a578-887ca149537e.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207515376-35af8019-c240-46a9-b9a4-680fb83a6d37.gif"> |
+| <img width="200" src="https://user-images.githubusercontent.com/61337202/207515368-9e24608f-31f7-426b-80e0-7867f9da2e30.gif"> | <img width="200" src="https://user-images.githubusercontent.com/61337202/207515372-c589c3e5-538d-4090-a578-887ca149537e.gif"> | <img width="200" src="https://user-images.githubusercontent.com/48354989/207786535-33848e1a-e1ae-44e9-b70d-d3674fc4b8f0.gif"> |
 
 ## 🚌 막차
 - 경로상에 있는 승차지의 막차 시간을 알려줍니다.
