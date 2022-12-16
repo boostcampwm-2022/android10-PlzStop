@@ -4,6 +4,6 @@ import com.stop.domain.model.nearplace.PlaceUseCaseItem
 
 interface InsertRecentPlaceSearchUseCase {
 
-    suspend fun insertRecentPlaceSearch(placeUseCaseItem: PlaceUseCaseItem)
+    suspend operator fun invoke(placeUseCaseItem: PlaceUseCaseItem)
 
 }

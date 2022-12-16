@@ -8,7 +8,7 @@ class InsertRecentPlaceSearchUseCaseImpl @Inject constructor(
     private val recentPlaceSearchRepository: RecentPlaceSearchRepository
 ) : InsertRecentPlaceSearchUseCase {
 
-    override suspend fun insertRecentPlaceSearch(placeUseCaseItem: PlaceUseCaseItem) {
+    override suspend operator fun invoke(placeUseCaseItem: PlaceUseCaseItem) {
         recentPlaceSearchRepository.insertRecentPlaceSearch(placeUseCaseItem)
     }
 

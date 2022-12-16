@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface GetRecentPlaceSearchUseCase {
 
-    fun getAllRecentPlaceSearch(): Flow<List<PlaceUseCaseItem>>
+    operator fun invoke(): Flow<List<PlaceUseCaseItem>>
 
 }

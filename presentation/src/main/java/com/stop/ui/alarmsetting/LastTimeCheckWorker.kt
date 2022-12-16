@@ -84,7 +84,7 @@ class LastTimeCheckWorker @AssistedInject constructor(
     private suspend fun checkLastTransportTime() {
         while (isStopped.not()) {
            //TODO 막차시간 가져오는 API로 변경 해야합니다.
-            getNearPlacesUseCase.getNearPlaces(
+            getNearPlacesUseCase(
                 "아남타워",
                 126.969652,
                 37.553836

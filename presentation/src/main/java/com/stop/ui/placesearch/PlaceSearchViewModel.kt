@@ -64,7 +64,7 @@ class PlaceSearchViewModel @Inject constructor(
     val distance: LiveData<Float>
         get() = _distance
 
-    val recentPlaceSearch: StateFlow<List<PlaceUseCaseItem>> = getRecentPlaceSearchUseCase.getAllRecentPlaceSearch().stateIn(
+    val recentPlaceSearch: StateFlow<List<PlaceUseCaseItem>> = getRecentPlaceSearchUseCase().stateIn(
         scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = emptyList()
     )
 
@@ -80,7 +80,7 @@ class PlaceSearchViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 _nearPlaces.emit(
-                    getNearPlacesUseCase.getNearPlaces(
+                    getNearPlacesUseCase(
                         searchKeyword, currentLocation.longitude, currentLocation.latitude
                     )
                 )
@@ -152,13 +152,13 @@ class PlaceSearchViewModel @Inject constructor(
 
     fun insertRecentSearchPlace(placeUseCaseItem: PlaceUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            insertRecentPlaceSearchUseCase.insertRecentPlaceSearch(placeUseCaseItem)
+            insertRecentPlaceSearchUseCase(placeUseCaseItem)
         }
     }
 
     fun deleteRecentSearchPlace() {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteRecentPlaceSearchUseCase.deleteAllRecentPlaceSearch()
+            deleteRecentPlaceSearchUseCase()
         }
     }
 
