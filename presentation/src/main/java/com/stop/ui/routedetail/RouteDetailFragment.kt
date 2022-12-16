@@ -1,14 +1,14 @@
 package com.stop.ui.routedetail
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.stop.R
 import androidx.navigation.navGraphViewModels
+import com.stop.R
 import com.stop.databinding.FragmentRouteDetailBinding
 import com.stop.domain.model.route.tmap.custom.Coordinate
 import com.stop.ui.route.RouteResultViewModel
@@ -16,8 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RouteDetailFragment : Fragment(), RouteDetailHandler {
+
     private var _binding: FragmentRouteDetailBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentRouteDetailBinding
+        get() = _binding!!
 
     private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
 
@@ -28,9 +30,16 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRouteDetailBinding.inflate(inflater, container, false)
+
         initBinding()
 
         return binding.root
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.routeResultViewModel = routeResultViewModel
+        binding.itinerary = routeResultViewModel.itinerary.value
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,18 +48,6 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         initTMap()
         initView()
         setRecyclerView()
-    }
-
-    override fun alertTMapReady() {
-        routeResultViewModel.itinerary.value?.let {
-            tMap.drawRoutes(it.routes)
-        }
-    }
-
-    private fun initBinding() {
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.routeResultViewModel = routeResultViewModel
-        binding.itinerary = routeResultViewModel.itinerary.value
     }
 
     private fun initTMap() {
@@ -93,9 +90,16 @@ class RouteDetailFragment : Fragment(), RouteDetailHandler {
         adapter.submitList(routeResultViewModel.getRouteItems())
     }
 
+    override fun alertTMapReady() {
+        routeResultViewModel.itinerary.value?.let {
+            tMap.drawRoutes(it.routes)
+        }
+    }
+
     override fun onDestroyView() {
         _binding = null
 
         super.onDestroyView()
     }
+
 }

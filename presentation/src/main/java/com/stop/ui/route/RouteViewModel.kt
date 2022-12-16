@@ -27,9 +27,6 @@ class RouteViewModel @Inject constructor(
     private val getLastTransportTimeUseCase: GetLastTransportTimeUseCase,
 ) : ViewModel() {
 
-    private var clickedItineraryIndex: Int = -1
-    var alertDialog: AlertDialog? = null
-
     private val _origin = MutableLiveData<Place>()
     val origin: LiveData<Place>
         get() = _origin
@@ -53,6 +50,9 @@ class RouteViewModel @Inject constructor(
     private val _isLoading = MutableLiveData<Event<Boolean>>()
     val isLoading: LiveData<Event<Boolean>>
         get() = _isLoading
+
+    private var clickedItineraryIndex: Int = -1
+    var alertDialog: AlertDialog? = null
 
     private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         val errorMessage = when (throwable) {

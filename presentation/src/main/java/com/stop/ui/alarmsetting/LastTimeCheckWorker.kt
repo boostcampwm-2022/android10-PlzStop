@@ -1,4 +1,4 @@
-package com.stop.alarm
+package com.stop.ui.alarmsetting
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -10,9 +10,10 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.stop.R
+import com.stop.util.AlarmFunctions
 import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
-import com.stop.isMoreThanOreo
-import com.stop.makeFullTime
+import com.stop.util.isMoreThanOreo
+import com.stop.util.makeFullTime
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.assisted.Assisted
@@ -132,4 +133,5 @@ class LastTimeCheckWorker @AssistedInject constructor(
         private const val TWO_MINUTES = 120_000L
         private const val ONE_MINUTES = 60_000L
     }
+
 }

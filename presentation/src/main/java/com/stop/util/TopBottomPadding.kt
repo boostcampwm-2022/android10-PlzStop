@@ -1,4 +1,4 @@
-package com.stop
+package com.stop.util
 
 import android.content.Context
 

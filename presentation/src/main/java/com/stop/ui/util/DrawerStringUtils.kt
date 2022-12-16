@@ -5,6 +5,7 @@ import com.stop.model.route.RouteItem
 import java.text.DecimalFormat
 
 object DrawerStringUtils {
+
     @JvmStatic
     fun getTimeString(time: Int): String {
         val timeString = StringBuilder()
@@ -57,4 +58,5 @@ object DrawerStringUtils {
             "${distance.toInt()}m"
         }
     }
+
 }

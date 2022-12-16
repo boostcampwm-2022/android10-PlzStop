@@ -1,4 +1,4 @@
-package com.stop.alarm
+package com.stop.ui.alarmstart
 
 import android.app.AlarmManager
 import android.content.Context
@@ -9,9 +9,9 @@ import android.os.*
 import androidx.lifecycle.LifecycleService
 import androidx.lifecycle.lifecycleScope
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
-import com.stop.isMoreThanOreoUnderRedVelVet
-import com.stop.isMoreThanSnow
-import com.stop.isUnderOreo
+import com.stop.util.isMoreThanOreoUnderRedVelVet
+import com.stop.util.isMoreThanSnow
+import com.stop.util.isUnderOreo
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.util.getBroadcastPendingIntent
 import dagger.hilt.android.AndroidEntryPoint

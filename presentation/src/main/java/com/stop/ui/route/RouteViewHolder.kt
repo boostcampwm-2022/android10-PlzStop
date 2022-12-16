@@ -2,9 +2,7 @@ package com.stop.ui.route
 
 import android.graphics.Color
 import android.view.View
-import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.R
 import com.stop.databinding.RouteItemBinding
@@ -16,7 +14,6 @@ class RouteViewHolder(
     private val binding: RouteItemBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    private val density = binding.root.context.resources.displayMetrics.density
     private var routeItemColor = 0
 
     fun bind(itinerary: Itinerary) {
@@ -128,7 +125,4 @@ class RouteViewHolder(
         binding.textViewRequiredMinute.text = minute.toString()
     }
 
-    private fun convertDpToPixel(size: Float): Int {
-        return (size * density + 0.5f).toInt()
-    }
 }

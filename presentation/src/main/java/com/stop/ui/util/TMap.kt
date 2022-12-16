@@ -8,7 +8,7 @@ import com.skt.tmap.TMapPoint
 import com.skt.tmap.TMapView
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.stop.BuildConfig
-import com.stop.model.Location
+import com.stop.model.map.Location
 import com.stop.ui.map.MapHandler
 import com.stop.ui.mission.MissionHandler
 import com.stop.ui.routedetail.RouteDetailHandler
@@ -17,6 +17,7 @@ open class TMap(
     private val context: Context,
     private val handler: Handler
 ) {
+
     lateinit var tMapView: TMapView
     lateinit var initLocation: Location
 
@@ -123,4 +124,5 @@ open class TMap(
     fun onDestroy() {
         tMapView.onDestroy()
     }
+
 }

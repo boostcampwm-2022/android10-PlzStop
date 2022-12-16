@@ -2,17 +2,17 @@ package com.stop.ui.route
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
 import com.stop.R
 import com.stop.databinding.FragmentRouteBinding
@@ -26,14 +26,25 @@ class RouteFragment : Fragment() {
     private val binding: FragmentRouteBinding
         get() = _binding!!
 
-    private val routeViewModel: RouteViewModel by activityViewModels()
-    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
-
-    private var args: RouteFragmentArgs? = null
-
     private lateinit var adapter: RouteAdapter
     private lateinit var backPressedCallback: OnBackPressedCallback
     private lateinit var alertDialog: AlertDialog
+
+    private var args: RouteFragmentArgs? = null
+
+    private val routeViewModel: RouteViewModel by activityViewModels()
+    private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        backPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack(R.id.mapFragment, false)
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,34 +58,25 @@ class RouteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentRouteBinding.inflate(layoutInflater)
+
+        initBinding()
+
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-
-        backPressedCallback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                findNavController().popBackStack(R.id.mapFragment, false)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
+    private fun initBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.viewModel = routeViewModel
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setBinding()
         setListener()
         setRecyclerView()
         setStartAndDestinationText()
         initDialog()
         setObserve()
-    }
-
-    private fun setBinding() {
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = routeViewModel
     }
 
     private fun setListener() {
@@ -110,6 +112,37 @@ class RouteFragment : Fragment() {
             }
         })
         binding.recyclerviewRoute.adapter = adapter
+    }
+
+    private fun setStartAndDestinationText() {
+        args?.start?.let {
+            routeViewModel.setOrigin(it)
+        }
+        args?.end?.let {
+            routeViewModel.setDestination(it)
+        }
+
+        requireArguments().clear()
+
+        if (args?.start != null || args?.end != null) {
+            routeViewModel.patchRoute()
+        }
+    }
+
+    private fun initDialog() {
+        val viewModelDialog = routeViewModel.alertDialog
+        if (viewModelDialog != null) {
+            alertDialog = viewModelDialog
+            return
+        }
+
+        val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
+        alertDialog = AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        alertDialog.window?.setBackgroundDrawableResource(R.color.transparent)
+        routeViewModel.alertDialog = alertDialog
     }
 
     private fun setObserve() {
@@ -150,41 +183,11 @@ class RouteFragment : Fragment() {
         }
     }
 
-    private fun setStartAndDestinationText() {
-        args?.start?.let {
-            routeViewModel.setOrigin(it)
-        }
-        args?.end?.let {
-            routeViewModel.setDestination(it)
-        }
-
-        requireArguments().clear()
-
-        if (args?.start != null || args?.end != null) {
-            routeViewModel.patchRoute()
-        }
-    }
-
-    private fun initDialog() {
-        val viewModelDialog = routeViewModel.alertDialog
-        if (viewModelDialog != null) {
-            alertDialog = viewModelDialog
-            return
-        }
-
-        val dialogView = layoutInflater.inflate(R.layout.dialog_progress, null)
-        alertDialog = AlertDialog.Builder(requireContext())
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-        alertDialog.window?.setBackgroundDrawableResource(R.color.transparent)
-        routeViewModel.alertDialog = alertDialog
-    }
-
     override fun onDestroyView() {
         _binding = null
         args = null
 
         super.onDestroyView()
     }
+
 }

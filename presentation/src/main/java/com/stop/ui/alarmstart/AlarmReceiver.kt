@@ -1,4 +1,4 @@
-package com.stop.alarm
+package com.stop.ui.alarmstart
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.stop.AlarmActivity
 import com.stop.R
-import com.stop.isMoreThanOreo
+import com.stop.util.isMoreThanOreo
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_HIGH_ID
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID

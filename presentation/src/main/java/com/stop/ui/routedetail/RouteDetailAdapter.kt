@@ -15,6 +15,7 @@ import com.stop.model.route.RouteItemType
 class RouteDetailAdapter(
     private val onRouteItemClickListener: OnRouteItemClickListener
 ): ListAdapter<RouteItem, RecyclerView.ViewHolder>(diffUtil) {
+
     class FirstViewHolder(
         private val binding: RouteFirstItemBinding
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -99,4 +100,5 @@ class RouteDetailAdapter(
             }
         }
     }
+
 }

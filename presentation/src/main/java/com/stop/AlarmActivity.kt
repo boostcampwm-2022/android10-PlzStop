@@ -7,6 +7,8 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import com.stop.databinding.ActivityAlarmBinding
+import com.stop.util.isMoreThanOreoMr1
+import com.stop.util.navigationHeight
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

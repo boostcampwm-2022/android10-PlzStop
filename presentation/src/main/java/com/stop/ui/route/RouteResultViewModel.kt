@@ -13,6 +13,7 @@ import com.stop.domain.model.route.tmap.custom.TransportRoute
 import com.stop.model.route.*
 
 class RouteResultViewModel : ViewModel() {
+
     private val _itinerary = MutableLiveData<Itinerary>()
     val itinerary: LiveData<Itinerary>
         get() = _itinerary
@@ -146,4 +147,5 @@ class RouteResultViewModel : ViewModel() {
         private const val MAIN_WALK_GREY = "#C0C5CA"
         private const val MAIN_YELLOW = "#FFC766"
     }
+
 }

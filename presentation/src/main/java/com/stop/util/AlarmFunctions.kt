@@ -1,4 +1,4 @@
-package com.stop.alarm
+package com.stop.util
 
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -6,17 +6,15 @@ import android.content.Context
 import android.content.Intent
 import com.stop.MainActivity
 import com.stop.R
-import com.stop.makeFullTime
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_ID
-import com.stop.util.getActivityPendingIntent
-import com.stop.util.getAlarmDefaultNotification
-import com.stop.util.getBroadcastPendingIntent
+import com.stop.ui.alarmstart.AlarmReceiver
 
 class AlarmFunctions(
     private val context: Context
 ) {
+
     fun callAlarm(lastTime: String, alarmTime: Int) {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

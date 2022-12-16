@@ -14,7 +14,7 @@ import com.stop.domain.usecase.nearplace.GetNearPlacesUseCase
 import com.stop.domain.usecase.nearplace.GetRecentPlaceSearchUseCase
 import com.stop.domain.usecase.nearplace.InsertRecentPlaceSearchUseCase
 import com.stop.model.Event
-import com.stop.model.Location
+import com.stop.model.map.Location
 import com.stop.model.route.Coordinate
 import com.stop.ui.map.MapTMap
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,39 +34,45 @@ class PlaceSearchViewModel @Inject constructor(
     private val insertRecentPlaceSearchUseCase: InsertRecentPlaceSearchUseCase
 ) : ViewModel() {
 
-    // 기본 주소로 서울역 주소 지정
-    var tMap: MapTMap? = null
-    var currentLocation = Location(37.553836, 126.969652)
-    var clickedPlaceName = ""
-    var panelInfo: com.stop.model.route.Place? = null
-
     private val _nearPlaces = MutableStateFlow<List<PlaceUseCaseItem>>(emptyList())
-    val nearPlaces: StateFlow<List<PlaceUseCaseItem>> = _nearPlaces
+    val nearPlaces: StateFlow<List<PlaceUseCaseItem>>
+        get() = _nearPlaces
 
     private val _isNearPlacesNotEmpty = MutableStateFlow(false)
-    val isNearPlacesNotEmpty: StateFlow<Boolean> = _isNearPlacesNotEmpty
+    val isNearPlacesNotEmpty: StateFlow<Boolean>
+        get() = _isNearPlacesNotEmpty
 
     private val errorMessageChannel = Channel<String>()
     val errorMessage = errorMessageChannel.receiveAsFlow()
 
     private val _clickPlaceUseCaseItem = MutableLiveData<Event<PlaceUseCaseItem>>()
-    val clickPlaceUseCaseItem: LiveData<Event<PlaceUseCaseItem>> = _clickPlaceUseCaseItem
+    val clickPlaceUseCaseItem: LiveData<Event<PlaceUseCaseItem>>
+        get() = _clickPlaceUseCaseItem
 
     private val clickCurrentLocationChannel = Channel<Boolean>()
     val clickCurrentLocation = clickCurrentLocationChannel.receiveAsFlow()
 
     private val _geoLocation = MutableLiveData<GeoLocationInfo>()
-    val geoLocation: LiveData<GeoLocationInfo> = _geoLocation
+    val geoLocation: LiveData<GeoLocationInfo>
+        get() = _geoLocation
 
     private val _panelVisibility = MutableLiveData(View.GONE)
-    val panelVisibility: LiveData<Int> = _panelVisibility
+    val panelVisibility: LiveData<Int>
+        get() = _panelVisibility
 
     private val _distance = MutableLiveData<Float>()
-    val distance: LiveData<Float> = _distance
+    val distance: LiveData<Float>
+        get() = _distance
 
     val recentPlaceSearch: StateFlow<List<PlaceUseCaseItem>> = getRecentPlaceSearchUseCase.getAllRecentPlaceSearch().stateIn(
-            scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = emptyList()
-        )
+        scope = viewModelScope, started = SharingStarted.WhileSubscribed(), initialValue = emptyList()
+    )
+
+    // 기본 주소로 서울역 주소 지정
+    var tMap: MapTMap? = null
+    var currentLocation = Location(37.553836, 126.969652)
+    var clickedPlaceName = ""
+    var panelInfo: com.stop.model.route.Place? = null
 
     fun getNearPlaces(
         searchKeyword: String,
@@ -159,4 +165,5 @@ class PlaceSearchViewModel @Inject constructor(
     fun setPanelVisibility(panelVisibility: Int) {
         _panelVisibility.value = panelVisibility
     }
+
 }

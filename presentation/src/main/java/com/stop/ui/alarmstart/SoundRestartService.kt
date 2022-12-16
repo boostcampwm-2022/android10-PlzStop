@@ -1,4 +1,4 @@
-package com.stop.alarm
+package com.stop.ui.alarmstart
 
 import android.app.Service
 import android.content.Intent
@@ -34,4 +34,5 @@ class SoundRestartService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
+
 }

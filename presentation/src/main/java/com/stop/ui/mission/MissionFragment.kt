@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -26,10 +25,11 @@ import com.stop.R
 import com.stop.databinding.FragmentMissionBinding
 import com.stop.domain.model.route.tmap.custom.Place
 import com.stop.domain.model.route.tmap.custom.WalkRoute
-import com.stop.isMoreThanOreo
-import com.stop.model.AlarmStatus
-import com.stop.model.Location
-import com.stop.model.MissionStatus
+import com.stop.util.isMoreThanOreo
+import com.stop.util.isMoreThanQ
+import com.stop.model.alarm.AlarmStatus
+import com.stop.model.map.Location
+import com.stop.model.mission.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
 import com.stop.ui.mission.MissionService.Companion.MISSION_LAST_TIME
 import com.stop.ui.mission.MissionService.Companion.MISSION_LOCATIONS
@@ -49,34 +49,13 @@ class MissionFragment : Fragment(), MissionHandler {
     private val alarmSettingViewModel: AlarmSettingViewModel by activityViewModels()
 
     private lateinit var tMap: MissionTMap
-
     private lateinit var missionServiceIntent: Intent
-
     private lateinit var backPressedCallback: OnBackPressedCallback
-
     private lateinit var userInfoReceiver: BroadcastReceiver
     private lateinit var timeReceiver: BroadcastReceiver
 
     var personCurrentLocation = Location(37.553836, 126.969652)
     var firstTime = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setMissionService()
-        setUserInfoBroadcastReceiver()
-        setTimeOverBroadcastReceiver()
-        missionViewModel.missionStatus.value = MissionStatus.ONGOING
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentMissionBinding.inflate(layoutInflater)
-
-        return binding.root
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -89,29 +68,13 @@ class MissionFragment : Fragment(), MissionHandler {
         requireActivity().onBackPressedDispatcher.addCallback(this, backPressedCallback)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        setTimer()
-        setDataBinding()
-        initTMap()
-        setMissionOver()
-        checkLocationPermission()
-    }
-
-    override fun onDestroyView() {
-        _binding = null
-
-        super.onDestroyView()
-    }
-
-    override fun onDestroy() {
-        tMap.onDestroy()
-
-        requireActivity().unregisterReceiver(userInfoReceiver)
-        requireActivity().unregisterReceiver(timeReceiver)
-
-        super.onDestroy()
+        setMissionService()
+        setUserInfoBroadcastReceiver()
+        setTimeOverBroadcastReceiver()
+        missionViewModel.missionStatus.value = MissionStatus.ONGOING
     }
 
     private fun setMissionService() {
@@ -160,6 +123,53 @@ class MissionFragment : Fragment(), MissionHandler {
         requireActivity().registerReceiver(timeReceiver, intentFilter)
     }
 
+    private fun setFailAnimation() {
+        with(binding.lottieFail) {
+            visibility = View.VISIBLE
+            playAnimation()
+            addAnimatorListener(object : Animator.AnimatorListener {
+
+                override fun onAnimationEnd(animation: Animator) {
+                    missionViewModel.missionStatus.value = MissionStatus.OVER
+                }
+
+                override fun onAnimationStart(animation: Animator) = Unit
+                override fun onAnimationCancel(animation: Animator) = Unit
+                override fun onAnimationRepeat(animation: Animator) = Unit
+
+            })
+        }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMissionBinding.inflate(layoutInflater)
+
+        initBinding()
+
+        return binding.root
+    }
+
+    private fun initBinding() {
+        alarmSettingViewModel.getAlarm()
+
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.missionViewModel = missionViewModel
+        binding.alarmSettingViewModel = alarmSettingViewModel
+        binding.fragment = this@MissionFragment
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setTimer()
+        initTMap()
+        setMissionOver()
+        checkLocationPermission()
+    }
+
     private fun setTimer() {
         missionServiceIntent.putExtra(MISSION_LAST_TIME, alarmSettingViewModel.alarmItem.value?.lastTime)
         if (isMoreThanOreo()) {
@@ -171,18 +181,48 @@ class MissionFragment : Fragment(), MissionHandler {
         missionServiceIntent.removeExtra(MISSION_LAST_TIME)
     }
 
-    private fun setDataBinding() {
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.missionViewModel = missionViewModel
-        binding.alarmSettingViewModel = alarmSettingViewModel
-        binding.fragment = this@MissionFragment
-    }
-
     private fun initTMap() {
         tMap = MissionTMap(requireActivity(), this)
         tMap.init()
 
         binding.constraintLayoutContainer.addView(tMap.tMapView)
+    }
+
+    private fun setMissionOver() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            missionViewModel.missionStatus.collect { missionStatus ->
+                if (missionStatus == MissionStatus.OVER) {
+                    alarmSettingViewModel.deleteAlarm()
+                    missionServiceIntent.putExtra(MISSION_OVER, true)
+                    if (isMoreThanOreo()) {
+                        requireActivity().startForegroundService(missionServiceIntent)
+                    } else {
+                        requireActivity().startService(missionServiceIntent)
+                    }
+                    requireActivity().stopService(missionServiceIntent)
+                    missionViewModel.missionStatus.value = MissionStatus.BEFORE
+                    alarmSettingViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
+
+                    Intent(requireActivity(), MainActivity::class.java).apply {
+                        flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        startActivity(this)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun checkLocationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
+                    requireActivity(),
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
+                )
+            ) {
+                setPermissionDialog(requireActivity())
+            }
+        }
     }
 
     fun setCompassMode() {
@@ -365,90 +405,48 @@ class MissionFragment : Fragment(), MissionHandler {
         }
     }
 
-    private fun setFailAnimation() {
-        with(binding.lottieFail) {
-            visibility = View.VISIBLE
-            playAnimation()
-            addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {
-                }
-
-                override fun onAnimationEnd(animation: Animator) {
-                    missionViewModel.missionStatus.value = MissionStatus.OVER
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                }
-
-                override fun onAnimationRepeat(animation: Animator) {
-                }
-            })
-        }
-    }
-
-    private fun setMissionOver() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            missionViewModel.missionStatus.collect { missionStatus ->
-                if (missionStatus == MissionStatus.OVER) {
-                    alarmSettingViewModel.deleteAlarm()
-                    missionServiceIntent.putExtra(MISSION_OVER, true)
-                    if (isMoreThanOreo()) {
-                        requireActivity().startForegroundService(missionServiceIntent)
-                    } else {
-                        requireActivity().startService(missionServiceIntent)
-                    }
-                    requireActivity().stopService(missionServiceIntent)
-                    missionViewModel.missionStatus.value = MissionStatus.BEFORE
-                    alarmSettingViewModel.alarmStatus.value = AlarmStatus.NON_EXIST
-
-                    Intent(requireActivity(), MainActivity::class.java).apply {
-                        flags =
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-                        startActivity(this)
-                    }
-                }
-            }
-        }
-    }
-
-
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setPermissionDialog(context: Context) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle("백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.")
+        if (isMoreThanQ()) {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("백그라운드 위치 권한을 위해 항상 허용으로 설정해주세요.")
 
-        val listener = DialogInterface.OnClickListener { _, p1 ->
-            when (p1) {
-                DialogInterface.BUTTON_POSITIVE ->
-                    setBackgroundPermission()
+            val listener = DialogInterface.OnClickListener { _, p1 ->
+                when (p1) {
+                    DialogInterface.BUTTON_POSITIVE ->
+                        setBackgroundPermission()
+                }
             }
-        }
-        builder.setPositiveButton("네", listener)
-        builder.setNegativeButton("아니오", null)
+            builder.setPositiveButton("네", listener)
+            builder.setNegativeButton("아니오", null)
 
-        builder.show()
-    }
-
-    private fun checkLocationPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(
-                    requireActivity(),
-                    Manifest.permission.ACCESS_BACKGROUND_LOCATION
-                )
-            ) {
-                setPermissionDialog(requireActivity())
-            }
+            builder.show()
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     private fun setBackgroundPermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(
-                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-            ), 2
-        )
+        if (isMoreThanQ()) {
+            ActivityCompat.requestPermissions(
+                requireActivity(),
+                arrayOf(
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                ), 2
+            )
+        }
+    }
+
+    override fun onDestroyView() {
+        _binding = null
+
+        super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        tMap.onDestroy()
+
+        requireActivity().unregisterReceiver(userInfoReceiver)
+        requireActivity().unregisterReceiver(timeReceiver)
+
+        super.onDestroy()
     }
 
     companion object {
@@ -457,4 +455,5 @@ class MissionFragment : Fragment(), MissionHandler {
         private val PERMISSIONS =
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
     }
+
 }
