@@ -5,13 +5,13 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.stop.R
-import com.stop.databinding.RouteItemBinding
+import com.stop.databinding.ItemRouteBinding
 import com.stop.domain.model.route.tmap.custom.*
 import com.stop.model.route.RouteItem
 import com.stop.model.route.RouteItemType
 
 class RouteViewHolder(
-    private val binding: RouteItemBinding
+    private val binding: ItemRouteBinding
 ) : RecyclerView.ViewHolder(binding.root) {
 
     private var routeItemColor = 0

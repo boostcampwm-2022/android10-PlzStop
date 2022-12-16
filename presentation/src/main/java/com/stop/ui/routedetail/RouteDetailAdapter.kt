@@ -6,18 +6,18 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.stop.databinding.RouteFirstItemBinding
-import com.stop.databinding.RouteLastItemBinding
-import com.stop.databinding.RoutePathItemBinding
+import com.stop.databinding.ItemRouteFirstBinding
+import com.stop.databinding.ItemRouteLastBinding
+import com.stop.databinding.ItemRoutePathBinding
 import com.stop.model.route.RouteItem
 import com.stop.model.route.RouteItemType
 
 class RouteDetailAdapter(
     private val onRouteItemClickListener: OnRouteItemClickListener
-): ListAdapter<RouteItem, RecyclerView.ViewHolder>(diffUtil) {
+) : ListAdapter<RouteItem, RecyclerView.ViewHolder>(diffUtil) {
 
     class FirstViewHolder(
-        private val binding: RouteFirstItemBinding
+        private val binding: ItemRouteFirstBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
@@ -26,7 +26,7 @@ class RouteDetailAdapter(
     }
 
     class PathViewHolder(
-        private val binding: RoutePathItemBinding
+        private val binding: ItemRoutePathBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
@@ -35,7 +35,7 @@ class RouteDetailAdapter(
     }
 
     class LastViewHolder(
-        private val binding: RouteLastItemBinding
+        private val binding: ItemRouteLastBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(routeItem: RouteItem) {
             binding.routeItem = routeItem
@@ -48,15 +48,15 @@ class RouteDetailAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val viewHolder: RecyclerView.ViewHolder = when (viewType) {
             TYPE_FIRST -> {
-                binding = RouteFirstItemBinding.inflate(inflater, parent, false)
+                binding = ItemRouteFirstBinding.inflate(inflater, parent, false)
                 FirstViewHolder(binding)
             }
             TYPE_PATH -> {
-                binding = RoutePathItemBinding.inflate(inflater, parent, false)
+                binding = ItemRoutePathBinding.inflate(inflater, parent, false)
                 PathViewHolder(binding)
             }
             TYPE_LAST -> {
-                binding = RouteLastItemBinding.inflate(inflater, parent, false)
+                binding = ItemRouteLastBinding.inflate(inflater, parent, false)
                 LastViewHolder(binding)
             }
             else -> throw IllegalArgumentException("Invalid ViewType")

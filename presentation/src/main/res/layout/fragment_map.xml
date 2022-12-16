@@ -153,7 +153,7 @@
 
                 <include
                     android:id="@+id/home_bottom_sheet"
-                    layout="@layout/home_bottom_sheet"
+                    layout="@layout/bottom_sheet_home"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"

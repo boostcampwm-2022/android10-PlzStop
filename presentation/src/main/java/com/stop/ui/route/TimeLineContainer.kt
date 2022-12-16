@@ -10,7 +10,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.content.ContextCompat
 import com.stop.R
-import com.stop.databinding.TimeLineItemBinding
+import com.stop.databinding.ItemTimeLineBinding
 import com.stop.domain.model.route.tmap.custom.MoveType
 import com.stop.domain.model.route.tmap.custom.Route
 import com.stop.domain.model.route.tmap.custom.TransportRoute
@@ -37,7 +37,7 @@ class TimeLineContainer(
         overlappingWidth = overlappingMarginPixel * (routes.size - 1)
 
         routes.forEachIndexed { index, route ->
-            val timeLineItem2Binding = TimeLineItemBinding.inflate(
+            val timeLineItem2Binding = ItemTimeLineBinding.inflate(
                 LayoutInflater.from(context),
                 this@TimeLineContainer,
                 true,
@@ -60,7 +60,7 @@ class TimeLineContainer(
         beforeView = null
     }
 
-    private fun setBindingAttribute(binding: TimeLineItemBinding, route: Route, index: Int) {
+    private fun setBindingAttribute(binding: ItemTimeLineBinding, route: Route, index: Int) {
         val filterTime = if (routeCount < 7) {
             60.0
         } else {
@@ -118,7 +118,7 @@ class TimeLineContainer(
     }
 
     private fun setConstraint(
-        binding: TimeLineItemBinding,
+        binding: ItemTimeLineBinding,
         index: Int,
         proportionOfSectionTime: Float,
         correctionValue: Float,
@@ -169,7 +169,7 @@ class TimeLineContainer(
         beforeViewId = binding.root.id
     }
 
-    private fun setIdentityColor(binding: TimeLineItemBinding, route: TransportRoute) {
+    private fun setIdentityColor(binding: ItemTimeLineBinding, route: TransportRoute) {
         val identityColor = Color.parseColor("#${route.routeColor}")
 
         binding.textViewSectionTime.background.setTint(identityColor)
@@ -179,7 +179,7 @@ class TimeLineContainer(
         binding.imageViewIcon.imageTintList = ColorStateList.valueOf(Color.WHITE)
     }
 
-    private fun setDefaultColor(binding: TimeLineItemBinding) {
+    private fun setDefaultColor(binding: ItemTimeLineBinding) {
         binding.textViewSectionTime.background.setTint(greyColor)
         binding.textViewSectionTime.setTextColor(Color.WHITE)
 
