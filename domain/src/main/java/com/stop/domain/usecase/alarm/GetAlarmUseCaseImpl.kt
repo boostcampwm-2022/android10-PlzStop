@@ -9,7 +9,7 @@ class GetAlarmUseCaseImpl @Inject constructor(
     private val alarmRepository: AlarmRepository
 ) : GetAlarmUseCase{
 
-    override suspend fun getAlarm(): Flow<AlarmUseCaseItem?> {
+    override suspend operator fun invoke(): Flow<AlarmUseCaseItem?> {
         return alarmRepository.getAlarm()
     }
 

@@ -34,7 +34,7 @@ class SoundService : LifecycleService() {
         normalExit = false
 
         lifecycleScope.launch {
-            getAlarmUseCase.getAlarm().collectLatest { alarmData ->
+            getAlarmUseCase().collectLatest { alarmData ->
                 alarmData?.let {
                     if (it.alarmMethod) {
                         mediaPlayer = MediaPlayer.create(this@SoundService, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)).apply {

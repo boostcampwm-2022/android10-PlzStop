@@ -53,13 +53,13 @@ class AlarmSettingViewModel @Inject constructor(
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveAlarmUseCase.saveAlarm(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
+            saveAlarmUseCase(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
         }
     }
 
     fun getAlarm(missionStatus: MissionStatus = MissionStatus.BEFORE) {
         viewModelScope.launch(Dispatchers.IO) {
-            getAlarmUseCase.getAlarm().collectLatest {
+            getAlarmUseCase().collectLatest {
                 _alarmItem.value = it
 
                 if (it != null) {
@@ -82,7 +82,7 @@ class AlarmSettingViewModel @Inject constructor(
 
     fun deleteAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteAlarmUseCase.deleteAlarm()
+            deleteAlarmUseCase()
         }
         cancelAlarm()
     }
