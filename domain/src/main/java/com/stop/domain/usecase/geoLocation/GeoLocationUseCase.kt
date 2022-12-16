@@ -4,8 +4,9 @@ import com.stop.domain.model.geoLocation.GeoLocationInfo
 
 interface GeoLocationUseCase {
 
-    suspend fun getGeoLocationInfo(
+    suspend operator fun invoke(
         lat: Double,
         lon: Double
     ): GeoLocationInfo
+
 }

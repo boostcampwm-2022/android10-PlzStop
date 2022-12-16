@@ -112,7 +112,7 @@ class PlaceSearchViewModel @Inject constructor(
     fun getGeoLocationInfo(latitude: Double, longitude: Double, isClickedFromPlaceSearch: Boolean) {
         viewModelScope.launch {
             try {
-                val geoLocationInfo = geoLocationUseCase.getGeoLocationInfo(latitude, longitude)
+                val geoLocationInfo = geoLocationUseCase(latitude, longitude)
 
                 _geoLocation.value = if (isClickedFromPlaceSearch) {
                     geoLocationInfo.toClickedGeoLocationInfo(clickedPlaceName)
