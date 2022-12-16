@@ -23,7 +23,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.AlarmActivity
 import com.stop.R
-import com.stop.ui.alarmstart.SoundService
 import com.stop.databinding.FragmentMapBinding
 import com.stop.model.alarm.AlarmStatus
 import com.stop.model.map.Location
@@ -31,6 +30,7 @@ import com.stop.model.mission.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.alarmstart.SoundService
 import com.stop.ui.mission.MissionService
 import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
@@ -64,8 +64,6 @@ class MapFragment : Fragment(), MapHandler {
     }
 
     private fun initBinding() {
-        alarmViewModel.getAlarm()
-
         binding.lifecycleOwner = viewLifecycleOwner
         binding.alarmViewModel = alarmViewModel
         binding.placeSearchViewModel = placeSearchViewModel
@@ -296,6 +294,8 @@ class MapFragment : Fragment(), MapHandler {
 
     override fun onResume() {
         super.onResume()
+
+        alarmViewModel.getAlarm()
 
         requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
             if (it == ALARM_MAP_CODE) {
