@@ -88,7 +88,7 @@ class PlaceSearchFragment : Fragment() {
         placeSearchViewModel.setNearPlacesEmpty()
         placeSearchViewModel.insertRecentSearchPlace(placeUseCaseItem)
 
-        findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+        findNavController().popBackStack(R.id.mapFragment, false)
     }
 
     private fun buttonClick() {
@@ -96,11 +96,11 @@ class PlaceSearchFragment : Fragment() {
             layoutRecentSearch.textViewCurrentLocation.setOnClickListener {
                 placeSearchViewModel.setClickCurrentLocation()
 
-                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                findNavController().popBackStack(R.id.mapFragment, false)
             }
 
             layoutRecentSearch.textViewSelectMap.setOnClickListener {
-                findNavController().navigate(R.id.action_placeSearchFragment_to_mapFragment)
+                findNavController().popBackStack(R.id.mapFragment, false)
             }
         }
     }

@@ -83,13 +83,17 @@ class RouteFragment : Fragment() {
         binding.textViewOrigin.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.nav_graph)
-            navController.navigate(R.id.action_global_placeSearchFragment)
+            if (navController.popBackStack(R.id.action_global_placeSearchFragment, false).not()) {
+                navController.navigate(R.id.placeSearchFragment)
+            }
         }
 
         binding.textViewDestination.setOnClickListener {
             val navController = findNavController()
             navController.setGraph(R.navigation.nav_graph)
-            navController.navigate(R.id.action_global_placeSearchFragment)
+            if (navController.popBackStack(R.id.action_global_placeSearchFragment, false).not()) {
+                navController.navigate(R.id.placeSearchFragment)
+            }
         }
 
         binding.imageViewSwapOriginWithDestination.setOnClickListener {
