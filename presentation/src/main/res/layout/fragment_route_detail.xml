@@ -144,7 +144,7 @@
                 android:layout_gravity="start"
                 bind:routeResultViewModel="@{routeResultViewModel}"
                 bind:itinerary="@{itinerary}"
-                layout="@layout/route_detail_drawer" />
+                layout="@layout/drawer_route_detail" />
         </androidx.drawerlayout.widget.DrawerLayout>
     </LinearLayout>
 </layout>

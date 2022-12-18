@@ -7,16 +7,15 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.workDataOf
-import com.stop.alarm.AlarmFunctions
-import com.stop.alarm.LastTimeCheckWorker
-import com.stop.convertTimeMillisToString
+import com.stop.util.AlarmFunctions
+import com.stop.util.convertTimeMillisToString
 import com.stop.domain.model.alarm.AlarmUseCaseItem
 import com.stop.domain.usecase.alarm.DeleteAlarmUseCase
 import com.stop.domain.usecase.alarm.GetAlarmUseCase
 import com.stop.domain.usecase.alarm.SaveAlarmUseCase
-import com.stop.makeFullTime
-import com.stop.model.AlarmStatus
-import com.stop.model.MissionStatus
+import com.stop.util.makeFullTime
+import com.stop.model.alarm.AlarmStatus
+import com.stop.model.mission.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_TIME
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.LAST_TIME
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,28 +36,30 @@ class AlarmSettingViewModel @Inject constructor(
     private val workManager: WorkManager
 ) : ViewModel() {
 
-    val alarmTime = MutableLiveData(0)
-    var alarmMethod = true
-
     private val _alarmItem = MutableStateFlow<AlarmUseCaseItem?>(null)
-    val alarmItem: StateFlow<AlarmUseCaseItem?> = _alarmItem
+    val alarmItem: StateFlow<AlarmUseCaseItem?>
+        get() = _alarmItem
+
+    private val _lastTimeCountDown = MutableLiveData("")
+    val lastTimeCountDown: LiveData<String>
+        get() = _lastTimeCountDown
 
     var alarmStatus = MutableStateFlow(AlarmStatus.NON_EXIST)
 
     private lateinit var workerId: UUID
 
-    private val _lastTimeCountDown = MutableLiveData("")
-    val lastTimeCountDown: LiveData<String> = _lastTimeCountDown
+    val alarmTime = MutableLiveData(0)
+    var alarmMethod = true
 
     fun saveAlarm(alarmUseCaseItem: AlarmUseCaseItem) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveAlarmUseCase.saveAlarm(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
+            saveAlarmUseCase(alarmUseCaseItem.copy(alarmTime = alarmTime.value ?: 0, alarmMethod = alarmMethod))
         }
     }
 
     fun getAlarm(missionStatus: MissionStatus = MissionStatus.BEFORE) {
         viewModelScope.launch(Dispatchers.IO) {
-            getAlarmUseCase.getAlarm().collectLatest {
+            getAlarmUseCase().collectLatest {
                 _alarmItem.value = it
 
                 if (it != null) {
@@ -81,7 +82,7 @@ class AlarmSettingViewModel @Inject constructor(
 
     fun deleteAlarm() {
         viewModelScope.launch(Dispatchers.IO) {
-            deleteAlarmUseCase.deleteAlarm()
+            deleteAlarmUseCase()
         }
         cancelAlarm()
     }

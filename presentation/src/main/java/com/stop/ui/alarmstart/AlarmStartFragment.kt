@@ -13,7 +13,6 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.stop.R
-import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentAlarmStartBinding
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_NOTIFICATION_HIGH_ID
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
@@ -23,7 +22,8 @@ import kotlinx.coroutines.launch
 class AlarmStartFragment : Fragment() {
 
     private var _binding: FragmentAlarmStartBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentAlarmStartBinding
+        get() = _binding!!
 
     private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
 

@@ -7,7 +7,7 @@ class DeleteRecentPlaceSearchUseCaseImpl @Inject constructor(
     private val recentPlaceSearchRepository: RecentPlaceSearchRepository
 ) : DeleteRecentPlaceSearchUseCase {
 
-    override suspend fun deleteAllRecentPlaceSearch() {
+    override suspend operator fun invoke() {
         recentPlaceSearchRepository.deleteAllRecentPlaceSearch()
     }
 

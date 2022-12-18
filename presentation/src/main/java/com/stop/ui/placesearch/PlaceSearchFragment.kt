@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 class PlaceSearchFragment : Fragment() {
 
     private var _binding: FragmentPlaceSearchBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentPlaceSearchBinding
+        get() = _binding!!
 
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
 
@@ -154,9 +155,9 @@ class PlaceSearchFragment : Fragment() {
             editTextFlow
                 .debounce(500)
                 .onEach {
-                    if(it.toString().isBlank()){
+                    if (it.toString().isBlank()) {
                         placeSearchViewModel.setNearPlacesEmpty()
-                    }else{
+                    } else {
                         placeSearchViewModel.getNearPlaces(it.toString())
                     }
                 }

@@ -10,7 +10,8 @@ import javax.inject.Inject
 class GeoLocationUseCaseImpl @Inject constructor(
     private val routeRepository: RouteRepository
 ) : GeoLocationUseCase {
-    override suspend fun getGeoLocationInfo(lat: Double, lon: Double): GeoLocationInfo {
+
+    override suspend operator fun invoke(lat: Double, lon: Double): GeoLocationInfo {
         val result = routeRepository.reverseGeocoding(
             Coordinate(lat.toString(), lon.toString()),
             AddressType.FULL_ADDRESS
@@ -32,4 +33,5 @@ class GeoLocationUseCaseImpl @Inject constructor(
             result.fullAddress.split(",").drop(1).first()
         }
     }
+
 }

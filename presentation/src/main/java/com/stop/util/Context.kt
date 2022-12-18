@@ -13,8 +13,6 @@ import android.view.WindowManager
 import android.view.WindowMetrics
 import androidx.core.app.NotificationCompat
 import com.stop.R
-import com.stop.isMOreThanRedVelVet
-import com.stop.isMoreThanOreo
 
 fun Context.getActivityPendingIntent(
     intent: Intent, requestCode: Int
@@ -84,7 +82,7 @@ private fun createHighNotificationChannel(context: Context, id: String, name: St
 }
 
 fun Context.getScreenSize(): Size {
-    return if (isMOreThanRedVelVet()) {
+    return if (isMoreThanRedVelVet()) {
         val metrics: WindowMetrics = getSystemService(WindowManager::class.java).currentWindowMetrics
         Size(metrics.bounds.width(), metrics.bounds.height())
     } else {

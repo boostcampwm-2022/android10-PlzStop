@@ -23,14 +23,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.skt.tmap.TMapPoint
 import com.stop.AlarmActivity
 import com.stop.R
-import com.stop.alarm.SoundService
 import com.stop.databinding.FragmentMapBinding
-import com.stop.model.AlarmStatus
-import com.stop.model.Location
-import com.stop.model.MissionStatus
+import com.stop.model.alarm.AlarmStatus
+import com.stop.model.map.Location
+import com.stop.model.mission.MissionStatus
 import com.stop.ui.alarmsetting.AlarmSettingFragment
 import com.stop.ui.alarmsetting.AlarmSettingFragment.Companion.ALARM_MAP_CODE
 import com.stop.ui.alarmsetting.AlarmSettingViewModel
+import com.stop.ui.alarmstart.SoundService
 import com.stop.ui.mission.MissionService
 import com.stop.ui.mission.MissionViewModel
 import com.stop.ui.placesearch.PlaceSearchViewModel
@@ -38,15 +38,16 @@ import com.stop.ui.util.Marker
 import kotlinx.coroutines.launch
 
 class MapFragment : Fragment(), MapHandler {
+
     private var _binding: FragmentMapBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentMapBinding
+        get() = _binding!!
 
     private val alarmViewModel: AlarmSettingViewModel by activityViewModels()
     private val placeSearchViewModel: PlaceSearchViewModel by activityViewModels()
     private val missionViewModel: MissionViewModel by viewModels()
 
     private lateinit var missionServiceIntent: Intent
-
     private lateinit var tMap: MapTMap
     private var mapUIVisibility = View.GONE
 
@@ -56,9 +57,18 @@ class MapFragment : Fragment(), MapHandler {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMapBinding.inflate(inflater, container, false)
+
         initBinding()
 
         return binding.root
+    }
+
+    private fun initBinding() {
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.alarmViewModel = alarmViewModel
+        binding.placeSearchViewModel = placeSearchViewModel
+        binding.missionViewModel = missionViewModel
+        binding.fragment = this@MapFragment
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -68,30 +78,6 @@ class MapFragment : Fragment(), MapHandler {
         initBottomSheetBehavior()
         initBottomSheetView()
         setBroadcastReceiver()
-    }
-
-    override fun alertTMapReady() {
-        requestPermissionsLauncher.launch(PERMISSIONS)
-
-        tMap.initListener()
-        initAfterTMapReady()
-    }
-
-    private fun initAfterTMapReady() {
-        initView()
-        initNavigateAction()
-        observeClickPlace()
-        observeClickCurrentLocation()
-    }
-
-    private fun initBinding() {
-        alarmViewModel.getAlarm()
-
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.alarmViewModel = alarmViewModel
-        binding.placeSearchViewModel = placeSearchViewModel
-        binding.missionViewModel = missionViewModel
-        binding.fragment = this@MapFragment
     }
 
     private fun initTMap() {
@@ -106,50 +92,6 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         binding.layoutContainer.addView(tMap.tMapView)
-    }
-
-    private fun initView() {
-        binding.layoutCompass.setOnClickListener {
-            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
-        }
-
-        binding.layoutCurrent.setOnClickListener {
-            requestPermissionsLauncher.launch(PERMISSIONS)
-
-            tMap.isTracking = true
-            tMap.tMapView.setCenterPoint(
-                placeSearchViewModel.currentLocation.latitude,
-                placeSearchViewModel.currentLocation.longitude,
-                true
-            )
-            tMap.addMarker(
-                Marker.PERSON_MARKER,
-                Marker.PERSON_MARKER_IMG,
-                TMapPoint(
-                    placeSearchViewModel.currentLocation.latitude,
-                    placeSearchViewModel.currentLocation.longitude
-                )
-            )
-        }
-
-    }
-
-    private fun initNavigateAction() {
-        binding.textViewSearch.setOnClickListener {
-            findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
-        }
-
-        binding.homePanel.viewPanelStart.setOnClickListener {
-            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
-            val bundle = bundleOf("start" to placeSearchViewModel.panelInfo)
-            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
-        }
-
-        binding.homePanel.viewPanelEnd.setOnClickListener {
-            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
-            val bundle = bundleOf("end" to placeSearchViewModel.panelInfo)
-            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
-        }
     }
 
     private fun initBottomSheetBehavior() {
@@ -176,7 +118,7 @@ class MapFragment : Fragment(), MapHandler {
             override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                with (binding.homeBottomSheet) {
+                with(binding.homeBottomSheet) {
                     layoutStateExpanded.layoutBottomSheetHomeStateExpanded.alpha = slideOffset
                     textViewAlarmState.alpha = 1 - slideOffset
                 }
@@ -223,6 +165,64 @@ class MapFragment : Fragment(), MapHandler {
         }
 
         requireActivity().registerReceiver(receiver, intentFilter)
+    }
+
+    override fun alertTMapReady() {
+        requestPermissionsLauncher.launch(PERMISSIONS)
+
+        tMap.initListener()
+        initAfterTMapReady()
+    }
+
+    private fun initAfterTMapReady() {
+        initView()
+        initNavigateAction()
+        observeClickPlace()
+        observeClickCurrentLocation()
+    }
+
+    private fun initView() {
+        binding.layoutCompass.setOnClickListener {
+            tMap.tMapView.isCompassMode = tMap.tMapView.isCompassMode.not()
+        }
+
+        binding.layoutCurrent.setOnClickListener {
+            requestPermissionsLauncher.launch(PERMISSIONS)
+
+            tMap.isTracking = true
+            tMap.tMapView.setCenterPoint(
+                placeSearchViewModel.currentLocation.latitude,
+                placeSearchViewModel.currentLocation.longitude,
+                true
+            )
+            tMap.addMarker(
+                Marker.PERSON_MARKER,
+                Marker.PERSON_MARKER_IMG,
+                TMapPoint(
+                    placeSearchViewModel.currentLocation.latitude,
+                    placeSearchViewModel.currentLocation.longitude
+                )
+            )
+        }
+
+    }
+
+    private fun initNavigateAction() {
+        binding.textViewSearch.setOnClickListener {
+            findNavController().navigate(R.id.action_mapFragment_to_placeSearchFragment)
+        }
+
+        binding.homePanel.viewPanelStart.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
+            val bundle = bundleOf("start" to placeSearchViewModel.panelInfo)
+            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
+        }
+
+        binding.homePanel.viewPanelEnd.setOnClickListener {
+            placeSearchViewModel.setPanelVisibility(View.INVISIBLE)
+            val bundle = bundleOf("end" to placeSearchViewModel.panelInfo)
+            findNavController().navigate(R.id.action_mapFragment_to_route_nav_graph, bundle)
+        }
     }
 
     private fun observeClickPlace() {
@@ -295,6 +295,8 @@ class MapFragment : Fragment(), MapHandler {
     override fun onResume() {
         super.onResume()
 
+        alarmViewModel.getAlarm()
+
         requireActivity().intent.extras?.getInt("ALARM_MAP_CODE")?.let {
             if (it == ALARM_MAP_CODE) {
                 openBottomSheet()
@@ -306,11 +308,6 @@ class MapFragment : Fragment(), MapHandler {
         val behavior = BottomSheetBehavior.from(binding.layoutHomeBottomSheet)
 
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        /*
-        binding.homeBottomSheet.layoutStateExpanded.root.visibility = View.VISIBLE
-        binding.homeBottomSheet.textViewAlarmState.visibility = View.GONE
-        binding.homeBottomSheet.homeBottomSheetDragHandle.visibility = View.GONE
-        */
     }
 
     override fun onDestroyView() {
@@ -341,4 +338,5 @@ class MapFragment : Fragment(), MapHandler {
         private val PERMISSIONS =
             arrayOf(permission.ACCESS_FINE_LOCATION, permission.ACCESS_COARSE_LOCATION)
     }
+
 }

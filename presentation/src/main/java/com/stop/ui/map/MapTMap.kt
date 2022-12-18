@@ -7,7 +7,7 @@ import com.skt.tmap.TMapView
 import com.skt.tmap.TMapView.OnClickListenerCallback
 import com.skt.tmap.overlay.TMapMarkerItem
 import com.skt.tmap.poi.TMapPOIItem
-import com.stop.model.Location
+import com.stop.model.map.Location
 import com.stop.ui.util.Marker
 import com.stop.ui.util.TMap
 
@@ -70,4 +70,5 @@ class MapTMap(
     companion object {
         private const val SCROLL_NUM = 3
     }
+
 }

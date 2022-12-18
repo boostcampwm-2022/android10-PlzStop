@@ -4,7 +4,7 @@ import com.stop.domain.model.nearplace.PlaceUseCaseItem
 
 interface GetNearPlacesUseCase {
 
-    suspend fun getNearPlaces(
+    suspend operator fun invoke(
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double

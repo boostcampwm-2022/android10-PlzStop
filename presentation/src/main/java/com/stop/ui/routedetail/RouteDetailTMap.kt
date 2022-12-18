@@ -14,9 +14,10 @@ class RouteDetailTMap(
     private val context: Context,
     handler: RouteDetailHandler,
 ) : TMap(context, handler) {
-    private val tMapPoints = arrayListOf<TMapPoint>()
 
     private var polyLine = TMapPolyLine()
+
+    private val tMapPoints = arrayListOf<TMapPoint>()
 
     fun drawRoutes(routes: List<Route>) {
         routes.forEach { route ->
@@ -99,4 +100,5 @@ class RouteDetailTMap(
         private const val LINE_WIDTH = 7F
         private const val OUT_LINE_WIDTH = 10F
     }
+
 }

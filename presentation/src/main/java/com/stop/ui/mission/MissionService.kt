@@ -15,7 +15,10 @@ import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.*
 import com.stop.*
 import com.stop.R
-import com.stop.model.Location
+import com.stop.model.map.Location
+import com.stop.util.convertTimeMillisToString
+import com.stop.util.isMoreThanOreo
+import com.stop.util.makeFullTime
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,9 +35,10 @@ class MissionService : LifecycleService() {
     private val locationRequest by lazy {
         LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_UNIT).build()
     }
-    private lateinit var locationCallback: LocationCallback
-    private var timer: Job = lifecycleScope.launch(Dispatchers.IO) { }
 
+    private lateinit var locationCallback: LocationCallback
+
+    private var timer: Job = lifecycleScope.launch(Dispatchers.IO) { }
     private var userLocation = arrayListOf<Location>()
     private var lastTime = ""
     private var isMissionOver = false
@@ -43,19 +47,6 @@ class MissionService : LifecycleService() {
         super.onCreate()
 
         setForeground()
-    }
-
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        getTimer(intent)
-        getStatus(intent)
-
-        return super.onStartCommand(intent, flags, startId)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        isMissionOver = true
     }
 
     private fun setForeground() {
@@ -138,6 +129,14 @@ class MissionService : LifecycleService() {
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+        getTimer(intent)
+        getStatus(intent)
+
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     private fun getTimer(intent: Intent?) {
         val lastTimeString = intent?.getStringExtra(MISSION_LAST_TIME)
         if (lastTimeString != null) {
@@ -188,6 +187,12 @@ class MissionService : LifecycleService() {
         if (intent?.getBooleanExtra(MISSION_OVER, false) == true) {
             stopForeground(true)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        isMissionOver = true
     }
 
     companion object {

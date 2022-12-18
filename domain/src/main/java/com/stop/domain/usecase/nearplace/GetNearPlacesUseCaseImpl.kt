@@ -8,7 +8,7 @@ internal class GetNearPlacesUseCaseImpl @Inject constructor(
     private val nearPlaceRepository: NearPlaceRepository
 ) : GetNearPlacesUseCase {
 
-    override suspend fun getNearPlaces(
+    override suspend operator fun invoke(
         searchKeyword: String,
         centerLon: Double,
         centerLat: Double,

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
-import com.stop.databinding.StationContainerItemBinding
+import com.stop.databinding.ItemStationContainerBinding
 import com.stop.model.route.RouteItem
 
 class StationContainer(
@@ -19,7 +19,7 @@ class StationContainer(
     fun submitList(routeItems: List<RouteItem>) {
         clearBeforeData()
         routeItems.forEachIndexed { index, routeItem ->
-            val stationContainerItemBinding = StationContainerItemBinding.inflate(
+            val stationContainerItemBinding = ItemStationContainerBinding.inflate(
                 LayoutInflater.from(context),
                 this,
                 true,
@@ -37,7 +37,7 @@ class StationContainer(
     }
 
     private fun setBindingAttribute(
-        binding: StationContainerItemBinding,
+        binding: ItemStationContainerBinding,
         routeItem: RouteItem,
         index: Int
     ) {
@@ -49,7 +49,7 @@ class StationContainer(
         }
     }
 
-    private fun setConstraint(binding: StationContainerItemBinding) {
+    private fun setConstraint(binding: ItemStationContainerBinding) {
         val endId = beforeViewId ?: this.id
         val endSide = if (beforeViewId == null) {
             ConstraintSet.TOP
@@ -76,4 +76,5 @@ class StationContainer(
         }
         beforeViewId = binding.root.id
     }
+
 }

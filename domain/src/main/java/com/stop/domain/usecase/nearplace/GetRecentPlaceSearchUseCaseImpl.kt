@@ -9,7 +9,7 @@ class GetRecentPlaceSearchUseCaseImpl @Inject constructor(
     private val recentPlaceSearchRepository: RecentPlaceSearchRepository
 ) : GetRecentPlaceSearchUseCase {
 
-    override fun getAllRecentPlaceSearch(): Flow<List<PlaceUseCaseItem>> {
+    override operator fun invoke(): Flow<List<PlaceUseCaseItem>> {
         return recentPlaceSearchRepository.getAllRecentPlaceSearch()
     }
 

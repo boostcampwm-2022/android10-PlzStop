@@ -137,6 +137,6 @@
             app:layout_constraintTop_toBottomOf="@id/view_alarm"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/route_path_item" />
+            tools:listitem="@layout/item_route_path" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

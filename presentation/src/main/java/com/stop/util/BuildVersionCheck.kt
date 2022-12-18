@@ -1,4 +1,4 @@
-package com.stop
+package com.stop.util
 
 import android.os.Build
 
@@ -17,5 +17,8 @@ fun isMoreThanOreoUnderRedVelVet(): Boolean =
 fun isMoreThanSnow(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
 
-fun isMOreThanRedVelVet(): Boolean =
+fun isMoreThanRedVelVet(): Boolean =
     Build.VERSION.SDK_INT >= Build.VERSION_CODES.R
+
+fun isMoreThanQ(): Boolean =
+    Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q

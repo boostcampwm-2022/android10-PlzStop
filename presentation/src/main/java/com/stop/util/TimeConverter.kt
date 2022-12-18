@@ -1,4 +1,4 @@
-package com.stop
+package com.stop.util
 
 import java.text.ParseException
 import java.text.SimpleDateFormat

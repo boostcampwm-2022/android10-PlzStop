@@ -1,4 +1,4 @@
-package com.stop.model
+package com.stop.model.map
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

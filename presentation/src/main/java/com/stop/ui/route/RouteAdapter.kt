@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.stop.databinding.RouteItemBinding
+import com.stop.databinding.ItemRouteBinding
 import com.stop.domain.model.route.tmap.custom.Itinerary
 
 class RouteAdapter(
@@ -13,7 +13,7 @@ class RouteAdapter(
 ) : ListAdapter<Itinerary, RouteViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RouteViewHolder {
-        val binding = RouteItemBinding.inflate(
+        val binding = ItemRouteBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
@@ -51,4 +51,5 @@ class RouteAdapter(
             }
         }
     }
+
 }

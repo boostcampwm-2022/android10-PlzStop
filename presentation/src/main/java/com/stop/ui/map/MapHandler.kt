@@ -4,6 +4,7 @@ import com.skt.tmap.TMapPoint
 import com.stop.ui.util.Handler
 
 interface MapHandler : Handler {
+
     fun alertTMapReady()
 
     fun setOnLocationChangeListener(location: android.location.Location)
@@ -11,4 +12,5 @@ interface MapHandler : Handler {
     fun setOnDisableScrollWIthZoomLevelListener()
 
     fun setPanel(tMapPoint: TMapPoint, isClickedFromPlaceSearch: Boolean)
+
 }

@@ -3,6 +3,7 @@ package com.stop.ui.util
 import com.stop.R
 
 object Marker {
+
     const val PLACE_MARKER = "place_marker"
     const val PLACE_MARKER_IMG = R.drawable.ic_place_marker
 
@@ -22,4 +23,5 @@ object Marker {
 
     const val WALK_LINE = "walk_line"
     const val WALK_LINE_COLOR = R.color.main_dark_grey
+
 }

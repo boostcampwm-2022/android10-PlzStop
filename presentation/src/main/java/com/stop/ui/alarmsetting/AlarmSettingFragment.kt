@@ -19,7 +19,8 @@ import kotlin.math.roundToInt
 class AlarmSettingFragment : Fragment() {
 
     private var _binding: FragmentAlarmSettingBinding? = null
-    private val binding get() = _binding!!
+    private val binding: FragmentAlarmSettingBinding
+        get() = _binding!!
 
     private val alarmSettingViewModel by activityViewModels<AlarmSettingViewModel>()
     private val routeResultViewModel: RouteResultViewModel by navGraphViewModels(R.id.route_nav_graph)
@@ -33,13 +34,6 @@ class AlarmSettingFragment : Fragment() {
         initBinding()
 
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initView()
-        setToggleListener()
     }
 
     private fun initBinding() {
@@ -63,8 +57,15 @@ class AlarmSettingFragment : Fragment() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        initView()
+        setToggleListener()
+    }
+
     private fun initView() {
-        with (binding) {
+        with(binding) {
             numberPickerAlarmTime.minValue = 0
             numberPickerAlarmTime.maxValue = 60
 
