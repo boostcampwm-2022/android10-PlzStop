@@ -4,14 +4,13 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class RequestParameters(
-    val airportCount: Int,
+    val airplaneCount: Int,
     val busCount: Int,
     val endX: String,
     val endY: String,
     val expressbusCount: Int,
     val ferryCount: Int,
     val locale: String,
-    val maxWalkDistance: String,
     val reqDttm: String,
     val startX: String,
     val startY: String,
