@@ -40,7 +40,7 @@ internal class GetRouteUseCaseImpl @Inject constructor(
                 totalDistance = itinerary.totalDistance,
                 totalTime = itinerary.totalTime,
                 transferCount = itinerary.transferCount,
-                walkTime = itinerary.walkTime,
+                walkTime = itinerary.totalWalkTime,
             )
         }
     }

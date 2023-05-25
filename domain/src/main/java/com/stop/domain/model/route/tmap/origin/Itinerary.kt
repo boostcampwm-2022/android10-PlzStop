@@ -10,6 +10,6 @@ data class Itinerary(
     val totalDistance: Double,
     val totalTime: Int,
     val transferCount: Int,
-    val walkDistance: Double,
-    val walkTime: Int
+    val totalWalkDistance: Double,
+    val totalWalkTime: Int
 )

@@ -241,8 +241,8 @@ internal class RouteRemoteDataSourceImpl @Inject constructor(
                     totalDistance = calculatedTotalDistance,
                     totalTime = calculatedTotalTime.toInt(),
                     transferCount = transferCount,
-                    walkDistance = walkDistance,
-                    walkTime = walkTime,
+                    totalWalkDistance = totalWalkDistance,
+                    totalWalkTime = totalWalkTime,
                 )
             }
         }
