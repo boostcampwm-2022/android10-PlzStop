@@ -218,3 +218,6 @@ fabric.properties
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/kotlin,android,androidstudio,macos
+branch_structure.json
+temp_auto_push.bat
+temp_interactive_push.bat
